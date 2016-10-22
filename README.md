@@ -15,7 +15,7 @@ After cloning the repository, it is sufficient to use `mvn package` to produce t
 java -jar target/maxmax.jar -in input.txt -out output.txt
 ```
 
-Each line of the output file has three tab-separated fields: the number of the cluster, the size of the cluster, and the list of the words belonging to the cluster separated with `, `.
+Each line of the output file has three tab-separated fields: the number of the cluster, the size of the cluster, and the list of the words belonging to the cluster separated with comma and space.
 
 It is also possible to use MaxMax as a library by calling the `MaxMax` class.
 
