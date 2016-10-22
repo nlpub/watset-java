@@ -43,7 +43,7 @@ public class MaxMax<V> implements Runnable {
         this.graph = graph;
         this.digraph = new DefaultDirectedGraph<>(DefaultEdge.class);
         this.graph.vertexSet().forEach(digraph::addVertex);
-        this.maximals = this.digraph.vertexSet().stream().collect(Collectors.toMap(Function.identity(), v -> Collections.emptySet()));
+        this.maximals = this.digraph.vertexSet().stream().collect(Collectors.toMap(Function.identity(), v -> new HashSet<>()));
         this.root = this.digraph.vertexSet().stream().collect(Collectors.toMap(Function.identity(), v -> true));
     }
 
@@ -51,11 +51,10 @@ public class MaxMax<V> implements Runnable {
         // Preparation: Compute Maximal Vertices
         digraph.vertexSet().forEach(u -> {
             final double max = graph.edgesOf(u).stream().mapToDouble(graph::getEdgeWeight).max().orElse(-1);
-            final Set<V> uMaximals = graph.edgesOf(u).stream().
+            graph.edgesOf(u).stream().
                     filter(e -> graph.getEdgeWeight(e) == max).
                     map(e -> graph.getEdgeSource(e).equals(u) ? graph.getEdgeTarget(e) : graph.getEdgeSource(e)).
-                    collect(Collectors.toSet());
-            if (!uMaximals.isEmpty()) maximals.put(u, uMaximals);
+                    forEach(v -> maximals.get(u).add(v));
         });
 
         // Stage 1: Graph Transformation
