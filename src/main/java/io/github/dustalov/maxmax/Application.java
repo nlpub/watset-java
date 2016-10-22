@@ -64,7 +64,7 @@ abstract class Application {
         try (final BufferedWriter writer = Files.newBufferedWriter(Paths.get(filename))) {
             int i = 0;
             for (final Set<String> cluster : maxmax.getClusters()) {
-                writer.write(String.format(Locale.ROOT, "%d\t%d\t%s\n", i++, cluster.size(), String.join(",", cluster)));
+                writer.write(String.format(Locale.ROOT, "%d\t%d\t%s\n", i++, cluster.size(), String.join(", ", cluster)));
             }
         }
     }
