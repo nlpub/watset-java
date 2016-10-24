@@ -9,7 +9,7 @@ This is an open source Java implementation of the MaxMax graph-based soft cluste
 
 ## Usage
 
-After cloning the repository, it is sufficient to use `mvn package` to produce the JAR file. The input undirected weighted graph should be represented in the text file, each line of which has three tab-separated fields: `word1&#9;word2&#9;weight`.
+After cloning the repository, it is sufficient to use `mvn package` to produce the JAR file. The input undirected weighted graph should be represented in the text file, each line of which has three tab-separated fields: <code>word1&#9;word2&#9;weight</code>.
 
 ```bash
 java -jar target/maxmax.jar -in input.txt -out output.txt
