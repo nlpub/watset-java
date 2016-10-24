@@ -31,7 +31,6 @@ interface ABCParser {
         stream.forEach(line -> {
             final String[] split = line.split("\t");
             if (split.length != 3 || split[0].equals(split[1])) return;
-            if (split[0].equals(split[1])) return;
             builder.addVertices(split[0], split[1]);
             builder.addEdge(split[0], split[1], Double.valueOf(split[2]));
         });

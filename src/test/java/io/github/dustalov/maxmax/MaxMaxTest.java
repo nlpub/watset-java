@@ -94,9 +94,9 @@ public class MaxMaxTest {
     }
 
     @Test
-    public void testRoot() {
-        assertEquals(CLUSTERS1.size(), maxmax1.getRoot().values().stream().filter(v -> v).count());
-        assertEquals(CLUSTERS2.size(), maxmax2.getRoot().values().stream().filter(v -> v).count());
+    public void testRoots() {
+        assertEquals(CLUSTERS1.size(), maxmax1.getRoots().values().stream().filter(v -> v).count());
+        assertEquals(CLUSTERS2.size(), maxmax2.getRoots().values().stream().filter(v -> v).count());
     }
 
     @Test

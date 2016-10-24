@@ -37,14 +37,14 @@ public class MaxMax<V> implements Runnable {
     private final UndirectedGraph<V, DefaultWeightedEdge> graph;
     private final DirectedGraph<V, DefaultEdge> digraph;
     private final Map<V, Set<V>> maximals;
-    private final Map<V, Boolean> root;
+    private final Map<V, Boolean> roots;
 
     public MaxMax(UndirectedGraph<V, DefaultWeightedEdge> graph) {
         this.graph = graph;
         this.digraph = new DefaultDirectedGraph<>(DefaultEdge.class);
         this.graph.vertexSet().forEach(digraph::addVertex);
         this.maximals = this.digraph.vertexSet().stream().collect(Collectors.toMap(Function.identity(), v -> new HashSet<>()));
-        this.root = this.digraph.vertexSet().stream().collect(Collectors.toMap(Function.identity(), v -> true));
+        this.roots = this.digraph.vertexSet().stream().collect(Collectors.toMap(Function.identity(), v -> true));
     }
 
     public void run() {
@@ -67,14 +67,14 @@ public class MaxMax<V> implements Runnable {
         // Stage 2: Identifying Clusters
         final Set<V> visited = new HashSet<>();
         digraph.vertexSet().forEach(v -> {
-            if (root.get(v)) {
+            if (roots.get(v)) {
                 final Queue<V> queue = new LinkedList<>();
                 queue.addAll(Graphs.successorListOf(digraph, v));
                 visited.add(v);
                 while (!queue.isEmpty()) {
                     final V u = queue.remove();
                     if (visited.contains(u)) continue;
-                    root.put(u, false);
+                    roots.put(u, false);
                     visited.add(u);
                     queue.addAll(Graphs.successorListOf(digraph, u));
                 }
@@ -94,12 +94,12 @@ public class MaxMax<V> implements Runnable {
         return maximals;
     }
 
-    public Map<V, Boolean> getRoot() {
-        return root;
+    public Map<V, Boolean> getRoots() {
+        return roots;
     }
 
     public Set<Set<V>> getClusters() {
-        final Set<V> roots = root.entrySet().stream().filter(Map.Entry::getValue).map(Map.Entry::getKey).collect(Collectors.toSet());
+        final Set<V> roots = this.roots.entrySet().stream().filter(Map.Entry::getValue).map(Map.Entry::getKey).collect(Collectors.toSet());
         final Set<Set<V>> clusters = roots.stream().map(root -> {
             final Set<V> visited = new HashSet<>();
             final Queue<V> queue = new LinkedList<>();
