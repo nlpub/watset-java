@@ -17,16 +17,16 @@
 
 package io.github.dustalov.maxmax;
 
-import org.jgrapht.UndirectedGraph;
+import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
-import org.jgrapht.graph.builder.UndirectedWeightedGraphBuilderBase;
+import org.jgrapht.graph.builder.GraphBuilder;
 
 import java.util.stream.Stream;
 
 interface ABCParser {
-    static UndirectedGraph<String, DefaultWeightedEdge> parse(Stream<String> stream) {
-        final UndirectedWeightedGraphBuilderBase<String, DefaultWeightedEdge, ? extends SimpleWeightedGraph<String, DefaultWeightedEdge>, ?> builder = SimpleWeightedGraph.builder(DefaultWeightedEdge.class);
+    static Graph<String, DefaultWeightedEdge> parse(Stream<String> stream) {
+        final GraphBuilder<String, DefaultWeightedEdge, ? extends SimpleWeightedGraph<String, DefaultWeightedEdge>> builder = SimpleWeightedGraph.<String, DefaultWeightedEdge>createBuilder(DefaultWeightedEdge.class);
 
         stream.forEach(line -> {
             final String[] split = line.split("\t");
@@ -35,6 +35,6 @@ interface ABCParser {
             builder.addEdge(split[0], split[1], Double.valueOf(split[2]));
         });
 
-        return builder.buildUnmodifiable();
+        return builder.build();
     }
 }

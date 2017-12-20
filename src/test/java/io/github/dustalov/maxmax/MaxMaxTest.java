@@ -17,7 +17,7 @@
 
 package io.github.dustalov.maxmax;
 
-import org.jgrapht.UndirectedGraph;
+import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
 import org.junit.Before;
@@ -31,7 +31,7 @@ import java.util.Set;
 import static org.junit.Assert.assertEquals;
 
 public class MaxMaxTest {
-    final static UndirectedGraph<String, DefaultWeightedEdge> GRAPH1 = SimpleWeightedGraph.<String, DefaultWeightedEdge>builder(DefaultWeightedEdge.class).
+    final static Graph<String, DefaultWeightedEdge> GRAPH1 = SimpleWeightedGraph.<String, DefaultWeightedEdge>createBuilder(DefaultWeightedEdge.class).
             addVertices("r", "s", "u", "v", "t", "w", "x").
             addEdge("r", "s", 3).
             addEdge("r", "v", 1).
@@ -56,7 +56,7 @@ public class MaxMaxTest {
             new HashSet<>(Arrays.asList("w", "t", "x"))
     )));
 
-    final static UndirectedGraph<String, DefaultWeightedEdge> GRAPH2 = SimpleWeightedGraph.<String, DefaultWeightedEdge>builder(DefaultWeightedEdge.class).
+    final static Graph<String, DefaultWeightedEdge> GRAPH2 = SimpleWeightedGraph.<String, DefaultWeightedEdge>createBuilder(DefaultWeightedEdge.class).
             addVertices("a", "b", "c", "d", "e").
             addEdge("a", "b", 3).
             addEdge("b", "c", 1).

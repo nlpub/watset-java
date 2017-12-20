@@ -18,7 +18,7 @@
 package io.github.dustalov.maxmax;
 
 import org.apache.commons.cli.*;
-import org.jgrapht.UndirectedGraph;
+import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 
 import java.io.BufferedWriter;
@@ -48,7 +48,7 @@ abstract class Application {
             System.exit(1);
         }
 
-        final UndirectedGraph<String, DefaultWeightedEdge> graph = parse(cmd.getOptionValue("in"), ABCParser::parse);
+        final Graph<String, DefaultWeightedEdge> graph = parse(cmd.getOptionValue("in"), ABCParser::parse);
         final MaxMax<String> maxmax = new MaxMax<>(graph);
         maxmax.run();
         write(cmd.getOptionValue("out"), maxmax);

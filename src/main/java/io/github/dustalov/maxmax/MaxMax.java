@@ -17,9 +17,8 @@
 
 package io.github.dustalov.maxmax;
 
-import org.jgrapht.DirectedGraph;
+import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
-import org.jgrapht.UndirectedGraph;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DefaultWeightedEdge;
@@ -34,12 +33,12 @@ import java.util.stream.Collectors;
  * @param <V> node class.
  */
 public class MaxMax<V> implements Runnable {
-    private final UndirectedGraph<V, DefaultWeightedEdge> graph;
-    private final DirectedGraph<V, DefaultEdge> digraph;
+    private final Graph<V, DefaultWeightedEdge> graph;
+    private final Graph<V, DefaultEdge> digraph;
     private final Map<V, Set<V>> maximals;
     private final Map<V, Boolean> roots;
 
-    public MaxMax(UndirectedGraph<V, DefaultWeightedEdge> graph) {
+    public MaxMax(Graph<V, DefaultWeightedEdge> graph) {
         this.graph = graph;
         this.digraph = new DefaultDirectedGraph<>(DefaultEdge.class);
         this.graph.vertexSet().forEach(digraph::addVertex);
@@ -82,11 +81,11 @@ public class MaxMax<V> implements Runnable {
         });
     }
 
-    public UndirectedGraph<V, DefaultWeightedEdge> getGraph() {
+    public Graph<V, DefaultWeightedEdge> getGraph() {
         return graph;
     }
 
-    public DirectedGraph<V, DefaultEdge> getDigraph() {
+    public Graph<V, DefaultEdge> getDigraph() {
         return digraph;
     }
 

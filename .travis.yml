@@ -2,6 +2,7 @@ sudo: false
 language: java
 jdk:
 - oraclejdk8
+- oraclejdk9
 before_script:
 - mvn versions:display-dependency-updates versions:display-plugin-updates
 cache:
