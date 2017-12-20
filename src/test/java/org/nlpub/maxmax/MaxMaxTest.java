@@ -15,7 +15,7 @@
  *
  */
 
-package io.github.dustalov.maxmax;
+package org.nlpub.maxmax;
 
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;

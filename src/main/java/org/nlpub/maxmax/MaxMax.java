@@ -15,13 +15,14 @@
  *
  */
 
-package io.github.dustalov.maxmax;
+package org.nlpub.maxmax;
 
 import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DefaultWeightedEdge;
+import org.nlpub.graph.Clustering;
 
 import java.util.*;
 import java.util.function.Function;
@@ -32,7 +33,7 @@ import java.util.stream.Collectors;
  *
  * @param <V> node class.
  */
-public class MaxMax<V> implements Runnable {
+public class MaxMax<V> implements Clustering<V> {
     private final Graph<V, DefaultWeightedEdge> graph;
     private final Graph<V, DefaultEdge> digraph;
     private final Map<V, Set<V>> maximals;
@@ -97,20 +98,25 @@ public class MaxMax<V> implements Runnable {
         return roots;
     }
 
-    public Set<Set<V>> getClusters() {
+    public Collection<Collection<V>> getClusters() {
         final Set<V> roots = this.roots.entrySet().stream().filter(Map.Entry::getValue).map(Map.Entry::getKey).collect(Collectors.toSet());
-        final Set<Set<V>> clusters = roots.stream().map(root -> {
+
+        final Set<Collection<V>> clusters = roots.stream().map(root -> {
             final Set<V> visited = new HashSet<>();
+
             final Queue<V> queue = new LinkedList<>();
             queue.add(root);
+
             while (!queue.isEmpty()) {
                 final V v = queue.remove();
                 if (visited.contains(v)) continue;
                 visited.add(v);
                 queue.addAll(Graphs.successorListOf(digraph, v));
             }
+
             return visited;
         }).collect(Collectors.toSet());
+
         return clusters;
     }
 }

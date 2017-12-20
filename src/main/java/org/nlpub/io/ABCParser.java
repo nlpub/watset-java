@@ -15,7 +15,7 @@
  *
  */
 
-package io.github.dustalov.maxmax;
+package org.nlpub.io;
 
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
@@ -24,7 +24,7 @@ import org.jgrapht.graph.builder.GraphBuilder;
 
 import java.util.stream.Stream;
 
-interface ABCParser {
+public interface ABCParser {
     static Graph<String, DefaultWeightedEdge> parse(Stream<String> stream) {
         final GraphBuilder<String, DefaultWeightedEdge, ? extends SimpleWeightedGraph<String, DefaultWeightedEdge>> builder = SimpleWeightedGraph.<String, DefaultWeightedEdge>createBuilder(DefaultWeightedEdge.class);
 
