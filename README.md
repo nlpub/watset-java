@@ -6,8 +6,8 @@ This package also includes the implementation of the [Chinese Whispers](https://
 
 [![Build Status][travis_ci_badge]][travis_ci_link]
 
-[travis_ci_badge]: https://travis-ci.org/dustalov/maxmax.svg
-[travis_ci_link]: https://travis-ci.org/dustalov/maxmax
+[travis_ci_badge]: https://travis-ci.org/dustalov/watset-java.svg
+[travis_ci_link]: https://travis-ci.org/dustalov/watset-java
 
 ## Usage
 
