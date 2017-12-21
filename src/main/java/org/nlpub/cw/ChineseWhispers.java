@@ -36,7 +36,6 @@ public class ChineseWhispers<V, E> implements Clustering<V> {
         this.graph = graph;
         this.nodeSelector = nodeSelector;
         this.iterations = iterations;
-        this.labels = null;
     }
 
     public ChineseWhispers(Graph<V, E> graph, NodeSelector<V, E> nodeSelector) {

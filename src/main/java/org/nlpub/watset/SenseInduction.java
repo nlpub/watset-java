@@ -37,7 +37,6 @@ public class SenseInduction<V, E> implements Runnable {
         this.graph = graph;
         this.target = target;
         this.clusteringProvider = clusteringProvider;
-        this.clusters = null;
     }
 
     @Override
