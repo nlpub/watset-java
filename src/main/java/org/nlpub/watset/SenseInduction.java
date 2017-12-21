@@ -31,14 +31,12 @@ public class SenseInduction<V, E> implements Runnable {
     protected final Graph<V, E> graph;
     protected final V target;
     protected final Function<Graph<V, E>, Clustering<V>> clusteringProvider;
-    protected final int radius;
     protected Collection<Collection<V>> clusters;
 
-    public SenseInduction(Graph<V, E> graph, V target, Function<Graph<V, E>, Clustering<V>> clusteringProvider, int radius) {
+    public SenseInduction(Graph<V, E> graph, V target, Function<Graph<V, E>, Clustering<V>> clusteringProvider) {
         this.graph = graph;
         this.target = target;
         this.clusteringProvider = clusteringProvider;
-        this.radius = radius;
         this.clusters = null;
     }
 

@@ -49,7 +49,7 @@ public class SenseInductionTest {
 
     private final static Function<Graph<String, DefaultWeightedEdge>, Clustering<String>> provider = (graph) -> new ChineseWhispers<>(graph, new ChrisWeighting<>());
 
-    private final static SenseInduction<String, DefaultWeightedEdge> senseInduction = new SenseInduction<>(WORDS, "a", provider, 1);
+    private final static SenseInduction<String, DefaultWeightedEdge> senseInduction = new SenseInduction<>(WORDS, "a", provider);
 
     @Before
     public void setup() {

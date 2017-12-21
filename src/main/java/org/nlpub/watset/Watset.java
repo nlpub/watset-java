@@ -89,7 +89,7 @@ public class Watset<V, E> implements Clustering<V> {
     }
 
     protected Map<Sense<V>, Map<V, Number>> induceSenses(V target) {
-        final SenseInduction<V, E> inducer = new SenseInduction<>(graph, target, this.localClusteringProvider, 1);
+        final SenseInduction<V, E> inducer = new SenseInduction<>(graph, target, this.localClusteringProvider);
         inducer.run();
 
         return inducer.getSenses();
