@@ -31,7 +31,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static org.nlpub.util.Maximizer.alwaysTrue;
 import static org.nlpub.util.Maximizer.argmax;
 
 public class Watset<V, E> implements Clustering<V> {
@@ -113,7 +112,7 @@ public class Watset<V, E> implements Clustering<V> {
         for (final Map.Entry<V, Number> entry : context.entrySet()) {
             if (sense.get().equals(entry.getKey())) continue;
 
-            final Sense<V> result = argmax(inventory.get(entry.getKey()).iterator(), alwaysTrue(), candidate -> {
+            final Sense<V> result = argmax(inventory.get(entry.getKey()).iterator(), candidate -> {
                 final Map<V, Number> candidateContext = senses.get(candidate);
                 return similarity.apply(context, candidateContext).doubleValue();
             }).get();

@@ -22,6 +22,9 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+/**
+ * This is an utility class that implements a naïve approach for search a local maximum of a function.
+ */
 public interface Maximizer {
     /**
      * A predicate that is always true.
@@ -34,11 +37,11 @@ public interface Maximizer {
     }
 
     /**
-     * This is an utility class that finds an argument of the maxima for certain score function.
+     * This is an utility method that finds an argument of the maxima for certain score function.
      *
      * @param it      finite iterator over the states.
      * @param checker the predicate that checks the suitability of an argument for the scoring.
-     * @param scorer  the evaluation function.
+     * @param scorer  the scoring function.
      * @param <V>     the argument type.
      * @return non-empty optional that contains the first found argmax, otherwise an empty one.
      */
@@ -60,5 +63,18 @@ public interface Maximizer {
         }
 
         return Optional.ofNullable(result);
+    }
+
+    /**
+     * This is a simplified method that finds the argmax.
+     *
+     * @param it     finite iterator over the states.
+     * @param scorer the scoring function.
+     * @param <V>    the argument type.
+     * @return non-empty optional that contains the first found argmax, otherwise an empty one.
+     * @see Maximizer#argmax(Iterator, Predicate, Function)
+     */
+    static <V> Optional<V> argmax(Iterator<V> it, Function<V, Double> scorer) {
+        return argmax(it, alwaysTrue(), scorer);
     }
 }
