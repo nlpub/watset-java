@@ -39,7 +39,7 @@ public class Watset<V, E> implements Clustering<V> {
     private final Function<Graph<V, E>, Clustering<V>> localClusteringProvider;
     private final Function<Graph<Sense<V>, DefaultWeightedEdge>, Clustering<Sense<V>>> globalClusteringProvider;
     private final ContextSimilarity<V> similarity;
-    private final Collection<Collection<Sense<V>>> senseClusters;
+    private Collection<Collection<Sense<V>>> senseClusters;
     private Graph<Sense<V>, DefaultWeightedEdge> senseGraph;
 
     public Watset(Graph<V, E> graph, Function<Graph<V, E>, Clustering<V>> localClusteringProvider, Function<Graph<Sense<V>, DefaultWeightedEdge>, Clustering<Sense<V>>> globalClusteringProvider, ContextSimilarity<V> similarity) {
@@ -47,13 +47,13 @@ public class Watset<V, E> implements Clustering<V> {
         this.localClusteringProvider = localClusteringProvider;
         this.globalClusteringProvider = globalClusteringProvider;
         this.similarity = similarity;
-        this.senseClusters = new HashSet<>();
+        this.senseClusters = null;
         this.senseGraph = null;
     }
 
     @Override
     public void run() {
-        this.senseClusters.clear();
+        this.senseClusters = null;
         this.senseGraph = null;
 
         final Map<V, Set<Sense<V>>> inventory = new ConcurrentHashMap<>();
@@ -78,7 +78,7 @@ public class Watset<V, E> implements Clustering<V> {
         final Clustering<Sense<V>> globalClustering = this.globalClusteringProvider.apply(senseGraph);
         globalClustering.run();
 
-        this.senseClusters.addAll(globalClustering.getClusters());
+        this.senseClusters = globalClustering.getClusters();
     }
 
     @Override

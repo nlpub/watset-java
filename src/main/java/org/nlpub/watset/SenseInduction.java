@@ -32,19 +32,19 @@ public class SenseInduction<V, E> implements Runnable {
     protected final V target;
     protected final Function<Graph<V, E>, Clustering<V>> clusteringProvider;
     protected final int radius;
-    protected final Collection<Collection<V>> clusters;
+    protected Collection<Collection<V>> clusters;
 
     public SenseInduction(Graph<V, E> graph, V target, Function<Graph<V, E>, Clustering<V>> clusteringProvider, int radius) {
         this.graph = graph;
         this.target = target;
         this.clusteringProvider = clusteringProvider;
         this.radius = radius;
-        this.clusters = new HashSet<>();
+        this.clusters = null;
     }
 
     @Override
     public void run() {
-        clusters.clear();
+        this.clusters = null;
 
         final Set<V> neighborhood = Neighbors.neighborSetOf(graph, target);
 
@@ -53,7 +53,7 @@ public class SenseInduction<V, E> implements Runnable {
         final Clustering<V> clustering = clusteringProvider.apply(ego);
         clustering.run();
 
-        clusters.addAll(clustering.getClusters());
+        this.clusters = clustering.getClusters();
     }
 
     public Map<Sense<V>, Map<V, Number>> getSenses() {

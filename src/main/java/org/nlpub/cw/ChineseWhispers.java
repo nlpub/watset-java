@@ -30,13 +30,13 @@ public class ChineseWhispers<V, E> implements Clustering<V> {
     protected final Graph<V, E> graph;
     protected final NodeSelector<V, E> nodeSelector;
     protected final Integer iterations;
-    protected final Map<V, Integer> labels;
+    protected Map<V, Integer> labels;
 
     public ChineseWhispers(Graph<V, E> graph, NodeSelector<V, E> nodeSelector, Integer iterations) {
         this.graph = graph;
         this.nodeSelector = nodeSelector;
         this.iterations = iterations;
-        this.labels = new HashMap<>();
+        this.labels = null;
     }
 
     public ChineseWhispers(Graph<V, E> graph, NodeSelector<V, E> nodeSelector) {
@@ -47,9 +47,15 @@ public class ChineseWhispers<V, E> implements Clustering<V> {
     public void run() {
         final List<V> nodes = new ArrayList<>(graph.vertexSet());
 
-        initializeLabels();
+        this.labels = new HashMap<>(nodes.size());
 
-        for (int i = 0; i < this.iterations; i++) {
+        int i = 0;
+
+        for (final V node : this.graph.vertexSet()) {
+            this.labels.put(node, i++);
+        }
+
+        for (i = 0; i < this.iterations; i++) {
             boolean changed = false;
 
             Collections.shuffle(nodes);
@@ -82,15 +88,5 @@ public class ChineseWhispers<V, E> implements Clustering<V> {
         }
 
         return clusters;
-    }
-
-    private void initializeLabels() {
-        this.labels.clear();
-
-        int i = 0;
-
-        for (final V node : this.graph.vertexSet()) {
-            this.labels.put(node, i++);
-        }
     }
 }
