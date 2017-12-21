@@ -19,12 +19,13 @@ package org.nlpub.watset;
 
 import org.jgrapht.Graph;
 import org.jgrapht.graph.AsSubgraph;
-import org.jgrapht.traverse.ClosestFirstIterator;
 import org.nlpub.graph.Clustering;
+import org.nlpub.util.Neighbors;
+import org.nlpub.watset.sense.IndexedSense;
+import org.nlpub.watset.sense.Sense;
 
 import java.util.*;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class SenseInduction<V, E> implements Runnable {
     protected final Graph<V, E> graph;
@@ -45,13 +46,9 @@ public class SenseInduction<V, E> implements Runnable {
     public void run() {
         clusters.clear();
 
-        final Set<V> neighborhood = new HashSet<>();
+        final Set<V> neighborhood = Neighbors.neighborSetOf(graph, target);
 
-        final ClosestFirstIterator<V, E> it = new ClosestFirstIterator<>(graph, target, radius);
-        it.forEachRemaining(neighborhood::add);
-        neighborhood.remove(this.target);
-
-        final Graph<V, E> ego = new AsSubgraph<>(graph, neighborhood);
+        final Graph<V, E> ego = new AsSubgraph<>(graph, new HashSet<>(neighborhood));
 
         final Clustering<V> clustering = clusteringProvider.apply(ego);
         clustering.run();
@@ -59,18 +56,19 @@ public class SenseInduction<V, E> implements Runnable {
         clusters.addAll(clustering.getClusters());
     }
 
-    public Map<Integer, Map<V, Number>> getSenses() {
+    public Map<Sense<V>, Map<V, Number>> getSenses() {
         int i = 0;
 
-        final Map<Integer, Map<V, Number>> senses = new HashMap<>();
+        final Map<Sense<V>, Map<V, Number>> senses = new HashMap<>();
 
-        for (Collection<V> cluster : clusters) {
-            final Map<V, Number> bag = cluster.stream().collect(Collectors.toMap(
-                    Function.identity(),
-                    neighbor -> graph.getEdgeWeight(graph.getEdge(this.target, neighbor))
-            ));
+        for (final Collection<V> cluster : clusters) {
+            final Map<V, Number> context = new HashMap<>();
 
-            senses.put(i++, bag);
+            for (final V neighbor : cluster) {
+                context.put(neighbor, this.graph.getEdgeWeight(this.graph.getEdge(this.target, neighbor)));
+            }
+
+            senses.put(new IndexedSense<>(this.target, i++), context);
         }
 
         return senses;

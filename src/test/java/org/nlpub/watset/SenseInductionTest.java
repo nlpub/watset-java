@@ -25,7 +25,7 @@ import org.junit.Test;
 import org.nlpub.cw.ChineseWhispers;
 import org.nlpub.cw.weighting.ChrisWeighting;
 import org.nlpub.graph.Clustering;
-import org.nlpub.watset.SenseInduction;
+import org.nlpub.watset.sense.Sense;
 
 import java.util.Map;
 import java.util.function.Function;
@@ -35,16 +35,16 @@ import static org.junit.Assert.assertEquals;
 public class SenseInductionTest {
     final static Graph<String, DefaultWeightedEdge> WORDS = SimpleWeightedGraph.<String, DefaultWeightedEdge>createBuilder(DefaultWeightedEdge.class).
             addVertices("a", "b", "c", "d", "e", "f", "g").
-            addEdge("a", "b").
-            addEdge("a", "c").
+            addEdge("a", "b", 10).
+            addEdge("a", "c", .5).
             addEdge("a", "d").
-            addEdge("a", "e").
+            addEdge("a", "e", .4).
             addEdge("a", "f").
             addEdge("a", "g").
-            addEdge("b", "c").
+            addEdge("b", "c", 3).
             addEdge("b", "d").
             addEdge("c", "d").
-            addEdge("e", "f").
+            addEdge("e", "f", .25).
             build();
 
     private final static Function<Graph<String, DefaultWeightedEdge>, Clustering<String>> provider = (graph) -> new ChineseWhispers<>(graph, new ChrisWeighting<>());
@@ -57,8 +57,8 @@ public class SenseInductionTest {
     }
 
     @Test
-    public void getSenses() {
-        final Map<Integer, Map<String, Number>> senses = senseInduction.getSenses();
+    public void getSensesA() {
+        final Map<Sense<String>, Map<String, Number>> senses = senseInduction.getSenses();
         assertEquals(3, senses.size());
     }
 }

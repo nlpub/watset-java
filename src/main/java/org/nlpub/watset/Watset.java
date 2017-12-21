@@ -23,7 +23,6 @@ import org.jgrapht.graph.SimpleWeightedGraph;
 import org.jgrapht.graph.builder.GraphBuilder;
 import org.nlpub.graph.Clustering;
 import org.nlpub.vsm.ContextSimilarity;
-import org.nlpub.watset.sense.IndexedSense;
 import org.nlpub.watset.sense.Sense;
 
 import java.util.*;
@@ -90,17 +89,10 @@ public class Watset<V, E> implements Clustering<V> {
     }
 
     protected Map<Sense<V>, Map<V, Number>> induceSenses(V target) {
-        final Map<Sense<V>, Map<V, Number>> senses = new HashMap<>();
-
         final SenseInduction<V, E> inducer = new SenseInduction<>(graph, target, this.localClusteringProvider, 1);
         inducer.run();
 
-        for (Map.Entry<Integer, Map<V, Number>> entry : inducer.getSenses().entrySet()) {
-            final Sense<V> sense = new IndexedSense<>(target, entry.getKey());
-            senses.put(sense, entry.getValue());
-        }
-
-        return senses;
+        return inducer.getSenses();
     }
 
     protected Map<Sense<V>, Number> disambiguateContext(Map<V, Set<Sense<V>>> inventory, Map<Sense<V>, Map<V, Number>> senses, Sense<V> sense) {
@@ -112,12 +104,16 @@ public class Watset<V, E> implements Clustering<V> {
         for (final Map.Entry<V, Number> entry : context.entrySet()) {
             if (sense.get().equals(entry.getKey())) continue;
 
-            final Sense<V> result = argmax(inventory.get(entry.getKey()).iterator(), candidate -> {
+            final Optional<Sense<V>> result = argmax(inventory.get(entry.getKey()).iterator(), candidate -> {
                 final Map<V, Number> candidateContext = senses.get(candidate);
                 return similarity.apply(context, candidateContext).doubleValue();
-            }).get();
+            });
 
-            dcontext.put(result, entry.getValue());
+            if (result.isPresent()) {
+                dcontext.put(result.get(), entry.getValue());
+            } else {
+                throw new IllegalArgumentException("Cannot find the sense for the word in context.");
+            }
         }
 
         return dcontext;

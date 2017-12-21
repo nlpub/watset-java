@@ -15,23 +15,25 @@
  *
  */
 
-package org.nlpub.cw.weighting;
+package org.nlpub.util;
 
 import org.jgrapht.Graph;
-import org.nlpub.util.Neighbors;
+import org.jgrapht.Graphs;
 
 import java.util.Iterator;
-import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-import static org.nlpub.util.Maximizer.argmax;
-
-public abstract class NeighborhoodWeighting<V, E> implements NodeSelector<V, E> {
-    @Override
-    public Optional<V> apply(Graph<V, E> graph, V node) {
-        final Iterator<V> neighbors = Neighbors.neighborInterator(graph, node);
-        final Optional<V> result = argmax(neighbors, neighbor -> !(node == neighbor), neighbor -> getScore(graph, node, neighbor));
-        return result;
+public interface Neighbors {
+    static <V, E> Iterator<V> neighborInterator(Graph<V, E> graph, V node) {
+        return graph.edgesOf(node).stream().
+                map(e -> Graphs.getOppositeVertex(graph, e, node)).
+                iterator();
     }
 
-    protected abstract double getScore(Graph<V, E> graph, V node, V neighbor);
+    static <V, E> Set<V> neighborSetOf(Graph<V, E> graph, V node) {
+        return graph.edgesOf(node).stream().
+                map(e -> Graphs.getOppositeVertex(graph, e, node)).
+                collect(Collectors.toSet());
+    }
 }
