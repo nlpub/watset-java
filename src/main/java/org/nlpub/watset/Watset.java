@@ -47,8 +47,6 @@ public class Watset<V, E> implements Clustering<V> {
         this.localClusteringProvider = localClusteringProvider;
         this.globalClusteringProvider = globalClusteringProvider;
         this.similarity = similarity;
-        this.senseClusters = null;
-        this.senseGraph = null;
     }
 
     @Override
@@ -56,22 +54,15 @@ public class Watset<V, E> implements Clustering<V> {
         this.senseClusters = null;
         this.senseGraph = null;
 
-        final Map<V, Set<Sense<V>>> inventory = new ConcurrentHashMap<>();
-        final Map<Sense<V>, Map<V, Number>> senses = new ConcurrentHashMap<>();
-
-        graph.vertexSet().parallelStream().forEach(node -> {
-            final Map<Sense<V>, Map<V, Number>> induced = induceSenses(node);
-            inventory.put(node, induced.keySet());
-            senses.putAll(induced);
-        });
+        final Map<V, Map<Sense<V>, Map<V, Number>>> inventory = graph.vertexSet().parallelStream().
+                collect(Collectors.toMap(Function.identity(), this::induceSenses));
 
         final Map<Sense<V>, Map<Sense<V>, Number>> contexts = new ConcurrentHashMap<>();
 
-        inventory.entrySet().parallelStream().forEach(entry -> {
-            for (final Sense<V> sense : entry.getValue()) {
-                contexts.put(sense, disambiguateContext(inventory, senses, sense));
-            }
-        });
+        inventory.entrySet().parallelStream().forEach(wordSenses ->
+                wordSenses.getValue().forEach((sense, context) ->
+                        contexts.put(sense, disambiguateContext(inventory, sense)))
+        );
 
         this.senseGraph = buildSenseGraph(contexts);
 
@@ -88,6 +79,14 @@ public class Watset<V, E> implements Clustering<V> {
                 collect(Collectors.toSet());
     }
 
+    public Graph<Sense<V>, DefaultWeightedEdge> getSenseGraph() {
+        if (Objects.isNull(senseGraph)) {
+            throw new IllegalStateException("The sense graph is not yet initialized.");
+        }
+
+        return senseGraph;
+    }
+
     protected Map<Sense<V>, Map<V, Number>> induceSenses(V target) {
         final SenseInduction<V, E> inducer = new SenseInduction<>(graph, target, this.localClusteringProvider);
         inducer.run();
@@ -95,17 +94,19 @@ public class Watset<V, E> implements Clustering<V> {
         return inducer.getSenses();
     }
 
-    protected Map<Sense<V>, Number> disambiguateContext(Map<V, Set<Sense<V>>> inventory, Map<Sense<V>, Map<V, Number>> senses, Sense<V> sense) {
-        final Map<V, Number> context = new HashMap<>(senses.get(sense));
+    protected Map<Sense<V>, Number> disambiguateContext(Map<V, Map<Sense<V>, Map<V, Number>>> inventory, Sense<V> sense) {
+        final Map<V, Number> context = new HashMap<>(inventory.get(sense.get()).get(sense));
         context.put(sense.get(), DEFAULT_CONTEXT_WEIGHT);
 
         final Map<Sense<V>, Number> dcontext = new HashMap<>();
 
         for (final Map.Entry<V, Number> entry : context.entrySet()) {
-            if (sense.get().equals(entry.getKey())) continue;
+            final V target = entry.getKey();
 
-            final Optional<Sense<V>> result = argmax(inventory.get(entry.getKey()).iterator(), candidate -> {
-                final Map<V, Number> candidateContext = senses.get(candidate);
+            if (sense.get().equals(target)) continue;
+
+            final Optional<Sense<V>> result = argmax(inventory.get(target).keySet().iterator(), candidate -> {
+                final Map<V, Number> candidateContext = inventory.get(target).get(candidate);
                 return similarity.apply(context, candidateContext).doubleValue();
             });
 
@@ -124,7 +125,9 @@ public class Watset<V, E> implements Clustering<V> {
 
         contexts.keySet().forEach(builder::addVertex);
 
-        contexts.forEach((sense, context) -> context.forEach((target, weight) -> builder.addEdge(sense, target, weight.doubleValue())));
+        contexts.forEach((source, context) ->
+                context.forEach((target, weight) ->
+                        builder.addEdge(source, target, weight.doubleValue())));
 
         return builder.build();
     }
