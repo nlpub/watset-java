@@ -19,17 +19,16 @@ package org.nlpub.cw.weighting;
 
 import org.jgrapht.Graph;
 import org.jgrapht.traverse.ClosestFirstIterator;
-import org.nlpub.util.Maximizer;
 
 import java.util.Optional;
 
-import static java.util.Objects.requireNonNull;
+import static org.nlpub.util.Maximizer.argmax;
 
 public abstract class NeighborhoodWeighting<V, E> implements NodeSelector<V, E> {
     @Override
     public Optional<V> apply(Graph<V, E> graph, V node) {
         final ClosestFirstIterator<V, ?> it = new ClosestFirstIterator<>(graph, node, 1);
-        final Optional<V> result = Maximizer.maximize(it, neighbor -> !(node == neighbor), neighbor -> getScore(graph, node, neighbor));
+        final Optional<V> result = argmax(it, neighbor -> !(node == neighbor), neighbor -> getScore(graph, node, neighbor));
         return result;
     }
 

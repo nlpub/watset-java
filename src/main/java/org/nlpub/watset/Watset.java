@@ -22,7 +22,6 @@ import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
 import org.jgrapht.graph.builder.GraphBuilder;
 import org.nlpub.graph.Clustering;
-import org.nlpub.util.Maximizer;
 import org.nlpub.vsm.ContextSimilarity;
 import org.nlpub.watset.sense.IndexedSense;
 import org.nlpub.watset.sense.Sense;
@@ -31,6 +30,8 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static org.nlpub.util.Maximizer.argmax;
 
 public class Watset<V, E> implements Clustering<V> {
     final static Number DEFAULT_CONTEXT_WEIGHT = 1;
@@ -111,7 +112,7 @@ public class Watset<V, E> implements Clustering<V> {
         for (final Map.Entry<V, Number> entry : context.entrySet()) {
             if (sense.get().equals(entry.getKey())) continue;
 
-            final Sense<V> result = Maximizer.maximize(inventory.get(entry.getKey()).iterator(), candidate -> true, candidate -> {
+            final Sense<V> result = argmax(inventory.get(entry.getKey()).iterator(), candidate -> true, candidate -> {
                 final Map<V, Number> candidateContext = senses.get(candidate);
                 return similarity.apply(context, candidateContext).doubleValue();
             }).get();

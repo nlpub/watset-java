@@ -23,7 +23,16 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 public interface Maximizer {
-    static <V> Optional<V> maximize(Iterator<V> it, Predicate<V> checker, Function<V, Double> scorer) {
+    /**
+     * This is an utility class that finds an argument of the maxima for certain score function.
+     *
+     * @param it      finite iterator over the states.
+     * @param checker the predicate that checks the suitability of an argument for the scoring.
+     * @param scorer  the evaluation function.
+     * @param <V>     the argument type.
+     * @return non-empty optional that contains the first found argmax, otherwise an empty one.
+     */
+    static <V> Optional<V> argmax(Iterator<V> it, Predicate<V> checker, Function<V, Double> scorer) {
         V result = null;
         double score = Double.NEGATIVE_INFINITY;
 
