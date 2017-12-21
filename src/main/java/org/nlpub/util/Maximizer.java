@@ -24,6 +24,16 @@ import java.util.function.Predicate;
 
 public interface Maximizer {
     /**
+     * A predicate that is always true.
+     *
+     * @param <T> the type.
+     * @return the absolute truth.
+     */
+    static <T> Predicate<T> alwaysTrue() {
+        return (o) -> true;
+    }
+
+    /**
      * This is an utility class that finds an argument of the maxima for certain score function.
      *
      * @param it      finite iterator over the states.
