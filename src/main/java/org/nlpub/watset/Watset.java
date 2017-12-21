@@ -124,8 +124,7 @@ public class Watset<V, E> implements Clustering<V> {
 
         contexts.keySet().forEach(builder::addVertex);
 
-        contexts.entrySet().forEach(context -> context.getValue().entrySet().
-                forEach(sense -> builder.addEdge(context.getKey(), sense.getKey(), sense.getValue().doubleValue())));
+        contexts.forEach((sense, context) -> context.forEach((target, weight) -> builder.addEdge(sense, target, weight.doubleValue())));
 
         return builder.build();
     }

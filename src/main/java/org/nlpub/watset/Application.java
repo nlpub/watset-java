@@ -88,6 +88,9 @@ abstract class Application {
             };
 
             algorithm = new Watset<>(graph, localClusteringProvider, globalClusteringProvider, new ContextCosineSimilarity<>());
+        } else {
+            System.err.println("No method selected.");
+            System.exit(1);
         }
 
         algorithm.run();

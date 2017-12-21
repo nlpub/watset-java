@@ -29,8 +29,7 @@ public abstract class NeighborhoodWeighting<V, E> implements NodeSelector<V, E> 
     @Override
     public Optional<V> apply(Graph<V, E> graph, V node) {
         final Iterator<V> neighbors = Neighbors.neighborInterator(graph, node);
-        final Optional<V> result = argmax(neighbors, neighbor -> !(node == neighbor), neighbor -> getScore(graph, node, neighbor));
-        return result;
+        return argmax(neighbors, neighbor -> !(node == neighbor), neighbor -> getScore(graph, node, neighbor));
     }
 
     protected abstract double getScore(Graph<V, E> graph, V node, V neighbor);

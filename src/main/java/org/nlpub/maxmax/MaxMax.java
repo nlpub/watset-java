@@ -101,7 +101,7 @@ public class MaxMax<V> implements Clustering<V> {
     public Collection<Collection<V>> getClusters() {
         final Set<V> roots = this.roots.entrySet().stream().filter(Map.Entry::getValue).map(Map.Entry::getKey).collect(Collectors.toSet());
 
-        final Set<Collection<V>> clusters = roots.stream().map(root -> {
+        return roots.stream().map(root -> {
             final Set<V> visited = new HashSet<>();
 
             final Queue<V> queue = new LinkedList<>();
@@ -116,7 +116,5 @@ public class MaxMax<V> implements Clustering<V> {
 
             return visited;
         }).collect(Collectors.toSet());
-
-        return clusters;
     }
 }

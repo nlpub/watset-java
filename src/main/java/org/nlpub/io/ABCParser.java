@@ -26,7 +26,7 @@ import java.util.stream.Stream;
 
 public interface ABCParser {
     static Graph<String, DefaultWeightedEdge> parse(Stream<String> stream) {
-        final GraphBuilder<String, DefaultWeightedEdge, ? extends SimpleWeightedGraph<String, DefaultWeightedEdge>> builder = SimpleWeightedGraph.<String, DefaultWeightedEdge>createBuilder(DefaultWeightedEdge.class);
+        final GraphBuilder<String, DefaultWeightedEdge, SimpleWeightedGraph<String, DefaultWeightedEdge>> builder = new GraphBuilder<>(new SimpleWeightedGraph<>(DefaultWeightedEdge.class));
 
         stream.forEach(line -> {
             final String[] split = line.split("\t");
