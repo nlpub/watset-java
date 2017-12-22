@@ -28,11 +28,14 @@ import org.nlpub.watset.sense.Sense;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static org.nlpub.util.Maximizer.argmax;
 
 public class Watset<V, E> implements Clustering<V> {
+    private static final Logger logger = Logger.getLogger(Watset.class.getSimpleName());
+
     final static Number DEFAULT_CONTEXT_WEIGHT = 1;
 
     private final Graph<V, E> graph;
@@ -54,8 +57,12 @@ public class Watset<V, E> implements Clustering<V> {
         this.senseClusters = null;
         this.senseGraph = null;
 
+        logger.info("Watset started.");
+
         final Map<V, Map<Sense<V>, Map<V, Number>>> inventory = graph.vertexSet().parallelStream().
                 collect(Collectors.toMap(Function.identity(), this::induceSenses));
+
+        logger.info("Watset: sense inventory constructed.");
 
         final Map<Sense<V>, Map<Sense<V>, Number>> contexts = new ConcurrentHashMap<>();
 
@@ -64,12 +71,20 @@ public class Watset<V, E> implements Clustering<V> {
                         contexts.put(sense, disambiguateContext(inventory, sense)))
         );
 
+        logger.info("Watset: contexts constructed.");
+
         this.senseGraph = buildSenseGraph(contexts);
+
+        logger.info("Watset: sense graph constructed.");
 
         final Clustering<Sense<V>> globalClustering = this.globalClusteringProvider.apply(senseGraph);
         globalClustering.run();
 
+        logger.info("Watset: clustering the sense graph.");
+
         this.senseClusters = globalClustering.getClusters();
+
+        logger.info("Watset finished.");
     }
 
     @Override
