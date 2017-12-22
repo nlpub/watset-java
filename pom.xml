@@ -29,9 +29,9 @@
     <inceptionYear>2016</inceptionYear>
 
     <scm>
-        <connection>scm:git:https://github.com/dustalov/watset-java</connection>
-        <developerConnection>scm:git:ssh://git@github.com:dustalov/watset-java.git</developerConnection>
-        <url>https://github.com/dustalov/watset-java</url>
+        <connection>scm:git:https://github.com/nlpub/watset-java</connection>
+        <developerConnection>scm:git:ssh://git@github.com:nlpub/watset-java.git</developerConnection>
+        <url>https://github.com/nlpub/watset-java</url>
     </scm>
 
     <developers>
