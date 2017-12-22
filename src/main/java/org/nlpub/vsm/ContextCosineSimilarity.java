@@ -20,8 +20,10 @@ package org.nlpub.vsm;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+
+import static org.nlpub.vsm.Vectors.dot;
+import static org.nlpub.vsm.Vectors.norm;
+import static org.nlpub.vsm.Vectors.transform;
 
 public class ContextCosineSimilarity<V> implements ContextSimilarity<V> {
     @Override
@@ -37,17 +39,5 @@ public class ContextCosineSimilarity<V> implements ContextSimilarity<V> {
         if (denominator == 0.) return 0d;
 
         return dot(vec1, vec2) / denominator;
-    }
-
-    protected double dot(Map<V, Number> vec1, Map<V, Number> vec2) {
-        return vec1.entrySet().stream().mapToDouble(e -> e.getValue().doubleValue() * vec2.get(e.getKey()).doubleValue()).sum();
-    }
-
-    protected double norm(Map<V, Number> bag) {
-        return Math.sqrt(bag.values().stream().mapToDouble(weight -> Math.pow(weight.doubleValue(), 2)).sum());
-    }
-
-    protected Map<V, Number> transform(Map<V, Number> bag, Set<V> whitelist) {
-        return whitelist.stream().collect(Collectors.toMap(Function.identity(), key -> bag.getOrDefault(key, 0.d)));
     }
 }
