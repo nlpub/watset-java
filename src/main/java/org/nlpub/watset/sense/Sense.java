@@ -17,7 +17,34 @@
 
 package org.nlpub.watset.sense;
 
+import org.nlpub.vsm.ContextSimilarity;
+
+import java.util.*;
 import java.util.function.Supplier;
 
+import static org.nlpub.util.Maximizer.argmax;
+
 public interface Sense<V> extends Supplier<V> {
+    static <V> Map<Sense<V>, Number> disambiguate(Map<V, Map<Sense<V>, Map<V, Number>>> inventory, ContextSimilarity<V> similarity, Map<V, Number> context, Set<V> ignored) {
+        final Map<Sense<V>, Number> dcontext = new HashMap<>();
+
+        for (final Map.Entry<V, Number> entry : context.entrySet()) {
+            final V target = entry.getKey();
+
+            if (ignored.contains(target)) continue;
+
+            final Optional<Sense<V>> result = argmax(inventory.getOrDefault(target, Collections.emptyMap()).keySet().iterator(), candidate -> {
+                final Map<V, Number> candidateContext = inventory.get(target).get(candidate);
+                return similarity.apply(context, candidateContext).doubleValue();
+            });
+
+            if (result.isPresent()) {
+                dcontext.put(result.get(), entry.getValue());
+            } else {
+                throw new IllegalArgumentException("Cannot find the sense for the word in context.");
+            }
+        }
+
+        return dcontext;
+    }
 }

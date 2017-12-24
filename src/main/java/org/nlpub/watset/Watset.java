@@ -31,17 +31,17 @@ import java.util.function.Function;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import static org.nlpub.util.Maximizer.argmax;
+import static org.nlpub.vsm.ContextSimilarity.DEFAULT_CONTEXT_WEIGHT;
+import static org.nlpub.watset.sense.Sense.disambiguate;
 
 public class Watset<V, E> implements Clustering<V> {
     private static final Logger logger = Logger.getLogger(Watset.class.getSimpleName());
-
-    final static Number DEFAULT_CONTEXT_WEIGHT = 1;
 
     private final Graph<V, E> graph;
     private final Function<Graph<V, E>, Clustering<V>> localClusteringProvider;
     private final Function<Graph<Sense<V>, DefaultWeightedEdge>, Clustering<Sense<V>>> globalClusteringProvider;
     private final ContextSimilarity<V> similarity;
+    private Map<V, Map<Sense<V>, Map<V, Number>>> inventory;
     private Collection<Collection<Sense<V>>> senseClusters;
     private Graph<Sense<V>, DefaultWeightedEdge> senseGraph;
 
@@ -56,10 +56,11 @@ public class Watset<V, E> implements Clustering<V> {
     public void run() {
         this.senseClusters = null;
         this.senseGraph = null;
+        this.inventory = null;
 
         logger.info("Watset started.");
 
-        final Map<V, Map<Sense<V>, Map<V, Number>>> inventory = graph.vertexSet().parallelStream().
+        inventory = graph.vertexSet().parallelStream().
                 collect(Collectors.toMap(Function.identity(), this::induceSenses));
 
         logger.info("Watset: sense inventory constructed.");
@@ -94,6 +95,14 @@ public class Watset<V, E> implements Clustering<V> {
                 collect(Collectors.toSet());
     }
 
+    public Map<V, Map<Sense<V>, Map<V, Number>>> getInventory() {
+        if (Objects.isNull(inventory)) {
+            throw new IllegalStateException("The sense inventory is not yet initialized.");
+        }
+
+        return inventory;
+    }
+
     public Graph<Sense<V>, DefaultWeightedEdge> getSenseGraph() {
         if (Objects.isNull(senseGraph)) {
             throw new IllegalStateException("The sense graph is not yet initialized.");
@@ -113,26 +122,7 @@ public class Watset<V, E> implements Clustering<V> {
         final Map<V, Number> context = new HashMap<>(inventory.get(sense.get()).get(sense));
         context.put(sense.get(), DEFAULT_CONTEXT_WEIGHT);
 
-        final Map<Sense<V>, Number> dcontext = new HashMap<>();
-
-        for (final Map.Entry<V, Number> entry : context.entrySet()) {
-            final V target = entry.getKey();
-
-            if (sense.get().equals(target)) continue;
-
-            final Optional<Sense<V>> result = argmax(inventory.get(target).keySet().iterator(), candidate -> {
-                final Map<V, Number> candidateContext = inventory.get(target).get(candidate);
-                return similarity.apply(context, candidateContext).doubleValue();
-            });
-
-            if (result.isPresent()) {
-                dcontext.put(result.get(), entry.getValue());
-            } else {
-                throw new IllegalArgumentException("Cannot find the sense for the word in context.");
-            }
-        }
-
-        return dcontext;
+        return disambiguate(inventory, similarity, context, Collections.singleton(sense.get()));
     }
 
     protected Graph<Sense<V>, DefaultWeightedEdge> buildSenseGraph(Map<Sense<V>, Map<Sense<V>, Number>> contexts) {

@@ -17,35 +17,41 @@
 
 package org.nlpub.watset;
 
-import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.junit.Before;
 import org.junit.Test;
-import org.nlpub.cw.ChineseWhispers;
-import org.nlpub.cw.weighting.ChrisWeighting;
-import org.nlpub.graph.Clustering;
 import org.nlpub.vsm.ContextCosineSimilarity;
+import org.nlpub.watset.sense.IndexedSense;
 import org.nlpub.watset.sense.Sense;
 
-import java.util.Collection;
-import java.util.function.Function;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.nlpub.watset.SenseInductionTest.WORDS;
+import static org.nlpub.watset.WatsetTest.globalClusteringProvider;
+import static org.nlpub.watset.WatsetTest.localClusteringProvider;
 
-public class WatsetTest {
-    final static Function<Graph<String, DefaultWeightedEdge>, Clustering<String>> localClusteringProvider = ego -> new ChineseWhispers<>(ego, new ChrisWeighting<>());
-    final static Function<Graph<Sense<String>, DefaultWeightedEdge>, Clustering<Sense<String>>> globalClusteringProvider = ego -> new ChineseWhispers<>(ego, new ChrisWeighting<>());
+public class WatlinkTest {
     final static Watset<String, DefaultWeightedEdge> watset = new Watset<>(WORDS, localClusteringProvider, globalClusteringProvider, new ContextCosineSimilarity<>());
 
+    final static Map<String, Collection<String>> hypernyms = new HashMap<String, Collection<String>>() {{
+        put("a", Arrays.asList("e", "f"));
+        put("b", Arrays.asList("e", "g"));
+    }};
+
+    private Watlink<String> watlink;
+
     @Before
-    void setup() {
+    public void setup() {
         watset.run();
+        watlink = new Watlink<>(watset.getInventory(), new ContextCosineSimilarity<>(), 1);
     }
 
     @Test
-    void testClustering() {
-        final Collection<Collection<String>> clusters = watset.getClusters();
-        assertEquals(3, clusters.size());
+    public void testRetrieval() {
+        final Map<Sense<String>, Number> context = watlink.retrieve(Arrays.asList("a", "b", "c"), hypernyms);
+        final Sense<String> gold = IndexedSense.of("e", 0);
+        assertEquals(Collections.singleton(gold), context.keySet());
+        assertEquals(2, context.get(gold));
     }
 }

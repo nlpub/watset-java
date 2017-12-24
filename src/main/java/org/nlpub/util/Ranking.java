@@ -15,10 +15,15 @@
  *
  */
 
-package org.nlpub.vsm;
+package org.nlpub.util;
 
 import java.util.Map;
+import java.util.stream.Collectors;
 
-public interface ContextSimilarity<V> extends Similarity<Map<V, Number>> {
-    Number DEFAULT_CONTEXT_WEIGHT = 1;
+public interface Ranking {
+    static <V> Map<V, Number> getTopK(Map<V, Number> vector, long k) {
+        return vector.entrySet().stream().
+                sorted((e1, e2) -> Double.compare(e2.getValue().doubleValue(), e1.getValue().doubleValue())).limit(k).
+                collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
 }

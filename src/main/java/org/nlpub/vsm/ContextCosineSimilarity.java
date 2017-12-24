@@ -21,9 +21,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import static org.nlpub.vsm.Vectors.dot;
-import static org.nlpub.vsm.Vectors.norm;
-import static org.nlpub.vsm.Vectors.transform;
+import static org.nlpub.vsm.Vectors.*;
 
 public class ContextCosineSimilarity<V> implements ContextSimilarity<V> {
     @Override
