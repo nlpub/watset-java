@@ -39,12 +39,12 @@ public class WatsetTest {
     final static Watset<String, DefaultWeightedEdge> watset = new Watset<>(WORDS, localClusteringProvider, globalClusteringProvider, new ContextCosineSimilarity<>());
 
     @Before
-    void setup() {
+    public void setup() {
         watset.run();
     }
 
     @Test
-    void testClustering() {
+    public void testClustering() {
         final Collection<Collection<String>> clusters = watset.getClusters();
         assertEquals(3, clusters.size());
     }

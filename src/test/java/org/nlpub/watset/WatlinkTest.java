@@ -52,6 +52,6 @@ public class WatlinkTest {
         final Map<Sense<String>, Number> context = watlink.retrieve(Arrays.asList("a", "b", "c"), hypernyms);
         final Sense<String> gold = IndexedSense.of("e", 0);
         assertEquals(Collections.singleton(gold), context.keySet());
-        assertEquals(2, context.get(gold));
+        assertEquals(2, context.get(gold).intValue());
     }
 }
