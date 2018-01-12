@@ -25,6 +25,7 @@ import org.nlpub.cw.weighting.*;
 import org.nlpub.graph.Clustering;
 import org.nlpub.io.ABCParser;
 import org.nlpub.maxmax.MaxMax;
+import org.nlpub.mcl.MarkovClustering;
 import org.nlpub.vsm.ContextCosineSimilarity;
 import org.nlpub.watset.sense.Sense;
 
@@ -67,6 +68,11 @@ abstract class Application {
 
         if (cmd.getOptionValue("method").equalsIgnoreCase("maxmax")) {
             algorithm = new MaxMax<>(graph);
+        } else if (cmd.getOptionValue("method").equalsIgnoreCase("mcl")) {
+            final Function<Graph<String, DefaultWeightedEdge>, Clustering<String>> globalClusteringProvider =
+                    global -> new MarkovClustering<>(global, 2, 2);
+
+            algorithm = globalClusteringProvider.apply(graph);
         } else if (cmd.getOptionValue("method").equalsIgnoreCase("cw")) {
             final Function<Graph<String, DefaultWeightedEdge>, Clustering<String>> globalClusteringProvider = global -> {
                 final NodeSelector<String, DefaultWeightedEdge> globalNodeSelector = parseNodeWeighting(globalNodeWeightingOption);
