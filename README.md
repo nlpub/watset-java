@@ -58,7 +58,7 @@ This implementation is not optimized, so the processing of large graphs will lik
 Watset requires two different clustering algorithms to be selected: the *local* clustering algorithm for sense induction that is specified using `-l` (`--local`) and the *global* algorithm for the final clustering that is specified using `-g` (`--global`). It is possible to configure the algorithms using the similar options as shown above using the `-lp` (`--local-params`) and `-gp` (`--global-params`) options. Multiple parameters should be separated with ampersand.
 
 ```bash
-$ java -jar watset.jar -i graph.txt -o output.tsv watset -l mcl -lp e=1&r=3 -g cw -gp mode=nolog
+$ java -jar watset.jar -i graph.txt -o output.tsv watset -l mcl -lp 'e=1&r=3' -g cw -gp mode=nolog
 ```
 
 In practice, the default parameters for MCL work well enough, so the `-lp` argument can be omitted in this example.
