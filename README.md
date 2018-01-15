@@ -13,7 +13,7 @@ This package, written in Java, also includes implementations of the [Chinese Whi
 
 There are two ways to obtain `watset-java`:
 
-1. to download the [recently released version](https://github.com/nlpub/watset-java/releases);
+1. to download the [recently released version](https://github.com/nlpub/watset-java/releases) (look at the `watset.jar` file in the Assets section);
 
 2. to compile the `master` branch from source by cloning the [repository](https://github.com/nlpub/watset-java) and running `mvn package` in the repository root.
 
