@@ -30,7 +30,7 @@
 
     <scm>
         <connection>scm:git:https://github.com/nlpub/watset-java</connection>
-        <developerConnection>scm:git:ssh://git@github.com:nlpub/watset-java.git</developerConnection>
+        <developerConnection>scm:git:git@github.com:nlpub/watset-java.git</developerConnection>
         <url>https://github.com/nlpub/watset-java</url>
     </scm>
 
