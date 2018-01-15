@@ -1,6 +1,6 @@
 # Watset
 
-This is an open source implementation of the [Watset] algorithm for fuzzy graph clustering (aka [soft clustering](https://en.wikipedia.org/wiki/Soft_clustering)).
+This is an open source implementation of the [Watset] algorithm for fuzzy graph clustering (aka [soft clustering](https://en.wikipedia.org/wiki/Soft_clustering)). The implementation is multi-threaded, extensible, contains several unit tests, and can be easily embedded into any Java-based graph processing pipeline. Also, it offers a convenient command-line tool for running [Watset] over the edge lists in text files.
 
 This package, written in Java, also includes implementations of the [Chinese Whispers] (2006), [Markov Clustering], and [MaxMax] (2013) graph clustering algorithms.
 
@@ -13,7 +13,7 @@ This package, written in Java, also includes implementations of the [Chinese Whi
 
 There are two ways to obtain `watset-java`:
 
-1. to download the [recently released version](https://github.com/nlpub/watset-java/releases) (look at the `watset.jar` file in the Assets section);
+1. to download the [recently released version](https://github.com/nlpub/watset-java/releases/latest) (look at the `watset.jar` file in the Assets section);
 
 2. to compile the `master` branch from source by cloning the [repository](https://github.com/nlpub/watset-java) and running `mvn package` in the repository root.
 
