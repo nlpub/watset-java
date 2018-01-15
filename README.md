@@ -111,8 +111,8 @@ $ java -jar watset.jar -i graph.txt -o output.tsv maxmax
 
 Copyright (c) 2016-2018 [Dmitry Ustalov]. See LICENSE for details.
 
-[Watset](https://doi.org/10.18653/v1/P17-1145)
-[Chinese Whispers](https://dl.acm.org/citation.cfm?id=1654774)
-[Markov Clustering](https://doi.org/10.1137/040608635)
-[MaxMax](https://doi.org/10.1007/978-3-642-37247-6_30)
+[Watset]: https://doi.org/10.18653/v1/P17-1145
+[Chinese Whispers]: https://dl.acm.org/citation.cfm?id=1654774
+[Markov Clustering]: https://doi.org/10.1137/040608635
+[MaxMax]: https://doi.org/10.1007/978-3-642-37247-6_30
 [Dmitry Ustalov]: https://ustalov.com/
