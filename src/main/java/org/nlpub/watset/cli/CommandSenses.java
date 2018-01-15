@@ -24,6 +24,7 @@ import org.nlpub.graph.DummyClustering;
 import org.nlpub.vsm.DummyContextSimilarity;
 import org.nlpub.watset.Application;
 import org.nlpub.watset.Watset;
+import org.nlpub.watset.sense.IndexedSense;
 import org.nlpub.watset.sense.Sense;
 
 import java.io.BufferedWriter;
@@ -77,13 +78,14 @@ public class CommandSenses implements Runnable {
         try (final BufferedWriter writer = Files.newBufferedWriter(path)) {
             for (final Map.Entry<String, Map<Sense<String>, Map<String, Number>>> wordEntry : inventory.entrySet()) {
                 final String word = wordEntry.getKey();
-                int i = 0;
 
                 for (final Map.Entry<Sense<String>, Map<String, Number>> senseEntry : wordEntry.getValue().entrySet()) {
+                    final IndexedSense<String> sense = (IndexedSense<String>) senseEntry.getKey();
+
                     final String context = senseEntry.getValue().entrySet().stream().
                             map(e -> String.format("%s:%f", e.getKey(), e.getValue().doubleValue())).
                             collect(joining(","));
-                    writer.write(String.format(Locale.ROOT, "%s\t%d\t%s\n", word, i++, context));
+                    writer.write(String.format(Locale.ROOT, "%s\t%d\t%s\n", word, sense.getSense(), context));
                 }
             }
         }
