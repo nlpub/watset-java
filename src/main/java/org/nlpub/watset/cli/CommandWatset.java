@@ -21,11 +21,17 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
-import org.nlpub.graph.Clustering;
 import org.nlpub.vsm.ContextCosineSimilarity;
 import org.nlpub.watset.Application;
 import org.nlpub.watset.Watset;
+import org.nlpub.watset.sense.IndexedSense;
 import org.nlpub.watset.sense.Sense;
+
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Locale;
 
 @Parameters(commandDescription = "Watset")
 public class CommandWatset extends ClusteringCommand {
@@ -46,7 +52,7 @@ public class CommandWatset extends ClusteringCommand {
     }
 
     @Override
-    public Clustering<String> getClustering() {
+    public Watset<String, DefaultWeightedEdge> getClustering() {
         final AlgorithmProvider<String, DefaultWeightedEdge> localAlgorithm = new AlgorithmProvider<>(local, localParams);
         final AlgorithmProvider<Sense<String>, DefaultWeightedEdge> globalAlgorithm = new AlgorithmProvider<>(global, globalParams);
 
@@ -56,5 +62,35 @@ public class CommandWatset extends ClusteringCommand {
                 graph, localAlgorithm, globalAlgorithm,
                 new ContextCosineSimilarity<>()
         );
+    }
+
+    @Override
+    public void run() {
+        if (!global.equalsIgnoreCase("dummy")) {
+            super.run();
+            return;
+        }
+
+        final Watset<String, DefaultWeightedEdge> watset = getClustering();
+        watset.run();
+
+        try {
+            write(application.output, watset.getSenseGraph());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void write(Path path, Graph<Sense<String>, DefaultWeightedEdge> graph) throws IOException {
+        try (final BufferedWriter writer = Files.newBufferedWriter(path)) {
+            for (final DefaultWeightedEdge edge : graph.edgeSet()) {
+                final IndexedSense<String> source = (IndexedSense<String>) graph.getEdgeSource(edge);
+                final IndexedSense<String> target = (IndexedSense<String>) graph.getEdgeTarget(edge);
+                writer.write(String.format(Locale.ROOT, "%s#%d\t%s#%d\t%f\n",
+                        source.get(), source.getSense(),
+                        target.get(), target.getSense(),
+                        graph.getEdgeWeight(edge)));
+            }
+        }
     }
 }

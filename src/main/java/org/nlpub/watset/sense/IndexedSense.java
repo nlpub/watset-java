@@ -29,6 +29,10 @@ public class IndexedSense<V> extends Pair<V, Integer> implements Sense<V> {
         return super.first;
     }
 
+    public Integer getSense() {
+        return getSecond();
+    }
+
     public static <V> IndexedSense<V> of(V a, Integer b) {
         return new IndexedSense<>(a, b);
     }

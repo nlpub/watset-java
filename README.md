@@ -63,15 +63,25 @@ $ java -jar watset.jar -i graph.txt -o output.tsv watset -l mcl -lp e=1&r=3 -g c
 
 In practice, the default parameters for MCL work well enough, so the `-lp` argument can be omitted in this example.
 
-### Watset: Word Sense Induction
+#### Watset: Word Sense Induction
 
-Since Watset performs curvature-based word sense induction, it is possible to extract the built sense inventory using the special command of this tool.
+Since [Watset] performs curvature-based word sense induction, it is possible to extract the built sense inventory using the special command of this tool.
 
 ```bash
 $ java -jar watset.jar -i graph.txt -o inventory.tsv senses -l mcl
 ```
 
 The output of this operation is a tab-separated file containing three columns: the target word, the word sense identifier, and the set of related words in the given word sense (the *context*).
+
+#### Watset: Word Sense Graph
+
+It is also possible to print the intermediate word sense graph built by [Watset]. For that, it is sufficient to pass the `dummy` parameter as the global clustering algorithm.
+
+```bash
+$ java -jar watset.jar -i graph.txt -o sense-graph.txt watset -l mcl -g dummy
+```
+
+The output file will be written virtually in the same ABC format as the input graph, but each node will be provided with the numerical sense identifier preceded by the suffix `#`. This feature simplifies the integration into the other graph processing pipelines.
 
 ### MaxMax
 

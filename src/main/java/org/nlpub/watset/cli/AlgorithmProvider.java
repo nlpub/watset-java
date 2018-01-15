@@ -21,6 +21,7 @@ import org.jgrapht.Graph;
 import org.nlpub.cw.ChineseWhispers;
 import org.nlpub.cw.weighting.*;
 import org.nlpub.graph.Clustering;
+import org.nlpub.graph.DummyClustering;
 import org.nlpub.maxmax.MaxMax;
 import org.nlpub.mcl.MarkovClustering;
 
@@ -50,6 +51,8 @@ public class AlgorithmProvider<V, E> implements Function<Graph<V, E>, Clustering
     @Override
     public Clustering<V> apply(Graph<V, E> graph) {
         switch (algorithm.toLowerCase()) {
+            case "dummy":
+                return new DummyClustering<>();
             case "cw":
                 final NodeSelector<V, E> nodeSelector = parseNodeSelector();
                 return new ChineseWhispers<>(graph, nodeSelector);

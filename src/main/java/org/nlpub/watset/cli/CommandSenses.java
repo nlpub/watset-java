@@ -30,6 +30,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Locale;
 import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
@@ -82,7 +83,7 @@ public class CommandSenses implements Runnable {
                     final String context = senseEntry.getValue().entrySet().stream().
                             map(e -> String.format("%s:%f", e.getKey(), e.getValue().doubleValue())).
                             collect(joining(","));
-                    writer.write(String.format("%s\t%d\t%s\n", word, i++, context));
+                    writer.write(String.format(Locale.ROOT, "%s\t%d\t%s\n", word, i++, context));
                 }
             }
         }
