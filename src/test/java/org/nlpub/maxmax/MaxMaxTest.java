@@ -73,7 +73,7 @@ public class MaxMaxTest {
             new HashSet<>(Arrays.asList("c", "d", "e"))
     )));
 
-    final MaxMax<String> maxmax1 = new MaxMax<>(GRAPH1), maxmax2 = new MaxMax<>(GRAPH2);
+    final MaxMax<String, DefaultWeightedEdge> maxmax1 = new MaxMax<>(GRAPH1), maxmax2 = new MaxMax<>(GRAPH2);
 
     @Before
     public void setup() {

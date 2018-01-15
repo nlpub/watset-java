@@ -21,7 +21,6 @@ import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
-import org.jgrapht.graph.DefaultWeightedEdge;
 import org.nlpub.graph.Clustering;
 
 import java.util.*;
@@ -33,13 +32,13 @@ import java.util.stream.Collectors;
  *
  * @param <V> node class.
  */
-public class MaxMax<V> implements Clustering<V> {
-    private final Graph<V, DefaultWeightedEdge> graph;
+public class MaxMax<V, E> implements Clustering<V> {
+    private final Graph<V, E> graph;
     private final Graph<V, DefaultEdge> digraph;
     private final Map<V, Set<V>> maximals;
     private final Map<V, Boolean> roots;
 
-    public MaxMax(Graph<V, DefaultWeightedEdge> graph) {
+    public MaxMax(Graph<V, E> graph) {
         this.graph = graph;
         this.digraph = new DefaultDirectedGraph<>(DefaultEdge.class);
         this.graph.vertexSet().forEach(digraph::addVertex);
@@ -53,7 +52,7 @@ public class MaxMax<V> implements Clustering<V> {
             final double max = graph.edgesOf(u).stream().mapToDouble(graph::getEdgeWeight).max().orElse(-1);
             graph.edgesOf(u).stream().
                     filter(e -> graph.getEdgeWeight(e) == max).
-                    map(e -> graph.getEdgeSource(e).equals(u) ? graph.getEdgeTarget(e) : graph.getEdgeSource(e)).
+                    map(e -> Graphs.getOppositeVertex(graph, e, u)).
                     forEach(v -> maximals.get(u).add(v));
         });
 
@@ -82,7 +81,7 @@ public class MaxMax<V> implements Clustering<V> {
         });
     }
 
-    public Graph<V, DefaultWeightedEdge> getGraph() {
+    public Graph<V, E> getGraph() {
         return graph;
     }
 
