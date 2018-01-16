@@ -85,7 +85,7 @@ The output file will be written virtually in the same ABC format as the input gr
 
 ### MaxMax
 
-[MaxMax] is a soft clustering algorithm for undirected graphs that constructs intermediate representation of the input graph as the directed graph. This algorithms has no options. 
+[MaxMax] is a soft clustering algorithm for undirected graphs that constructs intermediate representation of the input graph as the directed graph. This algorithm has no options.
 
 ```bash
 $ java -jar watset.jar -i graph.txt -o output.tsv maxmax
