@@ -18,11 +18,18 @@
 package org.nlpub.eval;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 import static java.util.function.Function.identity;
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.summingInt;
 
+/**
+ * Please be especially careful with the hashCode and equals methods of the cluster elements.
+ *
+ * @param <V> cluster element type.
+ */
 public class NormalizedModifiedPurity<V> {
     private final boolean multi;
 
@@ -80,12 +87,20 @@ public class NormalizedModifiedPurity<V> {
     }
 
     private Map<Collection<V>, Map<V, Double>> initialize(Collection<Collection<V>> clusters) {
-        final Map<Collection<V>, Map<V, Double>> instances = clusters.stream().
-                collect(toMap(identity(), cluster ->
-                        cluster.stream().collect(groupingBy(identity(), summingDouble(element -> 1)))
-                ));
+        final Map<Collection<V>, Map<V, Double>> instances = new HashMap<>();
 
-        final Map<V, Integer> counter = clusters.stream().flatMap(Collection::stream).collect(groupingBy(identity(), summingInt(element -> 1)));
+        for (final Collection<V> cluster : clusters) {
+            instances.putIfAbsent(cluster, new HashMap<>());
+
+            final Map<V, Double> clusterInstance = instances.get(cluster);
+
+            for (final V element : cluster) {
+                clusterInstance.put(element, 1 + clusterInstance.getOrDefault(element, 0d));
+            }
+        }
+
+        final Map<V, Integer> counter = clusters.stream().flatMap(Collection::stream).
+                collect(groupingBy(identity(), summingInt(element -> 1)));
 
         if (multi) {
             for (final Map.Entry<Collection<V>, Map<V, Double>> instance : instances.entrySet()) {
