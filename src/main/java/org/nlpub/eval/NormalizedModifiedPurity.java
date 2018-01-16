@@ -33,8 +33,8 @@ import static java.util.stream.Collectors.summingInt;
 public class NormalizedModifiedPurity<V> {
     private final boolean multi;
 
-    private final Map<Collection<V>, Map<V, Double>> classes;
-    private final Map<Collection<V>, Map<V, Double>> clusters;
+    private final Map<Integer, Map<V, Double>> classes;
+    private final Map<Integer, Map<V, Double>> clusters;
 
     public NormalizedModifiedPurity(boolean multi, Collection<Collection<V>> expected, Collection<Collection<V>> actual) {
         this.multi = multi;
@@ -65,10 +65,10 @@ public class NormalizedModifiedPurity<V> {
         return correct / total;
     }
 
-    private double evaluate(Map<V, Double> cluster, Map<Collection<V>, Map<V, Double>> classes) {
+    private double evaluate(Map<V, Double> cluster, Map<Integer, Map<V, Double>> classes) {
         return classes.keySet().stream().mapToDouble(klass -> cluster.entrySet().stream().
                 mapToDouble(element -> {
-                    if (!klass.contains(element.getKey())) return 0;
+                    if (!classes.get(klass).containsKey(element.getKey())) return 0;
                     if (multi) return element.getValue();
                     return 1;
                 }).sum()
@@ -86,24 +86,28 @@ public class NormalizedModifiedPurity<V> {
         return 2 * getNormalizedModifiedPurity() * getNormalizedInversePurity() / denominator;
     }
 
-    private Map<Collection<V>, Map<V, Double>> initialize(Collection<Collection<V>> clusters) {
-        final Map<Collection<V>, Map<V, Double>> instances = new HashMap<>();
+    private Map<Integer, Map<V, Double>> initialize(Collection<Collection<V>> clusters) {
+        final Map<Integer, Map<V, Double>> instances = new HashMap<>(clusters.size());
+
+        int i = 0;
 
         for (final Collection<V> cluster : clusters) {
-            instances.putIfAbsent(cluster, new HashMap<>());
+            instances.put(i, new HashMap<>(cluster.size()));
 
-            final Map<V, Double> clusterInstance = instances.get(cluster);
+            final Map<V, Double> clusterInstance = instances.get(i);
 
             for (final V element : cluster) {
                 clusterInstance.put(element, 1 + clusterInstance.getOrDefault(element, 0d));
             }
+
+            i++;
         }
 
         final Map<V, Integer> counter = clusters.stream().flatMap(Collection::stream).
                 collect(groupingBy(identity(), summingInt(element -> 1)));
 
         if (multi) {
-            for (final Map.Entry<Collection<V>, Map<V, Double>> instance : instances.entrySet()) {
+            for (final Map.Entry<Integer, Map<V, Double>> instance : instances.entrySet()) {
                 for (final Map.Entry<V, Double> element : instance.getValue().entrySet()) {
                     instance.getValue().put(element.getKey(), element.getValue() / counter.get(element.getKey()));
                 }
