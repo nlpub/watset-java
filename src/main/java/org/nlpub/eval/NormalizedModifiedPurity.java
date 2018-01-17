@@ -20,6 +20,7 @@ package org.nlpub.eval;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.groupingBy;
@@ -30,7 +31,31 @@ import static java.util.stream.Collectors.summingInt;
  *
  * @param <V> cluster element type.
  */
-public class NormalizedModifiedPurity<V> {
+public class NormalizedModifiedPurity<V> implements Supplier<NormalizedModifiedPurity.Result> {
+    public static class Result {
+        private final double normalizedModifiedPurity;
+        private final double normalizedInversePurity;
+
+        public Result(double normalizedModifiedPurity, double normalizedInversePurity) {
+            this.normalizedModifiedPurity = normalizedModifiedPurity;
+            this.normalizedInversePurity = normalizedInversePurity;
+        }
+
+        public double getNormalizedModifiedPurity() {
+            return normalizedModifiedPurity;
+        }
+
+        public double getNormalizedInversePurity() {
+            return normalizedInversePurity;
+        }
+
+        public double getF1Score() {
+            final double denominator = normalizedModifiedPurity + normalizedInversePurity;
+            if (denominator == 0d) return 0d;
+            return 2 * normalizedModifiedPurity * normalizedInversePurity / denominator;
+        }
+    }
+
     private final boolean multi;
 
     private final Map<Integer, Map<V, Double>> classes;
@@ -42,27 +67,24 @@ public class NormalizedModifiedPurity<V> {
         this.clusters = initialize(actual);
     }
 
-    public double getNormalizedModifiedPurity() {
-        final double correct = clusters.values().stream().
+    @Override
+    public Result get() {
+        final double correctClusters = clusters.values().stream().
                 mapToDouble(cluster -> cluster.size() > 1 ? evaluate(cluster, classes) : 0).
                 sum();
 
-        final double total = clusters.values().stream().
+        final double totalClusters = clusters.values().stream().
                 mapToDouble(this::clusterWeight).sum();
 
-        return correct / total;
-    }
-
-    public double getNormalizedInversePurity() {
-        final double correct = classes.values().stream().
+        final double correctClasses = classes.values().stream().
                 mapToDouble(klass -> evaluate(klass, clusters)).
                 sum();
 
-        final double total = classes.values().stream().
+        final double totalClasses = classes.values().stream().
                 mapToDouble(this::clusterWeight).
                 sum();
 
-        return correct / total;
+        return new Result(correctClusters / totalClusters, correctClasses / totalClasses);
     }
 
     private double evaluate(Map<V, Double> cluster, Map<Integer, Map<V, Double>> classes) {
@@ -78,12 +100,6 @@ public class NormalizedModifiedPurity<V> {
     private double clusterWeight(Map<V, Double> cluster) {
         if (!multi) return cluster.size();
         return cluster.values().stream().mapToDouble(Double::doubleValue).sum();
-    }
-
-    public double getFScore() {
-        final double denominator = getNormalizedModifiedPurity() + getNormalizedInversePurity();
-        if (denominator == 0d) return 0d;
-        return 2 * getNormalizedModifiedPurity() * getNormalizedInversePurity() / denominator;
     }
 
     private Map<Integer, Map<V, Double>> initialize(Collection<Collection<V>> clusters) {

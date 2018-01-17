@@ -50,39 +50,45 @@ public class NormalizedModifiedPurityTest {
     @Test
     public void testEquivalence() {
         final NormalizedModifiedPurity<String> nmpu = new NormalizedModifiedPurity<>(false, EXPECTED, EXPECTED);
-        assertEquals(1, nmpu.getNormalizedModifiedPurity(), 0.0001);
-        assertEquals(1, nmpu.getNormalizedInversePurity(), 0.0001);
-        assertEquals(1, nmpu.getFScore(), 0.0001);
+        final NormalizedModifiedPurity.Result result = nmpu.get();
+        assertEquals(1, result.getNormalizedModifiedPurity(), 0.0001);
+        assertEquals(1, result.getNormalizedInversePurity(), 0.0001);
+        assertEquals(1, result.getF1Score(), 0.0001);
 
         final NormalizedModifiedPurity<String> nmpuMulti = new NormalizedModifiedPurity<>(true, EXPECTED, EXPECTED);
-        assertEquals(1, nmpuMulti.getNormalizedModifiedPurity(), 0.0001);
-        assertEquals(1, nmpuMulti.getNormalizedInversePurity(), 0.0001);
-        assertEquals(1, nmpuMulti.getFScore(), 0.0001);
+        final NormalizedModifiedPurity.Result resultMulti = nmpuMulti.get();
+        assertEquals(1, resultMulti.getNormalizedModifiedPurity(), 0.0001);
+        assertEquals(1, resultMulti.getNormalizedInversePurity(), 0.0001);
+        assertEquals(1, resultMulti.getF1Score(), 0.0001);
     }
 
     @Test
     public void testScores1() {
         final NormalizedModifiedPurity<String> nmpu = new NormalizedModifiedPurity<>(false, EXPECTED, ACTUAL_1);
-        assertEquals(0.714, nmpu.getNormalizedModifiedPurity(), 0.01);
-        assertEquals(0.714, nmpu.getNormalizedInversePurity(), 0.01);
-        assertEquals(0.714, nmpu.getFScore(), 0.01);
+        final NormalizedModifiedPurity.Result result = nmpu.get();
+        assertEquals(0.714, result.getNormalizedModifiedPurity(), 0.01);
+        assertEquals(0.714, result.getNormalizedInversePurity(), 0.01);
+        assertEquals(0.714, result.getF1Score(), 0.01);
 
         final NormalizedModifiedPurity<String> nmpuMulti = new NormalizedModifiedPurity<>(true, EXPECTED, ACTUAL_1);
-        assertEquals(0.75, nmpuMulti.getNormalizedModifiedPurity(), 0.0001);
-        assertEquals(0.75, nmpuMulti.getNormalizedInversePurity(), 0.0001);
-        assertEquals(0.75, nmpuMulti.getFScore(), 0.0001);
+        final NormalizedModifiedPurity.Result resultMulti = nmpuMulti.get();
+        assertEquals(0.75, resultMulti.getNormalizedModifiedPurity(), 0.0001);
+        assertEquals(0.75, resultMulti.getNormalizedInversePurity(), 0.0001);
+        assertEquals(0.75, resultMulti.getF1Score(), 0.0001);
     }
 
     @Test
     public void testScores3() {
         final NormalizedModifiedPurity<String> nmpu = new NormalizedModifiedPurity<>(false, EXPECTED, ACTUAL_3);
-        assertEquals(0, nmpu.getNormalizedModifiedPurity(), 0.0001);
-        assertEquals(0.28571, nmpu.getNormalizedInversePurity(), 0.0001);
-        assertEquals(0, nmpu.getFScore(), 0.0001);
+        final NormalizedModifiedPurity.Result result = nmpu.get();
+        assertEquals(0, result.getNormalizedModifiedPurity(), 0.0001);
+        assertEquals(0.28571, result.getNormalizedInversePurity(), 0.0001);
+        assertEquals(0, result.getF1Score(), 0.0001);
 
         final NormalizedModifiedPurity<String> nmpuMulti = new NormalizedModifiedPurity<>(true, EXPECTED, ACTUAL_3);
-        assertEquals(0, nmpuMulti.getNormalizedModifiedPurity(), 0.0001);
-        assertEquals(0.33333, nmpuMulti.getNormalizedInversePurity(), 0.0001);
-        assertEquals(0, nmpuMulti.getFScore(), 0.0001);
+        final NormalizedModifiedPurity.Result resultMulti = nmpuMulti.get();
+        assertEquals(0, resultMulti.getNormalizedModifiedPurity(), 0.0001);
+        assertEquals(0.33333, resultMulti.getNormalizedInversePurity(), 0.0001);
+        assertEquals(0, resultMulti.getF1Score(), 0.0001);
     }
 }
