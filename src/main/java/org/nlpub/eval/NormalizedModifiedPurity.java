@@ -103,10 +103,10 @@ public class NormalizedModifiedPurity<V> {
             i++;
         }
 
-        final Map<V, Integer> counter = clusters.stream().flatMap(Collection::stream).
-                collect(groupingBy(identity(), summingInt(element -> 1)));
-
         if (multi) {
+            final Map<V, Integer> counter = clusters.stream().flatMap(Collection::stream).
+                    collect(groupingBy(identity(), summingInt(element -> 1)));
+
             for (final Map.Entry<Integer, Map<V, Double>> instance : instances.entrySet()) {
                 for (final Map.Entry<V, Double> element : instance.getValue().entrySet()) {
                     instance.getValue().put(element.getKey(), element.getValue() / counter.get(element.getKey()));
