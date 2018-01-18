@@ -17,14 +17,14 @@
 
 package org.nlpub.eval;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
 import static java.util.function.Function.identity;
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.summingInt;
+import static java.util.stream.Collectors.*;
 
 /**
  * Please be especially careful with the hashCode and equals methods of the cluster elements.
@@ -32,6 +32,18 @@ import static java.util.stream.Collectors.summingInt;
  * @param <V> cluster element type.
  */
 public class NormalizedModifiedPurity<V> implements Supplier<NormalizedModifiedPurity.Result> {
+    public static <V> Collection<Map<V, Double>> transform(Collection<Collection<V>> clusters) {
+        final Collection<Map<V, Double>> result = new ArrayList<>(clusters.size());
+
+        for (final Collection<V> cluster : clusters) {
+            final Map<V, Double> transformed = cluster.stream().
+                    collect(groupingBy(identity(), reducing(0d, e -> 1d, Double::sum)));
+            result.add(transformed);
+        }
+
+        return result;
+    }
+
     public static class Result {
         private final double normalizedModifiedPurity;
         private final double normalizedInversePurity;
@@ -56,80 +68,83 @@ public class NormalizedModifiedPurity<V> implements Supplier<NormalizedModifiedP
         }
     }
 
-    private final boolean multi;
+    private final Collection<Map<V, Double>> clusters;
+    private final Collection<Map<V, Double>> classes;
+    private final boolean fuzzy;
 
-    private final Map<Integer, Map<V, Double>> classes;
-    private final Map<Integer, Map<V, Double>> clusters;
+    public NormalizedModifiedPurity(Collection<Map<V, Double>> clusters, Collection<Map<V, Double>> classes, boolean fuzzy) {
+        this.fuzzy = fuzzy;
+        this.clusters = fuzzy ? normalize(clusters) : clusters;
+        this.classes = fuzzy ? normalize(classes) : classes;
+    }
 
-    public NormalizedModifiedPurity(boolean multi, Collection<Collection<V>> expected, Collection<Collection<V>> actual) {
-        this.multi = multi;
-        this.classes = initialize(expected);
-        this.clusters = initialize(actual);
+    public NormalizedModifiedPurity(Collection<Map<V, Double>> clusters, Collection<Map<V, Double>> classes) {
+        this(clusters, classes, true);
     }
 
     @Override
     public Result get() {
-        final double correctClusters = clusters.values().stream().
-                mapToDouble(cluster -> cluster.size() > 1 ? evaluate(cluster, classes) : 0).
-                sum();
-
-        final double totalClusters = clusters.values().stream().
-                mapToDouble(this::clusterWeight).sum();
-
-        final double correctClasses = classes.values().stream().
-                mapToDouble(klass -> evaluate(klass, clusters)).
-                sum();
-
-        final double totalClasses = classes.values().stream().
-                mapToDouble(this::clusterWeight).
-                sum();
-
-        return new Result(correctClusters / totalClusters, correctClasses / totalClasses);
+        final double normalizedModifiedPurity = purity(clusters, classes, true);
+        final double normalizedInversePurity = purity(classes, clusters, false);
+        return new NormalizedModifiedPurity.Result(normalizedModifiedPurity, normalizedInversePurity);
     }
 
-    private double evaluate(Map<V, Double> cluster, Map<Integer, Map<V, Double>> classes) {
-        return classes.keySet().stream().mapToDouble(klass -> cluster.entrySet().stream().
-                mapToDouble(element -> {
-                    if (!classes.get(klass).containsKey(element.getKey())) return 0;
-                    if (multi) return element.getValue();
-                    return 1;
-                }).sum()
-        ).max().orElseThrow(() -> new IllegalArgumentException("Do not pass me empty arrays"));
-    }
+    private double purity(Collection<Map<V, Double>> clusters, Collection<Map<V, Double>> classes, boolean modified) {
+        double denominator = clusters.stream().mapToInt(Map::size).sum();
 
-    private double clusterWeight(Map<V, Double> cluster) {
-        if (!multi) return cluster.size();
-        return cluster.values().stream().mapToDouble(Double::doubleValue).sum();
-    }
-
-    private Map<Integer, Map<V, Double>> initialize(Collection<Collection<V>> clusters) {
-        final Map<Integer, Map<V, Double>> instances = new HashMap<>(clusters.size());
-
-        int i = 0;
-
-        for (final Collection<V> cluster : clusters) {
-            instances.put(i, new HashMap<>(cluster.size()));
-
-            final Map<V, Double> clusterInstance = instances.get(i);
-
-            for (final V element : cluster) {
-                clusterInstance.put(element, 1 + clusterInstance.getOrDefault(element, 0d));
-            }
-
-            i++;
+        if (fuzzy) {
+            denominator = clusters.stream().
+                    mapToDouble(cluster -> cluster.values().stream().mapToDouble(a -> a).sum()).
+                    sum();
         }
 
-        if (multi) {
-            final Map<V, Integer> counter = clusters.stream().flatMap(Collection::stream).
-                    collect(groupingBy(identity(), summingInt(element -> 1)));
+        if (denominator == 0) return 0;
 
-            for (final Map.Entry<Integer, Map<V, Double>> instance : instances.entrySet()) {
-                for (final Map.Entry<V, Double> element : instance.getValue().entrySet()) {
-                    instance.getValue().put(element.getKey(), element.getValue() / counter.get(element.getKey()));
-                }
-            }
+        double numerator = 0;
+
+        for (final Map<V, Double> cluster : clusters) {
+            final double score = classes.stream().mapToDouble(klass -> delta(cluster, klass, modified)).max().orElse(0);
+            numerator += score;
         }
 
-        return instances;
+        return numerator / denominator;
+    }
+
+    private double delta(Map<V, Double> cluster, Map<V, Double> klass, boolean modified) {
+        if (modified && !(cluster.size() > 1)) return 0;
+
+        final Map<V, Double> intersection = new HashMap<>(cluster);
+
+        intersection.keySet().retainAll(klass.keySet());
+
+        if (intersection.isEmpty()) return 0;
+
+        if (!fuzzy) return intersection.size();
+
+        return intersection.values().stream().mapToDouble(a -> a).sum();
+    }
+
+    private Collection<Map<V, Double>> normalize(Collection<Map<V, Double>> clusters) {
+        if (!fuzzy) return clusters;
+
+        final Map<V, Double> counter = new HashMap<>();
+
+        clusters.stream().flatMap(cluster -> cluster.entrySet().stream()).
+                forEach(entry -> counter.put(entry.getKey(), counter.getOrDefault(entry.getKey(), 0d) + entry.getValue()));
+
+        final Collection<Map<V, Double>> normalized = new ArrayList<>(clusters.size());
+
+        for (final Map<V, Double> cluster : clusters) {
+            final Map<V, Double> normalizedCluster = cluster.entrySet().stream().
+                    collect(toMap(Map.Entry::getKey, entry -> entry.getValue() / counter.get(entry.getKey())));
+
+            if (cluster.size() != normalizedCluster.size()) throw new IllegalArgumentException("Cluster size changed");
+
+            normalized.add(normalizedCluster);
+        }
+
+        if (normalized.size() != clusters.size()) throw new IllegalArgumentException("Collection size changed");
+
+        return normalized;
     }
 }
