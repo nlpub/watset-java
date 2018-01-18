@@ -18,11 +18,10 @@
 package org.nlpub.cli;
 
 import org.nlpub.graph.Clustering;
-import org.nlpub.watset.Application;
 
 import java.io.IOException;
 
-import static org.nlpub.watset.Application.write;
+import static org.nlpub.cli.Application.write;
 
 public abstract class ClusteringCommand implements Runnable {
     final Application application;

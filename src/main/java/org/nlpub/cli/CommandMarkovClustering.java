@@ -20,7 +20,6 @@ package org.nlpub.cli;
 import com.beust.jcommander.Parameter;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.nlpub.graph.Clustering;
-import org.nlpub.watset.Application;
 
 import java.util.HashMap;
 import java.util.Map;

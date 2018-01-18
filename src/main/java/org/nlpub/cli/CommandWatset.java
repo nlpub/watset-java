@@ -22,7 +22,6 @@ import com.beust.jcommander.Parameters;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.nlpub.vsm.ContextCosineSimilarity;
-import org.nlpub.watset.Application;
 import org.nlpub.watset.Watset;
 import org.nlpub.watset.sense.IndexedSense;
 import org.nlpub.watset.sense.Sense;

@@ -22,7 +22,6 @@ import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.nlpub.graph.DummyClustering;
 import org.nlpub.vsm.DummyContextSimilarity;
-import org.nlpub.watset.Application;
 import org.nlpub.watset.Watset;
 import org.nlpub.watset.sense.IndexedSense;
 import org.nlpub.watset.sense.Sense;

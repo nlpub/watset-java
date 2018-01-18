@@ -19,7 +19,6 @@ package org.nlpub.cli;
 
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.nlpub.graph.Clustering;
-import org.nlpub.watset.Application;
 
 import java.util.Collections;
 
