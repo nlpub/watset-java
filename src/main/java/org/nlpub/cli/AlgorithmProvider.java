@@ -15,7 +15,7 @@
  *
  */
 
-package org.nlpub.watset.cli;
+package org.nlpub.cli;
 
 import org.jgrapht.Graph;
 import org.nlpub.cw.ChineseWhispers;

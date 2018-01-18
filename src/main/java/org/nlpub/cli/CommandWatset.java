@@ -15,7 +15,7 @@
  *
  */
 
-package org.nlpub.watset.cli;
+package org.nlpub.cli;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;

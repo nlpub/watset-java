@@ -15,7 +15,7 @@
  *
  */
 
-package org.nlpub.watset.cli;
+package org.nlpub.cli;
 
 import com.beust.jcommander.IParameterValidator;
 import com.beust.jcommander.ParameterException;

@@ -15,16 +15,22 @@
  *
  */
 
-package org.nlpub.watset.cli;
+package org.nlpub.cli;
 
-import com.beust.jcommander.IStringConverter;
+import org.jgrapht.graph.DefaultWeightedEdge;
+import org.nlpub.graph.Clustering;
+import org.nlpub.watset.Application;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.Collections;
 
-public class PathConverter implements IStringConverter<Path> {
+public class CommandMaxMax extends ClusteringCommand {
+    public CommandMaxMax(Application application) {
+        super(application);
+    }
+
     @Override
-    public Path convert(String value) {
-        return Paths.get(value);
+    public Clustering<String> getClustering() {
+        final AlgorithmProvider<String, DefaultWeightedEdge> algorithm = new AlgorithmProvider<>("maxmax", Collections.emptyMap());
+        return algorithm.apply(application.getGraph());
     }
 }

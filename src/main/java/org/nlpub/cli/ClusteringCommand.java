@@ -15,7 +15,7 @@
  *
  */
 
-package org.nlpub.watset.cli;
+package org.nlpub.cli;
 
 import org.nlpub.graph.Clustering;
 import org.nlpub.watset.Application;

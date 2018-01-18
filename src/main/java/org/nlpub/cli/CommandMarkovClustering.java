@@ -15,28 +15,35 @@
  *
  */
 
-package org.nlpub.watset.cli;
+package org.nlpub.cli;
 
 import com.beust.jcommander.Parameter;
-import com.beust.jcommander.Parameters;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.nlpub.graph.Clustering;
 import org.nlpub.watset.Application;
 
-import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
-@Parameters(commandDescription = "Chinese Whispers")
-public class CommandChineseWhispers extends ClusteringCommand {
-    @Parameter(required = true, names = {"-m", "--mode"}, validateWith = ChineseWhispersValidator.class)
-    private String mode;
+public class CommandMarkovClustering extends ClusteringCommand {
+    @Parameter(names = "-e")
+    private int e;
 
-    public CommandChineseWhispers(Application application) {
+    @Parameter(names = "-r")
+    private double r;
+
+    public CommandMarkovClustering(Application application) {
         super(application);
     }
 
     @Override
     public Clustering<String> getClustering() {
-        final AlgorithmProvider<String, DefaultWeightedEdge> algorithm = new AlgorithmProvider<>("cw", Collections.singletonMap("mode", mode));
+        final Map<String, String> params = new HashMap<String, String>() {{
+            put("e", Integer.toString(e));
+            put("r", Double.toString(r));
+        }};
+
+        final AlgorithmProvider<String, DefaultWeightedEdge> algorithm = new AlgorithmProvider<>("mcl", params);
         return algorithm.apply(application.getGraph());
     }
 }

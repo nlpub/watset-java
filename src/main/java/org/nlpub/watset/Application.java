@@ -22,9 +22,9 @@ import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
+import org.nlpub.cli.*;
 import org.nlpub.graph.Clustering;
 import org.nlpub.io.ABCParser;
-import org.nlpub.watset.cli.*;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
