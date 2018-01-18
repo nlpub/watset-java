@@ -125,8 +125,6 @@ public class NormalizedModifiedPurity<V> implements Supplier<NormalizedModifiedP
     }
 
     private Collection<Map<V, Double>> normalize(Collection<Map<V, Double>> clusters) {
-        if (!fuzzy) return clusters;
-
         final Map<V, Double> counter = new HashMap<>();
 
         clusters.stream().flatMap(cluster -> cluster.entrySet().stream()).
