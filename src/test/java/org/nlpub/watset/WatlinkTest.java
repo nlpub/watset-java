@@ -32,9 +32,9 @@ import static org.nlpub.watset.WatsetTest.globalClusteringProvider;
 import static org.nlpub.watset.WatsetTest.localClusteringProvider;
 
 public class WatlinkTest {
-    final static Watset<String, DefaultWeightedEdge> watset = new Watset<>(WORDS, localClusteringProvider, globalClusteringProvider, new ContextCosineSimilarity<>());
+    private final static Watset<String, DefaultWeightedEdge> watset = new Watset<>(WORDS, localClusteringProvider, globalClusteringProvider, new ContextCosineSimilarity<>());
 
-    final static Map<String, Collection<String>> hypernyms = new HashMap<String, Collection<String>>() {{
+    private final static Map<String, Collection<String>> hypernyms = new HashMap<String, Collection<String>>() {{
         put("a", Arrays.asList("e", "f"));
         put("b", Arrays.asList("e", "g"));
     }};

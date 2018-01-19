@@ -28,7 +28,7 @@ import java.util.Collection;
 import static org.junit.Assert.assertEquals;
 
 public class MarkovClusteringTest {
-    public final static Graph<String, DefaultWeightedEdge> BIPARTITE = SimpleWeightedGraph.<String, DefaultWeightedEdge>createBuilder(DefaultWeightedEdge.class).
+    private final static Graph<String, DefaultWeightedEdge> BIPARTITE = SimpleWeightedGraph.<String, DefaultWeightedEdge>createBuilder(DefaultWeightedEdge.class).
             addVertices("0", "1", "2", "3", "4", "5", "6", "7").
             addEdge("0", "1").
             addEdge("0", "2").
@@ -45,7 +45,7 @@ public class MarkovClusteringTest {
             addEdge("6", "7").
             build();
 
-    final MarkovClustering<String, ?> mcl1 = new MarkovClustering<>(BIPARTITE, 2, 2);
+    private final MarkovClustering<String, ?> mcl1 = new MarkovClustering<>(BIPARTITE, 2, 2);
 
     @Before
     public void setup() {

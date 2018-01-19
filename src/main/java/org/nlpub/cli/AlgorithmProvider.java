@@ -19,7 +19,7 @@ package org.nlpub.cli;
 
 import org.jgrapht.Graph;
 import org.nlpub.cw.ChineseWhispers;
-import org.nlpub.cw.weighting.*;
+import org.nlpub.cw.NodeWeighting;
 import org.nlpub.graph.Clustering;
 import org.nlpub.graph.DummyClustering;
 import org.nlpub.maxmax.MaxMax;
@@ -54,8 +54,8 @@ public class AlgorithmProvider<V, E> implements Function<Graph<V, E>, Clustering
             case "dummy":
                 return new DummyClustering<>();
             case "cw":
-                final NodeSelector<V, E> nodeSelector = parseNodeSelector();
-                return new ChineseWhispers<>(graph, nodeSelector);
+                final NodeWeighting<V, E> weighting = parseNodeWeighting();
+                return new ChineseWhispers<>(graph, weighting);
             case "mcl":
                 final int e = Integer.parseInt(params.getOrDefault("e", "2"));
                 final double r = Double.parseDouble(params.getOrDefault("r", "2"));
@@ -67,22 +67,20 @@ public class AlgorithmProvider<V, E> implements Function<Graph<V, E>, Clustering
         }
     }
 
-    private NodeSelector<V, E> parseNodeSelector() {
+    private NodeWeighting<V, E> parseNodeWeighting() {
         switch (params.getOrDefault("mode", "top").toLowerCase()) {
-            case "chris":
-                return new ChrisWeighting<>();
             case "top":
-                return new TopWeighting<>();
+                return NodeWeighting.top();
             case "log":
-                return new LogWeighting<>();
+                return NodeWeighting.log();
             case "nolog":
-                return new ProportionalWeighting<>();
+                return NodeWeighting.nolog();
             default:
                 throw new IllegalArgumentException("Unknown mode is set.");
         }
     }
 
-    public static Map<String, String> parseParams(String params) {
+    static Map<String, String> parseParams(String params) {
         if (Objects.isNull(params)) return Collections.emptyMap();
 
         return AMPERSAND.splitAsStream(params).

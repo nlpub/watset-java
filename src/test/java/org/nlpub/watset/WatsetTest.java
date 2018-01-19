@@ -22,21 +22,23 @@ import org.jgrapht.graph.DefaultWeightedEdge;
 import org.junit.Before;
 import org.junit.Test;
 import org.nlpub.cw.ChineseWhispers;
-import org.nlpub.cw.weighting.ChrisWeighting;
+import org.nlpub.cw.NodeWeighting;
 import org.nlpub.graph.Clustering;
 import org.nlpub.vsm.ContextCosineSimilarity;
 import org.nlpub.watset.sense.Sense;
 
 import java.util.Collection;
+import java.util.Random;
 import java.util.function.Function;
 
 import static org.junit.Assert.assertEquals;
 import static org.nlpub.watset.SenseInductionTest.WORDS;
 
 public class WatsetTest {
-    final static Function<Graph<String, DefaultWeightedEdge>, Clustering<String>> localClusteringProvider = ego -> new ChineseWhispers<>(ego, new ChrisWeighting<>());
-    final static Function<Graph<Sense<String>, DefaultWeightedEdge>, Clustering<Sense<String>>> globalClusteringProvider = ego -> new ChineseWhispers<>(ego, new ChrisWeighting<>());
-    final static Watset<String, DefaultWeightedEdge> watset = new Watset<>(WORDS, localClusteringProvider, globalClusteringProvider, new ContextCosineSimilarity<>());
+    private final static Random random = new Random(1337);
+    final static Function<Graph<String, DefaultWeightedEdge>, Clustering<String>> localClusteringProvider = ego -> new ChineseWhispers<>(ego, NodeWeighting.top(), ChineseWhispers.ITERATIONS, random);
+    final static Function<Graph<Sense<String>, DefaultWeightedEdge>, Clustering<Sense<String>>> globalClusteringProvider = ego -> new ChineseWhispers<>(ego, NodeWeighting.top(), ChineseWhispers.ITERATIONS, random);
+    private final static Watset<String, DefaultWeightedEdge> watset = new Watset<>(WORDS, localClusteringProvider, globalClusteringProvider, new ContextCosineSimilarity<>());
 
     @Before
     public void setup() {

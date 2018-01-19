@@ -26,25 +26,25 @@ import static org.junit.Assert.assertNotEquals;
 import static org.nlpub.vsm.Vectors.*;
 
 public class VectorsTest {
-    static final Map<String, Number> vec1 = new HashMap<String, Number>() {{
+    private static final Map<String, Number> vec1 = new HashMap<String, Number>() {{
         put("a", 1);
         put("b", 3);
         put("c", -5);
     }};
 
-    static final Map<String, Number> vec2 = new HashMap<String, Number>() {{
+    private static final Map<String, Number> vec2 = new HashMap<String, Number>() {{
         put("a", 4);
         put("b", -2);
         put("c", -1);
     }};
 
-    static final Map<String, Number> vec3 = new HashMap<String, Number>() {{
+    private static final Map<String, Number> vec3 = new HashMap<String, Number>() {{
         put("b", 4);
         put("c", -2);
         put("d", -1);
     }};
 
-    static final Set<String> whitelist = new HashSet<String>() {{
+    private static final Set<String> whitelist = new HashSet<String>() {{
         add("a");
         add("b");
         add("c");
@@ -52,8 +52,8 @@ public class VectorsTest {
     }};
 
 
-    static final Map<String, Number> vec1t = transform(vec1, whitelist);
-    static final Map<String, Number> vec3t = transform(vec3, whitelist);
+    private static final Map<String, Number> vec1t = transform(vec1, whitelist);
+    private static final Map<String, Number> vec3t = transform(vec3, whitelist);
 
     @Test
     public void testDot() {

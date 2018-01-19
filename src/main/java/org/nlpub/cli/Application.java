@@ -61,7 +61,7 @@ public class Application {
         }
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         // TODO: Use the main argument for --input instead of the named one.
         final Application application = new Application();
 

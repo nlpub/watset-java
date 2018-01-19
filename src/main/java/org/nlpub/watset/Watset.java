@@ -111,21 +111,21 @@ public class Watset<V, E> implements Clustering<V> {
         return senseGraph;
     }
 
-    protected Map<Sense<V>, Map<V, Number>> induceSenses(V target) {
+    private Map<Sense<V>, Map<V, Number>> induceSenses(V target) {
         final SenseInduction<V, E> inducer = new SenseInduction<>(graph, target, this.localClusteringProvider);
         inducer.run();
 
         return inducer.getSenses();
     }
 
-    protected Map<Sense<V>, Number> disambiguateContext(Map<V, Map<Sense<V>, Map<V, Number>>> inventory, Sense<V> sense) {
+    private Map<Sense<V>, Number> disambiguateContext(Map<V, Map<Sense<V>, Map<V, Number>>> inventory, Sense<V> sense) {
         final Map<V, Number> context = new HashMap<>(inventory.get(sense.get()).get(sense));
         context.put(sense.get(), DEFAULT_CONTEXT_WEIGHT);
 
         return disambiguate(inventory, similarity, context, Collections.singleton(sense.get()));
     }
 
-    protected Graph<Sense<V>, DefaultWeightedEdge> buildSenseGraph(Map<Sense<V>, Map<Sense<V>, Number>> contexts) {
+    private Graph<Sense<V>, DefaultWeightedEdge> buildSenseGraph(Map<Sense<V>, Map<Sense<V>, Number>> contexts) {
         final GraphBuilder<Sense<V>, DefaultWeightedEdge, SimpleWeightedGraph<Sense<V>, DefaultWeightedEdge>> builder = new GraphBuilder<>(new SimpleWeightedGraph<>(DefaultWeightedEdge.class));
 
         contexts.keySet().forEach(builder::addVertex);

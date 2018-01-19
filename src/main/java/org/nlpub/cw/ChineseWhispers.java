@@ -18,57 +18,55 @@
 package org.nlpub.cw;
 
 import org.jgrapht.Graph;
-import org.nlpub.cw.weighting.NodeSelector;
 import org.nlpub.graph.Clustering;
+import org.nlpub.util.Neighbors;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static org.nlpub.util.Maximizer.argmax;
+
 public class ChineseWhispers<V, E> implements Clustering<V> {
     public static final Integer ITERATIONS = 20;
 
-    protected final Graph<V, E> graph;
-    protected final NodeSelector<V, E> nodeSelector;
-    protected final Integer iterations;
-    protected Map<V, Integer> labels;
+    private final Graph<V, E> graph;
+    private final NodeWeighting<V, E> weighting;
+    private final Integer iterations;
+    private final Random random;
+    private Map<V, Integer> labels;
 
-    public ChineseWhispers(Graph<V, E> graph, NodeSelector<V, E> nodeSelector, Integer iterations) {
+    public ChineseWhispers(Graph<V, E> graph, NodeWeighting<V, E> weighting, Integer iterations, Random random) {
         this.graph = graph;
-        this.nodeSelector = nodeSelector;
+        this.weighting = weighting;
         this.iterations = iterations;
+        this.random = random;
     }
 
-    public ChineseWhispers(Graph<V, E> graph, NodeSelector<V, E> nodeSelector) {
-        this(graph, nodeSelector, ITERATIONS);
+    public ChineseWhispers(Graph<V, E> graph, NodeWeighting<V, E> weighting) {
+        this(graph, weighting, ITERATIONS, new Random());
     }
 
     @Override
     public void run() {
         final List<V> nodes = new ArrayList<>(graph.vertexSet());
 
-        this.labels = new HashMap<>(nodes.size());
+        labels = new HashMap<>(nodes.size());
 
         int i = 0;
 
-        for (final V node : this.graph.vertexSet()) {
-            this.labels.put(node, i++);
+        for (final V node : graph.vertexSet()) {
+            labels.put(node, i++);
         }
 
-        for (i = 0; i < this.iterations; i++) {
+        for (i = 0; i < iterations; i++) {
             boolean changed = false;
 
-            Collections.shuffle(nodes);
+            Collections.shuffle(nodes, random);
 
             for (final V node : nodes) {
-                final Optional<V> selection = this.nodeSelector.apply(this.graph, node);
-
-                if (selection.isPresent()) {
-                    final V neighbor = selection.get();
-
-                    changed = changed || (!this.labels.get(node).equals(this.labels.get(neighbor)));
-
-                    this.labels.put(node, this.labels.get(neighbor));
-                }
+                final int updated = choose(graph, labels, weighting, node);
+                final int previous = labels.put(node, updated);
+                changed = changed || (previous != updated);
             }
 
             if (!changed) break;
@@ -77,7 +75,7 @@ public class ChineseWhispers<V, E> implements Clustering<V> {
 
     @Override
     public Collection<Collection<V>> getClusters() {
-        final Map<Integer, List<Map.Entry<V, Integer>>> groups = this.labels.entrySet().stream().
+        final Map<Integer, List<Map.Entry<V, Integer>>> groups = labels.entrySet().stream().
                 collect(Collectors.groupingBy(Map.Entry::getValue));
 
         final Set<Collection<V>> clusters = new HashSet<>();
@@ -87,5 +85,20 @@ public class ChineseWhispers<V, E> implements Clustering<V> {
         }
 
         return clusters;
+    }
+
+    private Integer choose(Graph<V, E> graph, Map<V, Integer> labels, NodeWeighting<V, E> weighting, V node) {
+        final Map<Integer, Double> weights = new HashMap<>();
+
+        final Iterator<V> neighbors = Neighbors.neighborInterator(graph, node);
+
+        neighbors.forEachRemaining(neighbor -> {
+            final int label = labels.get(neighbor);
+            weights.put(label, weights.getOrDefault(label, weighting.apply(graph, node, neighbor)));
+        });
+
+        final Optional<Map.Entry<Integer, Double>> label = argmax(weights.entrySet().iterator(), Map.Entry::getValue);
+
+        return label.map(Map.Entry::getKey).orElseGet(() -> labels.get(node));
     }
 }

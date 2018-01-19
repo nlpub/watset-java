@@ -31,7 +31,7 @@ import java.util.Set;
 import static org.junit.Assert.assertEquals;
 
 public class MaxMaxTest {
-    final static Graph<String, DefaultWeightedEdge> GRAPH1 = SimpleWeightedGraph.<String, DefaultWeightedEdge>createBuilder(DefaultWeightedEdge.class).
+    private final static Graph<String, DefaultWeightedEdge> GRAPH1 = SimpleWeightedGraph.<String, DefaultWeightedEdge>createBuilder(DefaultWeightedEdge.class).
             addVertices("r", "s", "u", "v", "t", "w", "x").
             addEdge("r", "s", 3).
             addEdge("r", "v", 1).
@@ -51,12 +51,12 @@ public class MaxMaxTest {
             addEdge("u", "v", 1).
             build();
 
-    final static Set<Set<String>> CLUSTERS1 = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
+    private final static Set<Set<String>> CLUSTERS1 = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
             new HashSet<>(Arrays.asList("r", "s", "t", "u", "v")),
             new HashSet<>(Arrays.asList("w", "t", "x"))
     )));
 
-    final static Graph<String, DefaultWeightedEdge> GRAPH2 = SimpleWeightedGraph.<String, DefaultWeightedEdge>createBuilder(DefaultWeightedEdge.class).
+    private final static Graph<String, DefaultWeightedEdge> GRAPH2 = SimpleWeightedGraph.<String, DefaultWeightedEdge>createBuilder(DefaultWeightedEdge.class).
             addVertices("a", "b", "c", "d", "e").
             addEdge("a", "b", 3).
             addEdge("b", "c", 1).
@@ -68,12 +68,13 @@ public class MaxMaxTest {
             addEdge("d", "e", 3).
             build();
 
-    final static Set<Set<String>> CLUSTERS2 = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
+    private final static Set<Set<String>> CLUSTERS2 = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
             new HashSet<>(Arrays.asList("a", "b", "c")),
             new HashSet<>(Arrays.asList("c", "d", "e"))
     )));
 
-    final MaxMax<String, DefaultWeightedEdge> maxmax1 = new MaxMax<>(GRAPH1), maxmax2 = new MaxMax<>(GRAPH2);
+    private final MaxMax<String, DefaultWeightedEdge> maxmax1 = new MaxMax<>(GRAPH1);
+    private final MaxMax<String, DefaultWeightedEdge> maxmax2 = new MaxMax<>(GRAPH2);
 
     @Before
     public void setup() {

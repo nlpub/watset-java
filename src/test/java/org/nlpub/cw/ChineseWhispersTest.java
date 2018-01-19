@@ -22,14 +22,16 @@ import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
 import org.junit.Before;
 import org.junit.Test;
-import org.nlpub.cw.weighting.ChrisWeighting;
 
 import java.util.Collection;
+import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 
 public class ChineseWhispersTest {
-    public final static Graph<String, DefaultWeightedEdge> DISJOINT = SimpleWeightedGraph.<String, DefaultWeightedEdge>createBuilder(DefaultWeightedEdge.class).
+    private final static Random random = new Random(1337);
+
+    private final static Graph<String, DefaultWeightedEdge> DISJOINT = SimpleWeightedGraph.<String, DefaultWeightedEdge>createBuilder(DefaultWeightedEdge.class).
             addVertices("a", "b", "c", "d", "e").
             addEdge("a", "b").
             addEdge("a", "c").
@@ -37,7 +39,7 @@ public class ChineseWhispersTest {
             addEdge("d", "e").
             build();
 
-    final ChineseWhispers<String, ?> cw1 = new ChineseWhispers<>(DISJOINT, new ChrisWeighting<>());
+    private final ChineseWhispers<String, ?> cw1 = new ChineseWhispers<>(DISJOINT, NodeWeighting.top(), ChineseWhispers.ITERATIONS, random);
 
     @Before
     public void setup() {

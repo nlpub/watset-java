@@ -27,23 +27,23 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 
 public class NormalizedModifiedPurityTest {
-    static Collection<Map<String, Double>> EXPECTED = NormalizedModifiedPurity.transform(Arrays.asList(
+    private static final Collection<Map<String, Double>> EXPECTED = NormalizedModifiedPurity.transform(Arrays.asList(
             Arrays.asList("bank", "riverbank", "streambank", "streamside"),
             Arrays.asList("bank", "building", "bank building")
     ));
 
-    static Collection<Map<String, Double>> ACTUAL_1 = NormalizedModifiedPurity.transform(Arrays.asList(
+    private static final Collection<Map<String, Double>> ACTUAL_1 = NormalizedModifiedPurity.transform(Arrays.asList(
             Collections.singletonList("bank"),
             Arrays.asList("bank", "building"),
             Arrays.asList("riverbank", "streambank", "streamside"),
             Collections.singletonList("bank building")
     ));
 
-    static Collection<Map<String, Double>> ACTUAL_2 = NormalizedModifiedPurity.transform(Arrays.asList(
+    private static final Collection<Map<String, Double>> ACTUAL_2 = NormalizedModifiedPurity.transform(Collections.singletonList(
             Arrays.asList("bank", "riverbank", "streambank", "streamside", "building", "bank building")
     ));
 
-    static Collection<Map<String, Double>> ACTUAL_3 = NormalizedModifiedPurity.transform(Arrays.asList(
+    private static final Collection<Map<String, Double>> ACTUAL_3 = NormalizedModifiedPurity.transform(Arrays.asList(
             Collections.singletonList("bank"),
             Collections.singletonList("building"),
             Collections.singletonList("riverbank"),

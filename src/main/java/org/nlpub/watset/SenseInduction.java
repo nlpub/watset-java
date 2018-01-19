@@ -28,10 +28,10 @@ import java.util.*;
 import java.util.function.Function;
 
 public class SenseInduction<V, E> implements Runnable {
-    protected final Graph<V, E> graph;
-    protected final V target;
-    protected final Function<Graph<V, E>, Clustering<V>> clusteringProvider;
-    protected Collection<Collection<V>> clusters;
+    private final Graph<V, E> graph;
+    private final V target;
+    private final Function<Graph<V, E>, Clustering<V>> clusteringProvider;
+    private Collection<Collection<V>> clusters;
 
     public SenseInduction(Graph<V, E> graph, V target, Function<Graph<V, E>, Clustering<V>> clusteringProvider) {
         this.graph = graph;
