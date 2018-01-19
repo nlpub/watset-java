@@ -94,7 +94,7 @@ public class ChineseWhispers<V, E> implements Clustering<V> {
 
         neighbors.forEachRemaining(neighbor -> {
             final int label = labels.get(neighbor);
-            weights.put(label, weights.getOrDefault(label, weighting.apply(graph, node, neighbor)));
+            weights.put(label, weights.getOrDefault(label, 0d) + weighting.apply(graph, node, neighbor));
         });
 
         final Optional<Map.Entry<Integer, Double>> label = argmax(weights.entrySet().iterator(), Map.Entry::getValue);
