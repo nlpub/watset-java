@@ -29,8 +29,7 @@ In fact, `watset-java` is not just a tool, it also features a complete API for g
 
 [Chinese Whispers] is a hard clustering algorithm that resembles the popular children's game. This tool offers four different modes of this algorithm that can be set using the `-m` (`--mode`) option:
 
-* `chris`: the originally proposed node selection approach in Chinese Whispers that is suitable even for unweighted graphs;
-* `top`: the node selection approach that chooses for each node the neighboring node with the maximal edge weight;
+* `top`: the node selection approach that chooses the label having the highest total edge weight;
 * `nolog`: the `top` mode divided by the node degree;
 * `log`: the `top` mode divided by the logarithm of the node degree.
 
