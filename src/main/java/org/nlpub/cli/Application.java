@@ -29,9 +29,9 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collection;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -117,10 +117,21 @@ public class Application {
 
     public static void write(Path path, Clustering<String> clustering) throws IOException {
         try (final BufferedWriter writer = Files.newBufferedWriter(path)) {
-            int i = 0;
-            for (final Collection<String> cluster : clustering.getClusters()) {
-                writer.write(String.format(Locale.ROOT, "%d\t%d\t%s\n", i++, cluster.size(), String.join(", ", cluster)));
-            }
+            final AtomicInteger counter = new AtomicInteger(0);
+
+            clustering.getClusters().stream().
+                    sorted((smaller, larger) -> Integer.compare(larger.size(), smaller.size())).
+                    forEach(cluster -> {
+                        try {
+                            writer.write(String.format(Locale.ROOT, "%d\t%d\t%s\n",
+                                    counter.incrementAndGet(),
+                                    cluster.size(),
+                                    String.join(", ", cluster))
+                            );
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    });
         }
     }
 }
