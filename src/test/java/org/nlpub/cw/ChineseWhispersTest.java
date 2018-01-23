@@ -31,7 +31,7 @@ import static org.junit.Assert.assertEquals;
 public class ChineseWhispersTest {
     private final static Random random = new Random(1337);
 
-    private final static Graph<String, DefaultWeightedEdge> DISJOINT = SimpleWeightedGraph.<String, DefaultWeightedEdge>createBuilder(DefaultWeightedEdge.class).
+    public final static Graph<String, DefaultWeightedEdge> DISJOINT = SimpleWeightedGraph.<String, DefaultWeightedEdge>createBuilder(DefaultWeightedEdge.class).
             addVertices("a", "b", "c", "d", "e").
             addEdge("a", "b").
             addEdge("a", "c").

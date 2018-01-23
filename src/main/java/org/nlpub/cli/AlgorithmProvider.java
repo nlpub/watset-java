@@ -21,6 +21,7 @@ import org.jgrapht.Graph;
 import org.nlpub.cw.ChineseWhispers;
 import org.nlpub.cw.NodeWeighting;
 import org.nlpub.graph.Clustering;
+import org.nlpub.graph.ComponentsClustering;
 import org.nlpub.graph.DummyClustering;
 import org.nlpub.maxmax.MaxMax;
 import org.nlpub.mcl.MarkovClustering;
@@ -53,8 +54,10 @@ public class AlgorithmProvider<V, E> implements Function<Graph<V, E>, Clustering
         switch (algorithm.toLowerCase()) {
             case "dummy":
                 return new DummyClustering<>();
+            case "components":
+                return new ComponentsClustering<>(graph);
             case "cw":
-                final NodeWeighting<V, E> weighting = parseNodeWeighting();
+                final NodeWeighting<V, E> weighting = parseChineseWhispersNodeWeighting();
                 return new ChineseWhispers<>(graph, weighting);
             case "mcl":
                 final int e = Integer.parseInt(params.getOrDefault("e", "2"));
@@ -67,7 +70,7 @@ public class AlgorithmProvider<V, E> implements Function<Graph<V, E>, Clustering
         }
     }
 
-    private NodeWeighting<V, E> parseNodeWeighting() {
+    private NodeWeighting<V, E> parseChineseWhispersNodeWeighting() {
         switch (params.getOrDefault("mode", "top").toLowerCase()) {
             case "top":
                 return NodeWeighting.top();
