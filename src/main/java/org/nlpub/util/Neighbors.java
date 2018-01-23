@@ -25,7 +25,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public interface Neighbors {
-    static <V, E> Iterator<V> neighborInterator(Graph<V, E> graph, V node) {
+    static <V, E> Iterator<V> neighborIterator(Graph<V, E> graph, V node) {
         return graph.edgesOf(node).stream().
                 map(e -> Graphs.getOppositeVertex(graph, e, node)).
                 iterator();

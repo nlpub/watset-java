@@ -90,7 +90,7 @@ public class ChineseWhispers<V, E> implements Clustering<V> {
     private Integer choose(Graph<V, E> graph, Map<V, Integer> labels, NodeWeighting<V, E> weighting, V node) {
         final Map<Integer, Double> weights = new HashMap<>();
 
-        final Iterator<V> neighbors = Neighbors.neighborInterator(graph, node);
+        final Iterator<V> neighbors = Neighbors.neighborIterator(graph, node);
 
         neighbors.forEachRemaining(neighbor -> {
             final int label = labels.get(neighbor);
