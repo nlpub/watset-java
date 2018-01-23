@@ -17,13 +17,26 @@ There are two ways to obtain `watset-java`:
 
 2. to compile the `master` branch from source by cloning the [repository](https://github.com/nlpub/watset-java) and running `mvn package` in the repository root.
 
-This tool has five kinds of activity named the *commands*: four invoke different clustering algorithms (`watset`, `cw`, `mcl`, `maxmax`), one invokes graph-based word sense induction (`senses`).
+This tool has several kinds of activity named the *commands*: most invoke different clustering algorithms (`watset`, `cw`, `mcl`, `maxmax`), one invokes graph-based word sense induction (`senses`).
 
 There are two global command-line arguments: `-i` (or `--input`) that specifies the path of input file and `-o` (or `--output`) that specifies the path of the output file. The default values for these parameters are `/dev/stdin` and `/dev/stdout`, correspondingly.
 
 The input for this tool is an undirected weighted graph represented in the ABC format. This format is a tab-separated edge list: <code>word1&#9;word2&#9;weight</code>. The output of the graph clustering algorithm is a tab-separated file containing three columns: the cluster identifier, the cluster size, and the list of elements belonging to the cluster.
 
 In fact, `watset-java` is not just a tool, it also features a complete API for graph clustering. This API can easily be embedded into your application or library.
+
+### Dummy Clustering
+
+As the baseline, it is possible to use the following four dummy clustering “algorithms”:
+
+* `empty`: the empty output regardless of the input;
+* `singleton`: each node of the input graph is a different cluster;
+* `together`: one cluster that keeps all the elements of the input graph;
+* `components`: each cluster is a connected component of the input graph.
+
+```bash
+$ java -jar watset.jar -i graph.txt -o output.tsv singleton
+```
 
 ### Chinese Whispers
 
