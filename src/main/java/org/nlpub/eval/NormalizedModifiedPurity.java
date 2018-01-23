@@ -17,7 +17,6 @@
 
 package org.nlpub.eval;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,15 +32,10 @@ import static java.util.stream.Collectors.*;
  */
 public class NormalizedModifiedPurity<V> implements Supplier<NormalizedModifiedPurity.Result> {
     public static <V> Collection<Map<V, Double>> transform(Collection<Collection<V>> clusters) {
-        final Collection<Map<V, Double>> result = new ArrayList<>(clusters.size());
-
-        for (final Collection<V> cluster : clusters) {
-            final Map<V, Double> transformed = cluster.stream().
-                    collect(groupingBy(identity(), reducing(0d, e -> 1d, Double::sum)));
-            result.add(transformed);
-        }
-
-        return result;
+        return clusters.stream().
+                map(cluster -> cluster.stream().
+                        collect(groupingBy(identity(), reducing(0d, e -> 1d, Double::sum)))).
+                collect(toList());
     }
 
     public static class Result {
@@ -63,7 +57,9 @@ public class NormalizedModifiedPurity<V> implements Supplier<NormalizedModifiedP
 
         public double getF1Score() {
             final double denominator = normalizedModifiedPurity + normalizedInversePurity;
+
             if (denominator == 0d) return 0d;
+
             return 2 * normalizedModifiedPurity * normalizedInversePurity / denominator;
         }
     }
@@ -100,12 +96,10 @@ public class NormalizedModifiedPurity<V> implements Supplier<NormalizedModifiedP
 
         if (denominator == 0) return 0;
 
-        double numerator = 0;
-
-        for (final Map<V, Double> cluster : clusters) {
-            final double score = classes.stream().mapToDouble(klass -> delta(cluster, klass, modified)).max().orElse(0);
-            numerator += score;
-        }
+        double numerator = clusters.stream().
+                mapToDouble(cluster -> classes.stream().
+                        mapToDouble(klass -> delta(cluster, klass, modified)).max().orElse(0)).
+                sum();
 
         return numerator / denominator;
     }
@@ -130,18 +124,16 @@ public class NormalizedModifiedPurity<V> implements Supplier<NormalizedModifiedP
         clusters.stream().flatMap(cluster -> cluster.entrySet().stream()).
                 forEach(entry -> counter.put(entry.getKey(), counter.getOrDefault(entry.getKey(), 0d) + entry.getValue()));
 
-        final Collection<Map<V, Double>> normalized = new ArrayList<>(clusters.size());
-
-        for (final Map<V, Double> cluster : clusters) {
+        final Collection<Map<V, Double>> normalized = clusters.stream().map(cluster -> {
             final Map<V, Double> normalizedCluster = cluster.entrySet().stream().
                     collect(toMap(Map.Entry::getKey, entry -> entry.getValue() / counter.get(entry.getKey())));
 
             if (cluster.size() != normalizedCluster.size()) throw new IllegalArgumentException("Cluster size changed");
 
-            normalized.add(normalizedCluster);
-        }
+            return normalizedCluster;
+        }).collect(toList());
 
-        if (normalized.size() != clusters.size()) throw new IllegalArgumentException("Collection size changed");
+        if (clusters.size() != normalized.size()) throw new IllegalArgumentException("Collection size changed");
 
         return normalized;
     }
