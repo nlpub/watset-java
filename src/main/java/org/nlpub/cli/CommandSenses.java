@@ -20,7 +20,7 @@ package org.nlpub.cli;
 import com.beust.jcommander.Parameter;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
-import org.nlpub.graph.DummyClustering;
+import org.nlpub.graph.EmptyClustering;
 import org.nlpub.vsm.DummyContextSimilarity;
 import org.nlpub.watset.Watset;
 import org.nlpub.watset.sense.IndexedSense;
@@ -58,7 +58,7 @@ public class CommandSenses implements Runnable {
         final Graph<String, DefaultWeightedEdge> graph = application.getGraph();
 
         final Watset<String, DefaultWeightedEdge> watset = new Watset<>(
-                graph, algorithm, DummyClustering.provider(),
+                graph, algorithm, EmptyClustering.provider(),
                 new DummyContextSimilarity<>()
         );
 

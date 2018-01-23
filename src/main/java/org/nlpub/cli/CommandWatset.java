@@ -65,7 +65,7 @@ public class CommandWatset extends ClusteringCommand {
 
     @Override
     public void run() {
-        if (!global.equalsIgnoreCase("dummy")) {
+        if (!global.equalsIgnoreCase("empty")) {
             super.run();
             return;
         }

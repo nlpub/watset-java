@@ -23,9 +23,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.function.Function;
 
-public class DummyClustering<V> implements Clustering<V> {
+public class EmptyClustering<V> implements Clustering<V> {
     public static <V, E> Function<Graph<V, E>, Clustering<V>> provider() {
-        return graph -> new DummyClustering<>();
+        return graph -> new EmptyClustering<>();
     }
 
     @Override
