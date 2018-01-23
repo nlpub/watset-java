@@ -20,9 +20,7 @@ package org.nlpub.cli;
 import org.jgrapht.Graph;
 import org.nlpub.cw.ChineseWhispers;
 import org.nlpub.cw.NodeWeighting;
-import org.nlpub.graph.Clustering;
-import org.nlpub.graph.ComponentsClustering;
-import org.nlpub.graph.EmptyClustering;
+import org.nlpub.graph.*;
 import org.nlpub.maxmax.MaxMax;
 import org.nlpub.mcl.MarkovClustering;
 
@@ -54,6 +52,10 @@ public class AlgorithmProvider<V, E> implements Function<Graph<V, E>, Clustering
         switch (algorithm.toLowerCase()) {
             case "empty":
                 return new EmptyClustering<>();
+            case "together":
+                return new TogetherClustering<>(graph);
+            case "singleton":
+                return new SingletonClustering<>(graph);
             case "components":
                 return new ComponentsClustering<>(graph);
             case "cw":
