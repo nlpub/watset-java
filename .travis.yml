@@ -26,6 +26,7 @@ deploy:
 - provider: pages
   local-dir: target/site/apidocs
   skip-cleanup: true
+  github-token: $GITHUB_TOKEN
   on:
     jdk: oraclejdk8
     repo: nlpub/watset-java
