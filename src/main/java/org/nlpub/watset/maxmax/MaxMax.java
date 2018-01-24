@@ -89,6 +89,7 @@ public class MaxMax<V, E> implements Clustering<V> {
         return digraph;
     }
 
+    @SuppressWarnings("unused")
     public Map<V, Set<V>> getMaximals() {
         return maximals;
     }

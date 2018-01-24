@@ -33,7 +33,7 @@ import java.nio.file.Path;
 import java.util.Locale;
 
 @Parameters(commandDescription = "Watset")
-public class CommandWatset extends ClusteringCommand {
+class CommandWatset extends ClusteringCommand {
     @Parameter(required = true, description = "Local clustering algorithm", names = {"-l", "--local"})
     private String local;
 

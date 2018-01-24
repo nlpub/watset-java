@@ -22,7 +22,7 @@ import org.nlpub.watset.graph.Clustering;
 
 import java.util.Collections;
 
-public class CommandMaxMax extends ClusteringCommand {
+class CommandMaxMax extends ClusteringCommand {
     public CommandMaxMax(Application application) {
         super(application);
     }

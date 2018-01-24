@@ -23,7 +23,7 @@ import java.io.IOException;
 
 import static org.nlpub.watset.cli.Application.write;
 
-public abstract class ClusteringCommand implements Runnable {
+abstract class ClusteringCommand implements Runnable {
     final Application application;
 
     public ClusteringCommand(Application application) {

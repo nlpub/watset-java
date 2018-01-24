@@ -36,7 +36,7 @@ import java.util.Map;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.joining;
 
-public class CommandSenses implements Runnable {
+class CommandSenses implements Runnable {
     private final Application application;
 
     public CommandSenses(Application application) {

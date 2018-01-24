@@ -44,11 +44,7 @@ public interface LabelSelector<V, E> {
 
             final Optional<V> match = argmax(neighbors, neighbor -> weighting.apply(graph, labels, node, neighbor));
 
-            if (match.isPresent()) {
-                return labels.get(match.get());
-            } else {
-                return labels.get(node);
-            }
+            return match.map(labels::get).orElseGet(() -> labels.get(node));
         };
     }
 

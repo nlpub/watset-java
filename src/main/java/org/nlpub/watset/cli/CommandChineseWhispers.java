@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Parameters(commandDescription = "Chinese Whispers")
-public class CommandChineseWhispers extends ClusteringCommand {
+class CommandChineseWhispers extends ClusteringCommand {
     @Parameter(names = {"-m", "--mode"})
     private String mode;
 

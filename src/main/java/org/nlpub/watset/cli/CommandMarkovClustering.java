@@ -24,7 +24,7 @@ import org.nlpub.watset.graph.Clustering;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CommandMarkovClustering extends ClusteringCommand {
+class CommandMarkovClustering extends ClusteringCommand {
     @Parameter(names = "-e")
     private int e;
 
