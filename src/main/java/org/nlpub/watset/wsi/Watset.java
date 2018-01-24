@@ -30,6 +30,7 @@ import java.util.function.Function;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.requireNonNull;
 import static org.nlpub.watset.vsm.ContextSimilarity.DEFAULT_CONTEXT_WEIGHT;
 
 /**
@@ -51,10 +52,10 @@ public class Watset<V, E> implements Clustering<V> {
     private Graph<Sense<V>, DefaultWeightedEdge> senseGraph;
 
     public Watset(Graph<V, E> graph, Function<Graph<V, E>, Clustering<V>> local, Function<Graph<Sense<V>, DefaultWeightedEdge>, Clustering<Sense<V>>> global, ContextSimilarity<V> similarity) {
-        this.graph = graph;
-        this.local = local;
-        this.global = global;
-        this.similarity = similarity;
+        this.graph = requireNonNull(graph);
+        this.local = requireNonNull(local);
+        this.global = requireNonNull(global);
+        this.similarity = requireNonNull(similarity);
     }
 
     @Override

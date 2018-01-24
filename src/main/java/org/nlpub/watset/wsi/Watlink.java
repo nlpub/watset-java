@@ -25,6 +25,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * Watlink is a method for the generation and disambiguation of the upper-level elements for the clusters.
  *
@@ -37,8 +39,8 @@ public class Watlink<V> {
     private final Long k;
 
     public Watlink(Map<V, Map<Sense<V>, Map<V, Number>>> inventory, ContextSimilarity<V> similarity, long k) {
-        this.inventory = inventory;
-        this.similarity = similarity;
+        this.inventory = requireNonNull(inventory);
+        this.similarity = requireNonNull(similarity);
         this.k = k;
     }
 

@@ -25,6 +25,7 @@ import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toSet;
 
 public class Pairwise<V> implements Supplier<PrecisionRecall> {
@@ -32,8 +33,8 @@ public class Pairwise<V> implements Supplier<PrecisionRecall> {
     private final Collection<Collection<V>> classes;
 
     public Pairwise(Collection<Collection<V>> clusters, Collection<Collection<V>> classes) {
-        this.clusters = clusters;
-        this.classes = classes;
+        this.clusters = requireNonNull(clusters);
+        this.classes = requireNonNull(classes);
     }
 
     @Override

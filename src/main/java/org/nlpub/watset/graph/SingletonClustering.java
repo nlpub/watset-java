@@ -22,13 +22,14 @@ import org.jgrapht.Graph;
 import java.util.Collection;
 import java.util.Collections;
 
+import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toList;
 
 public class SingletonClustering<V, E> implements Clustering<V> {
     private final Graph<V, E> graph;
 
     public SingletonClustering(Graph<V, E> graph) {
-        this.graph = graph;
+        this.graph = requireNonNull(graph);
     }
 
     @Override

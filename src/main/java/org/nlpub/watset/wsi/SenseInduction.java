@@ -25,6 +25,8 @@ import org.nlpub.watset.util.Neighbors;
 import java.util.*;
 import java.util.function.Function;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * A simple graph-based word sense induction approach. It clusters node neighborhoods.
  *
@@ -38,9 +40,9 @@ public class SenseInduction<V, E> implements Runnable {
     private Collection<Collection<V>> clusters;
 
     public SenseInduction(Graph<V, E> graph, V target, Function<Graph<V, E>, Clustering<V>> clusteringProvider) {
-        this.graph = graph;
-        this.target = target;
-        this.clusteringProvider = clusteringProvider;
+        this.graph = requireNonNull(graph);
+        this.target = requireNonNull(target);
+        this.clusteringProvider = requireNonNull(clusteringProvider);
     }
 
     @Override

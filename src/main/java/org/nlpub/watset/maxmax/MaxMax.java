@@ -27,6 +27,8 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * An implementation of the MaxMax word sense induction algorithm.
  *
@@ -34,20 +36,24 @@ import java.util.stream.Collectors;
  */
 public class MaxMax<V, E> implements Clustering<V> {
     private final Graph<V, E> graph;
-    private final Graph<V, DefaultEdge> digraph;
-    private final Map<V, Set<V>> maximals;
-    private final Map<V, Boolean> roots;
+    private Graph<V, DefaultEdge> digraph;
+    private Map<V, Set<V>> maximals;
+    private Map<V, Boolean> roots;
 
     public MaxMax(Graph<V, E> graph) {
-        this.graph = graph;
-        this.digraph = new DefaultDirectedGraph<>(DefaultEdge.class);
-        this.graph.vertexSet().forEach(digraph::addVertex);
-        this.maximals = this.digraph.vertexSet().stream().collect(Collectors.toMap(Function.identity(), v -> new HashSet<>()));
-        this.roots = this.digraph.vertexSet().stream().collect(Collectors.toMap(Function.identity(), v -> true));
+        this.graph = requireNonNull(graph);
     }
 
     public void run() {
+        digraph = new DefaultDirectedGraph<>(DefaultEdge.class);
+        maximals = null;
+        roots = null;
+
+        graph.vertexSet().forEach(digraph::addVertex);
+
         // Preparation: Compute Maximal Vertices
+        maximals = this.digraph.vertexSet().stream().collect(Collectors.toMap(Function.identity(), v -> new HashSet<>()));
+
         digraph.vertexSet().forEach(u -> {
             final double max = graph.edgesOf(u).stream().mapToDouble(graph::getEdgeWeight).max().orElse(-1);
             graph.edgesOf(u).stream().
@@ -64,7 +70,10 @@ public class MaxMax<V, E> implements Clustering<V> {
         });
 
         // Stage 2: Identifying Clusters
+        roots = this.digraph.vertexSet().stream().collect(Collectors.toMap(Function.identity(), v -> true));
+
         final Set<V> visited = new HashSet<>();
+
         digraph.vertexSet().forEach(v -> {
             if (roots.get(v)) {
                 final Queue<V> queue = new LinkedList<>();

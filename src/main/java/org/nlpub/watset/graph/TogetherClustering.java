@@ -22,11 +22,13 @@ import org.jgrapht.Graph;
 import java.util.Collection;
 import java.util.Collections;
 
+import static java.util.Objects.requireNonNull;
+
 public class TogetherClustering<V, E> implements Clustering<V> {
     private final Graph<V, E> graph;
 
     public TogetherClustering(Graph<V, E> graph) {
-        this.graph = graph;
+        this.graph = requireNonNull(graph);
     }
 
     @Override

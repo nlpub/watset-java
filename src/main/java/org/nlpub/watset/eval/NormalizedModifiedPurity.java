@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import static java.util.Objects.requireNonNull;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.*;
 
@@ -44,8 +45,8 @@ public class NormalizedModifiedPurity<V> implements Supplier<PrecisionRecall> {
 
     public NormalizedModifiedPurity(Collection<Map<V, Double>> clusters, Collection<Map<V, Double>> classes, boolean fuzzy) {
         this.fuzzy = fuzzy;
-        this.clusters = fuzzy ? normalize(clusters) : clusters;
-        this.classes = fuzzy ? normalize(classes) : classes;
+        this.clusters = fuzzy ? normalize(requireNonNull(clusters)) : requireNonNull(clusters);
+        this.classes = fuzzy ? normalize(requireNonNull(classes)) : requireNonNull(classes);
     }
 
     public NormalizedModifiedPurity(Collection<Map<V, Double>> clusters, Collection<Map<V, Double>> classes) {

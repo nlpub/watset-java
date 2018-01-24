@@ -27,6 +27,8 @@ import org.nlpub.watset.graph.Clustering;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * This is a non-optimized implementation of the Markov Clustering algorithm.
  * <p>
@@ -47,7 +49,7 @@ public class MarkovClustering<V, E> implements Clustering<V> {
     protected Map<V, Integer> index;
 
     public MarkovClustering(Graph<V, E> graph, int e, double r) {
-        this.graph = graph;
+        this.graph = requireNonNull(graph);
         this.e = e;
         this.r = r;
     }

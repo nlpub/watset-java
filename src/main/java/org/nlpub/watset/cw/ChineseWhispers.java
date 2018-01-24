@@ -23,22 +23,24 @@ import org.nlpub.watset.graph.Clustering;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.requireNonNull;
+
 public class ChineseWhispers<V, E> implements Clustering<V> {
-    public static final Integer ITERATIONS = 20;
+    public static final int ITERATIONS = 20;
 
     private final Graph<V, E> graph;
     private final LabelSelector<V, E> selector;
     private final NodeWeighting<V, E> weighting;
-    private final Integer iterations;
+    private final int iterations;
     private final Random random;
     private Map<V, Integer> labels;
 
-    public ChineseWhispers(Graph<V, E> graph, NodeWeighting<V, E> weighting, LabelSelector<V, E> selector, Integer iterations, Random random) {
-        this.graph = graph;
-        this.weighting = weighting;
-        this.selector = selector;
+    public ChineseWhispers(Graph<V, E> graph, NodeWeighting<V, E> weighting, LabelSelector<V, E> selector, int iterations, Random random) {
+        this.graph = requireNonNull(graph);
+        this.weighting = requireNonNull(weighting);
+        this.selector = requireNonNull(selector);
         this.iterations = iterations;
-        this.random = random;
+        this.random = requireNonNull(random);
     }
 
     public ChineseWhispers(Graph<V, E> graph, NodeWeighting<V, E> weighting, LabelSelector<V, E> selector) {

@@ -29,7 +29,7 @@ public class ComponentsClustering<V, E> implements Clustering<V> {
     private Collection<Collection<V>> clusters = null;
 
     public ComponentsClustering(Graph<V, E> graph) {
-        this.graph = graph;
+        this.graph = requireNonNull(graph);
     }
 
     @Override
