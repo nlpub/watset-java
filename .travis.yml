@@ -28,5 +28,6 @@ deploy:
   skip-cleanup: true
   github-token: $GITHUB_TOKEN
   on:
+    tags: true
     jdk: oraclejdk8
     repo: nlpub/watset-java
