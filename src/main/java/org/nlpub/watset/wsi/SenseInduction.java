@@ -25,6 +25,12 @@ import org.nlpub.watset.util.Neighbors;
 import java.util.*;
 import java.util.function.Function;
 
+/**
+ * A simple graph-based word sense induction approach. It clusters node neighborhoods.
+ *
+ * @param <V> node class.
+ * @param <E> edge class.
+ */
 public class SenseInduction<V, E> implements Runnable {
     private final Graph<V, E> graph;
     private final V target;
@@ -39,7 +45,7 @@ public class SenseInduction<V, E> implements Runnable {
 
     @Override
     public void run() {
-        this.clusters = null;
+        clusters = null;
 
         final Set<V> neighborhood = Neighbors.neighborSetOf(graph, target);
 
@@ -48,7 +54,7 @@ public class SenseInduction<V, E> implements Runnable {
         final Clustering<V> clustering = clusteringProvider.apply(ego);
         clustering.run();
 
-        this.clusters = clustering.getClusters();
+        clusters = clustering.getClusters();
     }
 
     public Map<Sense<V>, Map<V, Number>> getSenses() {
@@ -60,10 +66,10 @@ public class SenseInduction<V, E> implements Runnable {
             final Map<V, Number> context = new HashMap<>();
 
             for (final V neighbor : cluster) {
-                context.put(neighbor, this.graph.getEdgeWeight(this.graph.getEdge(this.target, neighbor)));
+                context.put(neighbor, graph.getEdgeWeight(graph.getEdge(target, neighbor)));
             }
 
-            senses.put(new IndexedSense<>(this.target, i++), context);
+            senses.put(new IndexedSense<>(target, i++), context);
         }
 
         return senses;

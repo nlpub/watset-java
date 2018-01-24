@@ -28,7 +28,8 @@ import java.util.Map;
 /**
  * Watlink is a method for the generation and disambiguation of the upper-level elements for the clusters.
  *
- * @see <a href="http://www.dialog-21.ru/media/3959/ustalovda.pdf">Ustalov et al. (Dialogue 2017)</a>
+ * @param <V> node class.
+ * @see <a href="http://www.dialog-21.ru/media/3959/ustalovda.pdf">Ustalov (Dialogue 2017)</a>
  */
 public class Watlink<V> {
     private final Map<V, Map<Sense<V>, Map<V, Number>>> inventory;

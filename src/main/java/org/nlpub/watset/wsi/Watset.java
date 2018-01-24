@@ -32,29 +32,36 @@ import java.util.stream.Collectors;
 
 import static org.nlpub.watset.vsm.ContextSimilarity.DEFAULT_CONTEXT_WEIGHT;
 
+/**
+ * Watset is a local-global meta-algorithm for fuzzy graph clustering. It builds an intermediate undirected graph that addresses the element ambiguity by considering different senses of each element in the input graph.
+ *
+ * @param <V> node class.
+ * @param <E> edge class.
+ * @see <a href="https://doi.org/10.18653/v1/P17-1145">Ustalov et al. (ACL 2017)</a>
+ */
 public class Watset<V, E> implements Clustering<V> {
     private static final Logger logger = Logger.getLogger(Watset.class.getSimpleName());
 
     private final Graph<V, E> graph;
-    private final Function<Graph<V, E>, Clustering<V>> localClusteringProvider;
-    private final Function<Graph<Sense<V>, DefaultWeightedEdge>, Clustering<Sense<V>>> globalClusteringProvider;
+    private final Function<Graph<V, E>, Clustering<V>> local;
+    private final Function<Graph<Sense<V>, DefaultWeightedEdge>, Clustering<Sense<V>>> global;
     private final ContextSimilarity<V> similarity;
     private Map<V, Map<Sense<V>, Map<V, Number>>> inventory;
     private Collection<Collection<Sense<V>>> senseClusters;
     private Graph<Sense<V>, DefaultWeightedEdge> senseGraph;
 
-    public Watset(Graph<V, E> graph, Function<Graph<V, E>, Clustering<V>> localClusteringProvider, Function<Graph<Sense<V>, DefaultWeightedEdge>, Clustering<Sense<V>>> globalClusteringProvider, ContextSimilarity<V> similarity) {
+    public Watset(Graph<V, E> graph, Function<Graph<V, E>, Clustering<V>> local, Function<Graph<Sense<V>, DefaultWeightedEdge>, Clustering<Sense<V>>> global, ContextSimilarity<V> similarity) {
         this.graph = graph;
-        this.localClusteringProvider = localClusteringProvider;
-        this.globalClusteringProvider = globalClusteringProvider;
+        this.local = local;
+        this.global = global;
         this.similarity = similarity;
     }
 
     @Override
     public void run() {
-        this.senseClusters = null;
-        this.senseGraph = null;
-        this.inventory = null;
+        senseClusters = null;
+        senseGraph = null;
+        inventory = null;
 
         logger.info("Watset started.");
 
@@ -72,23 +79,23 @@ public class Watset<V, E> implements Clustering<V> {
 
         logger.info("Watset: contexts constructed.");
 
-        this.senseGraph = buildSenseGraph(contexts);
+        senseGraph = buildSenseGraph(contexts);
 
         logger.info("Watset: sense graph constructed.");
 
-        final Clustering<Sense<V>> globalClustering = this.globalClusteringProvider.apply(senseGraph);
+        final Clustering<Sense<V>> globalClustering = global.apply(senseGraph);
         globalClustering.run();
 
         logger.info("Watset: clustering the sense graph.");
 
-        this.senseClusters = globalClustering.getClusters();
+        senseClusters = globalClustering.getClusters();
 
         logger.info("Watset finished.");
     }
 
     @Override
     public Collection<Collection<V>> getClusters() {
-        return this.senseClusters.stream().
+        return senseClusters.stream().
                 map(cluster -> cluster.stream().map(Sense::get).collect(Collectors.toSet())).
                 collect(Collectors.toSet());
     }
@@ -110,7 +117,7 @@ public class Watset<V, E> implements Clustering<V> {
     }
 
     private Map<Sense<V>, Map<V, Number>> induceSenses(V target) {
-        final SenseInduction<V, E> inducer = new SenseInduction<>(graph, target, this.localClusteringProvider);
+        final SenseInduction<V, E> inducer = new SenseInduction<>(graph, target, local);
         inducer.run();
 
         return inducer.getSenses();
