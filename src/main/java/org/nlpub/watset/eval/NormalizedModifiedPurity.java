@@ -30,38 +30,12 @@ import static java.util.stream.Collectors.*;
  *
  * @param <V> cluster element type.
  */
-public class NormalizedModifiedPurity<V> implements Supplier<NormalizedModifiedPurity.Result> {
+public class NormalizedModifiedPurity<V> implements Supplier<PrecisionRecall> {
     public static <V> Collection<Map<V, Double>> transform(Collection<Collection<V>> clusters) {
         return clusters.stream().
                 map(cluster -> cluster.stream().
                         collect(groupingBy(identity(), reducing(0d, e -> 1d, Double::sum)))).
                 collect(toList());
-    }
-
-    public static class Result {
-        private final double normalizedModifiedPurity;
-        private final double normalizedInversePurity;
-
-        public Result(double normalizedModifiedPurity, double normalizedInversePurity) {
-            this.normalizedModifiedPurity = normalizedModifiedPurity;
-            this.normalizedInversePurity = normalizedInversePurity;
-        }
-
-        public double getNormalizedModifiedPurity() {
-            return normalizedModifiedPurity;
-        }
-
-        public double getNormalizedInversePurity() {
-            return normalizedInversePurity;
-        }
-
-        public double getF1Score() {
-            final double denominator = normalizedModifiedPurity + normalizedInversePurity;
-
-            if (denominator == 0d) return 0d;
-
-            return 2 * normalizedModifiedPurity * normalizedInversePurity / denominator;
-        }
     }
 
     private final Collection<Map<V, Double>> clusters;
@@ -79,10 +53,10 @@ public class NormalizedModifiedPurity<V> implements Supplier<NormalizedModifiedP
     }
 
     @Override
-    public Result get() {
+    public PrecisionRecall get() {
         final double normalizedModifiedPurity = purity(clusters, classes, true);
         final double normalizedInversePurity = purity(classes, clusters, false);
-        return new NormalizedModifiedPurity.Result(normalizedModifiedPurity, normalizedInversePurity);
+        return new PrecisionRecall(normalizedModifiedPurity, normalizedInversePurity);
     }
 
     private double purity(Collection<Map<V, Double>> clusters, Collection<Map<V, Double>> classes, boolean modified) {
