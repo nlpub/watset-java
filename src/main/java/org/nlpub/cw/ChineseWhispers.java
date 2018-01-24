@@ -19,31 +19,30 @@ package org.nlpub.cw;
 
 import org.jgrapht.Graph;
 import org.nlpub.graph.Clustering;
-import org.nlpub.util.Neighbors;
 
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static org.nlpub.util.Maximizer.argmax;
 
 public class ChineseWhispers<V, E> implements Clustering<V> {
     public static final Integer ITERATIONS = 20;
 
     private final Graph<V, E> graph;
+    private final LabelSelector<V, E> selector;
     private final NodeWeighting<V, E> weighting;
     private final Integer iterations;
     private final Random random;
     private Map<V, Integer> labels;
 
-    public ChineseWhispers(Graph<V, E> graph, NodeWeighting<V, E> weighting, Integer iterations, Random random) {
+    public ChineseWhispers(Graph<V, E> graph, NodeWeighting<V, E> weighting, LabelSelector<V, E> selector, Integer iterations, Random random) {
         this.graph = graph;
         this.weighting = weighting;
+        this.selector = selector;
         this.iterations = iterations;
         this.random = random;
     }
 
-    public ChineseWhispers(Graph<V, E> graph, NodeWeighting<V, E> weighting) {
-        this(graph, weighting, ITERATIONS, new Random());
+    public ChineseWhispers(Graph<V, E> graph, NodeWeighting<V, E> weighting, LabelSelector<V, E> selector) {
+        this(graph, weighting, selector, ITERATIONS, new Random());
     }
 
     @Override
@@ -64,7 +63,7 @@ public class ChineseWhispers<V, E> implements Clustering<V> {
             Collections.shuffle(nodes, random);
 
             for (final V node : nodes) {
-                final int updated = choose(graph, labels, weighting, node);
+                final int updated = selector.select(graph, labels, weighting, node);
                 final int previous = labels.put(node, updated);
                 changed = changed || (previous != updated);
             }
@@ -85,20 +84,5 @@ public class ChineseWhispers<V, E> implements Clustering<V> {
         }
 
         return clusters;
-    }
-
-    private Integer choose(Graph<V, E> graph, Map<V, Integer> labels, NodeWeighting<V, E> weighting, V node) {
-        final Map<Integer, Double> weights = new HashMap<>();
-
-        final Iterator<V> neighbors = Neighbors.neighborIterator(graph, node);
-
-        neighbors.forEachRemaining(neighbor -> {
-            final int label = labels.get(neighbor);
-            weights.put(label, weights.getOrDefault(label, 0d) + weighting.apply(graph, node, neighbor));
-        });
-
-        final Optional<Map.Entry<Integer, Double>> label = argmax(weights.entrySet().iterator(), Map.Entry::getValue);
-
-        return label.map(Map.Entry::getKey).orElseGet(() -> labels.get(node));
     }
 }

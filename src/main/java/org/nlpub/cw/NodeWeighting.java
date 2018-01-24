@@ -19,19 +19,25 @@ package org.nlpub.cw;
 
 import org.jgrapht.Graph;
 
+import java.util.Map;
+
 @FunctionalInterface
 public interface NodeWeighting<V, E> {
-    double apply(Graph<V, E> graph, V node, V neighbor);
+    double apply(Graph<V, E> graph, Map<V, Integer> labels, V node, V neighbor);
+
+    static <V, E> NodeWeighting<V, E> label() {
+        return (graph, labels, node, neighbor) -> labels.get(node);
+    }
 
     static <V, E> NodeWeighting<V, E> top() {
-        return (graph, node, neighbor) -> graph.getEdgeWeight(graph.getEdge(node, neighbor));
+        return (graph, labels, node, neighbor) -> graph.getEdgeWeight(graph.getEdge(node, neighbor));
     }
 
     static <V, E> NodeWeighting<V, E> log() {
-        return (graph, node, neighbor) -> graph.getEdgeWeight(graph.getEdge(node, neighbor)) / Math.log(1 + graph.degreeOf(neighbor));
+        return (graph, labels, node, neighbor) -> graph.getEdgeWeight(graph.getEdge(node, neighbor)) / Math.log(1 + graph.degreeOf(neighbor));
     }
 
     static <V, E> NodeWeighting<V, E> nolog() {
-        return (graph, node, neighbor) -> graph.getEdgeWeight(graph.getEdge(node, neighbor)) / graph.degreeOf(neighbor);
+        return (graph, labels, node, neighbor) -> graph.getEdgeWeight(graph.getEdge(node, neighbor)) / graph.degreeOf(neighbor);
     }
 }
