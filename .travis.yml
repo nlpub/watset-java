@@ -7,6 +7,9 @@ before_script:
 - mvn versions:display-dependency-updates versions:display-plugin-updates
 after_success:
 - mvn javadoc:javadoc
+env:
+  global:
+    secure: G3LjwFqKXkm9l6ZEDGt7we/7uE9tscgjtCBDeHGzm5ikhXyoZHSiSgf14BPvbeBbC8q2IRKwNQAqFoJFaZBBN58bETG2Tnq/JPo9/VbBHzebzZAQGjUxtnptqKQL49g2zyi9mwdLjOLr+GoW/j/QxdWh8K1oJp9PxT/mnsI7ObhMQ80GhwQNRa379saktW+tv+tSXZZXsd1fJB4Isz2z8SA78OlkTdyCeCQFYcv/Uf525NRYcGeju+vzV/9hA8TaQytQhZ7buIn60BmkbOXRCK1oJSKrnTDZEU+AGjf4CKKgoS0Kw00RB4V2nEiHV0NRfhxI/N9q4yf71lWgADNzcE4pXMEGId5Tc3dwieZzmhYq20el03m+6uQjI+Kv2F1iX+cBdZh3OYeSvpLx6sQi1xmoGV/2KyWFMeIlV9tTsi38zb+7S7S3qLa+r3TDRGdlnD5VXcqaqSXvDgseHCzcAK2PDVyZcEFETa3L8IFRxGX03HFtKHnAhjZx8g1dxeuGUXVVTWzHGcIuRhn7dJOCXImIcl9yMIiQ7f3ISmJTFfK9iPH6zTfEgaZ7ytA0sp8SIJmSB6eC0vih5i9EO6c0tEu9lf2bPJ92pmPIWi/9QdXBLuvbr9l2Y6KDzzhLCygh3SwfYjtsFBIQxwGaLvpqx1cNZ+ie2he3vtC3EWe4pWo=
 cache:
   directories:
   - "$HOME/.m2"
@@ -23,8 +26,7 @@ deploy:
   - provider: pages
     local-dir: target/site/apidocs
     skip-cleanup: true
-    env:
-      secure: "G3LjwFqKXkm9l6ZEDGt7we/7uE9tscgjtCBDeHGzm5ikhXyoZHSiSgf14BPvbeBbC8q2IRKwNQAqFoJFaZBBN58bETG2Tnq/JPo9/VbBHzebzZAQGjUxtnptqKQL49g2zyi9mwdLjOLr+GoW/j/QxdWh8K1oJp9PxT/mnsI7ObhMQ80GhwQNRa379saktW+tv+tSXZZXsd1fJB4Isz2z8SA78OlkTdyCeCQFYcv/Uf525NRYcGeju+vzV/9hA8TaQytQhZ7buIn60BmkbOXRCK1oJSKrnTDZEU+AGjf4CKKgoS0Kw00RB4V2nEiHV0NRfhxI/N9q4yf71lWgADNzcE4pXMEGId5Tc3dwieZzmhYq20el03m+6uQjI+Kv2F1iX+cBdZh3OYeSvpLx6sQi1xmoGV/2KyWFMeIlV9tTsi38zb+7S7S3qLa+r3TDRGdlnD5VXcqaqSXvDgseHCzcAK2PDVyZcEFETa3L8IFRxGX03HFtKHnAhjZx8g1dxeuGUXVVTWzHGcIuRhn7dJOCXImIcl9yMIiQ7f3ISmJTFfK9iPH6zTfEgaZ7ytA0sp8SIJmSB6eC0vih5i9EO6c0tEu9lf2bPJ92pmPIWi/9QdXBLuvbr9l2Y6KDzzhLCygh3SwfYjtsFBIQxwGaLvpqx1cNZ+ie2he3vtC3EWe4pWo="
     on:
       jdk: oraclejdk8
       repo: nlpub/watset-java
+    if: tag IS blank
