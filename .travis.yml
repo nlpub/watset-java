@@ -27,6 +27,6 @@ deploy:
     local-dir: target/site/apidocs
     skip-cleanup: true
     on:
+      tags: true
       jdk: oraclejdk8
       repo: nlpub/watset-java
-    if: tag IS blank
