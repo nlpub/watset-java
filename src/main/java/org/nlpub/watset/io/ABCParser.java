@@ -25,16 +25,23 @@ import org.jgrapht.graph.builder.GraphBuilder;
 import java.util.stream.Stream;
 
 public interface ABCParser {
-    static Graph<String, DefaultWeightedEdge> parse(Stream<String> stream) {
-        final GraphBuilder<String, DefaultWeightedEdge, SimpleWeightedGraph<String, DefaultWeightedEdge>> builder = new GraphBuilder<>(new SimpleWeightedGraph<>(DefaultWeightedEdge.class));
+    static Graph<String, DefaultWeightedEdge> parse(Stream<String> stream, String regex) {
+        final GraphBuilder<String, DefaultWeightedEdge, ? extends SimpleWeightedGraph<String, DefaultWeightedEdge>> builder = SimpleWeightedGraph.createBuilder(DefaultWeightedEdge.class);
 
         stream.forEach(line -> {
-            final String[] split = line.split("\t");
+            final String[] split = line.split(regex);
+
             if (split.length != 3 || split[0].equals(split[1])) return;
+
             builder.addVertices(split[0], split[1]);
+
             builder.addEdge(split[0], split[1], Double.valueOf(split[2]));
         });
 
         return builder.build();
+    }
+
+    static Graph<String, DefaultWeightedEdge> parse(Stream<String> stream) {
+        return parse(stream, "\t");
     }
 }
