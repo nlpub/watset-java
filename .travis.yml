@@ -5,16 +5,26 @@ jdk:
 - oraclejdk9
 before_script:
 - mvn versions:display-dependency-updates versions:display-plugin-updates
+after_success:
+- mvn javadoc:javadoc
 cache:
   directories:
   - "$HOME/.m2"
 deploy:
-  provider: releases
-  api_key:
-    secure: KD+OUHRDfiWWUGeVThdIbyQyglHLno49xqydKEWwUt4rY7F4wbofI8bkYTWg4PqGreKdMD6rJguFBeVXqSCfwkC6DkAqc1BXmglpN8vRqEhYYmjTIQrSoPQrdm/a5sRNNHzueM4XMK9Kqzo2f1K2pEzmSB0CyPfsLCBBa+Hdo72Z8Ev5s2kreZznmMLULd9jr8HUNpnQiXPNUGHA+KTOx5x340Si2sINUY9LJfyH3qLe2f7X4pILg+lLZZ1rnkXLgvvgw/beu1VcFmhzWwSkzPCJ303aMCJiMCYMKHPJSCu0UaDPnWvfRtdNS9ISzCC/QA2xtPPM4ZHk78qYwydqyccl/doIbMS5nUJ7qPACqW4hcddwYAOLH6hqnIBLHdOqOsUm5aN3/thopmnGJ9Q5c08PETBcIEXaZjnU6b3DzAa+UG6sWMTjzJg3XgcdG7Fkz7fS7dzrXu9oUwlYUyydwkJ608sMShX/6MCIMwPhZGNGUA+UQhfutPv5+5ElQjuHImRqvVrXA2DxQykuwF+ce6d+G9G2gnzzDoYcJQbdhFi53biMBGwg+ur6ddITRVSB5BflQHLoGqNJeeDjfj0CoSeAhr+gWoG8vF+AsLnOxcjd2fKBSmq6BoL6CPcnifatDJxtl+P4078IYCax33Be3iqP8hTZQX7E82IRxPMZhdA=
-  file: target/watset.jar
-  skip_cleanup: true
-  on:
-    tags: true
-    jdk: oraclejdk8
-    repo: nlpub/watset-java
+  - provider: releases
+    api_key:
+      secure: KD+OUHRDfiWWUGeVThdIbyQyglHLno49xqydKEWwUt4rY7F4wbofI8bkYTWg4PqGreKdMD6rJguFBeVXqSCfwkC6DkAqc1BXmglpN8vRqEhYYmjTIQrSoPQrdm/a5sRNNHzueM4XMK9Kqzo2f1K2pEzmSB0CyPfsLCBBa+Hdo72Z8Ev5s2kreZznmMLULd9jr8HUNpnQiXPNUGHA+KTOx5x340Si2sINUY9LJfyH3qLe2f7X4pILg+lLZZ1rnkXLgvvgw/beu1VcFmhzWwSkzPCJ303aMCJiMCYMKHPJSCu0UaDPnWvfRtdNS9ISzCC/QA2xtPPM4ZHk78qYwydqyccl/doIbMS5nUJ7qPACqW4hcddwYAOLH6hqnIBLHdOqOsUm5aN3/thopmnGJ9Q5c08PETBcIEXaZjnU6b3DzAa+UG6sWMTjzJg3XgcdG7Fkz7fS7dzrXu9oUwlYUyydwkJ608sMShX/6MCIMwPhZGNGUA+UQhfutPv5+5ElQjuHImRqvVrXA2DxQykuwF+ce6d+G9G2gnzzDoYcJQbdhFi53biMBGwg+ur6ddITRVSB5BflQHLoGqNJeeDjfj0CoSeAhr+gWoG8vF+AsLnOxcjd2fKBSmq6BoL6CPcnifatDJxtl+P4078IYCax33Be3iqP8hTZQX7E82IRxPMZhdA=
+    file: target/watset.jar
+    skip_cleanup: true
+    on:
+      tags: true
+      jdk: oraclejdk8
+      repo: nlpub/watset-java
+  - provider: pages
+    local-dir: target/site/apidocs
+    skip-cleanup: true
+    env:
+      secure: "G3LjwFqKXkm9l6ZEDGt7we/7uE9tscgjtCBDeHGzm5ikhXyoZHSiSgf14BPvbeBbC8q2IRKwNQAqFoJFaZBBN58bETG2Tnq/JPo9/VbBHzebzZAQGjUxtnptqKQL49g2zyi9mwdLjOLr+GoW/j/QxdWh8K1oJp9PxT/mnsI7ObhMQ80GhwQNRa379saktW+tv+tSXZZXsd1fJB4Isz2z8SA78OlkTdyCeCQFYcv/Uf525NRYcGeju+vzV/9hA8TaQytQhZ7buIn60BmkbOXRCK1oJSKrnTDZEU+AGjf4CKKgoS0Kw00RB4V2nEiHV0NRfhxI/N9q4yf71lWgADNzcE4pXMEGId5Tc3dwieZzmhYq20el03m+6uQjI+Kv2F1iX+cBdZh3OYeSvpLx6sQi1xmoGV/2KyWFMeIlV9tTsi38zb+7S7S3qLa+r3TDRGdlnD5VXcqaqSXvDgseHCzcAK2PDVyZcEFETa3L8IFRxGX03HFtKHnAhjZx8g1dxeuGUXVVTWzHGcIuRhn7dJOCXImIcl9yMIiQ7f3ISmJTFfK9iPH6zTfEgaZ7ytA0sp8SIJmSB6eC0vih5i9EO6c0tEu9lf2bPJ92pmPIWi/9QdXBLuvbr9l2Y6KDzzhLCygh3SwfYjtsFBIQxwGaLvpqx1cNZ+ie2he3vtC3EWe4pWo="
+    on:
+      jdk: oraclejdk8
+      repo: nlpub/watset-java
