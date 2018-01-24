@@ -30,8 +30,8 @@
         <connection>scm:git:https://github.com/nlpub/watset-java</connection>
         <developerConnection>scm:git:git@github.com:nlpub/watset-java.git</developerConnection>
         <url>https://github.com/nlpub/watset-java</url>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
 
     <developers>
         <developer>
@@ -116,7 +116,7 @@
                         <id>enforce</id>
                         <configuration>
                             <rules>
-                                <DependencyConvergence />
+                                <DependencyConvergence/>
                             </rules>
                         </configuration>
                         <goals>
@@ -175,9 +175,9 @@
                         </goals>
                         <configuration>
                             <transformers>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>org.nlpub.cli.Application</mainClass>
+                                    <mainClass>org.nlpub.watset.cli.Application</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>
