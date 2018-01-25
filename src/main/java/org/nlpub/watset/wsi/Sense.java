@@ -38,11 +38,9 @@ public interface Sense<V> extends Supplier<V> {
                 return similarity.apply(context, candidateContext).doubleValue();
             });
 
-            if (result.isPresent()) {
-                dcontext.put(result.get(), entry.getValue());
-            } else {
-                throw new IllegalArgumentException("Cannot find the sense for the word in context.");
-            }
+            final Sense<V> sense = result.orElseThrow(() -> new IllegalArgumentException("Cannot find the sense for the word in context."));
+
+            dcontext.put(sense, entry.getValue());
         }
 
         return dcontext;

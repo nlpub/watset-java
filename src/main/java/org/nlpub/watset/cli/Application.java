@@ -22,17 +22,14 @@ import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
-import org.nlpub.watset.graph.Clustering;
 import org.nlpub.watset.io.ABCParser;
+import org.nlpub.watset.io.ILEFormat;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Locale;
+import java.util.Collection;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
 public class Application {
@@ -54,8 +51,16 @@ public class Application {
     public Path output;
 
     public Graph<String, DefaultWeightedEdge> getGraph() {
-        try {
-            return parse(input, ABCParser::parse);
+        try (final Stream<String> stream = Files.lines(input)) {
+            return ABCParser.parse(stream);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Collection<Collection<String>> getClusters() {
+        try (final Stream<String> stream = Files.lines(input)) {
+            return ILEFormat.parse(stream);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -111,32 +116,6 @@ public class Application {
                 break;
             default:
                 break;
-        }
-    }
-
-    public static <T> T parse(Path path, Function<Stream<String>, T> f) throws IOException {
-        try (final Stream<String> stream = Files.lines(path)) {
-            return f.apply(stream);
-        }
-    }
-
-    public static void write(Path path, Clustering<String> clustering) throws IOException {
-        try (final BufferedWriter writer = Files.newBufferedWriter(path)) {
-            final AtomicInteger counter = new AtomicInteger(0);
-
-            clustering.getClusters().stream().
-                    sorted((smaller, larger) -> Integer.compare(larger.size(), smaller.size())).
-                    forEach(cluster -> {
-                        try {
-                            writer.write(String.format(Locale.ROOT, "%d\t%d\t%s\n",
-                                    counter.incrementAndGet(),
-                                    cluster.size(),
-                                    String.join(", ", cluster))
-                            );
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    });
         }
     }
 }

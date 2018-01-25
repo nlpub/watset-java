@@ -48,7 +48,7 @@ public class Watlink<V> {
         final Map<V, Number> context = new HashMap<>();
 
         for (final V node : cluster) {
-            if (!candidates.containsKey(node)) continue;
+            if (!requireNonNull(candidates).containsKey(node)) continue;
 
             for (final V upper : candidates.get(node)) {
                 context.put(upper, context.getOrDefault(upper, 0).doubleValue() + 1);

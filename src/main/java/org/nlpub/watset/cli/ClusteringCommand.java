@@ -21,7 +21,7 @@ import org.nlpub.watset.graph.Clustering;
 
 import java.io.IOException;
 
-import static org.nlpub.watset.cli.Application.write;
+import static org.nlpub.watset.io.ILEFormat.write;
 
 abstract class ClusteringCommand implements Runnable {
     final Application application;
