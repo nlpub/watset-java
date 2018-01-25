@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 import static java.util.function.Function.identity;
@@ -61,19 +62,25 @@ class CommandWatlink implements Runnable {
         final Watlink<String> watlink = new Watlink<>(inventory, new ContextCosineSimilarity<>(), k);
 
         try (final BufferedWriter writer = Files.newBufferedWriter(application.output)) {
-            int i = 0;
+            final AtomicInteger counter = new AtomicInteger(0);
 
-            for (final Collection<String> cluster : clusters) {
+            clusters.parallelStream().forEach(cluster -> {
                 final Map<Sense<String>, Number> dcontext = watlink.retrieve(cluster, candidates);
 
-                writer.write(String.format(Locale.ROOT, "%d\t%d\t%s\t%d\t%s\n",
-                        i++,
-                        cluster.size(),
-                        String.join(DELIMITER, cluster),
-                        dcontext.size(),
-                        String.join(DELIMITER, dcontext.entrySet().stream().map(e -> String.format(Locale.ROOT, "%s:%f", e.getKey().get(), e.getValue().doubleValue())).collect(joining(", "))))
-                );
-            }
+                try {
+                    writer.write(String.format(Locale.ROOT, "%d\t%d\t%s\t%d\t%s\n",
+                            counter.incrementAndGet(),
+                            cluster.size(),
+                            String.join(DELIMITER, cluster),
+                            dcontext.size(),
+                            dcontext.entrySet().stream().
+                                    map(e -> String.format(Locale.ROOT, "%s:%f", e.getKey().get(), e.getValue().doubleValue())).
+                                    collect(joining(DELIMITER)))
+                    );
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
