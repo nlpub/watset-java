@@ -50,9 +50,9 @@ public class SenseInductionTest {
 
     private final static Random random = new Random(1337);
 
-    private final static Function<Graph<String, DefaultWeightedEdge>, Clustering<String>> provider = (graph) -> new ChineseWhispers<>(graph, NodeWeighting.top(), LabelSelector.total(), ChineseWhispers.ITERATIONS, random);
+    private final static Function<Graph<String, DefaultWeightedEdge>, Clustering<String>> local = ChineseWhispers.provider(NodeWeighting.top(), LabelSelector.total(), ChineseWhispers.ITERATIONS, random);
 
-    private final static SenseInduction<String, DefaultWeightedEdge> senseInduction = new SenseInduction<>(WORDS, "a", provider);
+    private final static SenseInduction<String, DefaultWeightedEdge> senseInduction = new SenseInduction<>(WORDS, "a", local);
 
     @Before
     public void setup() {

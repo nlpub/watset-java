@@ -26,11 +26,11 @@ import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.nlpub.watset.wsi.SenseInductionTest.WORDS;
-import static org.nlpub.watset.wsi.WatsetTest.globalClusteringProvider;
-import static org.nlpub.watset.wsi.WatsetTest.localClusteringProvider;
+import static org.nlpub.watset.wsi.WatsetTest.global;
+import static org.nlpub.watset.wsi.WatsetTest.local;
 
 public class WatlinkTest {
-    private final static Watset<String, DefaultWeightedEdge> watset = new Watset<>(WORDS, localClusteringProvider, globalClusteringProvider, new ContextCosineSimilarity<>());
+    private final static Watset<String, DefaultWeightedEdge> watset = new Watset<>(WORDS, local, global, new ContextCosineSimilarity<>());
 
     private final static Map<String, Collection<String>> hypernyms = new HashMap<String, Collection<String>>() {{
         put("a", Arrays.asList("e", "f"));

@@ -21,11 +21,20 @@ import org.jgrapht.Graph;
 import org.nlpub.watset.graph.Clustering;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
 
 public class ChineseWhispers<V, E> implements Clustering<V> {
+    public static final <V, E> Function<Graph<V, E>, Clustering<V>> provider(NodeWeighting<V, E> weighting, LabelSelector<V, E> selector) {
+        return graph -> new ChineseWhispers<>(graph, weighting, selector);
+    }
+
+    public static final <V, E> Function<Graph<V, E>, Clustering<V>> provider(NodeWeighting<V, E> weighting, LabelSelector<V, E> selector, int iterations, Random random) {
+        return graph -> new ChineseWhispers<>(graph, weighting, selector, iterations, random);
+    }
+
     public static final int ITERATIONS = 20;
 
     private final Graph<V, E> graph;

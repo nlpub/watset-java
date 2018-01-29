@@ -35,9 +35,9 @@ import static org.junit.Assert.assertEquals;
 
 public class WatsetTest {
     private final static Random random = new Random(1337);
-    final static Function<Graph<String, DefaultWeightedEdge>, Clustering<String>> localClusteringProvider = ego -> new ChineseWhispers<>(ego, NodeWeighting.top(), LabelSelector.total(), ChineseWhispers.ITERATIONS, random);
-    final static Function<Graph<Sense<String>, DefaultWeightedEdge>, Clustering<Sense<String>>> globalClusteringProvider = ego -> new ChineseWhispers<>(ego, NodeWeighting.top(), LabelSelector.total(), ChineseWhispers.ITERATIONS, random);
-    private final static Watset<String, DefaultWeightedEdge> watset = new Watset<>(SenseInductionTest.WORDS, localClusteringProvider, globalClusteringProvider, new ContextCosineSimilarity<>());
+    final static Function<Graph<String, DefaultWeightedEdge>, Clustering<String>> local = ChineseWhispers.provider(NodeWeighting.top(), LabelSelector.total(), ChineseWhispers.ITERATIONS, random);
+    final static Function<Graph<Sense<String>, DefaultWeightedEdge>, Clustering<Sense<String>>> global = ChineseWhispers.provider(NodeWeighting.top(), LabelSelector.total(), ChineseWhispers.ITERATIONS, random);
+    private final static Watset<String, DefaultWeightedEdge> watset = new Watset<>(SenseInductionTest.WORDS, local, global, new ContextCosineSimilarity<>());
 
     @Before
     public void setup() {
