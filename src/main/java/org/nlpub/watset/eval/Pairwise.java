@@ -74,7 +74,7 @@ public class Pairwise<V> implements Supplier<PrecisionRecall> {
     }
 
     public static <V> Set<Pair<V, V>> transform(Collection<Collection<V>> clusters) {
-        return clusters.stream().flatMap(Pairwise::combination).collect(toSet());
+        return clusters.parallelStream().flatMap(Pairwise::combination).collect(toSet());
     }
 
     static <V> Stream<Pair<V, V>> combination(Collection<V> cluster) {
