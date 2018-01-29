@@ -64,14 +64,14 @@ public class NormalizedModifiedPurity<V> implements Supplier<PrecisionRecall> {
         double denominator = clusters.stream().mapToInt(Map::size).sum();
 
         if (fuzzy) {
-            denominator = clusters.stream().
+            denominator = clusters.parallelStream().
                     mapToDouble(cluster -> cluster.values().stream().mapToDouble(a -> a).sum()).
                     sum();
         }
 
         if (denominator == 0) return 0;
 
-        double numerator = clusters.stream().
+        double numerator = clusters.parallelStream().
                 mapToDouble(cluster -> classes.stream().
                         mapToDouble(klass -> delta(cluster, klass, modified)).max().orElse(0)).
                 sum();
