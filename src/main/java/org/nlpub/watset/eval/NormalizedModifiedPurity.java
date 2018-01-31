@@ -41,21 +41,23 @@ public class NormalizedModifiedPurity<V> implements Supplier<PrecisionRecall> {
 
     private final Collection<Map<V, Double>> clusters;
     private final Collection<Map<V, Double>> classes;
-    private final boolean fuzzy;
+    private final boolean normalized;
+    private final boolean modified;
 
-    public NormalizedModifiedPurity(Collection<Map<V, Double>> clusters, Collection<Map<V, Double>> classes, boolean fuzzy) {
-        this.fuzzy = fuzzy;
-        this.clusters = fuzzy ? normalize(requireNonNull(clusters)) : requireNonNull(clusters);
-        this.classes = fuzzy ? normalize(requireNonNull(classes)) : requireNonNull(classes);
+    public NormalizedModifiedPurity(Collection<Map<V, Double>> clusters, Collection<Map<V, Double>> classes, boolean normalized, boolean modified) {
+        this.normalized = normalized;
+        this.modified = modified;
+        this.clusters = normalized ? normalize(requireNonNull(clusters)) : requireNonNull(clusters);
+        this.classes = normalized ? normalize(requireNonNull(classes)) : requireNonNull(classes);
     }
 
     public NormalizedModifiedPurity(Collection<Map<V, Double>> clusters, Collection<Map<V, Double>> classes) {
-        this(clusters, classes, true);
+        this(clusters, classes, true, true);
     }
 
     @Override
     public PrecisionRecall get() {
-        final double normalizedModifiedPurity = purity(clusters, classes, true);
+        final double normalizedModifiedPurity = purity(clusters, classes, modified);
         final double normalizedInversePurity = purity(classes, clusters, false);
         return new PrecisionRecall(normalizedModifiedPurity, normalizedInversePurity);
     }
@@ -63,7 +65,7 @@ public class NormalizedModifiedPurity<V> implements Supplier<PrecisionRecall> {
     private double purity(Collection<Map<V, Double>> clusters, Collection<Map<V, Double>> classes, boolean modified) {
         double denominator = clusters.stream().mapToInt(Map::size).sum();
 
-        if (fuzzy) {
+        if (normalized) {
             denominator = clusters.parallelStream().
                     mapToDouble(cluster -> cluster.values().stream().mapToDouble(a -> a).sum()).
                     sum();
@@ -88,7 +90,7 @@ public class NormalizedModifiedPurity<V> implements Supplier<PrecisionRecall> {
 
         if (intersection.isEmpty()) return 0;
 
-        if (!fuzzy) return intersection.size();
+        if (!normalized) return intersection.size();
 
         return intersection.values().stream().mapToDouble(a -> a).sum();
     }

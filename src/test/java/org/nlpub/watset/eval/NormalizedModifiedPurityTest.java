@@ -36,7 +36,7 @@ public class NormalizedModifiedPurityTest {
 
     @Test
     public void testEquivalence() {
-        final NormalizedModifiedPurity<String> mpu = new NormalizedModifiedPurity<>(EXPECTED, EXPECTED, false);
+        final NormalizedModifiedPurity<String> mpu = new NormalizedModifiedPurity<>(EXPECTED, EXPECTED, false, true);
         final PrecisionRecall mpuResult = mpu.get();
         assertEquals(1, mpuResult.getPrecision(), .0001);
         assertEquals(1, mpuResult.getRecall(), .0001);
@@ -51,7 +51,7 @@ public class NormalizedModifiedPurityTest {
 
     @Test
     public void testScores1() {
-        final NormalizedModifiedPurity<String> mpu = new NormalizedModifiedPurity<>(ACTUAL_1, EXPECTED, false);
+        final NormalizedModifiedPurity<String> mpu = new NormalizedModifiedPurity<>(ACTUAL_1, EXPECTED, false, true);
         final PrecisionRecall mpuResult = mpu.get();
         assertEquals(.71429, mpuResult.getPrecision(), .0001);
         assertEquals(.71429, mpuResult.getRecall(), .0001);
@@ -66,7 +66,7 @@ public class NormalizedModifiedPurityTest {
 
     @Test
     public void testScores2() {
-        final NormalizedModifiedPurity<String> mpu = new NormalizedModifiedPurity<>(ACTUAL_2, EXPECTED, false);
+        final NormalizedModifiedPurity<String> mpu = new NormalizedModifiedPurity<>(ACTUAL_2, EXPECTED, false, true);
         final PrecisionRecall mpuResult = mpu.get();
         assertEquals(.66667, mpuResult.getPrecision(), .0001);
         assertEquals(1, mpuResult.getRecall(), .0001);
@@ -81,7 +81,7 @@ public class NormalizedModifiedPurityTest {
 
     @Test
     public void testScores3() {
-        final NormalizedModifiedPurity<String> mpu = new NormalizedModifiedPurity<>(ACTUAL_3, EXPECTED, false);
+        final NormalizedModifiedPurity<String> mpu = new NormalizedModifiedPurity<>(ACTUAL_3, EXPECTED, false, true);
         final PrecisionRecall mpuResult = mpu.get();
         assertEquals(0, mpuResult.getPrecision(), .0001);
         assertEquals(.28571, mpuResult.getRecall(), .0001);
