@@ -101,7 +101,7 @@ public class AlgorithmProvider<V, E> implements Function<Graph<V, E>, Clustering
     }
 
     static Map<String, String> parseParams(String params) {
-        if (Objects.isNull(params)) return Collections.emptyMap();
+        if (Objects.isNull(params) || params.trim().isEmpty()) return Collections.emptyMap();
 
         return AMPERSAND.splitAsStream(params).
                 map(s -> s.split("=", 2)).
