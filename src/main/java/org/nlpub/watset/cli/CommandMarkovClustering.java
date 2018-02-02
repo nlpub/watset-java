@@ -21,18 +21,25 @@ import com.beust.jcommander.Parameter;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.nlpub.watset.graph.Clustering;
 
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
 class CommandMarkovClustering extends ClusteringCommand {
+    private final boolean binary;
+
     @Parameter(names = "-e")
     private int e;
 
     @Parameter(names = "-r")
     private double r;
 
-    public CommandMarkovClustering(Application application) {
+    @Parameter(names = "--bin", converter = PathConverter.class)
+    private Path mcl;
+
+    public CommandMarkovClustering(Application application, boolean binary) {
         super(application);
+        this.binary = binary;
     }
 
     @Override
@@ -40,9 +47,10 @@ class CommandMarkovClustering extends ClusteringCommand {
         final Map<String, String> params = new HashMap<String, String>() {{
             put("e", Integer.toString(e));
             put("r", Double.toString(r));
+            put("bin", mcl.toAbsolutePath().toString());
         }};
 
-        final AlgorithmProvider<String, DefaultWeightedEdge> algorithm = new AlgorithmProvider<>("mcl", params);
+        final AlgorithmProvider<String, DefaultWeightedEdge> algorithm = new AlgorithmProvider<>(binary ? "mcl-bin" : "mcl", params);
         return algorithm.apply(application.getGraph());
     }
 }

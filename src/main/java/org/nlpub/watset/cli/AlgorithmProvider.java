@@ -24,7 +24,9 @@ import org.nlpub.watset.cw.NodeWeighting;
 import org.nlpub.watset.graph.*;
 import org.nlpub.watset.maxmax.MaxMax;
 import org.nlpub.watset.mcl.MarkovClustering;
+import org.nlpub.watset.mcl.MarkovClusteringBinaryRunner;
 
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
@@ -64,9 +66,14 @@ public class AlgorithmProvider<V, E> implements Function<Graph<V, E>, Clustering
                 final LabelSelector<V, E> selector = parseChineseWhispersLabelSelector();
                 return new ChineseWhispers<>(graph, weighting, selector);
             case "mcl":
+            case "mcl-bin":
                 final int e = Integer.parseInt(params.getOrDefault("e", "2"));
                 final double r = Double.parseDouble(params.getOrDefault("r", "2"));
-                return new MarkovClustering<>(graph, e, r);
+                if (algorithm.equalsIgnoreCase("mcl")) {
+                    return new MarkovClustering<>(graph, e, r);
+                } else {
+                    return new MarkovClusteringBinaryRunner<>(graph, Paths.get(params.get("bin")), e, r, Runtime.getRuntime().availableProcessors());
+                }
             case "maxmax":
                 return new MaxMax<>(graph);
             default:

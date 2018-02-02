@@ -71,7 +71,8 @@ public class Application {
         final Application application = new Application();
 
         final CommandChineseWhispers cw = new CommandChineseWhispers(application);
-        final CommandMarkovClustering mcl = new CommandMarkovClustering(application);
+        final CommandMarkovClustering mcl = new CommandMarkovClustering(application, false);
+        final CommandMarkovClustering mclBin = new CommandMarkovClustering(application, true);
         final CommandSenses senses = new CommandSenses(application);
         final CommandWatset watset = new CommandWatset(application);
         final CommandMaxMax maxmax = new CommandMaxMax(application);
@@ -81,6 +82,7 @@ public class Application {
                 .addObject(application)
                 .addCommand("cw", cw)
                 .addCommand("mcl", mcl)
+                .addCommand("mcl-bin", mclBin)
                 .addCommand("senses", senses)
                 .addCommand("watset", watset)
                 .addCommand("maxmax", maxmax)
@@ -101,6 +103,9 @@ public class Application {
                 break;
             case "mcl":
                 mcl.run();
+                break;
+            case "mcl-bin":
+                mclBin.run();
                 break;
             case "senses":
                 senses.run();
