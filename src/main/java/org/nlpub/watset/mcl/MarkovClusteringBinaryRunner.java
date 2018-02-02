@@ -42,20 +42,18 @@ public class MarkovClusteringBinaryRunner<V, E> implements Clustering<V> {
 
     private final Graph<V, E> graph;
     private final Path mcl;
-    private final int e;
     private final double r;
     private final int threads;
     private Map<V, Integer> mapping;
     private File output;
 
-    public static final <V, E> Function<Graph<V, E>, Clustering<V>> provider(Path mcl, int e, double r, int threads) {
-        return graph -> new MarkovClusteringBinaryRunner<>(graph, mcl, e, r, threads);
+    public static final <V, E> Function<Graph<V, E>, Clustering<V>> provider(Path mcl, double r, int threads) {
+        return graph -> new MarkovClusteringBinaryRunner<>(graph, mcl, r, threads);
     }
 
-    public MarkovClusteringBinaryRunner(Graph<V, E> graph, Path mcl, int e, double r, int threads) {
+    public MarkovClusteringBinaryRunner(Graph<V, E> graph, Path mcl, double r, int threads) {
         this.graph = requireNonNull(graph);
         this.mcl = mcl;
-        this.e = e;
         this.r = r;
         this.threads = threads;
     }
@@ -98,6 +96,7 @@ public class MarkovClusteringBinaryRunner<V, E> implements Clustering<V> {
         final ProcessBuilder builder = new ProcessBuilder(
                 mcl.toAbsolutePath().toString(),
                 input.toString(),
+                "-I", Double.toString(r),
                 "-te", Integer.toString(threads),
                 "--abc",
                 "-o", output.toString());
