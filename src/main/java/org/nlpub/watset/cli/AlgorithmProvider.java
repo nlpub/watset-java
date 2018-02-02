@@ -36,7 +36,7 @@ import java.util.regex.Pattern;
 import static java.util.stream.Collectors.toMap;
 
 public class AlgorithmProvider<V, E> implements Function<Graph<V, E>, Clustering<V>> {
-    public static final Pattern AMPERSAND = Pattern.compile("&");
+    public static final Pattern SEPARATOR = Pattern.compile(":");
 
     private final String algorithm;
     private final Map<String, String> params;
@@ -110,8 +110,9 @@ public class AlgorithmProvider<V, E> implements Function<Graph<V, E>, Clustering
     static Map<String, String> parseParams(String params) {
         if (Objects.isNull(params) || params.trim().isEmpty()) return Collections.emptyMap();
 
-        return AMPERSAND.splitAsStream(params).
+        return SEPARATOR.splitAsStream(params).
                 map(s -> s.split("=", 2)).
+                filter(pair -> pair.length == 2).
                 collect(toMap(kv -> kv[0].toLowerCase(), kv -> kv[1]));
     }
 }
