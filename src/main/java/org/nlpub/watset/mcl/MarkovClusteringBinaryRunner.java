@@ -82,14 +82,16 @@ public class MarkovClusteringBinaryRunner<V, E> implements Clustering<V> {
     @Override
     public void run() {
         logger.info("Starting Markov Clustering binary.");
+
         mapping = translate(graph);
-        logger.info("Markov Clustering finished.");
 
         try {
             process();
         } catch (IOException | InterruptedException ex) {
             throw new RuntimeException(ex);
         }
+
+        logger.info("Markov Clustering finished.");
     }
 
     private void process() throws IOException, InterruptedException {
