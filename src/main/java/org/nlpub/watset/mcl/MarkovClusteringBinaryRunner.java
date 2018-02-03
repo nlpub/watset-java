@@ -19,6 +19,7 @@ package org.nlpub.watset.mcl;
 
 import org.jgrapht.Graph;
 import org.nlpub.watset.graph.Clustering;
+import org.nlpub.watset.wsi.Watset;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -27,10 +28,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.function.Function;
+import java.util.logging.Logger;
 
 import static java.util.Objects.requireNonNull;
-import static java.util.stream.Collectors.toMap;
-import static java.util.stream.Collectors.toSet;
+import static java.util.stream.Collectors.*;
 
 /**
  * This is a weird thing. The implementation of MCL by its author is fast,
@@ -38,6 +39,8 @@ import static java.util.stream.Collectors.toSet;
  * process and speak to it over standard input/output redirection.
  */
 public class MarkovClusteringBinaryRunner<V, E> implements Clustering<V> {
+    private static final Logger logger = Logger.getLogger(Watset.class.getSimpleName());
+
     public static final int THREADS = 1;
 
     private final Graph<V, E> graph;
@@ -78,7 +81,9 @@ public class MarkovClusteringBinaryRunner<V, E> implements Clustering<V> {
 
     @Override
     public void run() {
+        logger.info("Starting Markov Clustering binary.");
         mapping = translate(graph);
+        logger.info("Markov Clustering finished.");
 
         try {
             process();
@@ -100,6 +105,7 @@ public class MarkovClusteringBinaryRunner<V, E> implements Clustering<V> {
                 "-te", Integer.toString(threads),
                 "--abc",
                 "-o", output.toString());
+        logger.info("Command: " + builder.command().stream().collect(joining(" ")));
 
         final Process process = builder.start();
         int status = process.waitFor();

@@ -40,7 +40,7 @@ class CommandWatlink implements Runnable {
     private final Application application;
 
     @Parameter(required = true, names = "-k")
-    private int k;
+    private Integer k;
 
     @Parameter(required = true, names = {"-c", "--candidates"}, converter = PathConverter.class)
     private Path candidates;

@@ -61,11 +61,13 @@ public class MarkovClustering<V, E> implements Clustering<V> {
 
     @Override
     public void run() {
-        this.index = null;
-        this.matrix = null;
+        index = null;
+        matrix = null;
 
-        this.index = buildNodeIndex(graph);
-        this.matrix = buildAdjacencyMatrix(graph, index);
+        if (graph.vertexSet().isEmpty()) return;
+
+        index = buildNodeIndex(graph);
+        matrix = buildAdjacencyMatrix(graph, index);
 
         normalizeColumns(matrix);
 
@@ -81,6 +83,8 @@ public class MarkovClustering<V, E> implements Clustering<V> {
 
     @Override
     public Collection<Collection<V>> getClusters() {
+        if (graph.vertexSet().isEmpty()) return Collections.emptySet();
+
         final Map<Integer, V> inverted = index.entrySet().stream().
                 collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
 
@@ -114,18 +118,18 @@ public class MarkovClustering<V, E> implements Clustering<V> {
     }
 
     protected INDArray buildAdjacencyMatrix(Graph<V, E> graph, Map<V, Integer> index) {
-        final double[][] matrix = new double[graph.vertexSet().size()][graph.vertexSet().size()];
+        final INDArray matrix = Nd4j.create(graph.vertexSet().size(), graph.vertexSet().size());
 
-        for (Map.Entry<V, Integer> entry : index.entrySet()) {
+        for (final Map.Entry<V, Integer> entry : index.entrySet()) {
             for (final E edge : graph.edgesOf(entry.getKey())) {
                 final V neighbor = Graphs.getOppositeVertex(graph, edge, entry.getKey());
-                matrix[entry.getValue()][index.get(neighbor)] = graph.getEdgeWeight(edge);
+                matrix.put(entry.getValue(), index.get(neighbor), graph.getEdgeWeight(edge));
             }
         }
 
-        for (int r = 0; r < matrix.length; r++) matrix[r][r] = 1;
+        for (int r = 0; r < matrix.shape()[0]; r++) matrix.put(r, r, 1);
 
-        return Nd4j.create(matrix);
+        return matrix;
     }
 
     protected void normalizeColumns(INDArray matrix) {
@@ -153,8 +157,8 @@ public class MarkovClustering<V, E> implements Clustering<V> {
     }
 
     protected INDArray inflationStep(INDArray matrix) {
-        final INDArray tmp = Nd4j.getExecutioner().execAndReturn(new Pow(matrix, r));
-        normalizeColumns(tmp);
-        return tmp;
+        final INDArray inflated = Nd4j.getExecutioner().execAndReturn(new Pow(matrix, r));
+        normalizeColumns(inflated);
+        return inflated;
     }
 }
