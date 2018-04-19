@@ -23,7 +23,10 @@ import org.nlpub.watset.graph.Clustering;
 import javax.annotation.Nonnull;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
 import java.util.function.Function;
 import java.util.logging.Logger;
 
@@ -44,53 +47,45 @@ public class Measurer<V, E> implements Runnable {
 
     private final Function<Graph<V, E>, Clustering<V>> provider;
     private final int repetitions, warmup;
-    private Set<Graph<V, E>> graphs;
-    private Map<Graph<V, E>, List<Long>> observations;
+    private Graph<V, E> graph;
+    private List<Long> measurements;
 
-    public Measurer(Function<Graph<V, E>, Clustering<V>> provider) {
-        this(provider, REPETITIONS, WARMUP);
+    public Measurer(Function<Graph<V, E>, Clustering<V>> provider, Graph<V, E> graph) {
+        this(provider, graph, REPETITIONS, WARMUP);
     }
 
-    public Measurer(Function<Graph<V, E>, Clustering<V>> provider, int repetitions, int warmup) {
+    public Measurer(Function<Graph<V, E>, Clustering<V>> provider, Graph<V, E> graph, int repetitions, int warmup) {
         this.provider = provider;
         this.repetitions = repetitions;
         this.warmup = warmup;
-        this.graphs = new LinkedHashSet<>();
-        this.observations = Collections.emptyMap();
+        this.graph = graph;
+        this.measurements = Collections.emptyList();
     }
 
-    public Set<Graph<V, E>> getGraphs() {
-        return graphs;
+    public Graph<V, E> getGraph() {
+        return graph;
     }
 
-    public void setGraphs(Set<Graph<V, E>> graphs) {
-        this.graphs = graphs;
-    }
-
-    public Map<Graph<V, E>, List<Long>> getObservations() {
-        return observations;
+    public List<Long> getObservations() {
+        return measurements;
     }
 
     public void run() {
         System.gc();
 
-        observations = new LinkedHashMap<>(graphs.size());
+        logger.info(String.format(Locale.ROOT, "Evaluating a graph with %d node(s).", graph.vertexSet().size()));
 
-        for (final Graph<V, E> graph : graphs) {
-            logger.info(String.format(Locale.ROOT, "Evaluating a graph with %d node(s).", graph.vertexSet().size()));
+        measurements = new ArrayList<>(warmup + repetitions);
 
-            final List<Long> measurements = new ArrayList<>(warmup + repetitions);
+        for (int i = -warmup; i < repetitions; i++) {
+            final Clustering<V> clustering = provider.apply(graph);
 
-            for (int i = -warmup; i < repetitions; i++) {
-                final Clustering<V> clustering = provider.apply(graph);
-                final Duration duration = measure(clustering);
-                if (i >= 0) measurements.add(i, duration.toMillis());
-            }
+            final Duration duration = measure(clustering);
 
-            observations.put(graph, measurements);
-
-            logger.info(String.format(Locale.ROOT, "Measurements done: %d out of %d.", observations.size(), graphs.size()));
+            if (i >= 0) measurements.add(i, duration.toMillis());
         }
+
+        logger.info("Evaluation complete.");
     }
 
     private Duration measure(@Nonnull Clustering<V> clustering) {
