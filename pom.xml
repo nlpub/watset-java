@@ -87,7 +87,7 @@
         <dependency>
             <groupId>org.bytedeco</groupId>
             <artifactId>javacpp</artifactId>
-            <version>1.4</version>
+            <version>1.4.1</version>
         </dependency>
         <dependency>
             <groupId>com.beust</groupId>
