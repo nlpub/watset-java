@@ -35,6 +35,10 @@ import static java.util.Objects.requireNonNull;
  * @param <V> node class.
  */
 public class MaxMax<V, E> implements Clustering<V> {
+    public static <V, E> Function<Graph<V, E>, Clustering<V>> provider() {
+        return MaxMax::new;
+    }
+
     private final Graph<V, E> graph;
     private Graph<V, DefaultEdge> digraph;
     private Map<V, Set<V>> maximals;

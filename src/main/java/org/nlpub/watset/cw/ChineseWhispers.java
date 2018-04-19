@@ -27,11 +27,11 @@ import java.util.stream.Collectors;
 import static java.util.Objects.requireNonNull;
 
 public class ChineseWhispers<V, E> implements Clustering<V> {
-    public static final <V, E> Function<Graph<V, E>, Clustering<V>> provider(NodeWeighting<V, E> weighting, LabelSelector<V, E> selector) {
+    public static <V, E> Function<Graph<V, E>, Clustering<V>> provider(NodeWeighting<V, E> weighting, LabelSelector<V, E> selector) {
         return graph -> new ChineseWhispers<>(graph, weighting, selector);
     }
 
-    public static final <V, E> Function<Graph<V, E>, Clustering<V>> provider(NodeWeighting<V, E> weighting, LabelSelector<V, E> selector, int iterations, Random random) {
+    public static <V, E> Function<Graph<V, E>, Clustering<V>> provider(NodeWeighting<V, E> weighting, LabelSelector<V, E> selector, int iterations, Random random) {
         return graph -> new ChineseWhispers<>(graph, weighting, selector, iterations, random);
     }
 

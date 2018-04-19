@@ -22,6 +22,7 @@ import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
 import org.jgrapht.graph.builder.GraphBuilder;
 import org.nlpub.watset.graph.Clustering;
+import org.nlpub.watset.vsm.ContextCosineSimilarity;
 import org.nlpub.watset.vsm.ContextSimilarity;
 
 import java.util.*;
@@ -41,6 +42,10 @@ import static org.nlpub.watset.vsm.ContextSimilarity.DEFAULT_CONTEXT_WEIGHT;
  * @see <a href="https://doi.org/10.18653/v1/P17-1145">Ustalov et al. (ACL 2017)</a>
  */
 public class Watset<V, E> implements Clustering<V> {
+    public static <V, E> Function<Graph<V, E>, Clustering<V>> provider(Function<Graph<V, E>, Clustering<V>> local, Function<Graph<Sense<V>, DefaultWeightedEdge>, Clustering<Sense<V>>> global) {
+        return graph -> new Watset<>(graph, local, global, new ContextCosineSimilarity<>());
+    }
+
     private static final Logger logger = Logger.getLogger(Watset.class.getSimpleName());
 
     private final Graph<V, E> graph;
