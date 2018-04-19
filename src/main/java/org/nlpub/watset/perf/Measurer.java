@@ -72,6 +72,8 @@ public class Measurer<V, E> implements Runnable {
     }
 
     public void run() {
+        System.gc();
+
         observations = new LinkedHashMap<>(graphs.size());
 
         for (final Graph<V, E> graph : graphs) {
@@ -95,7 +97,6 @@ public class Measurer<V, E> implements Runnable {
         final Instant start = Instant.now();
         clustering.run();
         final Instant end = Instant.now();
-        System.gc();
         return Duration.between(start, end);
     }
 }
