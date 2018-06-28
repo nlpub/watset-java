@@ -22,6 +22,7 @@ import org.jgrapht.Graphs;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.api.ops.impl.transforms.Pow;
 import org.nd4j.linalg.factory.Nd4j;
+import org.nd4j.linalg.ops.transforms.Transforms;
 import org.nlpub.watset.graph.Clustering;
 
 import java.util.*;
@@ -31,10 +32,9 @@ import java.util.stream.Collectors;
 import static java.util.Objects.requireNonNull;
 
 /**
- * This is a non-optimized implementation of the Markov Clustering algorithm.
- * <p>
- * In fact, this is a translation to Java of the Python source:
- * https://github.com/lucagiovagnoli/Markov_clustering-Graph_API.
+ * This is an implementation of the Markov Clustering (MCL) algorithm.
+ * It assumes processing of relatively small graphs due to the lack of
+ * pruning optimizations.
  *
  * @param <V> vertices
  * @param <E> edges
@@ -66,18 +66,18 @@ public class MarkovClustering<V, E> implements Clustering<V> {
 
         if (graph.vertexSet().isEmpty()) return;
 
-        index = buildNodeIndex(graph);
-        matrix = buildAdjacencyMatrix(graph, index);
+        index = buildIndex(graph);
+        matrix = buildMatrix(graph, index);
 
-        normalizeColumns(matrix);
+        normalize(matrix);
 
         for (int i = 0; i < ITERATIONS; i++) {
-            final INDArray previous = matrix.dup();
+            final INDArray previous = matrix.unsafeDuplication();
 
-            matrix = powerStep(matrix);
-            matrix = inflationStep(matrix);
+            expand(matrix);
+            inflate(matrix);
 
-            if (matrix.sub(previous).sumNumber().doubleValue() == 0d) break;
+            if (matrix.equals(previous)) break;
         }
     }
 
@@ -105,7 +105,13 @@ public class MarkovClustering<V, E> implements Clustering<V> {
         return clusters;
     }
 
-    protected Map<V, Integer> buildNodeIndex(Graph<V, E> graph) {
+    /**
+     * Index the nodes of the input graph.
+     *
+     * @param graph an input graph.
+     * @return a node index.
+     */
+    protected Map<V, Integer> buildIndex(Graph<V, E> graph) {
         final Map<V, Integer> index = new HashMap<>();
 
         int i = 0;
@@ -117,7 +123,14 @@ public class MarkovClustering<V, E> implements Clustering<V> {
         return index;
     }
 
-    protected INDArray buildAdjacencyMatrix(Graph<V, E> graph, Map<V, Integer> index) {
+    /**
+     * Construct an adjacency matrix for a given graph.
+     *
+     * @param graph a graph.
+     * @param index a node index for the graph.
+     * @return an adjacency matrix.
+     */
+    protected INDArray buildMatrix(Graph<V, E> graph, Map<V, Integer> index) {
         final INDArray matrix = Nd4j.create(graph.vertexSet().size(), graph.vertexSet().size());
 
         for (final Map.Entry<V, Integer> entry : index.entrySet()) {
@@ -132,33 +145,17 @@ public class MarkovClustering<V, E> implements Clustering<V> {
         return matrix;
     }
 
-    protected void normalizeColumns(INDArray matrix) {
+    protected void normalize(INDArray matrix) {
         final INDArray sums = matrix.sum(0);
-
-        for (int c = 0; c < matrix.shape()[1]; c++) {
-            final double sum = sums.getDouble(c);
-
-            if (sum == 0) continue;
-
-            for (int r = 0; r < matrix.shape()[0]; r++) {
-                matrix.put(r, c, matrix.getDouble(r, c) / sum);
-            }
-        }
+        matrix.diviRowVector(sums);
     }
 
-    protected INDArray powerStep(INDArray matrix) {
-        INDArray tmp = matrix;
-
-        for (int i = 0; i < e; i++) {
-            tmp = tmp.mmul(tmp);
-        }
-
-        return tmp;
+    protected void expand(INDArray matrix) {
+        Transforms.mpow(matrix, e, false);
     }
 
-    protected INDArray inflationStep(INDArray matrix) {
-        final INDArray inflated = Nd4j.getExecutioner().execAndReturn(new Pow(matrix, r));
-        normalizeColumns(inflated);
-        return inflated;
+    protected void inflate(INDArray matrix) {
+        Nd4j.getExecutioner().exec(new Pow(matrix, r));
+        normalize(matrix);
     }
 }

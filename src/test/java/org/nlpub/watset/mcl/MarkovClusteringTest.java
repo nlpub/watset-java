@@ -45,16 +45,35 @@ public class MarkovClusteringTest {
             addEdge("6", "7").
             build();
 
+    /**
+     * Example from https://www.cs.ucsb.edu/~xyan/classes/CS595D-2009winter/MCL_Presentation2.pdf.
+     */
+    private final static Graph<Integer, DefaultWeightedEdge> TWOCLUSTERS = SimpleWeightedGraph.<Integer, DefaultWeightedEdge>createBuilder(DefaultWeightedEdge.class).
+            addVertices(1, 2, 3, 4).
+            addEdge(1, 2).
+            addEdge(1, 3).
+            addEdge(1, 4).
+            addEdge(2, 4).
+            build();
+
     private final MarkovClustering<String, ?> mcl1 = new MarkovClustering<>(BIPARTITE, 2, 2);
+    private final MarkovClustering<Integer, ?> mcl2 = new MarkovClustering<>(TWOCLUSTERS, 2, 2);
 
     @Before
     public void setup() {
         mcl1.run();
+        mcl2.run();
+    }
+
+    @Test
+    public void testBipartiteClustering() {
+        final Collection<Collection<String>> clusters = mcl1.getClusters();
+        assertEquals(2, clusters.size());
     }
 
     @Test
     public void testClustering() {
-        final Collection<Collection<String>> clusters = mcl1.getClusters();
-        assertEquals(2, clusters.size());
+        final Collection<Collection<Integer>> clusters = mcl2.getClusters();
+        assertEquals(1, clusters.size());
     }
 }
