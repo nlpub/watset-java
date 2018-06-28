@@ -18,7 +18,6 @@
 package org.nlpub.watset.mcl;
 
 import org.jgrapht.Graph;
-import org.jgrapht.Graphs;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.api.ops.impl.transforms.Pow;
 import org.nd4j.linalg.factory.Nd4j;
@@ -133,11 +132,10 @@ public class MarkovClustering<V, E> implements Clustering<V> {
     protected INDArray buildMatrix(Graph<V, E> graph, Map<V, Integer> index) {
         final INDArray matrix = Nd4j.create(graph.vertexSet().size(), graph.vertexSet().size());
 
-        for (final Map.Entry<V, Integer> entry : index.entrySet()) {
-            for (final E edge : graph.edgesOf(entry.getKey())) {
-                final V neighbor = Graphs.getOppositeVertex(graph, edge, entry.getKey());
-                matrix.put(entry.getValue(), index.get(neighbor), graph.getEdgeWeight(edge));
-            }
+        for (final E edge : graph.edgeSet()) {
+            final int i = index.get(graph.getEdgeSource(edge)), j = index.get(graph.getEdgeTarget(edge));
+            matrix.put(i, j, graph.getEdgeWeight(edge));
+            matrix.put(j, i, graph.getEdgeWeight(edge));
         }
 
         for (int r = 0; r < matrix.shape()[0]; r++) matrix.put(r, r, 1);
