@@ -115,30 +115,30 @@ public class MarkovClustering<V, E> implements Clustering<V> {
 
         int i = 0;
 
-        for (final V vertex : graph.vertexSet()) {
-            index.put(vertex, i++);
-        }
+        for (final V vertex : graph.vertexSet()) index.put(vertex, i++);
 
         return index;
     }
 
     /**
-     * Construct an adjacency matrix for a given graph.
+     * Construct an adjacency matrix for a given graph. Note that the loops are ignored.
      *
      * @param graph a graph.
      * @param index a node index for the graph.
      * @return an adjacency matrix.
      */
     protected INDArray buildMatrix(Graph<V, E> graph, Map<V, Integer> index) {
-        final INDArray matrix = Nd4j.create(graph.vertexSet().size(), graph.vertexSet().size());
+        final INDArray matrix = Nd4j.eye(graph.vertexSet().size());
 
         for (final E edge : graph.edgeSet()) {
             final int i = index.get(graph.getEdgeSource(edge)), j = index.get(graph.getEdgeTarget(edge));
-            matrix.put(i, j, graph.getEdgeWeight(edge));
-            matrix.put(j, i, graph.getEdgeWeight(edge));
-        }
 
-        for (int r = 0; r < matrix.shape()[0]; r++) matrix.put(r, r, 1);
+            if (i != j) {
+                final double weight = graph.getEdgeWeight(edge);
+                matrix.put(i, j, weight);
+                matrix.put(j, i, weight);
+            }
+        }
 
         return matrix;
     }
