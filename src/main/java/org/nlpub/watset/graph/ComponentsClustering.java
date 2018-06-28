@@ -18,7 +18,7 @@
 package org.nlpub.watset.graph;
 
 import org.jgrapht.Graph;
-import org.jgrapht.alg.ConnectivityInspector;
+import org.jgrapht.alg.connectivity.ConnectivityInspector;
 
 import java.util.Collection;
 
