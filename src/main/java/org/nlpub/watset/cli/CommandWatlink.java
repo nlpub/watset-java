@@ -19,7 +19,6 @@ package org.nlpub.watset.cli;
 
 import com.beust.jcommander.Parameter;
 import org.nlpub.watset.vsm.ContextCosineSimilarity;
-import org.nlpub.watset.wsi.IndexedSense;
 import org.nlpub.watset.wsi.Sense;
 import org.nlpub.watset.wsi.Watlink;
 
@@ -31,10 +30,9 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
-import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toMap;
 import static org.nlpub.watset.io.ILEFormat.DELIMITER;
+import static org.nlpub.watset.wsi.Watlink.makeInventory;
 
 class CommandWatlink implements Runnable {
     private final Application application;
@@ -52,14 +50,11 @@ class CommandWatlink implements Runnable {
     @Override
     public void run() {
         final Collection<Collection<String>> clusters = application.getClusters();
-
-        final Map<String, Map<Sense<String>, Map<String, Number>>> inventory = getInventory(clusters);
-
-        final Map<String, Collection<String>> candidates = getCandidates();
-
-        addMissingSenses(inventory, candidates);
+        final Map<String, Map<Sense<String>, Map<String, Number>>> inventory = makeInventory(clusters);
 
         final Watlink<String> watlink = new Watlink<>(inventory, new ContextCosineSimilarity<>(), k);
+        final Map<String, Collection<String>> candidates = readCandidates();
+        watlink.addMissingSenses(candidates);
 
         try (final BufferedWriter writer = Files.newBufferedWriter(application.output)) {
             final AtomicInteger counter = new AtomicInteger(0);
@@ -74,7 +69,7 @@ class CommandWatlink implements Runnable {
                             String.join(DELIMITER, cluster),
                             dcontext.size(),
                             dcontext.entrySet().stream().
-                                    map(e -> String.format(Locale.ROOT, "%s:%f", e.getKey().get(), e.getValue().doubleValue())).
+                                    map(e -> String.format(Locale.ROOT, "%s:%f", e.getKey(), e.getValue().doubleValue())).
                                     collect(joining(DELIMITER)))
                     );
                 } catch (IOException e) {
@@ -86,32 +81,7 @@ class CommandWatlink implements Runnable {
         }
     }
 
-    private Map<String, Map<Sense<String>, Map<String, Number>>> getInventory(Collection<Collection<String>> clusters) {
-        final Map<String, Map<Sense<String>, Map<String, Number>>> inventory = new HashMap<>();
-
-        int i = 0;
-
-        for (final Collection<String> cluster : clusters) {
-            for (final String word : cluster) {
-                if (!inventory.containsKey(word)) inventory.put(word, new HashMap<>());
-
-                final Map<Sense<String>, Map<String, Number>> senses = inventory.get(word);
-                final Sense<String> sense = new IndexedSense<>(word, i);
-
-                final Map<String, Number> context = cluster.stream().
-                        filter(element -> !Objects.equals(word, element)).
-                        collect(toMap(identity(), weight -> 1));
-
-                senses.put(sense, context);
-            }
-
-            i++;
-        }
-
-        return inventory;
-    }
-
-    private Map<String, Collection<String>> getCandidates() {
+    private Map<String, Collection<String>> readCandidates() {
         try (final Stream<String> stream = Files.lines(candidates)) {
             final Map<String, Collection<String>> candidates = new HashMap<>();
 
@@ -130,22 +100,6 @@ class CommandWatlink implements Runnable {
             return candidates;
         } catch (IOException e) {
             throw new RuntimeException(e);
-        }
-    }
-
-    private void addMissingSenses(Map<String, Map<Sense<String>, Map<String, Number>>> inventory, Map<String, Collection<String>> candidates) {
-        final Set<String> missing = new HashSet<>();
-
-        for (final Map.Entry<String, Collection<String>> entry : candidates.entrySet()) {
-            if (!inventory.containsKey(entry.getKey())) missing.add(entry.getKey());
-
-            for (final String value : entry.getValue()) {
-                if (!inventory.containsKey(value)) missing.add(value);
-            }
-        }
-
-        for (final String word : missing) {
-            inventory.put(word, Collections.singletonMap(new IndexedSense<>(word, 0), Collections.emptyMap()));
         }
     }
 }

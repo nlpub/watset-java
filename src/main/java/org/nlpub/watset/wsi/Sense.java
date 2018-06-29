@@ -19,7 +19,10 @@ package org.nlpub.watset.wsi;
 
 import org.nlpub.watset.vsm.ContextSimilarity;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Supplier;
 
 import static org.nlpub.watset.util.Maximizer.argmax;
@@ -33,12 +36,10 @@ public interface Sense<V> extends Supplier<V> {
 
             if (ignored.contains(target)) continue;
 
-            final Optional<Sense<V>> result = argmax(inventory.getOrDefault(target, Collections.emptyMap()).keySet().iterator(), candidate -> {
+            final Sense<V> sense = argmax(inventory.getOrDefault(target, Collections.emptyMap()).keySet().iterator(), candidate -> {
                 final Map<V, Number> candidateContext = inventory.get(target).get(candidate);
                 return similarity.apply(context, candidateContext).doubleValue();
-            });
-
-            final Sense<V> sense = result.orElseThrow(() -> new IllegalArgumentException("Cannot find the sense for the word in context."));
+            }).orElseThrow(() -> new IllegalArgumentException("Cannot find the sense for the word in context."));
 
             dcontext.put(sense, entry.getValue());
         }

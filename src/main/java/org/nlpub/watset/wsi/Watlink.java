@@ -20,12 +20,11 @@ package org.nlpub.watset.wsi;
 import org.nlpub.watset.util.Ranking;
 import org.nlpub.watset.vsm.ContextSimilarity;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static java.util.Objects.requireNonNull;
+import static java.util.function.Function.identity;
+import static java.util.stream.Collectors.toMap;
 
 /**
  * Watlink is a method for the generation and disambiguation of the upper-level elements for the clusters.
@@ -34,6 +33,31 @@ import static java.util.Objects.requireNonNull;
  * @see <a href="http://www.dialog-21.ru/media/3959/ustalovda.pdf">Ustalov (Dialogue 2017)</a>
  */
 public class Watlink<V> {
+    public static <V> Map<V, Map<Sense<V>, Map<V, Number>>> makeInventory(Collection<Collection<V>> clusters) {
+        final Map<V, Map<Sense<V>, Map<V, Number>>> inventory = new HashMap<>();
+
+        int i = 0;
+
+        for (final Collection<V> cluster : clusters) {
+            for (final V word : cluster) {
+                if (!inventory.containsKey(word)) inventory.put(word, new HashMap<>());
+
+                final Map<Sense<V>, Map<V, Number>> senses = inventory.get(word);
+                final Sense<V> sense = new IndexedSense<>(word, i);
+
+                final Map<V, Number> context = cluster.stream().
+                        filter(element -> !Objects.equals(word, element)).
+                        collect(toMap(identity(), weight -> 1));
+
+                senses.put(sense, context);
+            }
+
+            i++;
+        }
+
+        return inventory;
+    }
+
     private final Map<V, Map<Sense<V>, Map<V, Number>>> inventory;
     private final ContextSimilarity<V> similarity;
     private final Long k;
@@ -55,8 +79,25 @@ public class Watlink<V> {
             }
         }
 
+        /* TODO: weights should be cosine similarities, not counts! */
         final Map<Sense<V>, Number> dcontext = Sense.disambiguate(inventory, similarity, context, Collections.emptySet());
 
         return Ranking.getTopK(dcontext, k);
+    }
+
+    public void addMissingSenses(Map<V, Collection<V>> candidates) {
+        final Set<V> missing = new HashSet<>();
+
+        for (final Map.Entry<V, Collection<V>> entry : requireNonNull(candidates).entrySet()) {
+            if (!inventory.containsKey(entry.getKey())) missing.add(entry.getKey());
+
+            for (final V value : entry.getValue()) {
+                if (!inventory.containsKey(value)) missing.add(value);
+            }
+        }
+
+        for (final V word : missing) {
+            inventory.put(word, Collections.singletonMap(new IndexedSense<>(word, 0), Collections.emptyMap()));
+        }
     }
 }

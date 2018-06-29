@@ -19,6 +19,8 @@ package org.nlpub.watset.wsi;
 
 import org.jgrapht.alg.util.Pair;
 
+import java.util.Locale;
+
 public class IndexedSense<V> extends Pair<V, Integer> implements Sense<V> {
     public IndexedSense(V v, Integer sense) {
         super(v, sense);
@@ -35,5 +37,10 @@ public class IndexedSense<V> extends Pair<V, Integer> implements Sense<V> {
 
     public static <V> IndexedSense<V> of(V a, Integer b) {
         return new IndexedSense<>(a, b);
+    }
+
+    @Override
+    public String toString() {
+        return String.format(Locale.ROOT, "%s#%d", super.first, super.second);
     }
 }
