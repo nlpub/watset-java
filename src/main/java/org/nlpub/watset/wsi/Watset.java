@@ -28,6 +28,7 @@ import org.nlpub.watset.vsm.ContextSimilarity;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -74,9 +75,11 @@ public class Watset<V, E> implements Clustering<V> {
         inventory = graph.vertexSet().parallelStream().
                 collect(Collectors.toMap(Function.identity(), this::induceSenses));
 
-        logger.info("Watset: sense inventory constructed.");
+        final int senses = inventory.values().stream().mapToInt(Map::size).sum();
 
-        final Map<Sense<V>, Map<Sense<V>, Number>> contexts = new ConcurrentHashMap<>();
+        logger.log(Level.INFO, "Watset: sense inventory constructed having {0} senses.", senses);
+
+        final Map<Sense<V>, Map<Sense<V>, Number>> contexts = new ConcurrentHashMap<>(senses);
 
         inventory.entrySet().parallelStream().forEach(wordSenses ->
                 wordSenses.getValue().forEach((sense, context) ->
