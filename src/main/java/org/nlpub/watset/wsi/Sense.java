@@ -29,7 +29,7 @@ import static org.nlpub.watset.util.Maximizer.argmax;
 
 public interface Sense<V> extends Supplier<V> {
     static <V> Map<Sense<V>, Number> disambiguate(Map<V, Map<Sense<V>, Map<V, Number>>> inventory, ContextSimilarity<V> similarity, Map<V, Number> context, Set<V> ignored) {
-        final Map<Sense<V>, Number> dcontext = new HashMap<>();
+        final Map<Sense<V>, Number> dcontext = new HashMap<>(context.size());
 
         for (final Map.Entry<V, Number> entry : context.entrySet()) {
             final V target = entry.getKey();
