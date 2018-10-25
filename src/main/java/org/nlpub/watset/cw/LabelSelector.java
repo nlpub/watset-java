@@ -63,7 +63,7 @@ public interface LabelSelector<V, E> {
 
             neighbors.forEachRemaining(neighbor -> {
                 final int label = labels.get(neighbor);
-                weights.put(label, weights.getOrDefault(label, 0d) + weighting.apply(graph, labels, node, neighbor));
+                weights.merge(label, weighting.apply(graph, labels, node, neighbor), Double::sum);
             });
 
             final Optional<Map.Entry<Integer, Double>> label = argmax(weights.entrySet().iterator(), Map.Entry::getValue);

@@ -75,7 +75,8 @@ public class ChineseWhispers<V, E> implements Clustering<V> {
 
             for (final V node : nodes) {
                 final int updated = selector.select(graph, labels, weighting, node);
-                final int previous = labels.put(node, updated);
+                // labels.put() never returns null for a known node
+                @SuppressWarnings("ConstantConditions") final int previous = labels.put(node, updated);
                 changed = changed || (previous != updated);
             }
 
