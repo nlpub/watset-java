@@ -26,8 +26,8 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 import java.util.function.Function;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -73,7 +73,7 @@ public class Measurer<V, E> implements Runnable {
     public void run() {
         System.gc();
 
-        logger.info(String.format(Locale.ROOT, "Evaluating a graph with %d node(s).", graph.vertexSet().size()));
+        logger.log(Level.INFO, "Evaluating a graph with {0} node(s).", graph.vertexSet().size());
 
         measurements = new ArrayList<>(warmup + repetitions);
 
