@@ -19,7 +19,6 @@ package org.nlpub.watset.cli;
 
 import org.jgrapht.Graph;
 import org.nlpub.watset.cw.ChineseWhispers;
-import org.nlpub.watset.cw.LabelSelector;
 import org.nlpub.watset.cw.NodeWeighting;
 import org.nlpub.watset.graph.*;
 import org.nlpub.watset.maxmax.MaxMax;
@@ -63,8 +62,7 @@ public class AlgorithmProvider<V, E> implements Function<Graph<V, E>, Clustering
                 return new ComponentsClustering<>(graph);
             case "cw":
                 final NodeWeighting<V, E> weighting = parseChineseWhispersNodeWeighting();
-                final LabelSelector<V, E> selector = parseChineseWhispersLabelSelector();
-                return new ChineseWhispers<>(graph, weighting, selector);
+                return new ChineseWhispers<>(graph, weighting);
             case "mcl":
             case "mcl-bin":
                 final int e = Integer.parseInt(params.getOrDefault("e", "2"));
@@ -93,17 +91,6 @@ public class AlgorithmProvider<V, E> implements Function<Graph<V, E>, Clustering
                 return NodeWeighting.nolog();
             default:
                 throw new IllegalArgumentException("Unknown mode is set.");
-        }
-    }
-
-    private LabelSelector<V, E> parseChineseWhispersLabelSelector() {
-        switch (params.getOrDefault("select", "total").toLowerCase()) {
-            case "single":
-                return LabelSelector.single();
-            case "total":
-                return LabelSelector.total();
-            default:
-                throw new IllegalArgumentException("Unknown selector is set.");
         }
     }
 

@@ -23,7 +23,6 @@ import org.jgrapht.graph.SimpleWeightedGraph;
 import org.junit.Before;
 import org.junit.Test;
 import org.nlpub.watset.cw.ChineseWhispers;
-import org.nlpub.watset.cw.LabelSelector;
 import org.nlpub.watset.cw.NodeWeighting;
 import org.nlpub.watset.graph.Clustering;
 
@@ -50,7 +49,7 @@ public class SenseInductionTest {
 
     private final static Random random = new Random(1337);
 
-    private final static Function<Graph<String, DefaultWeightedEdge>, Clustering<String>> local = ChineseWhispers.provider(NodeWeighting.top(), LabelSelector.total(), ChineseWhispers.ITERATIONS, random);
+    private final static Function<Graph<String, DefaultWeightedEdge>, Clustering<String>> local = ChineseWhispers.provider(NodeWeighting.top(), ChineseWhispers.ITERATIONS, random);
 
     private final static SenseInduction<String, DefaultWeightedEdge> senseInduction = new SenseInduction<>(WORDS, "a", local);
 

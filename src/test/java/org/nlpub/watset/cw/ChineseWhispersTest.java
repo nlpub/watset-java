@@ -39,7 +39,7 @@ public class ChineseWhispersTest {
             addEdge("d", "e").
             build();
 
-    private final ChineseWhispers<String, ?> cw1 = new ChineseWhispers<>(DISJOINT, NodeWeighting.top(), LabelSelector.total(), ChineseWhispers.ITERATIONS, random);
+    private final ChineseWhispers<String, ?> cw1 = new ChineseWhispers<>(DISJOINT, NodeWeighting.top(), ChineseWhispers.ITERATIONS, random);
 
     @Before
     public void setup() {
