@@ -31,7 +31,8 @@ import java.util.function.Function;
 import java.util.logging.Logger;
 
 import static java.util.Objects.requireNonNull;
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.toSet;
 
 /**
  * This is a weird thing. The implementation of MCL by its author is fast,
@@ -40,8 +41,6 @@ import static java.util.stream.Collectors.*;
  */
 public class MarkovClusteringBinaryRunner<V, E> implements Clustering<V> {
     private static final Logger logger = Logger.getLogger(Watset.class.getSimpleName());
-
-    public static final int THREADS = 1;
 
     private final Graph<V, E> graph;
     private final Path mcl;
@@ -54,11 +53,19 @@ public class MarkovClusteringBinaryRunner<V, E> implements Clustering<V> {
         return graph -> new MarkovClusteringBinaryRunner<>(graph, mcl, r, threads);
     }
 
+    public static final <V, E> Function<Graph<V, E>, Clustering<V>> provider(Path mcl, double r) {
+        return graph -> new MarkovClusteringBinaryRunner<>(graph, mcl, r);
+    }
+
     public MarkovClusteringBinaryRunner(Graph<V, E> graph, Path mcl, double r, int threads) {
         this.graph = requireNonNull(graph);
         this.mcl = mcl;
         this.r = r;
         this.threads = threads;
+    }
+
+    public MarkovClusteringBinaryRunner(Graph<V, E> graph, Path mcl, double r) {
+        this(graph, mcl, r, 1);
     }
 
     @Override
@@ -107,7 +114,7 @@ public class MarkovClusteringBinaryRunner<V, E> implements Clustering<V> {
                 "-te", Integer.toString(threads),
                 "--abc",
                 "-o", output.toString());
-        logger.info("Command: " + builder.command().stream().collect(joining(" ")));
+        logger.info("Command: " + String.join(" ", builder.command()));
 
         final Process process = builder.start();
         int status = process.waitFor();
