@@ -39,11 +39,11 @@ public class ChineseWhispers<V, E> implements Clustering<V> {
 
     public static final int ITERATIONS = 20;
 
-    private final Graph<V, E> graph;
-    private final NodeWeighting<V, E> weighting;
-    private final int iterations;
-    private final Random random;
-    private Map<V, Integer> labels;
+    protected final Graph<V, E> graph;
+    protected final NodeWeighting<V, E> weighting;
+    protected final int iterations;
+    protected final Random random;
+    protected Map<V, Integer> labels;
 
     public ChineseWhispers(Graph<V, E> graph, NodeWeighting<V, E> weighting, int iterations, Random random) {
         this.graph = requireNonNull(graph);
