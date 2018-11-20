@@ -18,9 +18,12 @@
 package org.nlpub.watset.util;
 
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
+
+import static java.util.Objects.isNull;
 
 /**
  * This is an utility class that implements a naïve approach for search a local maximum of a function.
@@ -35,6 +38,15 @@ public interface Maximizer {
     static <T> Predicate<T> alwaysTrue() {
         return (o) -> true;
     }
+    /**
+     * A predicate that is always false.
+     *
+     * @param <T> the type.
+     * @return the absolute non-truth.
+     */
+    static <T> Predicate<T> alwaysFalse() {
+        return (o) -> false;
+    }
 
     /**
      * This is an utility method that finds an argument of the maxima for certain score function.
@@ -43,20 +55,21 @@ public interface Maximizer {
      * @param checker the predicate that checks the suitability of an argument for the scoring.
      * @param scorer  the scoring function.
      * @param <V>     the argument type.
+     * @param <S>     the score type.
      * @return non-empty optional that contains the first found argmax, otherwise an empty one.
      */
-    static <V> Optional<V> argmax(Iterator<V> it, Predicate<V> checker, Function<V, Double> scorer) {
+    static <V, S extends Comparable<S>> Optional<V> argmax(Iterator<V> it, Predicate<V> checker, Function<V, S> scorer) {
         V result = null;
-        double score = Double.NEGATIVE_INFINITY;
+        S score = null;
 
         while (it.hasNext()) {
             final V current = it.next();
 
             if (!checker.test(current)) continue;
 
-            final double currentScore = scorer.apply(current);
+            final S currentScore = scorer.apply(current);
 
-            if (currentScore > score) {
+            if (isNull(score) || (currentScore.compareTo(score) > 0)) {
                 result = current;
                 score = currentScore;
             }
@@ -74,7 +87,7 @@ public interface Maximizer {
      * @return non-empty optional that contains the first found argmax, otherwise an empty one.
      * @see Maximizer#argmax(Iterator, Predicate, Function)
      */
-    static <V> Optional<V> argmax(Iterator<V> it, Function<V, Double> scorer) {
+    static <V, S extends Comparable<S>> Optional<V> argmax(Iterator<V> it, Function<V, S> scorer) {
         return argmax(it, alwaysTrue(), scorer);
     }
 }

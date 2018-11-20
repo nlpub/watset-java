@@ -25,7 +25,7 @@ import java.util.*;
 import static org.junit.Assert.assertNotEquals;
 
 public class VectorsTest {
-    private static final Map<String, Number> vec1 = new HashMap<String, Number>() {{
+    public static final Map<String, Number> vec1 = new HashMap<String, Number>() {{
         put("a", 1);
         put("b", 3);
         put("c", -5);
