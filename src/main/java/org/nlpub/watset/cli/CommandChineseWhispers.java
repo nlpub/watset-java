@@ -30,9 +30,6 @@ class CommandChineseWhispers extends ClusteringCommand {
     @Parameter(names = {"-m", "--mode"})
     private String mode;
 
-    @Parameter(names = {"-l", "--label"})
-    private String label;
-
     public CommandChineseWhispers(Application application) {
         super(application);
     }
@@ -41,7 +38,6 @@ class CommandChineseWhispers extends ClusteringCommand {
     public Clustering<String> getClustering() {
         final Map<String, String> params = new HashMap<String, String>() {{
             put("mode", mode);
-            put("label", label);
         }};
 
         final AlgorithmProvider<String, DefaultWeightedEdge> algorithm = new AlgorithmProvider<>("cw", params);
