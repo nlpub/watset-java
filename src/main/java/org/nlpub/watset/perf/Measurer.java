@@ -20,7 +20,6 @@ package org.nlpub.watset.perf;
 import org.jgrapht.Graph;
 import org.nlpub.watset.graph.Clustering;
 
-import javax.annotation.Nonnull;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -88,7 +87,7 @@ public class Measurer<V, E> implements Runnable {
         logger.info("Evaluation complete.");
     }
 
-    private Duration measure(@Nonnull Clustering<V> clustering) {
+    private Duration measure(Clustering<V> clustering) {
         final Instant start = Instant.now();
         clustering.run();
         final Instant end = Instant.now();

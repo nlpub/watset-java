@@ -17,11 +17,10 @@
 
 package org.nlpub.watset.mcl;
 
+import org.apache.commons.math3.linear.DefaultRealMatrixChangingVisitor;
+import org.apache.commons.math3.linear.MatrixUtils;
+import org.apache.commons.math3.linear.RealMatrix;
 import org.jgrapht.Graph;
-import org.nd4j.linalg.api.ndarray.INDArray;
-import org.nd4j.linalg.api.ops.impl.transforms.Pow;
-import org.nd4j.linalg.factory.Nd4j;
-import org.nd4j.linalg.ops.transforms.Transforms;
 import org.nlpub.watset.graph.Clustering;
 
 import java.util.*;
@@ -49,7 +48,7 @@ public class MarkovClustering<V, E> implements Clustering<V> {
     protected final Graph<V, E> graph;
     protected final int e;
     protected final double r;
-    protected INDArray matrix;
+    protected RealMatrix matrix;
     protected Map<V, Integer> index;
 
     public MarkovClustering(Graph<V, E> graph, int e, double r) {
@@ -71,7 +70,7 @@ public class MarkovClustering<V, E> implements Clustering<V> {
         normalize(matrix);
 
         for (int i = 0; i < ITERATIONS; i++) {
-            final INDArray previous = matrix.unsafeDuplication();
+            final RealMatrix previous = matrix.copy();
 
             expand(matrix);
             inflate(matrix);
@@ -89,13 +88,11 @@ public class MarkovClustering<V, E> implements Clustering<V> {
 
         final Set<Collection<V>> clusters = new HashSet<>();
 
-        for (int r = 0; r < matrix.rows(); r++) {
-            final INDArray row = matrix.getRow(r);
-
+        for (int r = 0; r < matrix.getRowDimension(); r++) {
             final Set<V> cluster = new HashSet<>();
 
-            for (int c = 0; c < row.length(); c++) {
-                if (row.getDouble(c) > 0) cluster.add(inverted.get(c));
+            for (int c = 0; c < matrix.getColumnDimension(); c++) {
+                if (matrix.getEntry(r, c) > 0) cluster.add(inverted.get(c));
             }
 
             if (!cluster.isEmpty()) clusters.add(cluster);
@@ -121,39 +118,71 @@ public class MarkovClustering<V, E> implements Clustering<V> {
     }
 
     /**
-     * Construct an adjacency matrix for a given graph. Note that the loops are ignored.
+     * Construct an adjacency sums for a given graph. Note that the loops are ignored.
      *
      * @param graph a graph.
      * @param index a node index for the graph.
-     * @return an adjacency matrix.
+     * @return an adjacency sums.
      */
-    protected INDArray buildMatrix(Graph<V, E> graph, Map<V, Integer> index) {
-        final INDArray matrix = Nd4j.eye(graph.vertexSet().size());
+    protected RealMatrix buildMatrix(Graph<V, E> graph, Map<V, Integer> index) {
+        final RealMatrix matrix = MatrixUtils.createRealIdentityMatrix(graph.vertexSet().size());
 
         for (final E edge : graph.edgeSet()) {
             final int i = index.get(graph.getEdgeSource(edge)), j = index.get(graph.getEdgeTarget(edge));
 
             if (i != j) {
                 final double weight = graph.getEdgeWeight(edge);
-                matrix.put(i, j, weight);
-                matrix.put(j, i, weight);
+                matrix.setEntry(i, j, weight);
+                matrix.setEntry(j, i, weight);
             }
         }
 
         return matrix;
     }
 
-    protected void normalize(INDArray matrix) {
-        final INDArray sums = matrix.sum(0);
-        matrix.diviRowVector(sums);
+    private class NormalizeVisitor extends DefaultRealMatrixChangingVisitor {
+        private final RealMatrix sums;
+
+        public NormalizeVisitor(RealMatrix sums) {
+            this.sums = sums;
+        }
+
+        @Override
+        public double visit(int row, int column, double value) {
+            return value / sums.getEntry(0, column);
+        }
     }
 
-    protected void expand(INDArray matrix) {
-        Transforms.mpow(matrix, e, false);
+    protected void normalize(RealMatrix matrix) {
+        final RealMatrix sums = createRowOnesRealMatrix(matrix.getRowDimension()).multiply(matrix);
+        matrix.walkInOptimizedOrder(new NormalizeVisitor(sums));
     }
 
-    protected void inflate(INDArray matrix) {
-        Nd4j.getExecutioner().exec(new Pow(matrix, r));
+    protected void expand(RealMatrix matrix) {
+        this.matrix = matrix.power(e);
+    }
+
+    private class InflateVisitor extends DefaultRealMatrixChangingVisitor {
+        private final double r;
+
+        public InflateVisitor(double r) {
+            this.r = r;
+        }
+
+        @Override
+        public double visit(int row, int column, double value) {
+            return Math.pow(value, r);
+        }
+    }
+
+    protected void inflate(RealMatrix matrix) {
         normalize(matrix);
+        matrix.walkInOptimizedOrder(new InflateVisitor(r));
+    }
+
+    private RealMatrix createRowOnesRealMatrix(int n) {
+        final double[] ones = new double[n];
+        Arrays.fill(ones, 1);
+        return MatrixUtils.createRowRealMatrix(ones);
     }
 }
