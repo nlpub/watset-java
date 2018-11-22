@@ -22,9 +22,6 @@ import org.nlpub.watset.graph.Clustering;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -41,13 +38,14 @@ import java.util.logging.Logger;
 public class Measurer<V, E> implements Runnable {
     private static final Logger logger = Logger.getLogger(Measurer.class.getSimpleName());
 
-    final static public int WARMUP = 15;
-    final static public int REPETITIONS = 35;
+    final static public int REPETITIONS = 10;
+    final static public int WARMUP = 5;
 
     private final Function<Graph<V, E>, Clustering<V>> provider;
     private final int repetitions, warmup;
     private Graph<V, E> graph;
-    private List<Long> measurements;
+    private long[] durations;
+    private int[] clusters;
 
     public Measurer(Function<Graph<V, E>, Clustering<V>> provider, Graph<V, E> graph) {
         this(provider, graph, REPETITIONS, WARMUP);
@@ -58,15 +56,18 @@ public class Measurer<V, E> implements Runnable {
         this.repetitions = repetitions;
         this.warmup = warmup;
         this.graph = graph;
-        this.measurements = Collections.emptyList();
     }
 
     public Graph<V, E> getGraph() {
         return graph;
     }
 
-    public List<Long> getObservations() {
-        return measurements;
+    public long[] getDurations() {
+        return durations;
+    }
+
+    public int[] getClusters() {
+        return clusters;
     }
 
     public void run() {
@@ -74,14 +75,18 @@ public class Measurer<V, E> implements Runnable {
 
         logger.log(Level.INFO, "Evaluating a graph with {0} node(s).", graph.vertexSet().size());
 
-        measurements = new ArrayList<>(warmup + repetitions);
+        durations = new long[repetitions];
+        clusters = new int[repetitions];
 
         for (int i = -warmup; i < repetitions; i++) {
             final Clustering<V> clustering = provider.apply(graph);
 
             final Duration duration = measure(clustering);
 
-            if (i >= 0) measurements.add(i, duration.toMillis());
+            if (i >= 0) {
+                durations[i] = duration.toMillis();
+                clusters[i] = clustering.getClusters().size();
+            }
         }
 
         logger.info("Evaluation complete.");
