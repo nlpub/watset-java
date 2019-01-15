@@ -23,6 +23,14 @@ There are two global command-line arguments: `-i` (or `--input`) that specifies 
 
 The input for this tool is an undirected weighted graph represented in the ABC format. This format is a tab-separated edge list: <code>word1&#9;word2&#9;weight</code>. The output of the graph clustering algorithm is a tab-separated file containing three columns: the cluster identifier, the cluster size, and the list of elements belonging to the cluster.
 
+```
+a	b	1
+b	c	0.5
+c	d	2
+```
+
+The default output format is a tab-separated file, each line of which contains three elements: `id`, `size` and a comma-and-space-separated list of elements.
+
 In fact, `watset-java` is not just a tool, it also features a complete API for graph clustering. This API can easily be embedded into your application or library. Consider the Javadoc at <https://nlpub.github.io/watset-java/>.
 
 ### Dummy Clustering
