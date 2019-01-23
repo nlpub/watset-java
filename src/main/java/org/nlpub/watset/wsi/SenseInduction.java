@@ -18,11 +18,12 @@
 package org.nlpub.watset.wsi;
 
 import org.jgrapht.Graph;
-import org.jgrapht.graph.AsSubgraph;
 import org.nlpub.watset.graph.Clustering;
 import org.nlpub.watset.util.Neighbors;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Function;
 
 import static java.util.Objects.requireNonNull;
@@ -49,9 +50,7 @@ public class SenseInduction<V, E> implements Runnable {
     public void run() {
         clusters = null;
 
-        final Set<V> neighborhood = Neighbors.neighborSetOf(graph, target);
-
-        final Graph<V, E> ego = new AsSubgraph<>(graph, new HashSet<>(neighborhood));
+        final Graph<V, E> ego = Neighbors.neighborhoodGraph(graph, target);
 
         final Clustering<V> clustering = clusteringProvider.apply(ego);
         clustering.run();

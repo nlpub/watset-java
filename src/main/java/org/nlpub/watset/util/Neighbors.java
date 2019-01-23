@@ -19,6 +19,8 @@ package org.nlpub.watset.util;
 
 import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
+import org.jgrapht.graph.SimpleWeightedGraph;
+import org.jgrapht.graph.builder.GraphBuilder;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -35,5 +37,26 @@ public interface Neighbors {
         return graph.edgesOf(node).stream().
                 map(e -> Graphs.getOppositeVertex(graph, e, node)).
                 collect(Collectors.toSet());
+    }
+
+    static <V, E> Graph<V, E> neighborhoodGraph(Graph<V, E> graph, V node) {
+        final GraphBuilder<V, E, ? extends SimpleWeightedGraph<V, E>> builder = SimpleWeightedGraph.createBuilder(graph.getEdgeSupplier());
+
+        final Set<V> neighborhood = neighborSetOf(graph, node);
+
+        for (final V neighbor : neighborhood) {
+            builder.addVertex(neighbor);
+
+            for (final E edge : graph.edgesOf(neighbor)) {
+                final V opposite = Graphs.getOppositeVertex(graph, edge, neighbor);
+
+                if (neighborhood.contains(opposite)) {
+                    builder.addVertex(opposite);
+                    builder.addEdge(neighbor, opposite, edge, graph.getEdgeWeight(edge));
+                }
+            }
+        }
+
+        return builder.buildAsUnmodifiable();
     }
 }

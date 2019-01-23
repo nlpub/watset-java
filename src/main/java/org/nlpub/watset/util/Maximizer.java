@@ -18,7 +18,6 @@
 package org.nlpub.watset.util;
 
 import java.util.Iterator;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;

@@ -18,7 +18,8 @@
 package org.nlpub.watset.vsm;
 
 import java.util.Map;
+import java.util.function.BiFunction;
 
-public interface ContextSimilarity<V> extends Similarity<Map<V, Number>> {
+public interface ContextSimilarity<V> extends BiFunction<Map<V, Number>, Map<V, Number>, Number> {
     Number DEFAULT_CONTEXT_WEIGHT = 1;
 }

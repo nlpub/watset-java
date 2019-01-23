@@ -33,7 +33,7 @@ import java.util.function.Function;
 import static org.junit.Assert.assertEquals;
 
 public class SenseInductionTest {
-    final static Graph<String, DefaultWeightedEdge> WORDS = SimpleWeightedGraph.<String, DefaultWeightedEdge>createBuilder(DefaultWeightedEdge.class).
+    public final static Graph<String, DefaultWeightedEdge> WORDS = SimpleWeightedGraph.<String, DefaultWeightedEdge>createBuilder(DefaultWeightedEdge.class).
             addVertices("a", "b", "c", "d", "e", "f", "g").
             addEdge("a", "b", 10).
             addEdge("a", "c", .5).
