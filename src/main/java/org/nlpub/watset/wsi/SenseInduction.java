@@ -64,7 +64,7 @@ public class SenseInduction<V, E> implements Runnable {
         final Map<Sense<V>, Map<V, Number>> senses = new HashMap<>();
 
         for (final Collection<V> cluster : clusters) {
-            final Map<V, Number> context = new HashMap<>();
+            final Map<V, Number> context = new HashMap<>(cluster.size());
 
             for (final V neighbor : cluster) {
                 context.put(neighbor, graph.getEdgeWeight(graph.getEdge(target, neighbor)));
