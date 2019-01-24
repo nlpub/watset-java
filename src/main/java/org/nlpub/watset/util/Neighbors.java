@@ -39,20 +39,29 @@ public interface Neighbors {
                 collect(Collectors.toSet());
     }
 
+    /**
+     * Extract a neighborhood graph for the given node from a graph.
+     *
+     * @param graph graph
+     * @param node  target node
+     * @param <V>   node class
+     * @param <E>   edge class
+     * @return a neighborhood graph
+     */
     static <V, E> Graph<V, E> neighborhoodGraph(Graph<V, E> graph, V node) {
         final GraphBuilder<V, E, ? extends SimpleWeightedGraph<V, E>> builder = SimpleWeightedGraph.createBuilder(graph.getEdgeSupplier());
 
         final Set<V> neighborhood = neighborSetOf(graph, node);
+        neighborhood.forEach(builder::addVertex);
 
         for (final V neighbor : neighborhood) {
-            builder.addVertex(neighbor);
-
             for (final E edge : graph.edgesOf(neighbor)) {
-                final V opposite = Graphs.getOppositeVertex(graph, edge, neighbor);
+                final V source = graph.getEdgeSource(edge);
+                final V target = graph.getEdgeTarget(edge);
 
-                if (neighborhood.contains(opposite)) {
-                    builder.addVertex(opposite);
-                    builder.addEdge(neighbor, opposite, edge, graph.getEdgeWeight(edge));
+                if (neighborhood.contains(source) && neighborhood.contains(target)) {
+                    final double weight = graph.getEdgeWeight(edge);
+                    builder.addEdge(source, target, edge, weight);
                 }
             }
         }
