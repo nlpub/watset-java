@@ -96,7 +96,7 @@ public class Watset<V, E> implements Clustering<V> {
         final Clustering<Sense<V>> globalClustering = global.apply(senseGraph);
         globalClustering.run();
 
-        logger.info("Watset: extracting clusters.");
+        logger.info("Watset: extracting sense clusters.");
 
         senseClusters = globalClustering.getClusters();
 
