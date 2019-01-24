@@ -80,8 +80,7 @@ public class MaxMax<V, E> implements Clustering<V> {
 
         digraph.vertexSet().forEach(v -> {
             if (roots.get(v)) {
-                final Queue<V> queue = new LinkedList<>();
-                queue.addAll(Graphs.successorListOf(digraph, v));
+                final Queue<V> queue = new LinkedList<>(Graphs.successorListOf(digraph, v));
                 visited.add(v);
                 while (!queue.isEmpty()) {
                     final V u = queue.remove();

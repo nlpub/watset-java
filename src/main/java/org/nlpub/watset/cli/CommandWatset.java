@@ -21,7 +21,7 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
-import org.nlpub.watset.vsm.ContextCosineSimilarity;
+import org.nlpub.watset.vsm.CosineContextSimilarity;
 import org.nlpub.watset.wsi.IndexedSense;
 import org.nlpub.watset.wsi.Sense;
 import org.nlpub.watset.wsi.Watset;
@@ -59,7 +59,7 @@ class CommandWatset extends ClusteringCommand {
 
         return new Watset<>(
                 graph, localAlgorithm, globalAlgorithm,
-                new ContextCosineSimilarity<>()
+                new CosineContextSimilarity<>()
         );
     }
 

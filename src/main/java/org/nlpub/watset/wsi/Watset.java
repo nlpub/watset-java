@@ -22,8 +22,8 @@ import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
 import org.jgrapht.graph.builder.GraphBuilder;
 import org.nlpub.watset.graph.Clustering;
-import org.nlpub.watset.vsm.ContextCosineSimilarity;
 import org.nlpub.watset.vsm.ContextSimilarity;
+import org.nlpub.watset.vsm.CosineContextSimilarity;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -33,7 +33,6 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
-import static org.nlpub.watset.vsm.ContextSimilarity.DEFAULT_CONTEXT_WEIGHT;
 
 /**
  * Watset is a local-global meta-algorithm for fuzzy graph clustering. It builds an intermediate undirected graph that addresses the element ambiguity by considering different senses of each element in the input graph.
@@ -43,8 +42,10 @@ import static org.nlpub.watset.vsm.ContextSimilarity.DEFAULT_CONTEXT_WEIGHT;
  * @see <a href="https://doi.org/10.18653/v1/P17-1145">Ustalov et al. (ACL 2017)</a>
  */
 public class Watset<V, E> implements Clustering<V> {
+    private final static Number DEFAULT_CONTEXT_WEIGHT = 1;
+
     public static <V, E> Function<Graph<V, E>, Clustering<V>> provider(Function<Graph<V, E>, Clustering<V>> local, Function<Graph<Sense<V>, DefaultWeightedEdge>, Clustering<Sense<V>>> global) {
-        return graph -> new Watset<>(graph, local, global, new ContextCosineSimilarity<>());
+        return graph -> new Watset<>(graph, local, global, new CosineContextSimilarity<>());
     }
 
     private static final Logger logger = Logger.getLogger(Watset.class.getSimpleName());
@@ -140,7 +141,7 @@ public class Watset<V, E> implements Clustering<V> {
     }
 
     private Graph<Sense<V>, DefaultWeightedEdge> buildSenseGraph(Map<Sense<V>, Map<Sense<V>, Number>> contexts) {
-        final GraphBuilder<Sense<V>, DefaultWeightedEdge, SimpleWeightedGraph<Sense<V>, DefaultWeightedEdge>> builder = new GraphBuilder<>(new SimpleWeightedGraph<>(DefaultWeightedEdge.class));
+        final GraphBuilder<Sense<V>, DefaultWeightedEdge, ? extends SimpleWeightedGraph<Sense<V>, DefaultWeightedEdge>> builder = SimpleWeightedGraph.createBuilder(DefaultWeightedEdge.class);
 
         contexts.keySet().forEach(builder::addVertex);
 

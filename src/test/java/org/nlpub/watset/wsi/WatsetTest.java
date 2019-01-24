@@ -24,7 +24,7 @@ import org.junit.Test;
 import org.nlpub.watset.cw.ChineseWhispers;
 import org.nlpub.watset.cw.NodeWeighting;
 import org.nlpub.watset.graph.Clustering;
-import org.nlpub.watset.vsm.ContextCosineSimilarity;
+import org.nlpub.watset.vsm.CosineContextSimilarity;
 
 import java.util.Collection;
 import java.util.Random;
@@ -36,7 +36,7 @@ public class WatsetTest {
     private final static Random random = new Random(1337);
     final static Function<Graph<String, DefaultWeightedEdge>, Clustering<String>> local = ChineseWhispers.provider(NodeWeighting.top(), ChineseWhispers.ITERATIONS, random);
     final static Function<Graph<Sense<String>, DefaultWeightedEdge>, Clustering<Sense<String>>> global = ChineseWhispers.provider(NodeWeighting.top(), ChineseWhispers.ITERATIONS, random);
-    private final static Watset<String, DefaultWeightedEdge> watset = new Watset<>(SenseInductionTest.WORDS, local, global, new ContextCosineSimilarity<>());
+    private final static Watset<String, DefaultWeightedEdge> watset = new Watset<>(SenseInductionTest.WORDS, local, global, new CosineContextSimilarity<>());
 
     @Before
     public void setup() {

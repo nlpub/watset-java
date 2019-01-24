@@ -17,11 +17,29 @@
 
 package org.nlpub.watset.vsm;
 
-import java.util.Map;
+import org.apache.commons.math3.linear.RealVector;
+import org.nlpub.watset.util.Vectors;
 
-public class DummyContextSimilarity<V> implements ContextSimilarity<V> {
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
+
+public class CosineContextSimilarity<V> implements ContextSimilarity<V> {
     @Override
     public Number apply(Map<V, Number> bag1, Map<V, Number> bag2) {
-        return 0;
+        final Set<V> union = new LinkedHashSet<>(bag1.keySet());
+        union.addAll(bag2.keySet());
+
+        final RealVector vec1 = Vectors.transform(bag1, union);
+        final RealVector vec2 = Vectors.transform(bag2, union);
+
+        final double norm1 = vec1.getNorm();
+        final double norm2 = vec2.getNorm();
+
+        if (norm1 == 0 || norm2 == 0) {
+            return 0d;
+        } else {
+            return vec1.dotProduct(vec2) / (norm1 * norm2);
+        }
     }
 }

@@ -18,7 +18,7 @@
 package org.nlpub.watset.cli;
 
 import com.beust.jcommander.Parameter;
-import org.nlpub.watset.vsm.ContextCosineSimilarity;
+import org.nlpub.watset.vsm.CosineContextSimilarity;
 import org.nlpub.watset.wsi.Sense;
 import org.nlpub.watset.wsi.Watlink;
 
@@ -52,7 +52,7 @@ class CommandWatlink implements Runnable {
         final Collection<Collection<String>> clusters = application.getClusters();
         final Map<String, Map<Sense<String>, Map<String, Number>>> inventory = makeInventory(clusters);
 
-        final Watlink<String> watlink = new Watlink<>(inventory, new ContextCosineSimilarity<>(), k);
+        final Watlink<String> watlink = new Watlink<>(inventory, new CosineContextSimilarity<>(), k);
         final Map<String, Collection<String>> candidates = readCandidates();
         watlink.addMissingSenses(candidates);
 

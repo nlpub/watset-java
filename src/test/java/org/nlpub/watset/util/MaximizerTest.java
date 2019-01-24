@@ -24,17 +24,17 @@ import java.util.Optional;
 
 import static org.junit.Assert.*;
 import static org.nlpub.watset.util.Maximizer.*;
-import static org.nlpub.watset.vsm.VectorsTest.vec1;
+import static org.nlpub.watset.util.VectorsTest.bag1;
 
 public class MaximizerTest {
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-    final Optional<Map.Entry<String, Number>> arg1 = argmax(vec1.entrySet().iterator(), e -> e.getValue().doubleValue());
+    final Optional<Map.Entry<String, Number>> arg1 = argmax(bag1.entrySet().iterator(), e -> e.getValue().doubleValue());
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-    final Optional<Map.Entry<String, Number>> arg2 = argmax(vec1.entrySet().iterator(), alwaysFalse(), e -> e.getValue().doubleValue());
+    final Optional<Map.Entry<String, Number>> arg2 = argmax(bag1.entrySet().iterator(), alwaysFalse(), e -> e.getValue().doubleValue());
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-    final Optional<Map.Entry<String, Number>> arg3 = argmax(vec1.entrySet().iterator(), e -> e.getValue().doubleValue() < 0, e -> e.getValue().doubleValue());
+    final Optional<Map.Entry<String, Number>> arg3 = argmax(bag1.entrySet().iterator(), e -> e.getValue().doubleValue() < 0, e -> e.getValue().doubleValue());
 
     @Test
     public void testAlwaysTrue() {

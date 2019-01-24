@@ -21,7 +21,7 @@ import com.beust.jcommander.Parameter;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.nlpub.watset.graph.EmptyClustering;
-import org.nlpub.watset.vsm.DummyContextSimilarity;
+import org.nlpub.watset.vsm.ContextSimilarity;
 import org.nlpub.watset.wsi.IndexedSense;
 import org.nlpub.watset.wsi.Sense;
 import org.nlpub.watset.wsi.Watset;
@@ -58,8 +58,7 @@ class CommandSenses implements Runnable {
         final Graph<String, DefaultWeightedEdge> graph = application.getGraph();
 
         final Watset<String, DefaultWeightedEdge> watset = new Watset<>(
-                graph, algorithm, EmptyClustering.provider(),
-                new DummyContextSimilarity<>()
+                graph, algorithm, EmptyClustering.provider(), ContextSimilarity.dummy()
         );
 
         watset.run();

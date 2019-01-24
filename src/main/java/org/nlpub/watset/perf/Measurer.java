@@ -43,7 +43,7 @@ public class Measurer<V, E> implements Runnable {
 
     private final Function<Graph<V, E>, Clustering<V>> provider;
     private final int repetitions, warmup;
-    private Graph<V, E> graph;
+    private final Graph<V, E> graph;
     private long[] durations;
     private int[] clusters;
 

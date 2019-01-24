@@ -39,7 +39,7 @@ import static java.util.Objects.requireNonNull;
  * @see <a href="https://micans.org/mcl/">van Dongen (2000)</a>
  */
 public class MarkovClustering<V, E> implements Clustering<V> {
-    public static final <V, E> Function<Graph<V, E>, Clustering<V>> provider(int e, double r) {
+    public static <V, E> Function<Graph<V, E>, Clustering<V>> provider(int e, double r) {
         return graph -> new MarkovClustering<>(graph, e, r);
     }
 

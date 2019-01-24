@@ -20,7 +20,7 @@ package org.nlpub.watset.wsi;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.junit.Before;
 import org.junit.Test;
-import org.nlpub.watset.vsm.ContextCosineSimilarity;
+import org.nlpub.watset.vsm.CosineContextSimilarity;
 
 import java.util.*;
 
@@ -30,7 +30,7 @@ import static org.nlpub.watset.wsi.WatsetTest.global;
 import static org.nlpub.watset.wsi.WatsetTest.local;
 
 public class WatlinkTest {
-    private final static Watset<String, DefaultWeightedEdge> watset = new Watset<>(WORDS, local, global, new ContextCosineSimilarity<>());
+    private final static Watset<String, DefaultWeightedEdge> watset = new Watset<>(WORDS, local, global, new CosineContextSimilarity<>());
 
     private final static Map<String, Collection<String>> hypernyms = new HashMap<String, Collection<String>>() {{
         put("a", Arrays.asList("e", "f"));
@@ -42,7 +42,7 @@ public class WatlinkTest {
     @Before
     public void setup() {
         watset.run();
-        watlink = new Watlink<>(watset.getInventory(), new ContextCosineSimilarity<>(), 1);
+        watlink = new Watlink<>(watset.getInventory(), new CosineContextSimilarity<>(), 1);
     }
 
     @Test
