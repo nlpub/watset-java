@@ -139,7 +139,7 @@ $ java -jar watset.jar -i graph.txt -o output.tsv maxmax
 
 ## Copyright
 
-Copyright (c) 2016-2018 [Dmitry Ustalov]. See LICENSE for details.
+Copyright (c) 2016-2019 [Dmitry Ustalov]. See LICENSE for details.
 
 [Watset]: https://doi.org/10.18653/v1/P17-1145
 [Chinese Whispers]: https://dl.acm.org/citation.cfm?id=1654774
