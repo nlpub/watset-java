@@ -21,14 +21,13 @@ import org.jgrapht.Graph;
 import org.nlpub.watset.graph.Clustering;
 import org.nlpub.watset.wsi.Watset;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.function.Function;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toMap;
@@ -88,7 +87,7 @@ public class MarkovClusteringBinaryRunner<V, E> implements Clustering<V> {
 
     @Override
     public void run() {
-        logger.info("Starting Markov Clustering binary.");
+        logger.info("Preparing for Markov Clustering.");
 
         mapping = translate(graph);
 
@@ -114,13 +113,24 @@ public class MarkovClusteringBinaryRunner<V, E> implements Clustering<V> {
                 "-te", Integer.toString(threads),
                 "--abc",
                 "-o", output.toString());
+
         logger.info("Command: " + String.join(" ", builder.command()));
 
         final Process process = builder.start();
         int status = process.waitFor();
 
         if (status != 0) {
-            throw new IllegalStateException("mcl process \"" + mcl.toAbsolutePath() + "\" returned " + status);
+            try (final Reader isr = new InputStreamReader(process.getErrorStream())) {
+                try (final BufferedReader reader = new BufferedReader(isr)) {
+                    final String stderr = reader.lines().collect(Collectors.joining("\n"));
+
+                    if (stderr.isEmpty()) {
+                        throw new IllegalStateException(mcl.toAbsolutePath() + " returned " + status);
+                    } else {
+                        throw new IllegalStateException(mcl.toAbsolutePath() + " returned " + status + ": " + stderr);
+                    }
+                }
+            }
         }
     }
 
