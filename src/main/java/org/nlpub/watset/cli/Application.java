@@ -30,9 +30,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 public class Application {
+    private static final Logger logger = Logger.getLogger(Application.class.getSimpleName());
+
     private static final IDefaultProvider DEFAULT_PROVIDER = option -> {
         switch (option.toLowerCase()) {
             case "--input":
@@ -52,7 +56,10 @@ public class Application {
 
     public Graph<String, DefaultWeightedEdge> getGraph() {
         try (final Stream<String> stream = Files.lines(input)) {
-            return ABCParser.parse(stream);
+            final Graph<String, DefaultWeightedEdge> graph = ABCParser.parse(stream);
+            logger.log(Level.INFO, "Read {0} nodes and {1} edges from {2}.",
+                    new Object[]{graph.vertexSet().size(), graph.edgeSet().size(), input.toAbsolutePath()});
+            return graph;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -60,7 +67,10 @@ public class Application {
 
     public Collection<Collection<String>> getClusters() {
         try (final Stream<String> stream = Files.lines(input)) {
-            return ILEFormat.parse(stream);
+            final Collection<Collection<String>> clusters = ILEFormat.parse(stream);
+            logger.log(Level.INFO, "Read {0} clusters from {1}.",
+                    new Object[]{clusters.size(), input.toAbsolutePath()});
+            return clusters;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
