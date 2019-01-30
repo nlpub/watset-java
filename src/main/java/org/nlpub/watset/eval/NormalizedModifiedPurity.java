@@ -27,9 +27,14 @@ import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.*;
 
 /**
+ * An implementation of the normalized modified purity evaluation measure for overlapping clustering.
+ * <p>
  * Please be especially careful with the hashCode and equals methods of the cluster elements.
  *
  * @param <V> cluster element type.
+ * @see <a href="https://nlp.stanford.edu/IR-book/html/htmledition/evaluation-of-clustering-1.html">Evaluation of clustering</a>
+ * @see <a href="https://doi.org/10.3115/v1/P14-1097">Kawahara et al. (ACL 2014)</a>
+ * @see <a href="https://aclweb.org/anthology/P18-2010">Ustalov et al. (ACL 2018)</a>
  */
 public class NormalizedModifiedPurity<V> implements Supplier<PrecisionRecall> {
     public static <V> Collection<Map<V, Double>> transform(Collection<Collection<V>> clusters) {
@@ -62,6 +67,16 @@ public class NormalizedModifiedPurity<V> implements Supplier<PrecisionRecall> {
         return new PrecisionRecall(normalizedModifiedPurity, normalizedInversePurity);
     }
 
+    /**
+     * Computes the (modified) purity of the given clusters as according
+     * to the gold standard clustering, classes.
+     *
+     * @param clusters clustering
+     * @param classes  gold clustering
+     * @param modified whether to use a modified purity
+     * @return (modified) purity
+     * @see <a href="https://doi.org/10.3115/v1/P14-1097">Kawahara et al. (ACL 2014)</a>
+     */
     private double purity(Collection<Map<V, Double>> clusters, Collection<Map<V, Double>> classes, boolean modified) {
         double denominator = clusters.stream().mapToInt(Map::size).sum();
 
@@ -81,6 +96,16 @@ public class NormalizedModifiedPurity<V> implements Supplier<PrecisionRecall> {
         return numerator / denominator;
     }
 
+    /**
+     * Computes the fuzzy overlap between two clusters, cluster and klass. In case of modified purity
+     * the singleton clusters are ignored.
+     *
+     * @param cluster  one cluster
+     * @param klass    another cluster
+     * @param modified whether to use a modified purity
+     * @return cluster overlap measure
+     * @see <a href="https://doi.org/10.3115/v1/P14-1097">Kawahara et al. (ACL 2014)</a>
+     */
     private double delta(Map<V, Double> cluster, Map<V, Double> klass, boolean modified) {
         if (modified && !(cluster.size() > 1)) return 0;
 
