@@ -19,6 +19,16 @@ package org.nlpub.watset.graph;
 
 import java.util.Collection;
 
+/**
+ * An instance of Clustering returns clusters after running the underlying algorithm.
+ *
+ * @param <V> node class.
+ */
 public interface Clustering<V> extends Runnable {
+    /**
+     * Return a collection of clusters, each cluster is a collection of objects.
+     *
+     * @return clusters.
+     */
     Collection<Collection<V>> getClusters();
 }

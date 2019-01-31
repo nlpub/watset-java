@@ -31,11 +31,17 @@ public class TogetherClustering<V, E> implements Clustering<V> {
         this.graph = requireNonNull(graph);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Collection<Collection<V>> getClusters() {
         return Collections.singletonList(graph.vertexSet());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void run() {
     }

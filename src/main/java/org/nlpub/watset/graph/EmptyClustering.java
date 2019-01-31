@@ -28,11 +28,17 @@ public class EmptyClustering<V> implements Clustering<V> {
         return graph -> new EmptyClustering<>();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Collection<Collection<V>> getClusters() {
         return Collections.emptySet();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void run() {
     }

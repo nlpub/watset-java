@@ -65,6 +65,9 @@ public class Watset<V, E> implements Clustering<V> {
         this.similarity = requireNonNull(similarity);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void run() {
         senseClusters = null;
@@ -103,6 +106,9 @@ public class Watset<V, E> implements Clustering<V> {
         logger.info("Watset finished.");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Collection<Collection<V>> getClusters() {
         return senseClusters.stream().

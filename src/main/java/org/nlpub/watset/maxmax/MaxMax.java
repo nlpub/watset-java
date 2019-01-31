@@ -48,6 +48,9 @@ public class MaxMax<V, E> implements Clustering<V> {
         this.graph = requireNonNull(graph);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void run() {
         digraph = new DefaultDirectedGraph<>(DefaultEdge.class);
         maximals = null;
@@ -110,6 +113,9 @@ public class MaxMax<V, E> implements Clustering<V> {
         return roots;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public Collection<Collection<V>> getClusters() {
         final Set<V> roots = this.roots.entrySet().stream().filter(Map.Entry::getValue).map(Map.Entry::getKey).collect(Collectors.toSet());
 

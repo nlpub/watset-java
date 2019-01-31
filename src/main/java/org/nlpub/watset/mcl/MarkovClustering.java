@@ -57,6 +57,9 @@ public class MarkovClustering<V, E> implements Clustering<V> {
         this.r = r;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void run() {
         index = null;
@@ -79,6 +82,9 @@ public class MarkovClustering<V, E> implements Clustering<V> {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Collection<Collection<V>> getClusters() {
         if (graph.vertexSet().isEmpty()) return Collections.emptySet();

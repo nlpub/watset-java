@@ -32,11 +32,17 @@ public class ComponentsClustering<V, E> implements Clustering<V> {
         this.graph = requireNonNull(graph);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Collection<Collection<V>> getClusters() {
         return requireNonNull(clusters);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @SuppressWarnings("unchecked")
     public void run() {

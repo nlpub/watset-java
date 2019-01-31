@@ -56,6 +56,9 @@ public class ChineseWhispers<V, E> implements Clustering<V> {
         this(graph, weighting, ITERATIONS, new Random());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void run() {
         final List<V> nodes = new ArrayList<>(graph.vertexSet());
@@ -89,6 +92,9 @@ public class ChineseWhispers<V, E> implements Clustering<V> {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Collection<Collection<V>> getClusters() {
         final Map<Integer, List<Map.Entry<V, Integer>>> groups = labels.entrySet().stream().

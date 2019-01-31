@@ -67,6 +67,9 @@ public class MarkovClusteringBinaryRunner<V, E> implements Clustering<V> {
         this(graph, mcl, r, 1);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Collection<Collection<V>> getClusters() {
         final Map<Integer, V> inverse = mapping.entrySet().stream().
@@ -85,6 +88,9 @@ public class MarkovClusteringBinaryRunner<V, E> implements Clustering<V> {
         throw new IllegalStateException("The clusters cannot be read.");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void run() {
         logger.info("Preparing for Markov Clustering.");
