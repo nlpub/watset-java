@@ -24,9 +24,20 @@ import java.util.Collections;
 
 import static java.util.Objects.requireNonNull;
 
+/**
+ * A trivial clustering algorithm that puts every node together in a single large cluster.
+ *
+ * @param <V> node class.
+ * @param <E> edge class.
+ */
 public class TogetherClustering<V, E> implements Clustering<V> {
     private final Graph<V, E> graph;
 
+    /**
+     * Sets up a trivial clustering algorithm.
+     *
+     * @param graph an input graph.
+     */
     public TogetherClustering(Graph<V, E> graph) {
         this.graph = requireNonNull(graph);
     }

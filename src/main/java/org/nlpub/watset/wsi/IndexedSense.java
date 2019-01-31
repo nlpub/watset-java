@@ -21,24 +21,54 @@ import org.jgrapht.alg.util.Pair;
 
 import java.util.Locale;
 
+/**
+ * A simple integer sense identifier.
+ *
+ * @param <V> object class.
+ */
 public class IndexedSense<V> extends Pair<V, Integer> implements Sense<V> {
-    public IndexedSense(V v, Integer sense) {
-        super(v, sense);
+    /**
+     * Creates a sense of an object.
+     *
+     * @param object an object.
+     * @param sense  a sense identifier.
+     * @param <V>    object class.
+     * @return a sense of an object.
+     */
+    public static <V> IndexedSense<V> of(V object, int sense) {
+        return new IndexedSense<>(object, sense);
     }
 
+    /**
+     * Creates a sense of an object.
+     *
+     * @param object an object.
+     * @param sense  a sense identifier.
+     */
+    public IndexedSense(V object, Integer sense) {
+        super(object, sense);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public V get() {
         return super.first;
     }
 
+    /**
+     * Gets a sense identifier.
+     *
+     * @return a sense identifier.
+     */
     public Integer getSense() {
         return getSecond();
     }
 
-    public static <V> IndexedSense<V> of(V a, Integer b) {
-        return new IndexedSense<>(a, b);
-    }
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return String.format(Locale.ROOT, "%s#%d", super.first, super.second);

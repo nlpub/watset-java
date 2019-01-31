@@ -35,15 +35,30 @@ import java.util.stream.Collectors;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Watset is a local-global meta-algorithm for fuzzy graph clustering. It builds an intermediate undirected graph that addresses the element ambiguity by considering different senses of each element in the input graph.
+ * Watset is a local-global meta-algorithm for fuzzy graph clustering.
+ * It builds an intermediate undirected graph that addresses the element ambiguity by
+ * inducing different senses of each node in the input graph.
  *
  * @param <V> node class.
  * @param <E> edge class.
  * @see <a href="https://doi.org/10.18653/v1/P17-1145">Ustalov et al. (ACL 2017)</a>
  */
 public class Watset<V, E> implements Clustering<V> {
+    /**
+     * Watset inserts the target node during disambiguation.
+     * This constant specifies its weight which is equal to one.
+     */
     private final static Number DEFAULT_CONTEXT_WEIGHT = 1;
 
+    /**
+     * Sets up the Watset clustering algorithm in a functional style.
+     *
+     * @param local  a supplier for a local clustering algorithm.
+     * @param global a supplier for a global clustering algorithm.
+     * @param <V>    node class.
+     * @param <E>    edge class.
+     * @return an instance of Watset.
+     */
     public static <V, E> Function<Graph<V, E>, Clustering<V>> provider(Function<Graph<V, E>, Clustering<V>> local, Function<Graph<Sense<V>, DefaultWeightedEdge>, Clustering<Sense<V>>> global) {
         return graph -> new Watset<>(graph, local, global, new CosineContextSimilarity<>());
     }
@@ -58,6 +73,14 @@ public class Watset<V, E> implements Clustering<V> {
     private Collection<Collection<Sense<V>>> senseClusters;
     private Graph<Sense<V>, DefaultWeightedEdge> senseGraph;
 
+    /**
+     * Sets up the Watset clustering algorithm.
+     *
+     * @param graph      an input graph.
+     * @param local      a supplier for a local clustering algorithm.
+     * @param global     a supplier for a global clustering algorithm.
+     * @param similarity a context similarity measure.
+     */
     public Watset(Graph<V, E> graph, Function<Graph<V, E>, Clustering<V>> local, Function<Graph<Sense<V>, DefaultWeightedEdge>, Clustering<Sense<V>>> global, ContextSimilarity<V> similarity) {
         this.graph = requireNonNull(graph);
         this.local = requireNonNull(local);
@@ -116,6 +139,11 @@ public class Watset<V, E> implements Clustering<V> {
                 collect(Collectors.toSet());
     }
 
+    /**
+     * Gets a built sense inventory.
+     *
+     * @return a sense inventory.
+     */
     public Map<V, Map<Sense<V>, Map<V, Number>>> getInventory() {
         if (Objects.isNull(inventory)) {
             throw new IllegalStateException("The sense inventory is not yet initialized.");
@@ -124,6 +152,11 @@ public class Watset<V, E> implements Clustering<V> {
         return inventory;
     }
 
+    /**
+     * Gets an intermediate sense-aware graph.
+     *
+     * @return a sense graph.
+     */
     public Graph<Sense<V>, DefaultWeightedEdge> getSenseGraph() {
         if (Objects.isNull(senseGraph)) {
             throw new IllegalStateException("The sense graph is not yet initialized.");
@@ -132,20 +165,42 @@ public class Watset<V, E> implements Clustering<V> {
         return senseGraph;
     }
 
+    /**
+     * Induces senses for the target node.
+     *
+     * @param target a target node.
+     * @return a map to senses to contexts.
+     */
     private Map<Sense<V>, Map<V, Number>> induceSenses(V target) {
         final SenseInduction<V, E> inducer = new SenseInduction<>(graph, target, local);
+
         inducer.run();
 
         return inducer.getSenses();
     }
 
+    /**
+     * Disambiguates the context of the given node sense as according to the sense inventory
+     * using {@link Sense#disambiguate(Map, ContextSimilarity, Map, Set)}.
+     *
+     * @param inventory a sense inventory.
+     * @param sense     a target sense.
+     * @return a disambiguated context.
+     */
     private Map<Sense<V>, Number> disambiguateContext(Map<V, Map<Sense<V>, Map<V, Number>>> inventory, Sense<V> sense) {
         final Map<V, Number> context = new HashMap<>(inventory.get(sense.get()).get(sense));
+
         context.put(sense.get(), DEFAULT_CONTEXT_WEIGHT);
 
         return Sense.disambiguate(inventory, similarity, context, Collections.singleton(sense.get()));
     }
 
+    /**
+     * Builds an intermediate sense-aware representation of the input graph.
+     *
+     * @param contexts disambiguated contexts.
+     * @return a sense graph.
+     */
     private Graph<Sense<V>, DefaultWeightedEdge> buildSenseGraph(Map<Sense<V>, Map<Sense<V>, Number>> contexts) {
         final GraphBuilder<Sense<V>, DefaultWeightedEdge, ? extends SimpleWeightedGraph<Sense<V>, DefaultWeightedEdge>> builder = SimpleWeightedGraph.createBuilder(DefaultWeightedEdge.class);
 

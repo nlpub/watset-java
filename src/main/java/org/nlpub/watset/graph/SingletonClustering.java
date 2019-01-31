@@ -25,9 +25,20 @@ import java.util.Collections;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toList;
 
+/**
+ * A trivial clustering algorithm that puts every node in a separate cluster.
+ *
+ * @param <V> node class.
+ * @param <E> edge class.
+ */
 public class SingletonClustering<V, E> implements Clustering<V> {
     private final Graph<V, E> graph;
 
+    /**
+     * Sets up a trivial clustering algorithm.
+     *
+     * @param graph an input graph.
+     */
     public SingletonClustering(Graph<V, E> graph) {
         this.graph = requireNonNull(graph);
     }

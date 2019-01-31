@@ -33,6 +33,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @param <V> node class.
  * @param <E> edge class.
+ * @see <a href="https://doi.org/10.3115/1067737.1067753">Dorow &amp; Widdows (EACL '03)</a>
  */
 public class SenseInduction<V, E> implements Runnable {
     private final Graph<V, E> graph;
@@ -40,12 +41,22 @@ public class SenseInduction<V, E> implements Runnable {
     private final Function<Graph<V, E>, Clustering<V>> clusteringProvider;
     private Collection<Collection<V>> clusters;
 
+    /**
+     * Constructs a sense inducer.
+     *
+     * @param graph              an input graph.
+     * @param target             a target node.
+     * @param clusteringProvider a neighborhood clustering algorithm provider.
+     */
     public SenseInduction(Graph<V, E> graph, V target, Function<Graph<V, E>, Clustering<V>> clusteringProvider) {
         this.graph = requireNonNull(graph);
         this.target = requireNonNull(target);
         this.clusteringProvider = requireNonNull(clusteringProvider);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void run() {
         clusters = null;
@@ -58,6 +69,11 @@ public class SenseInduction<V, E> implements Runnable {
         clusters = clustering.getClusters();
     }
 
+    /**
+     * Gets the induced senses and their non-disambiguated contexts.
+     *
+     * @return a map of senses to their contexts.
+     */
     public Map<Sense<V>, Map<V, Number>> getSenses() {
         int i = 0;
 

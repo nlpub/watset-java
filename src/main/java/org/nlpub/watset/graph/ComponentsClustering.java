@@ -24,10 +24,21 @@ import java.util.Collection;
 
 import static java.util.Objects.requireNonNull;
 
+/**
+ * A trivial clustering algorithm that treats every connected component as a cluster.
+ *
+ * @param <V> node class.
+ * @param <E> edge class.
+ */
 public class ComponentsClustering<V, E> implements Clustering<V> {
     private final Graph<V, E> graph;
     private Collection<Collection<V>> clusters = null;
 
+    /**
+     * Sets up a trivial clustering algorithm.
+     *
+     * @param graph an input graph.
+     */
     public ComponentsClustering(Graph<V, E> graph) {
         this.graph = requireNonNull(graph);
     }

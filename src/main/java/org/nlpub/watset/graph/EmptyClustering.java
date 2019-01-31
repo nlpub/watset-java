@@ -23,6 +23,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.function.Function;
 
+/**
+ * A trivial clustering algorithm that returns no clusters.
+ *
+ * @param <V> node class.
+ */
 public class EmptyClustering<V> implements Clustering<V> {
     public static <V, E> Function<Graph<V, E>, Clustering<V>> provider() {
         return graph -> new EmptyClustering<>();

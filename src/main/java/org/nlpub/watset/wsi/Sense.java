@@ -27,7 +27,23 @@ import java.util.function.Supplier;
 
 import static org.nlpub.watset.util.Maximizer.argmax;
 
+/**
+ * A sense is a simple wrapper over an object that has a different address in the memory.
+ *
+ * @param <V> wrapped class.
+ */
 public interface Sense<V> extends Supplier<V> {
+    /**
+     * Disambiguate a context as according to its similarity to the senses in the inventory.
+     * The method skips context keys which are marked as ignored.
+     *
+     * @param inventory  sense inventory.
+     * @param similarity similarity measure.
+     * @param context    context to disambiguate.
+     * @param ignored    blacklisted keys.
+     * @param <V>        context element class.
+     * @return disambiguated context.
+     */
     static <V> Map<Sense<V>, Number> disambiguate(Map<V, Map<Sense<V>, Map<V, Number>>> inventory, ContextSimilarity<V> similarity, Map<V, Number> context, Set<V> ignored) {
         final Map<Sense<V>, Number> dcontext = new HashMap<>(context.size());
 
