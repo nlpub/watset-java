@@ -166,6 +166,7 @@
                                     <mainClass>org.nlpub.watset.cli.Application</mainClass>
                                 </transformer>
                             </transformers>
+                            <minimizeJar>true</minimizeJar>
                         </configuration>
                     </execution>
                 </executions>
