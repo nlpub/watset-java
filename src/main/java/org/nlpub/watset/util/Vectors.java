@@ -23,20 +23,41 @@ import org.apache.commons.math3.linear.RealVector;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * This interface contains useful vector-space model transformations
+ * from bag-of-words representations to real-valued vectors.
+ */
 public interface Vectors {
+    /**
+     * Transforms a bag-of-words into a real-valued vector.
+     * The number of elements in the vector is equals to the size of the key set of the given bag.
+     *
+     * @param bag bag-of-words.
+     * @param <V> bag element class.
+     * @return real-valued vector.
+     */
     static <V> RealVector transform(Map<V, Number> bag) {
         return transform(bag, bag.keySet());
     }
 
+    /**
+     * Transforms a bag-of-words into a real-valued vector.
+     * The number of elements in the vector is equals to the size of the domain set.
+     *
+     * @param bag    bag-of-words.
+     * @param domain set of dimensions.
+     * @param <V>    bag element class.
+     * @return real-valued vector.
+     */
     static <V> RealVector transform(Map<V, Number> bag, Set<V> domain) {
-        final ArrayRealVector vector = new ArrayRealVector(domain.size());
+        final double[] data = new double[domain.size()];
 
         int i = 0;
 
         for (final V key : domain) {
-            vector.setEntry(i++, bag.getOrDefault(key, 0).doubleValue());
+            data[i++] = bag.getOrDefault(key, 0).doubleValue();
         }
 
-        return vector;
+        return new ArrayRealVector(data, false);
     }
 }

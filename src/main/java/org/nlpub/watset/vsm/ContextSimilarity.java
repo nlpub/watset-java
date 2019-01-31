@@ -20,7 +20,20 @@ package org.nlpub.watset.vsm;
 import java.util.Map;
 import java.util.function.BiFunction;
 
+/**
+ * This functional interface computes a similarity measure between a pair of bag-of-words.
+ * It maps a pair of bags to a number.
+ *
+ * @param <V> bag element class.
+ * @see <a href="https://nlp.stanford.edu/IR-book/html/htmledition/dot-products-1.html">Dot products</a>
+ */
 public interface ContextSimilarity<V> extends BiFunction<Map<V, Number>, Map<V, Number>, Number> {
+    /**
+     * Returns a dummy similarity function that always returns zero.
+     *
+     * @param <V> bag element class.
+     * @return dummy similarity function.
+     */
     static <V> ContextSimilarity<V> dummy() {
         return (bag1, bag2) -> 0;
     }

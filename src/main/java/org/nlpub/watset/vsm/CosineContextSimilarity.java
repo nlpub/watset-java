@@ -24,7 +24,15 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * {@inheritDoc}
+ *
+ * @see <a href="https://nlp.stanford.edu/IR-book/html/htmledition/queries-as-vectors-1.html">Queries as vectors</a>
+ */
 public class CosineContextSimilarity<V> implements ContextSimilarity<V> {
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Number apply(Map<V, Number> bag1, Map<V, Number> bag2) {
         final Set<V> union = new LinkedHashSet<>(bag1.keySet());
