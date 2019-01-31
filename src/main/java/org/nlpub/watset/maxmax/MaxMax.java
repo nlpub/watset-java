@@ -30,11 +30,20 @@ import java.util.stream.Collectors;
 import static java.util.Objects.requireNonNull;
 
 /**
- * An implementation of the MaxMax word sense induction algorithm.
+ * An implementation of the MaxMax clustering algorithm.
  *
  * @param <V> node class.
+ * @param <E> edge class.
+ * @see <a href="https://doi.org/10.1007/978-3-642-37247-6_30">Hope &amp; Keller (CICLing 2013)</a>
  */
 public class MaxMax<V, E> implements Clustering<V> {
+    /**
+     * Sets up the MaxMax clustering algorithm in a functional style.
+     *
+     * @param <V> node class.
+     * @param <E> edge class.
+     * @return an instance of MaxMax.
+     */
     public static <V, E> Function<Graph<V, E>, Clustering<V>> provider() {
         return MaxMax::new;
     }
@@ -44,6 +53,11 @@ public class MaxMax<V, E> implements Clustering<V> {
     private Map<V, Set<V>> maximals;
     private Map<V, Boolean> roots;
 
+    /**
+     * Sets up the MaxMax clustering algorithm.
+     *
+     * @param graph an input graph.
+     */
     public MaxMax(Graph<V, E> graph) {
         this.graph = requireNonNull(graph);
     }
@@ -96,23 +110,6 @@ public class MaxMax<V, E> implements Clustering<V> {
         });
     }
 
-    public Graph<V, E> getGraph() {
-        return graph;
-    }
-
-    public Graph<V, DefaultEdge> getDigraph() {
-        return digraph;
-    }
-
-    @SuppressWarnings("unused")
-    public Map<V, Set<V>> getMaximals() {
-        return maximals;
-    }
-
-    public Map<V, Boolean> getRoots() {
-        return roots;
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -134,5 +131,35 @@ public class MaxMax<V, E> implements Clustering<V> {
 
             return visited;
         }).collect(Collectors.toSet());
+    }
+
+    /**
+     * Returns the directed graph representation of the input graph.
+     *
+     * @return a directed graph.
+     */
+    @SuppressWarnings("WeakerAccess")
+    public Graph<V, DefaultEdge> getDigraph() {
+        return requireNonNull(digraph);
+    }
+
+    /**
+     * Returns the map of nodes to their maximal affinity nodes.
+     *
+     * @return a map of maximal affinities.
+     */
+    @SuppressWarnings("unused")
+    public Map<V, Set<V>> getMaximals() {
+        return requireNonNull(maximals);
+    }
+
+    /**
+     * Return the map of root and non-root nodes.
+     *
+     * @return a map of root and non-root nodes.
+     */
+    @SuppressWarnings("WeakerAccess")
+    public Map<V, Boolean> getRoots() {
+        return requireNonNull(roots);
     }
 }
