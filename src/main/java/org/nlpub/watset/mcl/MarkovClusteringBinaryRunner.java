@@ -82,10 +82,8 @@ public class MarkovClusteringBinaryRunner<V, E> implements Clustering<V> {
                             collect(toSet())).
                     collect(toSet());
         } catch (IOException ex) {
-            ex.printStackTrace();
+            throw new IllegalStateException("The clusters cannot be read.", ex);
         }
-
-        throw new IllegalStateException("The clusters cannot be read.");
     }
 
     /**
