@@ -54,7 +54,7 @@ public class IndexedSense<V> extends Pair<V, Integer> implements Sense<V> {
      */
     @Override
     public V get() {
-        return super.first;
+        return first;
     }
 
     /**
@@ -63,7 +63,7 @@ public class IndexedSense<V> extends Pair<V, Integer> implements Sense<V> {
      * @return a sense identifier.
      */
     public Integer getSense() {
-        return getSecond();
+        return second;
     }
 
     /**
@@ -71,6 +71,6 @@ public class IndexedSense<V> extends Pair<V, Integer> implements Sense<V> {
      */
     @Override
     public String toString() {
-        return String.format(Locale.ROOT, "%s#%d", super.first, super.second);
+        return String.format(Locale.ROOT, "%s#%d", first, second);
     }
 }
