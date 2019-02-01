@@ -36,6 +36,7 @@ import static java.util.stream.Collectors.toList;
  * Utilities to handle the ILE (identifier, length, elements) file format.
  */
 public interface ILEFormat {
+    String SEPARATOR = "\t";
     String DELIMITER = ", ";
 
     static Collection<Collection<String>> parse(Stream<String> stream, String regex) {
@@ -49,7 +50,7 @@ public interface ILEFormat {
     }
 
     static Collection<Collection<String>> parse(Stream<String> stream) {
-        return parse(stream, "\t");
+        return parse(stream, SEPARATOR);
     }
 
     static void write(Path path, Clustering<String> clustering) throws IOException {

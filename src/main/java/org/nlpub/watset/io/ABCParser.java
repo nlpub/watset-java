@@ -24,7 +24,12 @@ import org.jgrapht.graph.builder.GraphBuilder;
 
 import java.util.stream.Stream;
 
+/**
+ * Utilities to handle the ABC (source, target, weight) edge list format.
+ */
 public interface ABCParser {
+    String SEPARATOR = "\t";
+
     static Graph<String, DefaultWeightedEdge> parse(Stream<String> stream, String regex) {
         final GraphBuilder<String, DefaultWeightedEdge, ? extends SimpleWeightedGraph<String, DefaultWeightedEdge>> builder = SimpleWeightedGraph.createBuilder(DefaultWeightedEdge.class);
 
@@ -42,6 +47,6 @@ public interface ABCParser {
     }
 
     static Graph<String, DefaultWeightedEdge> parse(Stream<String> stream) {
-        return parse(stream, "\t");
+        return parse(stream, SEPARATOR);
     }
 }
