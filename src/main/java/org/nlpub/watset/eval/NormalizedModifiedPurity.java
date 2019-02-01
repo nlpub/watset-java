@@ -20,7 +20,6 @@ package org.nlpub.watset.eval;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Supplier;
 
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Function.identity;
@@ -31,12 +30,19 @@ import static java.util.stream.Collectors.*;
  * <p>
  * Please be especially careful with the hashCode and equals methods of the cluster elements.
  *
- * @param <V> cluster element type.
+ * @param <V> a cluster element type.
  * @see <a href="https://nlp.stanford.edu/IR-book/html/htmledition/evaluation-of-clustering-1.html">Evaluation of clustering</a>
  * @see <a href="https://doi.org/10.3115/v1/P14-1097">Kawahara et al. (ACL 2014)</a>
  * @see <a href="https://aclweb.org/anthology/P18-2010">Ustalov et al. (ACL 2018)</a>
  */
-public class NormalizedModifiedPurity<V> implements Supplier<PrecisionRecall> {
+public class NormalizedModifiedPurity<V> {
+    /**
+     * Transforms a collection of clusters into a collection of weighted cluster elements.
+     *
+     * @param clusters a collection of clusters.
+     * @param <V>      a cluster element type.
+     * @return a collection of weighted cluster elements.
+     */
     public static <V> Collection<Map<V, Double>> transform(Collection<Collection<V>> clusters) {
         return clusters.stream().
                 map(cluster -> cluster.stream().
@@ -44,27 +50,65 @@ public class NormalizedModifiedPurity<V> implements Supplier<PrecisionRecall> {
                 collect(toList());
     }
 
-    private final Collection<Map<V, Double>> clusters;
-    private final Collection<Map<V, Double>> classes;
-    private final boolean normalized;
-    private final boolean modified;
+    /**
+     * Normalizes clusters to allow using normalized (modified) purity.
+     *
+     * @param clusters a collection of clusters.
+     * @param <V>      a cluster element type.
+     * @return a collection of normalized clusters.
+     */
+    public static <V> Collection<Map<V, Double>> normalize(Collection<Map<V, Double>> clusters) {
+        final Map<V, Double> counter = new HashMap<>();
 
-    public NormalizedModifiedPurity(Collection<Map<V, Double>> clusters, Collection<Map<V, Double>> classes, boolean normalized, boolean modified) {
+        clusters.stream().flatMap(cluster -> cluster.entrySet().stream()).
+                forEach(entry -> counter.put(entry.getKey(), counter.getOrDefault(entry.getKey(), 0d) + entry.getValue()));
+
+        final Collection<Map<V, Double>> normalized = clusters.stream().map(cluster -> {
+            final Map<V, Double> normalizedCluster = cluster.entrySet().stream().
+                    collect(toMap(Map.Entry::getKey, entry -> entry.getValue() / counter.get(entry.getKey())));
+
+            if (cluster.size() != normalizedCluster.size()) throw new IllegalArgumentException("Cluster size changed");
+
+            return normalizedCluster;
+        }).collect(toList());
+
+        if (clusters.size() != normalized.size()) throw new IllegalArgumentException("Collection size changed");
+
+        return normalized;
+    }
+
+    private final boolean normalized, modified;
+
+    /**
+     * Constructs a normalized modified purity calculator.
+     */
+    public NormalizedModifiedPurity() {
+        this(true, true);
+    }
+
+    /**
+     * Constructs a normalized modified purity calculator that allows
+     * turning normalized and/or modified options off.
+     *
+     * @param normalized normalized purity is on.
+     * @param modified   modified purity is on.
+     */
+    public NormalizedModifiedPurity(boolean normalized, boolean modified) {
         this.normalized = normalized;
         this.modified = modified;
-        this.clusters = normalized ? normalize(requireNonNull(clusters)) : requireNonNull(clusters);
-        this.classes = normalized ? normalize(requireNonNull(classes)) : requireNonNull(classes);
     }
 
-    public NormalizedModifiedPurity(Collection<Map<V, Double>> clusters, Collection<Map<V, Double>> classes) {
-        this(clusters, classes, true, true);
-    }
-
-    @Override
-    public PrecisionRecall get() {
-        final double normalizedModifiedPurity = purity(clusters, classes, modified);
-        final double normalizedInversePurity = purity(classes, clusters, false);
-        return new PrecisionRecall(normalizedModifiedPurity, normalizedInversePurity);
+    /**
+     * Computes a purity (nmPU), inverse purity (niPU) and F-score.
+     *
+     * @param clusters a collection of clusters.
+     * @param classes  a collection of gold standard clusters.
+     * @return precision-recall report.
+     */
+    public PrecisionRecall evaluate(Collection<Map<V, Double>> clusters, Collection<Map<V, Double>> classes) {
+        final double nmPU = purity(requireNonNull(clusters), requireNonNull(classes), modified);
+        final double niPU = purity(classes, clusters, false);
+        return new PrecisionRecall(nmPU, niPU);
     }
 
     /**
@@ -77,7 +121,7 @@ public class NormalizedModifiedPurity<V> implements Supplier<PrecisionRecall> {
      * @return (modified) purity
      * @see <a href="https://doi.org/10.3115/v1/P14-1097">Kawahara et al. (ACL 2014)</a>
      */
-    private double purity(Collection<Map<V, Double>> clusters, Collection<Map<V, Double>> classes, boolean modified) {
+    public double purity(Collection<Map<V, Double>> clusters, Collection<Map<V, Double>> classes, boolean modified) {
         double denominator = clusters.stream().mapToInt(Map::size).sum();
 
         if (normalized) {
@@ -106,7 +150,7 @@ public class NormalizedModifiedPurity<V> implements Supplier<PrecisionRecall> {
      * @return cluster overlap measure
      * @see <a href="https://doi.org/10.3115/v1/P14-1097">Kawahara et al. (ACL 2014)</a>
      */
-    private double delta(Map<V, Double> cluster, Map<V, Double> klass, boolean modified) {
+    public double delta(Map<V, Double> cluster, Map<V, Double> klass, boolean modified) {
         if (modified && !(cluster.size() > 1)) return 0;
 
         final Map<V, Double> intersection = new HashMap<>(cluster);
@@ -118,25 +162,5 @@ public class NormalizedModifiedPurity<V> implements Supplier<PrecisionRecall> {
         if (!normalized) return intersection.size();
 
         return intersection.values().stream().mapToDouble(a -> a).sum();
-    }
-
-    private Collection<Map<V, Double>> normalize(Collection<Map<V, Double>> clusters) {
-        final Map<V, Double> counter = new HashMap<>();
-
-        clusters.stream().flatMap(cluster -> cluster.entrySet().stream()).
-                forEach(entry -> counter.put(entry.getKey(), counter.getOrDefault(entry.getKey(), 0d) + entry.getValue()));
-
-        final Collection<Map<V, Double>> normalized = clusters.stream().map(cluster -> {
-            final Map<V, Double> normalizedCluster = cluster.entrySet().stream().
-                    collect(toMap(Map.Entry::getKey, entry -> entry.getValue() / counter.get(entry.getKey())));
-
-            if (cluster.size() != normalizedCluster.size()) throw new IllegalArgumentException("Cluster size changed");
-
-            return normalizedCluster;
-        }).collect(toList());
-
-        if (clusters.size() != normalized.size()) throw new IllegalArgumentException("Collection size changed");
-
-        return normalized;
     }
 }

@@ -23,74 +23,87 @@ import java.util.Collection;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.nlpub.watset.eval.NormalizedModifiedPurity.normalize;
 import static org.nlpub.watset.eval.NormalizedModifiedPurity.transform;
 
 public class NormalizedModifiedPurityTest {
-    private static final Collection<Map<String, Double>> EXPECTED = transform(PairwiseTest.EXPECTED);
+    private static final Collection<Map<String, Double>> GOLD = transform(PairwiseTest.GOLD);
+    private static final Collection<Map<String, Double>> GOLD_NORMALIZED = normalize(GOLD);
 
-    private static final Collection<Map<String, Double>> ACTUAL_1 = transform(PairwiseTest.ACTUAL_1);
+    private static final Collection<Map<String, Double>> EXAMPLE_1 = transform(PairwiseTest.EXAMPLE_1);
+    private static final Collection<Map<String, Double>> EXAMPLE_1_NORMALIZED = normalize(EXAMPLE_1);
 
-    private static final Collection<Map<String, Double>> ACTUAL_2 = transform(PairwiseTest.ACTUAL_2);
+    private static final Collection<Map<String, Double>> EXAMPLE_2 = transform(PairwiseTest.EXAMPLE_2);
+    private static final Collection<Map<String, Double>> EXAMPLE_2_NORMALIZED = normalize(EXAMPLE_2);
 
-    private static final Collection<Map<String, Double>> ACTUAL_3 = transform(PairwiseTest.ACTUAL_3);
+    private static final Collection<Map<String, Double>> EXAMPLE_3 = transform(PairwiseTest.EXAMPLE_3);
+    private static final Collection<Map<String, Double>> EXAMPLE_3_NORMALIZED = normalize(EXAMPLE_3);
+
+    private static final NormalizedModifiedPurity<String> mpu = new NormalizedModifiedPurity<>(false, true);
+
+    private static final NormalizedModifiedPurity<String> nmpu = new NormalizedModifiedPurity<>();
 
     @Test
-    public void testEquivalence() {
-        final NormalizedModifiedPurity<String> mpu = new NormalizedModifiedPurity<>(EXPECTED, EXPECTED, false, true);
-        final PrecisionRecall mpuResult = mpu.get();
-        assertEquals(1, mpuResult.getPrecision(), .0001);
-        assertEquals(1, mpuResult.getRecall(), .0001);
-        assertEquals(1, mpuResult.getF1Score(), .0001);
-
-        final NormalizedModifiedPurity<String> nmpu = new NormalizedModifiedPurity<>(EXPECTED, EXPECTED);
-        final PrecisionRecall nmpuResult = nmpu.get();
-        assertEquals(1, nmpuResult.getPrecision(), .0001);
-        assertEquals(1, nmpuResult.getRecall(), .0001);
-        assertEquals(1, nmpuResult.getF1Score(), .0001);
+    public void testGold() {
+        final PrecisionRecall result = mpu.evaluate(GOLD, GOLD);
+        assertEquals(1, result.getPrecision(), .0001);
+        assertEquals(1, result.getRecall(), .0001);
+        assertEquals(1, result.getF1Score(), .0001);
     }
 
     @Test
-    public void testScores1() {
-        final NormalizedModifiedPurity<String> mpu = new NormalizedModifiedPurity<>(ACTUAL_1, EXPECTED, false, true);
-        final PrecisionRecall mpuResult = mpu.get();
-        assertEquals(.71429, mpuResult.getPrecision(), .0001);
-        assertEquals(.71429, mpuResult.getRecall(), .0001);
-        assertEquals(.71429, mpuResult.getF1Score(), .0001);
-
-        final NormalizedModifiedPurity<String> nmpu = new NormalizedModifiedPurity<>(ACTUAL_1, EXPECTED);
-        final PrecisionRecall nmpuResult = nmpu.get();
-        assertEquals(.75, nmpuResult.getPrecision(), .0001);
-        assertEquals(.75, nmpuResult.getRecall(), .0001);
-        assertEquals(.75, nmpuResult.getF1Score(), .0001);
+    public void testGoldNormalized() {
+        final PrecisionRecall result = nmpu.evaluate(GOLD_NORMALIZED, GOLD_NORMALIZED);
+        assertEquals(1, result.getPrecision(), .0001);
+        assertEquals(1, result.getRecall(), .0001);
+        assertEquals(1, result.getF1Score(), .0001);
     }
 
     @Test
-    public void testScores2() {
-        final NormalizedModifiedPurity<String> mpu = new NormalizedModifiedPurity<>(ACTUAL_2, EXPECTED, false, true);
-        final PrecisionRecall mpuResult = mpu.get();
-        assertEquals(.66667, mpuResult.getPrecision(), .0001);
-        assertEquals(1, mpuResult.getRecall(), .0001);
-        assertEquals(.80000, mpuResult.getF1Score(), .0001);
-
-        final NormalizedModifiedPurity<String> nmpu = new NormalizedModifiedPurity<>(ACTUAL_2, EXPECTED);
-        final PrecisionRecall nmpuResult = nmpu.get();
-        assertEquals(.66667, nmpuResult.getPrecision(), .0001);
-        assertEquals(1, nmpuResult.getRecall(), .0001);
-        assertEquals(.80000, nmpuResult.getF1Score(), .0001);
+    public void testExample1() {
+        final PrecisionRecall result = mpu.evaluate(EXAMPLE_1, GOLD);
+        assertEquals(.71429, result.getPrecision(), .0001);
+        assertEquals(.71429, result.getRecall(), .0001);
+        assertEquals(.71429, result.getF1Score(), .0001);
     }
 
     @Test
-    public void testScores3() {
-        final NormalizedModifiedPurity<String> mpu = new NormalizedModifiedPurity<>(ACTUAL_3, EXPECTED, false, true);
-        final PrecisionRecall mpuResult = mpu.get();
-        assertEquals(0, mpuResult.getPrecision(), .0001);
-        assertEquals(.28571, mpuResult.getRecall(), .0001);
-        assertEquals(0, mpuResult.getF1Score(), .0001);
+    public void testExample1Normalized() {
+        final PrecisionRecall result = nmpu.evaluate(EXAMPLE_1_NORMALIZED, GOLD_NORMALIZED);
+        assertEquals(.75, result.getPrecision(), .0001);
+        assertEquals(.75, result.getRecall(), .0001);
+        assertEquals(.75, result.getF1Score(), .0001);
+    }
 
-        final NormalizedModifiedPurity<String> nmpu = new NormalizedModifiedPurity<>(ACTUAL_3, EXPECTED);
-        final PrecisionRecall nmpuResult = nmpu.get();
-        assertEquals(0, nmpuResult.getPrecision(), .0001);
-        assertEquals(.33333, nmpuResult.getRecall(), .0001);
-        assertEquals(0, nmpuResult.getF1Score(), .0001);
+    @Test
+    public void testExample2() {
+        final PrecisionRecall result = mpu.evaluate(EXAMPLE_2, GOLD);
+        assertEquals(.66667, result.getPrecision(), .0001);
+        assertEquals(1, result.getRecall(), .0001);
+        assertEquals(.80000, result.getF1Score(), .0001);
+    }
+
+    @Test
+    public void testExample2Normalized() {
+        final PrecisionRecall result = nmpu.evaluate(EXAMPLE_2_NORMALIZED, GOLD_NORMALIZED);
+        assertEquals(.66667, result.getPrecision(), .0001);
+        assertEquals(1, result.getRecall(), .0001);
+        assertEquals(.80000, result.getF1Score(), .0001);
+    }
+
+    @Test
+    public void testExample3() {
+        final PrecisionRecall result = mpu.evaluate(EXAMPLE_3, GOLD);
+        assertEquals(0, result.getPrecision(), .0001);
+        assertEquals(.28571, result.getRecall(), .0001);
+        assertEquals(0, result.getF1Score(), .0001);
+    }
+
+    @Test
+    public void testExample3Normalized() {
+        final PrecisionRecall result = nmpu.evaluate(EXAMPLE_3_NORMALIZED, GOLD_NORMALIZED);
+        assertEquals(0, result.getPrecision(), .0001);
+        assertEquals(.33333, result.getRecall(), .0001);
+        assertEquals(0, result.getF1Score(), .0001);
     }
 }

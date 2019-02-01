@@ -27,25 +27,23 @@ import static org.junit.Assert.assertTrue;
 import static org.nlpub.watset.eval.Pairwise.transform;
 
 public class PairwiseTest {
-    static final Set<String> ABC = new HashSet<>(Arrays.asList("a", "b", "c"));
-
-    static final Collection<Collection<String>> EXPECTED = Arrays.asList(
+    static final Collection<Collection<String>> GOLD = Arrays.asList(
             Arrays.asList("bank", "riverbank", "streambank", "streamside"),
             Arrays.asList("bank", "building", "bank building")
     );
 
-    static final Collection<Collection<String>> ACTUAL_1 = Arrays.asList(
+    static final Collection<Collection<String>> EXAMPLE_1 = Arrays.asList(
             Collections.singletonList("bank"),
             Arrays.asList("bank", "building"),
             Arrays.asList("riverbank", "streambank", "streamside"),
             Collections.singletonList("bank building")
     );
 
-    static final Collection<Collection<String>> ACTUAL_2 = Collections.singletonList(
+    static final Collection<Collection<String>> EXAMPLE_2 = Collections.singletonList(
             Arrays.asList("bank", "riverbank", "streambank", "streamside", "building", "bank building")
     );
 
-    static final Collection<Collection<String>> ACTUAL_3 = Arrays.asList(
+    static final Collection<Collection<String>> EXAMPLE_3 = Arrays.asList(
             Collections.singletonList("bank"),
             Collections.singletonList("building"),
             Collections.singletonList("riverbank"),
@@ -54,37 +52,37 @@ public class PairwiseTest {
             Collections.singletonList("bank building")
     );
 
+    private static final Set<String> ABC = new HashSet<>(Arrays.asList("a", "b", "c"));
+
+    private static final Pairwise<String> pairwise = new Pairwise<>();
+
     @Test
-    public void testEquivalence() {
-        final Pairwise<String> pairwise = new Pairwise<>(EXPECTED, EXPECTED);
-        final PrecisionRecall result = pairwise.get();
+    public void testGold() {
+        final PrecisionRecall result = pairwise.evaluate(GOLD, GOLD);
         assertEquals(1, result.getPrecision(), .0001);
         assertEquals(1, result.getRecall(), .0001);
         assertEquals(1, result.getF1Score(), .0001);
     }
 
     @Test
-    public void testScores1() {
-        final Pairwise<String> mpu = new Pairwise<>(ACTUAL_1, EXPECTED);
-        final PrecisionRecall result = mpu.get();
+    public void testExample1() {
+        final PrecisionRecall result = pairwise.evaluate(EXAMPLE_1, GOLD);
         assertEquals(1, result.getPrecision(), .0001);
         assertEquals(.44444, result.getRecall(), .0001);
         assertEquals(.61538, result.getF1Score(), .0001);
     }
 
     @Test
-    public void testScores2() {
-        final Pairwise<String> mpu = new Pairwise<>(ACTUAL_2, EXPECTED);
-        final PrecisionRecall result = mpu.get();
+    public void testExample2() {
+        final PrecisionRecall result = pairwise.evaluate(EXAMPLE_2, GOLD);
         assertEquals(.6, result.getPrecision(), .0001);
         assertEquals(1, result.getRecall(), .0001);
         assertEquals(.74999, result.getF1Score(), .0001);
     }
 
     @Test
-    public void testScores3() {
-        final Pairwise<String> mpu = new Pairwise<>(ACTUAL_3, EXPECTED);
-        final PrecisionRecall result = mpu.get();
+    public void testExample3() {
+        final PrecisionRecall result = pairwise.evaluate(EXAMPLE_3, GOLD);
         assertEquals(0, result.getPrecision(), .0001);
         assertEquals(0, result.getRecall(), .0001);
         assertEquals(0, result.getF1Score(), .0001);
