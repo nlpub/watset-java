@@ -37,6 +37,7 @@ public interface Maximizer {
     static <T> Predicate<T> alwaysTrue() {
         return (o) -> true;
     }
+
     /**
      * A predicate that is always false.
      *
