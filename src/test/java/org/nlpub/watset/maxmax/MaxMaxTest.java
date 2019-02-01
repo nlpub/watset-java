@@ -83,12 +83,6 @@ public class MaxMaxTest {
     }
 
     @Test
-    public void testGraphConsistency() {
-        assertEquals(GRAPH1, maxmax1.getGraph());
-        assertEquals(GRAPH2, maxmax2.getGraph());
-    }
-
-    @Test
     public void testDigraphVerticesConsistency() {
         assertEquals(GRAPH1.vertexSet(), maxmax1.getDigraph().vertexSet());
         assertEquals(GRAPH2.vertexSet(), maxmax2.getDigraph().vertexSet());
