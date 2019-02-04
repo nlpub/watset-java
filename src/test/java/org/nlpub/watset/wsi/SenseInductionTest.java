@@ -51,16 +51,11 @@ public class SenseInductionTest {
 
     private final static Function<Graph<String, DefaultWeightedEdge>, Clustering<String>> local = ChineseWhispers.provider(NodeWeighting.top(), ChineseWhispers.ITERATIONS, random);
 
-    private final static SenseInduction<String, DefaultWeightedEdge> senseInduction = new SenseInduction<>(WORDS, "a", local);
-
-    @Before
-    public void setup() {
-        senseInduction.run();
-    }
+    private final static SenseInduction<String, DefaultWeightedEdge> senseInduction = new SenseInduction<>(WORDS, local);
 
     @Test
     public void getSensesA() {
-        final Map<Sense<String>, Map<String, Number>> senses = senseInduction.getSenses();
+        final Map<Sense<String>, Map<String, Number>> senses = senseInduction.induce("a");
         assertEquals(3, senses.size());
     }
 }

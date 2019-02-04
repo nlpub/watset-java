@@ -33,7 +33,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import static java.util.Objects.isNull;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -71,6 +70,7 @@ public class Watset<V, E> implements Clustering<V> {
     private final Function<Graph<V, E>, Clustering<V>> local;
     private final Function<Graph<Sense<V>, DefaultWeightedEdge>, Clustering<Sense<V>>> global;
     private final ContextSimilarity<V> similarity;
+    private final SenseInduction<V, E> inducer;
     private Map<V, Map<Sense<V>, Map<V, Number>>> inventory;
     private Collection<Collection<Sense<V>>> senseClusters;
     private Graph<Sense<V>, DefaultWeightedEdge> senseGraph;
@@ -88,6 +88,7 @@ public class Watset<V, E> implements Clustering<V> {
         this.local = requireNonNull(local);
         this.global = requireNonNull(global);
         this.similarity = requireNonNull(similarity);
+        this.inducer = new SenseInduction<>(graph, local);
     }
 
     /**
@@ -102,7 +103,7 @@ public class Watset<V, E> implements Clustering<V> {
         logger.info("Watset started.");
 
         inventory = graph.vertexSet().parallelStream().
-                collect(Collectors.toMap(Function.identity(), this::induceSenses));
+                collect(Collectors.toMap(Function.identity(), inducer::induce));
 
         final int senses = inventory.values().stream().mapToInt(Map::size).sum();
 
@@ -147,11 +148,7 @@ public class Watset<V, E> implements Clustering<V> {
      * @return a sense inventory.
      */
     public Map<V, Map<Sense<V>, Map<V, Number>>> getInventory() {
-        if (isNull(inventory)) {
-            throw new IllegalStateException("The sense inventory is not yet initialized.");
-        }
-
-        return inventory;
+        return requireNonNull(inventory);
     }
 
     /**
@@ -160,25 +157,7 @@ public class Watset<V, E> implements Clustering<V> {
      * @return a sense graph.
      */
     public Graph<Sense<V>, DefaultWeightedEdge> getSenseGraph() {
-        if (isNull(senseGraph)) {
-            throw new IllegalStateException("The sense graph is not yet initialized.");
-        }
-
-        return senseGraph;
-    }
-
-    /**
-     * Induces senses for the target node.
-     *
-     * @param target a target node.
-     * @return a map to senses to contexts.
-     */
-    private Map<Sense<V>, Map<V, Number>> induceSenses(V target) {
-        final SenseInduction<V, E> inducer = new SenseInduction<>(graph, target, local);
-
-        inducer.run();
-
-        return inducer.getSenses();
+        return requireNonNull(senseGraph);
     }
 
     /**

@@ -26,7 +26,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-import static java.util.Objects.isNull;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -36,49 +35,34 @@ import static java.util.Objects.requireNonNull;
  * @param <E> edge class.
  * @see <a href="https://doi.org/10.3115/1067737.1067753">Dorow &amp; Widdows (EACL '03)</a>
  */
-public class SenseInduction<V, E> implements Runnable {
+public class SenseInduction<V, E> {
     private final Graph<V, E> graph;
-    private final V target;
-    private final Function<Graph<V, E>, Clustering<V>> clusteringProvider;
-    private Collection<Collection<V>> clusters;
+    private final Function<Graph<V, E>, Clustering<V>> local;
 
     /**
      * Constructs a sense inducer.
      *
-     * @param graph              an input graph.
-     * @param target             a target node.
-     * @param clusteringProvider a neighborhood clustering algorithm provider.
+     * @param graph an input graph.
+     * @param local a neighborhood clustering local provider.
      */
-    public SenseInduction(Graph<V, E> graph, V target, Function<Graph<V, E>, Clustering<V>> clusteringProvider) {
+    public SenseInduction(Graph<V, E> graph, Function<Graph<V, E>, Clustering<V>> local) {
         this.graph = requireNonNull(graph);
-        this.target = requireNonNull(target);
-        this.clusteringProvider = requireNonNull(clusteringProvider);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void run() {
-        clusters = null;
-
-        final Graph<V, E> ego = Neighbors.neighborhoodGraph(graph, target);
-
-        final Clustering<V> clustering = clusteringProvider.apply(ego);
-        clustering.run();
-
-        clusters = clustering.getClusters();
+        this.local = requireNonNull(local);
     }
 
     /**
      * Gets the induced senses and their non-disambiguated contexts.
      *
+     * @param target a target node.
      * @return a map of senses to their contexts.
      */
-    public Map<Sense<V>, Map<V, Number>> getSenses() {
-        if (isNull(clusters)) {
-            throw new IllegalStateException("The clusters have not yet been obtained.");
-        }
+    public Map<Sense<V>, Map<V, Number>> induce(V target) {
+        final Graph<V, E> ego = Neighbors.neighborhoodGraph(graph, requireNonNull(target));
+
+        final Clustering<V> clustering = local.apply(ego);
+        clustering.run();
+
+        final Collection<Collection<V>> clusters = clustering.getClusters();
 
         final Map<Sense<V>, Map<V, Number>> senses = new HashMap<>();
 
