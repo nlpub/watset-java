@@ -19,10 +19,10 @@ package org.nlpub.watset.wsi;
 
 import org.nlpub.watset.util.ContextSimilarity;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Supplier;
 
 import static org.nlpub.watset.util.Maximizer.argmax;
@@ -44,7 +44,7 @@ public interface Sense<V> extends Supplier<V> {
      * @param <V>        context element class.
      * @return disambiguated context.
      */
-    static <V> Map<Sense<V>, Number> disambiguate(Map<V, Map<Sense<V>, Map<V, Number>>> inventory, ContextSimilarity<V> similarity, Map<V, Number> context, Set<V> ignored) {
+    static <V> Map<Sense<V>, Number> disambiguate(Map<V, Map<Sense<V>, Map<V, Number>>> inventory, ContextSimilarity<V> similarity, Map<V, Number> context, Collection<V> ignored) {
         final Map<Sense<V>, Number> dcontext = new HashMap<>(context.size());
 
         for (final Map.Entry<V, Number> entry : context.entrySet()) {
