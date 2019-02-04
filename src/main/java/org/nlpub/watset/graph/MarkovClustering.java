@@ -35,7 +35,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @param <V> vertices
  * @param <E> edges
- * @see <a href="https://micans.org/mcl/">van Dongen (2000)</a>
+ * @see <a href="https://doi.org/10.1137/040608635">van Dongen (2008)</a>
  */
 public class MarkovClustering<V, E> implements Clustering<V> {
     public static <V, E> Function<Graph<V, E>, Clustering<V>> provider(int e, double r) {

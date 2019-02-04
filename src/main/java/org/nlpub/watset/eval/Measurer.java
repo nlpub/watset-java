@@ -62,10 +62,12 @@ public class Measurer<V, E> implements Runnable {
         return graph;
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public long[] getDurations() {
         return durations;
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public int[] getClusters() {
         return clusters;
     }

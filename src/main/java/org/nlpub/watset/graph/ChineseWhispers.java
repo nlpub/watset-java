@@ -29,6 +29,8 @@ import static org.nlpub.watset.util.Maximizer.argmax;
 
 /**
  * Implementation of the Chinese Whispers algorithm.
+ *
+ * @see <a href="http://dl.acm.org/citation.cfm?id=1654774">Biemann (TextGraphs-1)</a>
  */
 public class ChineseWhispers<V, E> implements Clustering<V> {
     public static <V, E> Function<Graph<V, E>, Clustering<V>> provider(NodeWeighting<V, E> weighting) {

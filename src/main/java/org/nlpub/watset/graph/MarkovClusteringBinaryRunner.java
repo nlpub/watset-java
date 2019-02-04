@@ -35,6 +35,8 @@ import static java.util.stream.Collectors.toSet;
  * This is a weird thing. The implementation of MCL by its author is fast,
  * but is distributed under GPL. In order to use it, we need to run the separate
  * process and speak to it over standard input/output redirection.
+ *
+ * @see <a href="https://micans.org/mcl/">van Dongen (2000)</a>
  */
 public class MarkovClusteringBinaryRunner<V, E> implements Clustering<V> {
     private static final Logger logger = Logger.getLogger(MarkovClusteringBinaryRunner.class.getSimpleName());

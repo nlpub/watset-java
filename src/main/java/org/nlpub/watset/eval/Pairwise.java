@@ -41,7 +41,7 @@ public class Pairwise<V> {
      *
      * @param clusters a collection of clusters.
      * @param <V>      an element class.
-     * @return
+     * @return a collection of pairs.
      */
     public static <V> Set<Pair<V, V>> transform(Collection<Collection<V>> clusters) {
         return clusters.parallelStream().flatMap(Pairwise::combination).collect(toSet());
