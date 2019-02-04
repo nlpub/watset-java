@@ -26,7 +26,10 @@ import org.nlpub.watset.util.CosineContextSimilarity;
 import org.nlpub.watset.wsi.Sense;
 import org.nlpub.watset.wsi.SenseInduction;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.logging.Level;
@@ -162,7 +165,7 @@ public class Watset<V, E> implements Clustering<V> {
 
     /**
      * Disambiguates the context of the given node sense as according to the sense inventory
-     * using {@link Sense#disambiguate(Map, ContextSimilarity, Map, Set)}.
+     * using {@link Sense#disambiguate(Map, ContextSimilarity, Map, Collection)}.
      *
      * @param inventory a sense inventory.
      * @param sense     a target sense.

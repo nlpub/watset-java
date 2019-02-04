@@ -84,6 +84,7 @@ public interface Maximizer {
      * @param it     finite iterator over the states.
      * @param scorer the scoring function.
      * @param <V>    the argument type.
+     * @param <S>    the score type.
      * @return non-empty optional that contains the first found argmax, otherwise an empty one.
      * @see Maximizer#argmax(Iterator, Predicate, Function)
      */
