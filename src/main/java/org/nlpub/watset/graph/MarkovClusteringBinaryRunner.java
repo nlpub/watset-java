@@ -37,7 +37,7 @@ import static java.util.stream.Collectors.toSet;
  * process and speak to it over standard input/output redirection.
  */
 public class MarkovClusteringBinaryRunner<V, E> implements Clustering<V> {
-    private static final Logger logger = Logger.getLogger(Watset.class.getSimpleName());
+    private static final Logger logger = Logger.getLogger(MarkovClusteringBinaryRunner.class.getSimpleName());
 
     private final Graph<V, E> graph;
     private final Path mcl;
