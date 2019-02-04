@@ -77,7 +77,7 @@ public class NormalizedModifiedPurity<V> {
         return normalized;
     }
 
-    private final boolean normalized, modified;
+    final boolean normalized, modified;
 
     /**
      * Constructs a normalized modified purity calculator.
@@ -132,7 +132,7 @@ public class NormalizedModifiedPurity<V> {
 
         if (denominator == 0) return 0;
 
-        double numerator = clusters.parallelStream().
+        final double numerator = clusters.parallelStream().
                 mapToDouble(cluster -> classes.stream().
                         mapToDouble(klass -> delta(cluster, klass, modified)).max().orElse(0)).
                 sum();
