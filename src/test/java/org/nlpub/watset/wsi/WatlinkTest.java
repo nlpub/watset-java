@@ -26,9 +26,9 @@ import org.nlpub.watset.util.CosineContextSimilarity;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
+import static org.nlpub.watset.graph.WatsetTest.global;
+import static org.nlpub.watset.graph.WatsetTest.local;
 import static org.nlpub.watset.wsi.SenseInductionTest.WORDS;
-import static org.nlpub.watset.wsi.WatsetTest.global;
-import static org.nlpub.watset.wsi.WatsetTest.local;
 
 public class WatlinkTest {
     private final static Watset<String, DefaultWeightedEdge> watset = new Watset<>(WORDS, local, global, new CosineContextSimilarity<>());

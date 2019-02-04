@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Dmitry Ustalov
+ * Copyright 2019 Dmitry Ustalov
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  *
  */
 
-package org.nlpub.watset.wsi;
+package org.nlpub.watset.graph;
 
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
@@ -26,6 +26,8 @@ import org.nlpub.watset.graph.NodeWeighting;
 import org.nlpub.watset.graph.Clustering;
 import org.nlpub.watset.graph.Watset;
 import org.nlpub.watset.util.CosineContextSimilarity;
+import org.nlpub.watset.wsi.Sense;
+import org.nlpub.watset.wsi.SenseInductionTest;
 
 import java.util.Collection;
 import java.util.Random;
@@ -35,8 +37,8 @@ import static org.junit.Assert.assertEquals;
 
 public class WatsetTest {
     private final static Random random = new Random(1337);
-    final static Function<Graph<String, DefaultWeightedEdge>, Clustering<String>> local = ChineseWhispers.provider(NodeWeighting.top(), ChineseWhispers.ITERATIONS, random);
-    final static Function<Graph<Sense<String>, DefaultWeightedEdge>, Clustering<Sense<String>>> global = ChineseWhispers.provider(NodeWeighting.top(), ChineseWhispers.ITERATIONS, random);
+    public final static Function<Graph<String, DefaultWeightedEdge>, Clustering<String>> local = ChineseWhispers.provider(NodeWeighting.top(), ChineseWhispers.ITERATIONS, random);
+    public final static Function<Graph<Sense<String>, DefaultWeightedEdge>, Clustering<Sense<String>>> global = ChineseWhispers.provider(NodeWeighting.top(), ChineseWhispers.ITERATIONS, random);
     private final static Watset<String, DefaultWeightedEdge> watset = new Watset<>(SenseInductionTest.WORDS, local, global, new CosineContextSimilarity<>());
 
     @Before
