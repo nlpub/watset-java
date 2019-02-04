@@ -22,8 +22,8 @@ import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
 import org.junit.Before;
 import org.junit.Test;
-import org.nlpub.watset.cw.ChineseWhispers;
-import org.nlpub.watset.cw.NodeWeighting;
+import org.nlpub.watset.graph.ChineseWhispers;
+import org.nlpub.watset.graph.NodeWeighting;
 import org.nlpub.watset.graph.Clustering;
 
 import java.util.Map;

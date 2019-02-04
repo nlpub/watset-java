@@ -18,7 +18,7 @@
 package org.nlpub.watset.cli;
 
 import com.beust.jcommander.Parameter;
-import org.nlpub.watset.vsm.CosineContextSimilarity;
+import org.nlpub.watset.util.CosineContextSimilarity;
 import org.nlpub.watset.wsi.Sense;
 import org.nlpub.watset.wsi.Watlink;
 
@@ -31,7 +31,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.joining;
-import static org.nlpub.watset.io.ILEFormat.DELIMITER;
+import static org.nlpub.watset.util.ILEFormat.DELIMITER;
 import static org.nlpub.watset.wsi.Watlink.makeInventory;
 
 class CommandWatlink implements Runnable {

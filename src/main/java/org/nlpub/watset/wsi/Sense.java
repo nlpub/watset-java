@@ -17,7 +17,7 @@
 
 package org.nlpub.watset.wsi;
 
-import org.nlpub.watset.vsm.ContextSimilarity;
+import org.nlpub.watset.util.ContextSimilarity;
 
 import java.util.Collections;
 import java.util.HashMap;

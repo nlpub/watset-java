@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Dmitry Ustalov
+ * Copyright 2019 Dmitry Ustalov
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,9 @@
  *
  */
 
-package org.nlpub.watset.mcl;
+package org.nlpub.watset.graph;
 
 import org.jgrapht.Graph;
-import org.nlpub.watset.graph.Clustering;
-import org.nlpub.watset.wsi.Watset;
 
 import java.io.*;
 import java.nio.file.Files;

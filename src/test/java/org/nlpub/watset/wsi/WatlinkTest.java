@@ -20,7 +20,8 @@ package org.nlpub.watset.wsi;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.junit.Before;
 import org.junit.Test;
-import org.nlpub.watset.vsm.CosineContextSimilarity;
+import org.nlpub.watset.graph.Watset;
+import org.nlpub.watset.util.CosineContextSimilarity;
 
 import java.util.*;
 

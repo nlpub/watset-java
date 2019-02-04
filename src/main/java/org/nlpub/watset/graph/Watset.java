@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Dmitry Ustalov
+ * Copyright 2019 Dmitry Ustalov
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,15 +15,16 @@
  *
  */
 
-package org.nlpub.watset.wsi;
+package org.nlpub.watset.graph;
 
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
 import org.jgrapht.graph.builder.GraphBuilder;
-import org.nlpub.watset.graph.Clustering;
-import org.nlpub.watset.vsm.ContextSimilarity;
-import org.nlpub.watset.vsm.CosineContextSimilarity;
+import org.nlpub.watset.util.ContextSimilarity;
+import org.nlpub.watset.util.CosineContextSimilarity;
+import org.nlpub.watset.wsi.Sense;
+import org.nlpub.watset.wsi.SenseInduction;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;

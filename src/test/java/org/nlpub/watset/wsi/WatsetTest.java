@@ -21,10 +21,11 @@ import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.junit.Before;
 import org.junit.Test;
-import org.nlpub.watset.cw.ChineseWhispers;
-import org.nlpub.watset.cw.NodeWeighting;
+import org.nlpub.watset.graph.ChineseWhispers;
+import org.nlpub.watset.graph.NodeWeighting;
 import org.nlpub.watset.graph.Clustering;
-import org.nlpub.watset.vsm.CosineContextSimilarity;
+import org.nlpub.watset.graph.Watset;
+import org.nlpub.watset.util.CosineContextSimilarity;
 
 import java.util.Collection;
 import java.util.Random;

@@ -22,8 +22,8 @@ import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
-import org.nlpub.watset.io.ABCParser;
-import org.nlpub.watset.io.ILEFormat;
+import org.nlpub.watset.util.ABCParser;
+import org.nlpub.watset.util.ILEFormat;
 
 import java.io.IOException;
 import java.nio.file.Files;

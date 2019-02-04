@@ -18,12 +18,12 @@
 package org.nlpub.watset.cli;
 
 import org.jgrapht.Graph;
-import org.nlpub.watset.cw.ChineseWhispers;
-import org.nlpub.watset.cw.NodeWeighting;
+import org.nlpub.watset.graph.ChineseWhispers;
+import org.nlpub.watset.graph.NodeWeighting;
 import org.nlpub.watset.graph.*;
-import org.nlpub.watset.maxmax.MaxMax;
-import org.nlpub.watset.mcl.MarkovClustering;
-import org.nlpub.watset.mcl.MarkovClusteringBinaryRunner;
+import org.nlpub.watset.graph.MaxMax;
+import org.nlpub.watset.graph.MarkovClustering;
+import org.nlpub.watset.graph.MarkovClusteringBinaryRunner;
 
 import java.nio.file.Paths;
 import java.util.Collections;

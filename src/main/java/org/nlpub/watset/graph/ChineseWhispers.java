@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Dmitry Ustalov
+ * Copyright 2019 Dmitry Ustalov
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,9 @@
  *
  */
 
-package org.nlpub.watset.cw;
+package org.nlpub.watset.graph;
 
 import org.jgrapht.Graph;
-import org.nlpub.watset.graph.Clustering;
 import org.nlpub.watset.util.Neighbors;
 
 import java.util.*;
@@ -28,6 +27,9 @@ import java.util.stream.Collectors;
 import static java.util.Objects.requireNonNull;
 import static org.nlpub.watset.util.Maximizer.argmax;
 
+/**
+ * Implementation of the Chinese Whispers algorithm.
+ */
 public class ChineseWhispers<V, E> implements Clustering<V> {
     public static <V, E> Function<Graph<V, E>, Clustering<V>> provider(NodeWeighting<V, E> weighting) {
         return graph -> new ChineseWhispers<>(graph, weighting);

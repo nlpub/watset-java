@@ -19,7 +19,6 @@ package org.nlpub.watset.graph;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.nlpub.watset.cw.ChineseWhispersTest;
 
 import java.util.Collection;
 
