@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -75,9 +76,13 @@ public class SenseInduction<V, E> implements Runnable {
      * @return a map of senses to their contexts.
      */
     public Map<Sense<V>, Map<V, Number>> getSenses() {
-        int i = 0;
+        if (isNull(clusters)) {
+            throw new IllegalStateException("The clusters have not yet been obtained.");
+        }
 
         final Map<Sense<V>, Map<V, Number>> senses = new HashMap<>();
+
+        int i = 0;
 
         for (final Collection<V> cluster : clusters) {
             final Map<V, Number> context = new HashMap<>(cluster.size());

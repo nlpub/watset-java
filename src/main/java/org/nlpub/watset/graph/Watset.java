@@ -33,6 +33,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -146,7 +147,7 @@ public class Watset<V, E> implements Clustering<V> {
      * @return a sense inventory.
      */
     public Map<V, Map<Sense<V>, Map<V, Number>>> getInventory() {
-        if (Objects.isNull(inventory)) {
+        if (isNull(inventory)) {
             throw new IllegalStateException("The sense inventory is not yet initialized.");
         }
 
@@ -159,7 +160,7 @@ public class Watset<V, E> implements Clustering<V> {
      * @return a sense graph.
      */
     public Graph<Sense<V>, DefaultWeightedEdge> getSenseGraph() {
-        if (Objects.isNull(senseGraph)) {
+        if (isNull(senseGraph)) {
             throw new IllegalStateException("The sense graph is not yet initialized.");
         }
 
