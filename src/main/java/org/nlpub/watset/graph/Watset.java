@@ -88,7 +88,7 @@ public class Watset<V, E> implements Clustering<V> {
         this.local = requireNonNull(local);
         this.global = requireNonNull(global);
         this.similarity = requireNonNull(similarity);
-        this.inducer = new SenseInduction<>(graph, local);
+        this.inducer = new SenseInduction<>(graph, this.local);
     }
 
     /**
