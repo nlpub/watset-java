@@ -20,6 +20,7 @@ package org.nlpub.watset.cli;
 import com.beust.jcommander.Parameter;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.nlpub.watset.graph.Clustering;
+import org.nlpub.watset.util.AlgorithmProvider;
 
 import java.nio.file.Path;
 import java.util.HashMap;

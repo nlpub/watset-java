@@ -19,6 +19,7 @@ package org.nlpub.watset.cli;
 
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.nlpub.watset.graph.Clustering;
+import org.nlpub.watset.util.AlgorithmProvider;
 
 import java.util.Collections;
 
