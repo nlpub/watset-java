@@ -16,6 +16,6 @@
  */
 
 /**
- * Miscellaneous utility classes.
+ * Utilities.
  */
 package org.nlpub.watset.util;

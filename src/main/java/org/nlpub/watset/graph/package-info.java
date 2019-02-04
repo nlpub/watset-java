@@ -16,6 +16,6 @@
  */
 
 /**
- * Utility classes for graph processing.
+ * Graph processing and clustering.
  */
 package org.nlpub.watset.graph;

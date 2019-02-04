@@ -16,6 +16,6 @@
  */
 
 /**
- * Implementation of the Watset algorithm and other things related to sense induction.
+ * Tools for sense induction.
  */
 package org.nlpub.watset.wsi;

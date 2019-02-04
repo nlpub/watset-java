@@ -16,6 +16,6 @@
  */
 
 /**
- * Implementation of clustering evaluation methods.
+ * Clustering evaluation and performance measurement tools.
  */
 package org.nlpub.watset.eval;
