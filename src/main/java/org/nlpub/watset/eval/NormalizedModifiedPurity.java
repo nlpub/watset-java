@@ -133,11 +133,21 @@ public class NormalizedModifiedPurity<V> {
         if (denominator == 0) return 0;
 
         final double numerator = clusters.parallelStream().
-                mapToDouble(cluster -> classes.stream().
-                        mapToDouble(klass -> delta(cluster, klass, modified)).max().orElse(0)).
-                sum();
+                mapToDouble(cluster -> score(cluster, classes, modified)).sum();
 
         return numerator / denominator;
+    }
+
+    /**
+     * Computes the (modified) cluster score on a defined collection of classes.
+     *
+     * @param cluster  a cluster.
+     * @param classes  a collection of classes.
+     * @param modified whether to use a modified purity
+     * @return cluster score
+     */
+    public double score(Map<V, Double> cluster, Collection<Map<V, Double>> classes, boolean modified) {
+        return classes.stream().mapToDouble(klass -> delta(cluster, klass, modified)).max().orElse(0);
     }
 
     /**

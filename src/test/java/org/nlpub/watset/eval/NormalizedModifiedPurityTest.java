@@ -27,17 +27,17 @@ import static org.nlpub.watset.eval.NormalizedModifiedPurity.normalize;
 import static org.nlpub.watset.eval.NormalizedModifiedPurity.transform;
 
 public class NormalizedModifiedPurityTest {
-    private static final Collection<Map<String, Double>> GOLD = transform(PairwiseTest.GOLD);
-    private static final Collection<Map<String, Double>> GOLD_NORMALIZED = normalize(GOLD);
+    static final Collection<Map<String, Double>> GOLD = transform(PairwiseTest.GOLD);
+    static final Collection<Map<String, Double>> GOLD_NORMALIZED = normalize(GOLD);
 
-    private static final Collection<Map<String, Double>> EXAMPLE_1 = transform(PairwiseTest.EXAMPLE_1);
-    private static final Collection<Map<String, Double>> EXAMPLE_1_NORMALIZED = normalize(EXAMPLE_1);
+    static final Collection<Map<String, Double>> EXAMPLE_1 = transform(PairwiseTest.EXAMPLE_1);
+    static final Collection<Map<String, Double>> EXAMPLE_1_NORMALIZED = normalize(EXAMPLE_1);
 
-    private static final Collection<Map<String, Double>> EXAMPLE_2 = transform(PairwiseTest.EXAMPLE_2);
-    private static final Collection<Map<String, Double>> EXAMPLE_2_NORMALIZED = normalize(EXAMPLE_2);
+    static final Collection<Map<String, Double>> EXAMPLE_2 = transform(PairwiseTest.EXAMPLE_2);
+    static final Collection<Map<String, Double>> EXAMPLE_2_NORMALIZED = normalize(EXAMPLE_2);
 
-    private static final Collection<Map<String, Double>> EXAMPLE_3 = transform(PairwiseTest.EXAMPLE_3);
-    private static final Collection<Map<String, Double>> EXAMPLE_3_NORMALIZED = normalize(EXAMPLE_3);
+    static final Collection<Map<String, Double>> EXAMPLE_3 = transform(PairwiseTest.EXAMPLE_3);
+    static final Collection<Map<String, Double>> EXAMPLE_3_NORMALIZED = normalize(EXAMPLE_3);
 
     private static final NormalizedModifiedPurity<String> mpu = new NormalizedModifiedPurity<>(false, true);
 
