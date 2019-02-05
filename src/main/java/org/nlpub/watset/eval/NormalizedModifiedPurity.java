@@ -126,7 +126,7 @@ public class NormalizedModifiedPurity<V> {
 
         if (normalized) {
             denominator = clusters.parallelStream().
-                    mapToDouble(cluster -> cluster.values().stream().mapToDouble(a -> a).sum()).
+                    mapToDouble(cluster -> cluster.values().stream().mapToDouble(Double::doubleValue).sum()).
                     sum();
         }
 
@@ -171,6 +171,6 @@ public class NormalizedModifiedPurity<V> {
 
         if (!normalized) return intersection.size();
 
-        return intersection.values().stream().mapToDouble(a -> a).sum();
+        return intersection.values().stream().mapToDouble(Double::doubleValue).sum();
     }
 }
