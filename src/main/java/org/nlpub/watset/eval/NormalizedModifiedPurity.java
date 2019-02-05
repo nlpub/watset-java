@@ -77,6 +77,12 @@ public class NormalizedModifiedPurity<V> {
         return normalized;
     }
 
+    public static <V> PrecisionRecall evaluate(NormalizedModifiedPurity<V> precision, NormalizedModifiedPurity<V> recall, Collection<Map<V, Double>> clusters, Collection<Map<V, Double>> classes) {
+        final double nmPU = precision.purity(requireNonNull(clusters), requireNonNull(classes));
+        final double niPU = recall.purity(classes, clusters);
+        return new PrecisionRecall(nmPU, niPU);
+    }
+
     final boolean normalized, modified;
 
     /**
@@ -99,29 +105,15 @@ public class NormalizedModifiedPurity<V> {
     }
 
     /**
-     * Computes a purity (nmPU), inverse purity (niPU) and F-score.
-     *
-     * @param clusters a collection of clusters.
-     * @param classes  a collection of gold standard clusters.
-     * @return precision-recall report.
-     */
-    public PrecisionRecall evaluate(Collection<Map<V, Double>> clusters, Collection<Map<V, Double>> classes) {
-        final double nmPU = purity(requireNonNull(clusters), requireNonNull(classes), modified);
-        final double niPU = purity(classes, clusters, false);
-        return new PrecisionRecall(nmPU, niPU);
-    }
-
-    /**
      * Computes the (modified) purity of the given clusters as according
      * to the gold standard clustering, classes.
      *
      * @param clusters clustering
      * @param classes  gold clustering
-     * @param modified whether to use a modified purity
      * @return (modified) purity
      * @see <a href="https://doi.org/10.3115/v1/P14-1097">Kawahara et al. (ACL 2014)</a>
      */
-    public double purity(Collection<Map<V, Double>> clusters, Collection<Map<V, Double>> classes, boolean modified) {
+    public double purity(Collection<Map<V, Double>> clusters, Collection<Map<V, Double>> classes) {
         double denominator = clusters.stream().mapToInt(Map::size).sum();
 
         if (normalized) {
@@ -133,7 +125,7 @@ public class NormalizedModifiedPurity<V> {
         if (denominator == 0) return 0;
 
         final double numerator = clusters.parallelStream().
-                mapToDouble(cluster -> score(cluster, classes, modified)).sum();
+                mapToDouble(cluster -> score(cluster, classes)).sum();
 
         return numerator / denominator;
     }
@@ -143,11 +135,10 @@ public class NormalizedModifiedPurity<V> {
      *
      * @param cluster  a cluster.
      * @param classes  a collection of classes.
-     * @param modified whether to use a modified purity
      * @return cluster score
      */
-    public double score(Map<V, Double> cluster, Collection<Map<V, Double>> classes, boolean modified) {
-        return classes.stream().mapToDouble(klass -> delta(cluster, klass, modified)).max().orElse(0);
+    public double score(Map<V, Double> cluster, Collection<Map<V, Double>> classes) {
+        return classes.stream().mapToDouble(klass -> delta(cluster, klass)).max().orElse(0);
     }
 
     /**
@@ -156,11 +147,10 @@ public class NormalizedModifiedPurity<V> {
      *
      * @param cluster  one cluster
      * @param klass    another cluster
-     * @param modified whether to use a modified purity
      * @return cluster overlap measure
      * @see <a href="https://doi.org/10.3115/v1/P14-1097">Kawahara et al. (ACL 2014)</a>
      */
-    public double delta(Map<V, Double> cluster, Map<V, Double> klass, boolean modified) {
+    public double delta(Map<V, Double> cluster, Map<V, Double> klass) {
         if (modified && !(cluster.size() > 1)) return 0;
 
         final Map<V, Double> intersection = new HashMap<>(cluster);
