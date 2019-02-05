@@ -20,6 +20,7 @@ package org.nlpub.watset.graph;
 import org.jgrapht.Graph;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
@@ -126,7 +127,7 @@ public class MarkovClusteringBinaryRunner<V, E> implements Clustering<V> {
         int status = process.waitFor();
 
         if (status != 0) {
-            try (final Reader isr = new InputStreamReader(process.getErrorStream())) {
+            try (final Reader isr = new InputStreamReader(process.getErrorStream(), StandardCharsets.UTF_8)) {
                 try (final BufferedReader reader = new BufferedReader(isr)) {
                     final String stderr = reader.lines().collect(Collectors.joining("\n"));
 
@@ -162,7 +163,7 @@ public class MarkovClusteringBinaryRunner<V, E> implements Clustering<V> {
                 final int target = mapping.get(graph.getEdgeTarget(edge));
                 final double weight = graph.getEdgeWeight(edge);
 
-                writer.write(String.format(Locale.ROOT, "%d\t%d\t%f\n", source, target, weight));
+                writer.write(String.format(Locale.ROOT, "%d\t%d\t%f%n", source, target, weight));
             }
         }
 

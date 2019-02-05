@@ -86,7 +86,7 @@ class CommandWatset extends ClusteringCommand {
             for (final DefaultWeightedEdge edge : graph.edgeSet()) {
                 final IndexedSense<String> source = (IndexedSense<String>) graph.getEdgeSource(edge);
                 final IndexedSense<String> target = (IndexedSense<String>) graph.getEdgeTarget(edge);
-                writer.write(String.format(Locale.ROOT, "%s#%d\t%s#%d\t%f\n",
+                writer.write(String.format(Locale.ROOT, "%s#%d\t%s#%d\t%f%n",
                         source.get(), source.getSense(),
                         target.get(), target.getSense(),
                         graph.getEdgeWeight(edge)));

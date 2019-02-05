@@ -61,7 +61,7 @@ public interface ILEFormat {
                     sorted((smaller, larger) -> Integer.compare(larger.size(), smaller.size())).
                     forEach(cluster -> {
                         try {
-                            writer.write(String.format(Locale.ROOT, "%d\t%d\t%s\n",
+                            writer.write(String.format(Locale.ROOT, "%d\t%d\t%s%n",
                                     counter.incrementAndGet(),
                                     cluster.size(),
                                     String.join(DELIMITER, cluster))

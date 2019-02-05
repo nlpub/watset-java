@@ -22,9 +22,12 @@ import org.nlpub.watset.graph.Clustering;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  * This is a clustering algorithm performance evaluator. Given a clustering algorithm provider and
@@ -63,13 +66,13 @@ public class Measurer<V, E> {
     }
 
     @SuppressWarnings("UnusedReturnValue")
-    public long[] getDurations() {
-        return durations;
+    public List<Long> getDurations() {
+        return Arrays.stream(durations).boxed().collect(Collectors.toList());
     }
 
     @SuppressWarnings("UnusedReturnValue")
-    public int[] getClusters() {
-        return clusters;
+    public List<Integer> getClusters() {
+        return Arrays.stream(clusters).boxed().collect(Collectors.toList());
     }
 
     public void run() {

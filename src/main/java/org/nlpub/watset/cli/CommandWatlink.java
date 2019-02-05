@@ -62,7 +62,7 @@ class CommandWatlink {
                 final Map<Sense<String>, Number> dcontext = watlink.retrieve(cluster, candidates);
 
                 try {
-                    writer.write(String.format(Locale.ROOT, "%d\t%d\t%s\t%d\t%s\n",
+                    writer.write(String.format(Locale.ROOT, "%d\t%d\t%s\t%d\t%s%n",
                             counter.incrementAndGet(),
                             cluster.size(),
                             String.join(DELIMITER, cluster),

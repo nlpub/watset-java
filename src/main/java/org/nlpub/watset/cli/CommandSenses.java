@@ -83,7 +83,7 @@ class CommandSenses {
                     final String context = senseEntry.getValue().entrySet().stream().
                             map(e -> String.format("%s:%f", e.getKey(), e.getValue().doubleValue())).
                             collect(joining(","));
-                    writer.write(String.format(Locale.ROOT, "%s\t%d\t%s\n", word, sense.getSense(), context));
+                    writer.write(String.format(Locale.ROOT, "%s\t%d\t%s%n", word, sense.getSense(), context));
                 }
             }
         }
