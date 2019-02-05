@@ -60,11 +60,11 @@ public class MarkovClustering<V, E> implements Clustering<V> {
      * {@inheritDoc}
      */
     @Override
-    public void run() {
+    public Clustering<V> fit() {
         index = null;
         matrix = null;
 
-        if (graph.vertexSet().isEmpty()) return;
+        if (graph.vertexSet().isEmpty()) return this;
 
         index = buildIndex(graph);
         matrix = buildMatrix(graph, index);
@@ -79,6 +79,8 @@ public class MarkovClustering<V, E> implements Clustering<V> {
 
             if (matrix.equals(previous)) break;
         }
+
+        return this;
     }
 
     /**

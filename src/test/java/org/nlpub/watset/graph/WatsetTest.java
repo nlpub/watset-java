@@ -21,10 +21,6 @@ import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.junit.Before;
 import org.junit.Test;
-import org.nlpub.watset.graph.ChineseWhispers;
-import org.nlpub.watset.graph.NodeWeighting;
-import org.nlpub.watset.graph.Clustering;
-import org.nlpub.watset.graph.Watset;
 import org.nlpub.watset.util.CosineContextSimilarity;
 import org.nlpub.watset.wsi.Sense;
 import org.nlpub.watset.wsi.SenseInductionTest;
@@ -43,7 +39,7 @@ public class WatsetTest {
 
     @Before
     public void setup() {
-        watset.run();
+        watset.fit();
     }
 
     @Test

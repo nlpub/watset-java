@@ -49,11 +49,4 @@ public class TogetherClustering<V, E> implements Clustering<V> {
     public Collection<Collection<V>> getClusters() {
         return Collections.singletonList(graph.vertexSet());
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void run() {
-    }
 }

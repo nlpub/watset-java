@@ -42,7 +42,7 @@ public class WatlinkTest {
 
     @Before
     public void setup() {
-        watset.run();
+        watset.fit();
         watlink = new Watlink<>(watset.getInventory(), new CosineContextSimilarity<>(), 1);
     }
 

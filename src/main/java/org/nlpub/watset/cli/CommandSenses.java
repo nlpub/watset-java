@@ -21,11 +21,11 @@ import com.beust.jcommander.Parameter;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.nlpub.watset.graph.EmptyClustering;
+import org.nlpub.watset.graph.Watset;
 import org.nlpub.watset.util.AlgorithmProvider;
 import org.nlpub.watset.util.ContextSimilarity;
 import org.nlpub.watset.wsi.IndexedSense;
 import org.nlpub.watset.wsi.Sense;
-import org.nlpub.watset.graph.Watset;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -37,7 +37,7 @@ import java.util.Map;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.joining;
 
-class CommandSenses implements Runnable {
+class CommandSenses {
     private final Application application;
 
     public CommandSenses(Application application) {
@@ -50,7 +50,6 @@ class CommandSenses implements Runnable {
     @Parameter(description = "Local clustering algorithm parameters", names = {"-lp", "--local-params"})
     private String localParams;
 
-    @Override
     public void run() {
         requireNonNull(local);
 
@@ -62,7 +61,7 @@ class CommandSenses implements Runnable {
                 graph, algorithm, EmptyClustering.provider(), ContextSimilarity.dummy()
         );
 
-        watset.run();
+        watset.fit();
 
         final Map<String, Map<Sense<String>, Map<String, Number>>> inventory = watset.getInventory();
 

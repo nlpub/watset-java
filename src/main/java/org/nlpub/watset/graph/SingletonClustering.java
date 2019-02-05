@@ -50,11 +50,4 @@ public class SingletonClustering<V, E> implements Clustering<V> {
     public Collection<Collection<V>> getClusters() {
         return graph.vertexSet().stream().map(Collections::singleton).collect(toList());
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void run() {
-    }
 }

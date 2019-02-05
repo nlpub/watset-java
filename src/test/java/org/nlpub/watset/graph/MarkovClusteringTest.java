@@ -22,7 +22,6 @@ import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
 import org.junit.Before;
 import org.junit.Test;
-import org.nlpub.watset.graph.MarkovClustering;
 
 import java.util.Collection;
 
@@ -62,8 +61,8 @@ public class MarkovClusteringTest {
 
     @Before
     public void setup() {
-        mcl1.run();
-        mcl2.run();
+        mcl1.fit();
+        mcl2.fit();
     }
 
     @Test

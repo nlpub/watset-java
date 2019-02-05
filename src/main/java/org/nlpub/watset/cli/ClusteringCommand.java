@@ -23,17 +23,16 @@ import java.io.IOException;
 
 import static org.nlpub.watset.util.ILEFormat.write;
 
-abstract class ClusteringCommand implements Runnable {
+abstract class ClusteringCommand {
     final Application application;
 
     public ClusteringCommand(Application application) {
         this.application = application;
     }
 
-    @Override
     public void run() {
         final Clustering<String> clustering = getClustering();
-        clustering.run();
+        clustering.fit();
 
         try {
             write(application.output, clustering);

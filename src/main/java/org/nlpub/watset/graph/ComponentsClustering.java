@@ -31,8 +31,7 @@ import static java.util.Objects.requireNonNull;
  * @param <E> edge class.
  */
 public class ComponentsClustering<V, E> implements Clustering<V> {
-    private final Graph<V, E> graph;
-    private Collection<Collection<V>> clusters = null;
+    private final ConnectivityInspector<V, E> inspector;
 
     /**
      * Sets up a trivial clustering algorithm.
@@ -40,15 +39,7 @@ public class ComponentsClustering<V, E> implements Clustering<V> {
      * @param graph an input graph.
      */
     public ComponentsClustering(Graph<V, E> graph) {
-        this.graph = requireNonNull(graph);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Collection<Collection<V>> getClusters() {
-        return requireNonNull(clusters);
+        this.inspector = new ConnectivityInspector<>(requireNonNull(graph));
     }
 
     /**
@@ -56,9 +47,7 @@ public class ComponentsClustering<V, E> implements Clustering<V> {
      */
     @Override
     @SuppressWarnings("unchecked")
-    public void run() {
-        final ConnectivityInspector<V, E> inspector = new ConnectivityInspector<>(graph);
-        // TODO: Is there a simpler approach?
-        clusters = (Collection<Collection<V>>) (Collection<? extends Collection<V>>) inspector.connectedSets();
+    public Collection<Collection<V>> getClusters() {
+        return (Collection<Collection<V>>) (Collection<? extends Collection<V>>) inspector.connectedSets();
     }
 }

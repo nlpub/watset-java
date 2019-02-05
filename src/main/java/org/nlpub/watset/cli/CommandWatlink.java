@@ -34,7 +34,7 @@ import static java.util.stream.Collectors.joining;
 import static org.nlpub.watset.util.ILEFormat.DELIMITER;
 import static org.nlpub.watset.wsi.Watlink.makeInventory;
 
-class CommandWatlink implements Runnable {
+class CommandWatlink {
     private final Application application;
 
     @Parameter(required = true, names = "-k")
@@ -47,7 +47,6 @@ class CommandWatlink implements Runnable {
         this.application = application;
     }
 
-    @Override
     public void run() {
         final Collection<Collection<String>> clusters = application.getClusters();
         final Map<String, Map<Sense<String>, Map<String, Number>>> inventory = makeInventory(clusters);

@@ -21,11 +21,11 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
+import org.nlpub.watset.graph.Watset;
 import org.nlpub.watset.util.AlgorithmProvider;
 import org.nlpub.watset.util.CosineContextSimilarity;
 import org.nlpub.watset.wsi.IndexedSense;
 import org.nlpub.watset.wsi.Sense;
-import org.nlpub.watset.graph.Watset;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -72,7 +72,7 @@ class CommandWatset extends ClusteringCommand {
         }
 
         final Watset<String, DefaultWeightedEdge> watset = getClustering();
-        watset.run();
+        watset.fit();
 
         try {
             write(application.output, watset.getSenseGraph());

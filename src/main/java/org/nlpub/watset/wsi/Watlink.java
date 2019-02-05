@@ -17,8 +17,8 @@
 
 package org.nlpub.watset.wsi;
 
-import org.nlpub.watset.util.Ranking;
 import org.nlpub.watset.util.ContextSimilarity;
+import org.nlpub.watset.util.Ranking;
 
 import java.util.*;
 

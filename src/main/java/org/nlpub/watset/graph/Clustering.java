@@ -24,9 +24,19 @@ import java.util.Collection;
  *
  * @param <V> node class.
  */
-public interface Clustering<V> extends Runnable {
+public interface Clustering<V> {
+    /**
+     * Runs the algorithm to induce the parameters of the clusters.
+     *
+     * @return itself.
+     */
+    default Clustering<V> fit() {
+        return this;
+    }
+
     /**
      * Return a collection of clusters, each cluster is a collection of objects.
+     * Usually this method is called after the fit method.
      *
      * @return clusters.
      */

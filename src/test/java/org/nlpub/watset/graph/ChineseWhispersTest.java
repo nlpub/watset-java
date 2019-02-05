@@ -22,8 +22,6 @@ import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
 import org.junit.Before;
 import org.junit.Test;
-import org.nlpub.watset.graph.ChineseWhispers;
-import org.nlpub.watset.graph.NodeWeighting;
 
 import java.util.Collection;
 import java.util.Random;
@@ -45,7 +43,7 @@ public class ChineseWhispersTest {
 
     @Before
     public void setup() {
-        cw1.run();
+        cw1.fit();
     }
 
     @Test

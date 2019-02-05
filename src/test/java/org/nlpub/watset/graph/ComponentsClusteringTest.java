@@ -29,7 +29,7 @@ public class ComponentsClusteringTest {
 
     @Before
     public void setup() {
-        components.run();
+        components.fit();
     }
 
     @Test

@@ -22,7 +22,6 @@ import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
 import org.junit.Before;
 import org.junit.Test;
-import org.nlpub.watset.graph.MaxMax;
 
 import java.util.Arrays;
 import java.util.Collections;

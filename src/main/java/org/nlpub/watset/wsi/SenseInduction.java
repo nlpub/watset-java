@@ -60,7 +60,7 @@ public class SenseInduction<V, E> {
         final Graph<V, E> ego = Neighbors.neighborhoodGraph(graph, requireNonNull(target));
 
         final Clustering<V> clustering = local.apply(ego);
-        clustering.run();
+        clustering.fit();
 
         final Collection<Collection<V>> clusters = clustering.getClusters();
 

@@ -35,7 +35,7 @@ import java.util.logging.Logger;
  * @param <V> node class.
  * @param <E> edge class.
  */
-public class Measurer<V, E> implements Runnable {
+public class Measurer<V, E> {
     private static final Logger logger = Logger.getLogger(Measurer.class.getSimpleName());
 
     final static public int REPETITIONS = 10;
@@ -96,7 +96,7 @@ public class Measurer<V, E> implements Runnable {
 
     private Duration measure(Clustering<V> clustering) {
         final Instant start = Instant.now();
-        clustering.run();
+        clustering.fit();
         final Instant end = Instant.now();
         return Duration.between(start, end);
     }

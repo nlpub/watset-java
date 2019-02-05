@@ -90,7 +90,7 @@ public class MarkovClusteringBinaryRunner<V, E> implements Clustering<V> {
      * {@inheritDoc}
      */
     @Override
-    public void run() {
+    public Clustering<V> fit() {
         logger.info("Preparing for Markov Clustering.");
 
         mapping = translate(graph);
@@ -102,6 +102,8 @@ public class MarkovClusteringBinaryRunner<V, E> implements Clustering<V> {
         }
 
         logger.info("Markov Clustering finished.");
+
+        return this;
     }
 
     private void process() throws IOException, InterruptedException {

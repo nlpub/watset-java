@@ -20,11 +20,10 @@ package org.nlpub.watset.wsi;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
-import org.junit.Before;
 import org.junit.Test;
 import org.nlpub.watset.graph.ChineseWhispers;
-import org.nlpub.watset.graph.NodeWeighting;
 import org.nlpub.watset.graph.Clustering;
+import org.nlpub.watset.graph.NodeWeighting;
 
 import java.util.Map;
 import java.util.Random;
