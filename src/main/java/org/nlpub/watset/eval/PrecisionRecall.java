@@ -17,27 +17,59 @@
 
 package org.nlpub.watset.eval;
 
+/**
+ * A simple class that contains precision and recall, and computes F-score.
+ *
+ * @see <a href="https://en.wikipedia.org/wiki/Precision_and_recall">Precision and recall</a>
+ */
 public class PrecisionRecall {
     private final double precision;
     private final double recall;
 
+    /**
+     * Wraps the precision and recall values.
+     *
+     * @param precision precision value.
+     * @param recall    recall value.
+     */
     public PrecisionRecall(double precision, double recall) {
         this.precision = precision;
         this.recall = recall;
     }
 
+    /**
+     * Gets the value of precision.
+     *
+     * @return precision value.
+     */
     public double getPrecision() {
         return precision;
     }
 
+    /**
+     * Gets the value of recall.
+     *
+     * @return recall value.
+     */
     public double getRecall() {
         return recall;
     }
 
+    /**
+     * Computes the F<sub>1</sub>-score using precision and recall.
+     *
+     * @return F-score value.
+     */
     public double getF1Score() {
         return getFScore(1);
     }
 
+    /**
+     * Computes the F<sub>&beta;</sub>-score using precision and recall.
+     *
+     * @param beta beta value.
+     * @return F-score value.
+     */
     public double getFScore(double beta) {
         double beta2 = Math.pow(beta, 2);
         double denominator = beta2 * precision + recall;

@@ -77,6 +77,16 @@ public class NormalizedModifiedPurity<V> {
         return normalized;
     }
 
+    /**
+     * Computes a precision and recall using purity and inverse purity, correspondingly.
+     *
+     * @param precision purity.
+     * @param recall    inverse purity.
+     * @param clusters  a collection of clusters.
+     * @param classes   a collection of classes.
+     * @param <V>       a cluster element type.
+     * @return precision and recall object.
+     */
     public static <V> PrecisionRecall evaluate(NormalizedModifiedPurity<V> precision, NormalizedModifiedPurity<V> recall, Collection<Map<V, Double>> clusters, Collection<Map<V, Double>> classes) {
         final double nmPU = precision.purity(requireNonNull(clusters), requireNonNull(classes));
         final double niPU = recall.purity(classes, clusters);
@@ -133,8 +143,8 @@ public class NormalizedModifiedPurity<V> {
     /**
      * Computes the (modified) cluster score on a defined collection of classes.
      *
-     * @param cluster  a cluster.
-     * @param classes  a collection of classes.
+     * @param cluster a cluster.
+     * @param classes a collection of classes.
      * @return cluster score
      */
     public double score(Map<V, Double> cluster, Collection<Map<V, Double>> classes) {
@@ -145,8 +155,8 @@ public class NormalizedModifiedPurity<V> {
      * Computes the fuzzy overlap between two clusters, cluster and klass. In case of modified purity
      * the singleton clusters are ignored.
      *
-     * @param cluster  one cluster
-     * @param klass    another cluster
+     * @param cluster one cluster
+     * @param klass   another cluster
      * @return cluster overlap measure
      * @see <a href="https://doi.org/10.3115/v1/P14-1097">Kawahara et al. (ACL 2014)</a>
      */

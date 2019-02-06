@@ -37,14 +37,18 @@ public class CachedNormalizedModifiedPurity<V> extends NormalizedModifiedPurity<
     protected final Map<Map<V, Double>, Double> cache;
 
     /**
-     * {@inheritDoc}
+     * Constructs a cached normalized modified purity calculator.
      */
     public CachedNormalizedModifiedPurity() {
         this(true, true);
     }
 
     /**
-     * {@inheritDoc}
+     * Constructs a cached normalized modified purity calculator that allows
+     * turning normalized and/or modified options off.
+     *
+     * @param normalized normalized purity is on.
+     * @param modified   modified purity is on.
      */
     public CachedNormalizedModifiedPurity(boolean normalized, boolean modified) {
         super(normalized, modified);
