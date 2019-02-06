@@ -4,10 +4,12 @@ This is an open source implementation of the [Watset] algorithm for fuzzy graph 
 
 This package, written in Java, also includes implementations of the [Chinese Whispers] (2006), [Markov Clustering] (2000), and [MaxMax] (2013) graph clustering algorithms.
 
-[![Build Status][travis_ci_badge]][travis_ci_link]
+[![Build Status][travis_ci_badge]][travis_ci_link] [![JitPack][jitpack_badge]][jitpack_link]
 
 [travis_ci_badge]: https://travis-ci.org/nlpub/watset-java.svg
 [travis_ci_link]: https://travis-ci.org/nlpub/watset-java
+[jitpack_badge]: https://jitpack.io/v/nlpub/watset-java.svg
+[jitpack_link]: https://jitpack.io/#nlpub/watset-java
 
 ## Usage
 
@@ -113,13 +115,13 @@ $ java -jar watset.jar -i graph.txt -o output.tsv maxmax
 
 ## Citation
 
-* [Ustalov, D.](https://github.com/dustalov), [Panchenko, A.](https://www.inf.uni-hamburg.de/en/inst/ab/lt/people/alexander-panchenko.html), [Biemann, C.](https://www.inf.uni-hamburg.de/en/inst/ab/lt/people/chris-biemann.html): [Watset: Automatic Induction of Synsets from a Graph of Synonyms](https://doi.org/10.18653/v1/P17-1145). In: Proceedings of the 55th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers), Vancouver, BC, Canada, Association for Computational Linguistics (2017) 1579–1590
+* [Ustalov, D.](https://github.com/dustalov), [Panchenko, A.](https://www.inf.uni-hamburg.de/en/inst/ab/lt/people/alexander-panchenko.html), [Biemann, C.](https://www.inf.uni-hamburg.de/en/inst/ab/lt/people/chris-biemann.html): [Watset: Automatic Induction of Synsets from a Graph of Synonyms](https://doi.org/10.18653/v1/P17-1145). In: Proceedings of the 55th Annual Meeting of the Association for Computational Linguistics (Volume&nbsp;1: Long Papers), Vancouver, BC, Canada, Association for Computational Linguistics (2017) 1579–1590
 
 ```latex
 @inproceedings{Ustalov:17:acl,
   author    = {Ustalov, Dmitry and Panchenko, Alexander and Biemann, Chris},
   title     = {{Watset: Automatic Induction of Synsets from a Graph of Synonyms}},
-  booktitle = {Proceedings of the 55th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)},
+  booktitle = {Proceedings of the 55th Annual Meeting of the Association for Computational Linguistics (Volume~1: Long Papers)},
   year      = {2017},
   pages     = {1579--1590},
   doi       = {10.18653/v1/P17-1145},
