@@ -30,5 +30,5 @@ deploy:
   github-token: $GITHUB_TOKEN
   on:
     tags: true
-    jdk: oraclejdk8
+    jdk: oraclejdk11
     repo: nlpub/watset-java
