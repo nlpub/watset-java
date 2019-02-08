@@ -78,8 +78,8 @@ public class MaxMaxTest {
 
     @Before
     public void setup() {
-        maxmax1.run();
-        maxmax2.run();
+        maxmax1.fit();
+        maxmax2.fit();
     }
 
     @Test

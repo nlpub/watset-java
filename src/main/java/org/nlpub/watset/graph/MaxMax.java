@@ -61,10 +61,8 @@ public class MaxMax<V, E> implements Clustering<V> {
         this.graph = requireNonNull(graph);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public void run() {
+    @Override
+    public Clustering<V> fit() {
         digraph = new DefaultDirectedGraph<>(DefaultEdge.class);
         maximals = null;
         roots = null;
@@ -107,6 +105,8 @@ public class MaxMax<V, E> implements Clustering<V> {
                 }
             }
         });
+
+        return this;
     }
 
     /**
