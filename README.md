@@ -4,12 +4,14 @@ This is an open source implementation of the [Watset] algorithm for fuzzy graph 
 
 This package, written in Java, also includes implementations of the [Chinese Whispers] (2006), [Markov Clustering] (2000), and [MaxMax] (2013) graph clustering algorithms.
 
-[![Build Status][travis_ci_badge]][travis_ci_link] [![JitPack][jitpack_badge]][jitpack_link]
+[![Build Status][travis_ci_badge]][travis_ci_link] [![JitPack][jitpack_badge]][jitpack_link] [![Maintainability][codeclimate_badge]][codeclimate_link]
 
 [travis_ci_badge]: https://travis-ci.org/nlpub/watset-java.svg
 [travis_ci_link]: https://travis-ci.org/nlpub/watset-java
 [jitpack_badge]: https://jitpack.io/v/nlpub/watset-java.svg
 [jitpack_link]: https://jitpack.io/#nlpub/watset-java
+[codeclimate_badge]: https://api.codeclimate.com/v1/badges/2f2a90dd42ae703e9e5d/maintainability
+[codeclimate_link]: https://codeclimate.com/github/nlpub/watset-java/maintainability
 
 ## Usage
 
