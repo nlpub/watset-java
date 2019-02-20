@@ -42,18 +42,30 @@ public class MarkovClustering<V, E> implements Clustering<V> {
         return graph -> new MarkovClustering<>(graph, e, r);
     }
 
+    /**
+     * A stateless visitor that raises the power of each element to the power of <tt>r</tt>.
+     */
+    class InflateVisitor extends DefaultRealMatrixChangingVisitor {
+        @Override
+        public double visit(int row, int column, double value) {
+            return Math.pow(value, r);
+        }
+    }
+
     public static final Integer ITERATIONS = 20;
 
     protected final Graph<V, E> graph;
     protected final int e;
     protected final double r;
     protected RealMatrix matrix;
+    protected InflateVisitor inflateVisitor;
     protected Map<V, Integer> index;
 
     public MarkovClustering(Graph<V, E> graph, int e, double r) {
         this.graph = requireNonNull(graph);
         this.e = e;
         this.r = r;
+        this.inflateVisitor = new InflateVisitor();
     }
 
     /**
@@ -147,7 +159,10 @@ public class MarkovClustering<V, E> implements Clustering<V> {
         return matrix;
     }
 
-    private class NormalizeVisitor extends DefaultRealMatrixChangingVisitor {
+    /**
+     * A visitor that normalizes columns.
+     */
+    static class NormalizeVisitor extends DefaultRealMatrixChangingVisitor {
         private final RealMatrix sums;
 
         public NormalizeVisitor(RealMatrix sums) {
@@ -169,22 +184,9 @@ public class MarkovClustering<V, E> implements Clustering<V> {
         this.matrix = matrix.power(e);
     }
 
-    private class InflateVisitor extends DefaultRealMatrixChangingVisitor {
-        private final double r;
-
-        public InflateVisitor(double r) {
-            this.r = r;
-        }
-
-        @Override
-        public double visit(int row, int column, double value) {
-            return Math.pow(value, r);
-        }
-    }
-
     protected void inflate(RealMatrix matrix) {
         normalize(matrix);
-        matrix.walkInOptimizedOrder(new InflateVisitor(r));
+        matrix.walkInOptimizedOrder(inflateVisitor);
     }
 
     private RealMatrix createRowOnesRealMatrix(int n) {
