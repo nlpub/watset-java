@@ -38,17 +38,23 @@ import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.joining;
 
 class CommandSenses {
-    private final Application application;
+    final Application application;
+    final ContextSimilarity<String> similarity;
 
     public CommandSenses(Application application) {
+        this(application, ContextSimilarity.dummy());
+    }
+
+    public CommandSenses(Application application, ContextSimilarity<String> similarity) {
         this.application = application;
+        this.similarity = similarity;
     }
 
     @Parameter(required = true, description = "Local clustering algorithm", names = {"-l", "--local"})
-    private String local;
+    String local;
 
     @Parameter(description = "Local clustering algorithm parameters", names = {"-lp", "--local-params"})
-    private String localParams;
+    String localParams;
 
     public void run() {
         requireNonNull(local);
@@ -58,21 +64,21 @@ class CommandSenses {
         final Graph<String, DefaultWeightedEdge> graph = application.getGraph();
 
         final Watset<String, DefaultWeightedEdge> watset = new Watset<>(
-                graph, algorithm, EmptyClustering.provider(), ContextSimilarity.dummy()
+                graph, algorithm, EmptyClustering.provider(), similarity
         );
 
         watset.fit();
 
-        final Map<String, Map<Sense<String>, Map<String, Number>>> inventory = watset.getInventory();
-
         try {
-            write(application.output, inventory);
+            write(application.output, watset);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void write(Path path, Map<String, Map<Sense<String>, Map<String, Number>>> inventory) throws IOException {
+    void write(Path path, Watset<String, DefaultWeightedEdge> watset) throws IOException {
+        final Map<String, Map<Sense<String>, Map<String, Number>>> inventory = watset.getInventory();
+
         try (final BufferedWriter writer = Files.newBufferedWriter(path)) {
             for (final Map.Entry<String, Map<Sense<String>, Map<String, Number>>> wordEntry : inventory.entrySet()) {
                 final String word = wordEntry.getKey();

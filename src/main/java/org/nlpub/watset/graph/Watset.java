@@ -75,6 +75,7 @@ public class Watset<V, E> implements Clustering<V> {
     private final ContextSimilarity<V> similarity;
     private final SenseInduction<V, E> inducer;
     private Map<V, Map<Sense<V>, Map<V, Number>>> inventory;
+    private Map<Sense<V>, Map<Sense<V>, Number>> contexts;
     private Collection<Collection<Sense<V>>> senseClusters;
     private Graph<Sense<V>, DefaultWeightedEdge> senseGraph;
 
@@ -102,6 +103,7 @@ public class Watset<V, E> implements Clustering<V> {
         senseClusters = null;
         senseGraph = null;
         inventory = null;
+        contexts = null;
 
         logger.info("Watset started.");
 
@@ -112,7 +114,7 @@ public class Watset<V, E> implements Clustering<V> {
 
         logger.log(Level.INFO, "Watset: sense inventory constructed having {0} senses.", senses);
 
-        final Map<Sense<V>, Map<Sense<V>, Number>> contexts = new ConcurrentHashMap<>(senses);
+        contexts = new ConcurrentHashMap<>(senses);
 
         inventory.entrySet().parallelStream().forEach(wordSenses ->
                 wordSenses.getValue().forEach((sense, context) ->
@@ -154,6 +156,16 @@ public class Watset<V, E> implements Clustering<V> {
      */
     public Map<V, Map<Sense<V>, Map<V, Number>>> getInventory() {
         return requireNonNull(inventory);
+    }
+
+
+    /**
+     * Gets the disambiguated contexts.
+     *
+     * @return disambiguated contexts.
+     */
+    public Map<Sense<V>, Map<Sense<V>, Number>> getContexts() {
+        return requireNonNull(Collections.unmodifiableMap(contexts));
     }
 
     /**

@@ -84,6 +84,7 @@ public class Application {
         final CommandMarkovClustering mcl = new CommandMarkovClustering(application, false);
         final CommandMarkovClustering mclBin = new CommandMarkovClustering(application, true);
         final CommandSenses senses = new CommandSenses(application);
+        final CommandDisambiguatedSenses dsenses = new CommandDisambiguatedSenses(application);
         final CommandWatset watset = new CommandWatset(application);
         final CommandMaxMax maxmax = new CommandMaxMax(application);
         final CommandWatlink watlink = new CommandWatlink(application);
@@ -94,6 +95,7 @@ public class Application {
                 .addCommand("mcl", mcl)
                 .addCommand("mcl-bin", mclBin)
                 .addCommand("senses", senses)
+                .addCommand("dsenses", dsenses)
                 .addCommand("watset", watset)
                 .addCommand("maxmax", maxmax)
                 .addCommand("watlink", watlink)
@@ -119,6 +121,9 @@ public class Application {
                 break;
             case "senses":
                 senses.run();
+                break;
+            case "dsenses":
+                dsenses.run();
                 break;
             case "watset":
                 watset.run();
