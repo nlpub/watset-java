@@ -155,7 +155,7 @@ public class Watset<V, E> implements Clustering<V> {
      * @return a sense inventory.
      */
     public Map<V, Map<Sense<V>, Map<V, Number>>> getInventory() {
-        return requireNonNull(inventory);
+        return Collections.unmodifiableMap(requireNonNull(inventory));
     }
 
 
@@ -165,7 +165,7 @@ public class Watset<V, E> implements Clustering<V> {
      * @return disambiguated contexts.
      */
     public Map<Sense<V>, Map<Sense<V>, Number>> getContexts() {
-        return requireNonNull(Collections.unmodifiableMap(contexts));
+        return Collections.unmodifiableMap(requireNonNull(contexts));
     }
 
     /**
