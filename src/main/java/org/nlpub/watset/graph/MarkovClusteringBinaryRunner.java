@@ -129,7 +129,7 @@ public class MarkovClusteringBinaryRunner<V, E> implements Clustering<V> {
         if (status != 0) {
             try (final Reader isr = new InputStreamReader(process.getErrorStream(), StandardCharsets.UTF_8)) {
                 try (final BufferedReader reader = new BufferedReader(isr)) {
-                    final String stderr = reader.lines().collect(Collectors.joining("\n"));
+                    final String stderr = reader.lines().collect(Collectors.joining(System.lineSeparator()));
 
                     if (stderr.isEmpty()) {
                         throw new IllegalStateException(mcl.toAbsolutePath() + " returned " + status);
