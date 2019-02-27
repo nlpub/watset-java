@@ -18,6 +18,7 @@
 package org.nlpub.watset.graph;
 
 import org.jgrapht.Graph;
+import org.jgrapht.graph.AsUnmodifiableGraph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
 import org.jgrapht.graph.builder.GraphBuilder;
@@ -125,14 +126,22 @@ public class Watset<V, E> implements Clustering<V> {
 
         contexts = new ConcurrentHashMap<>(senses);
 
-        inventory.entrySet().parallelStream().forEach(wordSenses ->
+        inventory.entrySet().parallelStream().forEach(wordSenses -> {
+            if (wordSenses.getValue().isEmpty()) {
+                contexts.put(new IndexedSense<>(wordSenses.getKey(), 0), Collections.emptyMap());
+            } else {
                 wordSenses.getValue().forEach((sense, context) ->
-                        contexts.put(sense, disambiguateContext(inventory, sense)))
-        );
+                        contexts.put(sense, disambiguateContext(inventory, sense)));
+            }
+        });
 
         logger.info("Watset: contexts constructed.");
 
         senseGraph = buildSenseGraph(contexts);
+
+        if (graph.edgeSet().size() != senseGraph.edgeSet().size()) {
+            throw new IllegalStateException("Mismatch in the number of edges");
+        }
 
         logger.info("Watset: sense graph constructed.");
 
@@ -167,7 +176,6 @@ public class Watset<V, E> implements Clustering<V> {
         return Collections.unmodifiableMap(requireNonNull(inventory));
     }
 
-
     /**
      * Gets the disambiguated contexts.
      *
@@ -183,7 +191,7 @@ public class Watset<V, E> implements Clustering<V> {
      * @return a sense graph.
      */
     public Graph<Sense<V>, DefaultWeightedEdge> getSenseGraph() {
-        return requireNonNull(senseGraph);
+        return new AsUnmodifiableGraph<>(requireNonNull(senseGraph));
     }
 
     /**
