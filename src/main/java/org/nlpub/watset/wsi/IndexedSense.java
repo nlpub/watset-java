@@ -21,6 +21,8 @@ import org.jgrapht.alg.util.Pair;
 
 import java.util.Locale;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * A simple integer sense identifier.
  *
@@ -46,7 +48,7 @@ public class IndexedSense<V> extends Pair<V, Integer> implements Sense<V> {
      * @param sense  a sense identifier.
      */
     public IndexedSense(V object, Integer sense) {
-        super(object, sense);
+        super(object, requireNonNull(sense));
     }
 
     /**
