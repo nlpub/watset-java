@@ -25,6 +25,7 @@ import org.nlpub.watset.graph.ChineseWhispers;
 import org.nlpub.watset.graph.Clustering;
 import org.nlpub.watset.graph.NodeWeighting;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.function.Function;
@@ -54,7 +55,7 @@ public class SenseInductionTest {
 
     @Test
     public void getSensesA() {
-        final Map<Sense<String>, Map<String, Number>> senses = senseInduction.induce("a");
+        final List<Map<String, Number>> senses = senseInduction.induce("a");
         assertEquals(3, senses.size());
     }
 }

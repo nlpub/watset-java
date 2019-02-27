@@ -21,9 +21,7 @@ import org.jgrapht.Graph;
 import org.nlpub.watset.graph.Clustering;
 import org.nlpub.watset.util.Neighbors;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
 import static java.util.Objects.requireNonNull;
@@ -56,7 +54,7 @@ public class SenseInduction<V, E> {
      * @param target a target node.
      * @return a map of senses to their contexts.
      */
-    public Map<Sense<V>, Map<V, Number>> induce(V target) {
+    public List<Map<V, Number>> induce(V target) {
         final Graph<V, E> ego = Neighbors.neighborhoodGraph(graph, requireNonNull(target));
 
         final Clustering<V> clustering = local.apply(ego);
@@ -64,9 +62,7 @@ public class SenseInduction<V, E> {
 
         final Collection<Collection<V>> clusters = clustering.getClusters();
 
-        final Map<Sense<V>, Map<V, Number>> senses = new HashMap<>();
-
-        int i = 0;
+        final List<Map<V, Number>> senses = new ArrayList<>(clusters.size());
 
         for (final Collection<V> cluster : clusters) {
             final Map<V, Number> context = new HashMap<>(cluster.size());
@@ -75,7 +71,7 @@ public class SenseInduction<V, E> {
                 context.put(neighbor, graph.getEdgeWeight(graph.getEdge(target, neighbor)));
             }
 
-            senses.put(new IndexedSense<>(target, i++), context);
+            senses.add(context);
         }
 
         return senses;

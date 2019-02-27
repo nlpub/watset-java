@@ -23,13 +23,11 @@ import org.jgrapht.graph.SimpleWeightedGraph;
 import org.jgrapht.graph.builder.GraphBuilder;
 import org.nlpub.watset.util.ContextSimilarity;
 import org.nlpub.watset.util.CosineContextSimilarity;
+import org.nlpub.watset.wsi.IndexedSense;
 import org.nlpub.watset.wsi.Sense;
 import org.nlpub.watset.wsi.SenseInduction;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.logging.Level;
@@ -107,8 +105,19 @@ public class Watset<V, E> implements Clustering<V> {
 
         logger.info("Watset started.");
 
-        inventory = graph.vertexSet().parallelStream().
-                collect(Collectors.toMap(Function.identity(), inducer::induce));
+        inventory = new ConcurrentHashMap<>();
+
+        graph.vertexSet().parallelStream().forEach(node -> {
+            final List<Map<V, Number>> senses = inducer.induce(node);
+
+            final Map<Sense<V>, Map<V, Number>> senseMap = new HashMap<>(senses.size());
+
+            for (int i = 0; i < senses.size(); i++) {
+                senseMap.put(new IndexedSense<>(node, i), senses.get(i));
+            }
+
+            inventory.put(node, senseMap);
+        });
 
         final int senses = inventory.values().stream().mapToInt(Map::size).sum();
 
