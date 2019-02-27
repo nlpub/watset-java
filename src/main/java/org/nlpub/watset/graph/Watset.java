@@ -109,7 +109,7 @@ public class Watset<V, E> implements Clustering<V> {
         inventory = new ConcurrentHashMap<>();
 
         graph.vertexSet().parallelStream().forEach(node -> {
-            final List<Map<V, Number>> senses = inducer.induce(node);
+            final List<Map<V, Number>> senses = inducer.contexts(node);
 
             final Map<Sense<V>, Map<V, Number>> senseMap = new HashMap<>(senses.size());
 

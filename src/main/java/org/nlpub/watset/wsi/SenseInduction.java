@@ -49,18 +49,28 @@ public class SenseInduction<V, E> {
     }
 
     /**
-     * Gets the induced senses and their non-disambiguated contexts.
+     * Gets the induced sense clusters.
      *
      * @param target a target node.
      * @return a map of senses to their contexts.
      */
-    public List<Map<V, Number>> induce(V target) {
+    public Collection<Collection<V>> clusters(V target) {
         final Graph<V, E> ego = Neighbors.neighborhoodGraph(graph, requireNonNull(target));
 
         final Clustering<V> clustering = local.apply(ego);
         clustering.fit();
 
-        final Collection<Collection<V>> clusters = clustering.getClusters();
+        return clustering.getClusters();
+    }
+
+    /**
+     * Gets the induced senses and their non-disambiguated contexts.
+     *
+     * @param target a target node.
+     * @return a map of senses to their contexts.
+     */
+    public List<Map<V, Number>> contexts(V target) {
+        final Collection<Collection<V>> clusters = clusters(target);
 
         final List<Map<V, Number>> senses = new ArrayList<>(clusters.size());
 

@@ -55,7 +55,7 @@ public class SenseInductionTest {
 
     @Test
     public void getSensesA() {
-        final List<Map<String, Number>> senses = senseInduction.induce("a");
+        final List<Map<String, Number>> senses = senseInduction.contexts("a");
         assertEquals(3, senses.size());
     }
 }
