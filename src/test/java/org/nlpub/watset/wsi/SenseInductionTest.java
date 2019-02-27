@@ -34,7 +34,7 @@ import static org.junit.Assert.assertEquals;
 
 public class SenseInductionTest {
     public final static Graph<String, DefaultWeightedEdge> WORDS = SimpleWeightedGraph.<String, DefaultWeightedEdge>createBuilder(DefaultWeightedEdge.class).
-            addVertices("a", "b", "c", "d", "e", "f", "g").
+            addVertices("a", "b", "c", "d", "e", "f", "g", "h").
             addEdge("a", "b", 10).
             addEdge("a", "c", .5).
             addEdge("a", "d").

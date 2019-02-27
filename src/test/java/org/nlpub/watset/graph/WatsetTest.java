@@ -45,6 +45,6 @@ public class WatsetTest {
     @Test
     public void testClustering() {
         final Collection<Collection<String>> clusters = watset.getClusters();
-        assertEquals(3, clusters.size());
+        assertEquals(4, clusters.size());
     }
 }
