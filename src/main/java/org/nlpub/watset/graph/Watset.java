@@ -139,8 +139,11 @@ public class Watset<V, E> implements Clustering<V> {
 
         senseGraph = buildSenseGraph(contexts);
 
-        if (graph.edgeSet().size() != senseGraph.edgeSet().size()) {
-            throw new IllegalStateException("Mismatch in the number of edges");
+        if (graph.edgeSet().size() > senseGraph.edgeSet().size()) {
+            throw new IllegalStateException("Mismatch in the number of edges: expected at least " +
+                    graph.edgeSet().size() +
+                    ", but got " +
+                    senseGraph.edgeSet().size());
         }
 
         logger.info("Watset: sense graph constructed.");
