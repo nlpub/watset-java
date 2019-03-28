@@ -69,7 +69,6 @@ public class Watset<V, E> implements Clustering<V> {
     private static final Logger logger = Logger.getLogger(Watset.class.getSimpleName());
 
     private final Graph<V, E> graph;
-    private final Function<Graph<V, E>, Clustering<V>> local;
     private final Function<Graph<Sense<V>, DefaultWeightedEdge>, Clustering<Sense<V>>> global;
     private final ContextSimilarity<V> similarity;
     private final SenseInduction<V, E> inducer;
@@ -88,10 +87,9 @@ public class Watset<V, E> implements Clustering<V> {
      */
     public Watset(Graph<V, E> graph, Function<Graph<V, E>, Clustering<V>> local, Function<Graph<Sense<V>, DefaultWeightedEdge>, Clustering<Sense<V>>> global, ContextSimilarity<V> similarity) {
         this.graph = requireNonNull(graph);
-        this.local = requireNonNull(local);
         this.global = requireNonNull(global);
         this.similarity = requireNonNull(similarity);
-        this.inducer = new SenseInduction<>(graph, this.local);
+        this.inducer = new SenseInduction<>(graph, requireNonNull(local));
     }
 
     /**
