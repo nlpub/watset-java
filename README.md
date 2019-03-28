@@ -95,17 +95,7 @@ Since [Watset] performs curvature-based word sense induction, it is possible to 
 $ java -jar watset.jar -i graph.txt -o inventory.tsv senses -l mcl
 ```
 
-The output of this operation is a tab-separated file containing three columns: the target word, the word sense identifier, and the set of related words in the given word sense (the *context*).
-
-#### Watset: Word Sense Induction and Disambiguation
-
-This operation is a variation of the previous one, but it disambiguates and puts the sense identifiers to the output file.
-
-```bash
-$ java -jar watset.jar -i graph.txt -o inventory.tsv dsenses -l mcl
-```
-
-The format is virtually the same, yet the sense identifiers are appended in the form of `word#id`.
+The output of this operation is a tab-separated file containing three columns: the target word, the word sense identifier, and the set of related disambiguated senses in the given word sense (the *context*). Each sense is represented as `word#id`.
 
 #### Watset: Word Sense Graph
 

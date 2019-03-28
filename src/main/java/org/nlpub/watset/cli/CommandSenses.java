@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Dmitry Ustalov
+ * Copyright 2019 Dmitry Ustalov
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,6 +41,12 @@ class CommandSenses {
     final Application application;
     final ContextSimilarity<String> similarity;
 
+    @Parameter(required = true, description = "Local clustering algorithm", names = {"-l", "--local"})
+    String local;
+
+    @Parameter(description = "Local clustering algorithm parameters", names = {"-lp", "--local-params"})
+    String localParams;
+
     public CommandSenses(Application application) {
         this(application, ContextSimilarity.dummy());
     }
@@ -49,12 +55,6 @@ class CommandSenses {
         this.application = application;
         this.similarity = similarity;
     }
-
-    @Parameter(required = true, description = "Local clustering algorithm", names = {"-l", "--local"})
-    String local;
-
-    @Parameter(description = "Local clustering algorithm parameters", names = {"-lp", "--local-params"})
-    String localParams;
 
     public void run() {
         requireNonNull(local);
@@ -74,20 +74,21 @@ class CommandSenses {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
     }
 
     void write(Path path, Watset<String, DefaultWeightedEdge> watset) throws IOException {
         final Map<String, Map<Sense<String>, Map<String, Number>>> inventory = watset.getInventory();
+        final Map<Sense<String>, Map<Sense<String>, Number>> contexts = watset.getContexts();
 
         try (final BufferedWriter writer = Files.newBufferedWriter(path)) {
             for (final Map.Entry<String, Map<Sense<String>, Map<String, Number>>> wordEntry : inventory.entrySet()) {
                 final String word = wordEntry.getKey();
 
-                for (final Map.Entry<Sense<String>, Map<String, Number>> senseEntry : wordEntry.getValue().entrySet()) {
-                    final IndexedSense<String> sense = (IndexedSense<String>) senseEntry.getKey();
-
-                    final String context = senseEntry.getValue().entrySet().stream().
-                            map(e -> String.format("%s:%f", e.getKey(), e.getValue().doubleValue())).
+                for (final Sense<String> rawSense : wordEntry.getValue().keySet()) {
+                    final IndexedSense<String> sense = (IndexedSense<String>) rawSense;
+                    final String context = contexts.get(rawSense).entrySet().stream().
+                            map(e -> String.format("%s#%d:%f", e.getKey().get(), ((IndexedSense<String>) e.getKey()).getSense(), e.getValue().doubleValue())).
                             collect(joining(","));
                     writer.write(String.format(Locale.ROOT, "%s\t%d\t%s%n", word, sense.getSense(), context));
                 }
