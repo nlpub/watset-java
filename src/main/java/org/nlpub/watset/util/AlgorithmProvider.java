@@ -22,6 +22,7 @@ import org.nlpub.watset.graph.*;
 
 import java.nio.file.Paths;
 import java.util.Collections;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
@@ -46,7 +47,7 @@ public class AlgorithmProvider<V, E> implements Function<Graph<V, E>, Clustering
 
     @Override
     public Clustering<V> apply(Graph<V, E> graph) {
-        switch (algorithm.toLowerCase()) {
+        switch (algorithm.toLowerCase(Locale.ROOT)) {
             case "empty":
                 return new EmptyClustering<>();
             case "together":
@@ -75,7 +76,7 @@ public class AlgorithmProvider<V, E> implements Function<Graph<V, E>, Clustering
     }
 
     private NodeWeighting<V, E> parseChineseWhispersNodeWeighting() {
-        switch (params.getOrDefault("mode", "top").toLowerCase()) {
+        switch (params.getOrDefault("mode", "top").toLowerCase(Locale.ROOT)) {
             case "label":
                 return NodeWeighting.label();
             case "top":
@@ -95,6 +96,6 @@ public class AlgorithmProvider<V, E> implements Function<Graph<V, E>, Clustering
         return SEPARATOR.splitAsStream(params).
                 map(s -> s.split("=", 2)).
                 filter(pair -> pair.length == 2).
-                collect(toMap(kv -> kv[0].toLowerCase(), kv -> kv[1]));
+                collect(toMap(kv -> kv[0].toLowerCase(Locale.ROOT), kv -> kv[1]));
     }
 }

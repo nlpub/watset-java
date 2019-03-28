@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -109,7 +110,7 @@ public class Application {
             System.exit(1);
         }
 
-        switch (jc.getParsedCommand().toLowerCase()) {
+        switch (jc.getParsedCommand().toLowerCase(Locale.ROOT)) {
             case "cw":
                 cw.run();
                 break;
