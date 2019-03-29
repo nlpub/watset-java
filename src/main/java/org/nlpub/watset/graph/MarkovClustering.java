@@ -57,8 +57,8 @@ public class MarkovClustering<V, E> implements Clustering<V> {
     protected final Graph<V, E> graph;
     protected final int e;
     protected final double r;
+    protected final InflateVisitor inflateVisitor;
     protected RealMatrix matrix;
-    protected InflateVisitor inflateVisitor;
     protected Map<V, Integer> index;
 
     public MarkovClustering(Graph<V, E> graph, int e, double r) {
