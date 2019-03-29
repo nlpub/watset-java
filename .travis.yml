@@ -4,6 +4,13 @@ jdk:
 - oraclejdk8
 - openjdk11
 - oraclejdk11
+- openjdk12
+- oraclejdk12
+matrix:
+  allow_failures:
+    - jdk:
+      - openjdk12
+      - oraclejdk12
 before_script:
 - mvn versions:display-dependency-updates versions:display-plugin-updates
 after_success:
