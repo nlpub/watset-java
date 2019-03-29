@@ -99,10 +99,10 @@ The output of this operation is a tab-separated file containing three columns: t
 
 #### Watset: Word Sense Graph
 
-It is also possible to print the intermediate word sense graph built by [Watset]. For that, it is sufficient to pass the `empty` parameter as the global clustering algorithm.
+It is also possible to print the intermediate word sense graph built by [Watset].
 
 ```bash
-$ java -jar watset.jar -i graph.txt -o sense-graph.txt watset -l mcl -g empty
+$ java -jar watset.jar -i graph.txt -o sense-graph.txt graph -l mcl
 ```
 
 The output file will be written virtually in the same ABC format as the input graph, but each node will be provided with the numerical sense identifier preceded by the suffix `#`. This feature simplifies the integration into the other graph processing pipelines.

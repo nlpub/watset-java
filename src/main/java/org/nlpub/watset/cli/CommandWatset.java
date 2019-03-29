@@ -21,17 +21,12 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
+import org.nlpub.watset.graph.Clustering;
+import org.nlpub.watset.graph.SimplifiedWatset;
 import org.nlpub.watset.graph.Watset;
 import org.nlpub.watset.util.AlgorithmProvider;
 import org.nlpub.watset.util.CosineContextSimilarity;
-import org.nlpub.watset.wsi.IndexedSense;
 import org.nlpub.watset.wsi.Sense;
-
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Locale;
 
 @Parameters(commandDescription = "Watset")
 class CommandWatset extends ClusteringCommand {
@@ -47,50 +42,24 @@ class CommandWatset extends ClusteringCommand {
     @Parameter(description = "Global clustering algorithm parameters", names = {"-gp", "--global-params"})
     private String globalParams;
 
+    @Parameter(description = "Use Simplified Watset", names = {"-s", "--simplified"})
+    boolean simplified = false;
+
     public CommandWatset(Application application) {
         super(application);
     }
 
     @Override
-    public Watset<String, DefaultWeightedEdge> getClustering() {
-        final AlgorithmProvider<String, DefaultWeightedEdge> localAlgorithm = new AlgorithmProvider<>(local, localParams);
-        final AlgorithmProvider<Sense<String>, DefaultWeightedEdge> globalAlgorithm = new AlgorithmProvider<>(global, globalParams);
+    public Clustering<String> getClustering() {
+        final AlgorithmProvider<String, DefaultWeightedEdge> localProvider = new AlgorithmProvider<>(local, localParams);
+        final AlgorithmProvider<Sense<String>, DefaultWeightedEdge> globalProvider = new AlgorithmProvider<>(global, globalParams);
 
         final Graph<String, DefaultWeightedEdge> graph = application.getGraph();
 
-        return new Watset<>(
-                graph, localAlgorithm, globalAlgorithm,
-                new CosineContextSimilarity<>()
-        );
-    }
-
-    @Override
-    public void run() {
-        if (!global.equalsIgnoreCase("empty")) {
-            super.run();
-            return;
-        }
-
-        final Watset<String, DefaultWeightedEdge> watset = getClustering();
-        watset.fit();
-
-        try {
-            write(application.output, watset.getSenseGraph());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private void write(Path path, Graph<Sense<String>, DefaultWeightedEdge> graph) throws IOException {
-        try (final BufferedWriter writer = Files.newBufferedWriter(path)) {
-            for (final DefaultWeightedEdge edge : graph.edgeSet()) {
-                final IndexedSense<String> source = (IndexedSense<String>) graph.getEdgeSource(edge);
-                final IndexedSense<String> target = (IndexedSense<String>) graph.getEdgeTarget(edge);
-                writer.write(String.format(Locale.ROOT, "%s#%d\t%s#%d\t%f%n",
-                        source.get(), source.getSense(),
-                        target.get(), target.getSense(),
-                        graph.getEdgeWeight(edge)));
-            }
+        if (simplified) {
+            return new SimplifiedWatset<>(graph, localProvider, globalProvider);
+        } else {
+            return new Watset<>(graph, localProvider, globalProvider, new CosineContextSimilarity<>());
         }
     }
 }

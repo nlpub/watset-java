@@ -72,7 +72,7 @@ public class SimplifiedWatset<V, E> implements Clustering<V> {
         inventory = new ConcurrentHashMap<>(graph.vertexSet().size());
         senses = new ConcurrentHashMap<>(graph.vertexSet().size());
 
-        logger.info("Watset started.");
+        logger.info("Simplified Watset started.");
 
         graph.vertexSet().parallelStream().forEach(node -> {
             final Collection<Collection<V>> clusters = inducer.clusters(node);
@@ -103,7 +103,7 @@ public class SimplifiedWatset<V, E> implements Clustering<V> {
         });
 
         final int count = senses.values().stream().mapToInt(List::size).sum();
-        logger.log(Level.INFO, "Watset: sense inventory constructed having {0} senses.", count);
+        logger.log(Level.INFO, "Simplified Watset: sense inventory constructed having {0} senses.", count);
 
         final GraphBuilder<Sense<V>, DefaultWeightedEdge, ? extends SimpleWeightedGraph<Sense<V>, DefaultWeightedEdge>> builder = SimpleWeightedGraph.createBuilder(DefaultWeightedEdge.class);
 
@@ -134,16 +134,16 @@ public class SimplifiedWatset<V, E> implements Clustering<V> {
                     senseGraph.edgeSet().size());
         }
 
-        logger.info("Watset: sense graph constructed.");
+        logger.info("Simplified Watset: sense graph constructed.");
 
         final Clustering<Sense<V>> globalClustering = global.apply(senseGraph);
         globalClustering.fit();
 
-        logger.info("Watset: extracting sense clusters.");
+        logger.info("Simplified Watset: extracting sense clusters.");
 
         senseClusters = globalClustering.getClusters();
 
-        logger.info("Watset finished.");
+        logger.info("Simplified Watset finished.");
 
         return this;
     }
@@ -162,5 +162,32 @@ public class SimplifiedWatset<V, E> implements Clustering<V> {
      */
     public Graph<Sense<V>, DefaultWeightedEdge> getSenseGraph() {
         return new AsUnmodifiableGraph<>(requireNonNull(senseGraph));
+    }
+
+    /**
+     * Gets disambiguated contexts.
+     */
+    public Map<Sense<V>, Map<Sense<V>, Number>> getContexts() {
+        final Map<Sense<V>, Map<Sense<V>, Number>> contexts = new HashMap<>();
+
+        for (final DefaultWeightedEdge edge : requireNonNull(senseGraph).edgeSet()) {
+            final Sense<V> source = senseGraph.getEdgeSource(edge), target = senseGraph.getEdgeTarget(edge);
+            final double weight = senseGraph.getEdgeWeight(edge);
+
+            if (!contexts.containsKey(source)) contexts.put(source, new HashMap<>());
+            if (!contexts.containsKey(target)) contexts.put(target, new HashMap<>());
+
+            contexts.get(source).put(target, weight);
+            contexts.get(target).put(source, weight);
+        }
+
+        if (contexts.size() != senseGraph.vertexSet().size()) {
+            throw new IllegalStateException("Mismatch in the number of senses: expected " +
+                    senseGraph.vertexSet().size() +
+                    ", but got " +
+                    contexts.size());
+        }
+
+        return contexts;
     }
 }

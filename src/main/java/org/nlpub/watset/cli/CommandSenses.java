@@ -21,9 +21,10 @@ import com.beust.jcommander.Parameter;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.nlpub.watset.graph.EmptyClustering;
+import org.nlpub.watset.graph.SimplifiedWatset;
 import org.nlpub.watset.graph.Watset;
 import org.nlpub.watset.util.AlgorithmProvider;
-import org.nlpub.watset.util.ContextSimilarity;
+import org.nlpub.watset.util.CosineContextSimilarity;
 import org.nlpub.watset.wsi.IndexedSense;
 import org.nlpub.watset.wsi.Sense;
 
@@ -39,7 +40,6 @@ import static java.util.stream.Collectors.joining;
 
 class CommandSenses {
     final Application application;
-    final ContextSimilarity<String> similarity;
 
     @Parameter(required = true, description = "Local clustering algorithm", names = {"-l", "--local"})
     String local;
@@ -47,13 +47,11 @@ class CommandSenses {
     @Parameter(description = "Local clustering algorithm parameters", names = {"-lp", "--local-params"})
     String localParams;
 
-    public CommandSenses(Application application) {
-        this(application, ContextSimilarity.dummy());
-    }
+    @Parameter(description = "Use Simplified Watset", names = {"-s", "--simplified"})
+    boolean simplified = false;
 
-    public CommandSenses(Application application, ContextSimilarity<String> similarity) {
+    public CommandSenses(Application application) {
         this.application = application;
-        this.similarity = similarity;
     }
 
     public void run() {
@@ -63,36 +61,45 @@ class CommandSenses {
 
         final Graph<String, DefaultWeightedEdge> graph = application.getGraph();
 
-        final Watset<String, DefaultWeightedEdge> watset = new Watset<>(
-                graph, algorithm, EmptyClustering.provider(), similarity
-        );
-
-        watset.fit();
+        final Map<Sense<String>, Map<Sense<String>, Number>> contexts = simplified ? getSimplifiedWatsetContexts(algorithm, graph) : getWatsetContexts(algorithm, graph);
 
         try {
-            write(application.output, watset);
+            write(application.output, contexts);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
     }
 
-    void write(Path path, Watset<String, DefaultWeightedEdge> watset) throws IOException {
-        final Map<String, Map<Sense<String>, Map<String, Number>>> inventory = watset.getInventory();
-        final Map<Sense<String>, Map<Sense<String>, Number>> contexts = watset.getContexts();
-
+    void write(Path path, Map<Sense<String>, Map<Sense<String>, Number>> contexts) throws IOException {
         try (final BufferedWriter writer = Files.newBufferedWriter(path)) {
-            for (final Map.Entry<String, Map<Sense<String>, Map<String, Number>>> wordEntry : inventory.entrySet()) {
-                final String word = wordEntry.getKey();
+            for (final Map.Entry<Sense<String>, Map<Sense<String>, Number>> context : contexts.entrySet()) {
+                final IndexedSense<String> sense = ((IndexedSense<String>) context.getKey());
 
-                for (final Sense<String> rawSense : wordEntry.getValue().keySet()) {
-                    final IndexedSense<String> sense = (IndexedSense<String>) rawSense;
-                    final String context = contexts.get(rawSense).entrySet().stream().
-                            map(e -> String.format("%s#%d:%f", e.getKey().get(), ((IndexedSense<String>) e.getKey()).getSense(), e.getValue().doubleValue())).
-                            collect(joining(","));
-                    writer.write(String.format(Locale.ROOT, "%s\t%d\t%s%n", word, sense.getSense(), context));
-                }
+                final String contextRecord = context.getValue().entrySet().stream().
+                        map(e -> String.format(Locale.ROOT, "%s#%d:%f",
+                                e.getKey().get(),
+                                ((IndexedSense<String>) e.getKey()).getSense(),
+                                e.getValue().doubleValue())).
+                        collect(joining(","));
+
+                writer.write(String.format(Locale.ROOT, "%s\t%d\t%s%n", sense.get(), sense.getSense(), contextRecord));
             }
         }
+    }
+
+    public Map<Sense<String>, Map<Sense<String>, Number>> getWatsetContexts(AlgorithmProvider<String, DefaultWeightedEdge> algorithm, Graph<String, DefaultWeightedEdge> graph) {
+        final Watset<String, DefaultWeightedEdge> watset = new Watset<>(graph, algorithm, EmptyClustering.provider(), new CosineContextSimilarity<>());
+
+        watset.fit();
+
+        return watset.getContexts();
+    }
+
+    public Map<Sense<String>, Map<Sense<String>, Number>> getSimplifiedWatsetContexts(AlgorithmProvider<String, DefaultWeightedEdge> algorithm, Graph<String, DefaultWeightedEdge> graph) {
+        final SimplifiedWatset<String, DefaultWeightedEdge> watset = new SimplifiedWatset<>(graph, algorithm, EmptyClustering.provider());
+
+        watset.fit();
+
+        return watset.getContexts();
     }
 }
