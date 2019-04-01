@@ -26,7 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * <p>
  * This class creates an instance of {@link ConcurrentHashMap} to cache the scores
  * for the elements of clusters. It is designed under an assumption that the
- * <tt>classes</tt> <i>do not change</i>. This assumption is valid for computing
+ * <code>classes</code> <em>do not change</em>. This assumption is valid for computing
  * the precision (nmPU) in case of normalized modified purity as defined by
  * <a href="https://doi.org/10.3115/v1/P14-1097">Kawahara et al. (ACL 2014)</a>.
  * <p>

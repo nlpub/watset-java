@@ -43,7 +43,7 @@ public class MarkovClustering<V, E> implements Clustering<V> {
     }
 
     /**
-     * A stateless visitor that raises the power of each element to the power of <tt>r</tt>.
+     * A stateless visitor that raises the power of each element to the power of <code>r</code>.
      */
     class InflateVisitor extends DefaultRealMatrixChangingVisitor {
         @Override

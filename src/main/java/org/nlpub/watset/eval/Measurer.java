@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 /**
  * This is a clustering algorithm performance evaluator. Given a clustering algorithm provider and
  * a set of graphs, it measures the running time of the clustering algorithm on every input graph.
- * Before recording the measurements, it <i>warms up</i> by running exactly the same operation to
+ * Before recording the measurements, it <em>warms up</em> by running exactly the same operation to
  * leverage the influence of JIT and other VM optimizations.
  *
  * @param <V> node class.
