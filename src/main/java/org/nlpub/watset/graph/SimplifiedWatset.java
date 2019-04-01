@@ -166,6 +166,8 @@ public class SimplifiedWatset<V, E> implements Clustering<V> {
 
     /**
      * Gets disambiguated contexts.
+     *
+     * @return disambiguated contexts.
      */
     public Map<Sense<V>, Map<Sense<V>, Number>> getContexts() {
         final Map<Sense<V>, Map<Sense<V>, Number>> contexts = new HashMap<>();
