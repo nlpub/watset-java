@@ -84,7 +84,8 @@ public class AlgorithmProvider<V, E> implements Function<Graph<V, E>, Clustering
             case "log":
                 return NodeWeighting.log();
             case "nolog":
-                return NodeWeighting.nolog();
+            case "lin":
+                return NodeWeighting.lin();
             default:
                 throw new IllegalArgumentException("Unknown mode is set.");
         }

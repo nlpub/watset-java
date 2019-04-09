@@ -55,7 +55,7 @@ $ java -jar watset.jar -i graph.txt -o output.tsv singleton
 [Chinese Whispers] is a hard clustering algorithm that resembles the popular children's game. This tool offers four different modes of this algorithm that can be set using the `-m` (`--mode`) option:
 
 * `top`: the node selection approach that chooses the label having the highest total edge weight;
-* `nolog`: the `top` mode divided by the node degree;
+* `lin`: the `top` mode divided by the node degree (also known as `nolog`);
 * `log`: the `top` mode divided by the logarithm of the node degree.
 
 ```bash

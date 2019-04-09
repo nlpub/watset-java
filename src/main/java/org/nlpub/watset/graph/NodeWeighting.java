@@ -21,6 +21,13 @@ import org.jgrapht.Graph;
 
 import java.util.Map;
 
+/**
+ * Node weighting approach for Chinese Whispers.
+ *
+ * @param <V> node class.
+ * @param <E> edge class.
+ * @see ChineseWhispers
+ */
 @FunctionalInterface
 public interface NodeWeighting<V, E> {
     double apply(Graph<V, E> graph, Map<V, Integer> labels, V node, V neighbor);
@@ -37,7 +44,7 @@ public interface NodeWeighting<V, E> {
         return (graph, labels, node, neighbor) -> graph.getEdgeWeight(graph.getEdge(node, neighbor)) / Math.log(1 + graph.degreeOf(neighbor));
     }
 
-    static <V, E> NodeWeighting<V, E> nolog() {
+    static <V, E> NodeWeighting<V, E> lin() {
         return (graph, labels, node, neighbor) -> graph.getEdgeWeight(graph.getEdge(node, neighbor)) / graph.degreeOf(neighbor);
     }
 }
