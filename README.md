@@ -133,6 +133,10 @@ $ java -jar watset.jar -i graph.txt -o output.tsv maxmax
 }
 ```
 
+## Tutorial
+
+Watset was featured in the &ldquo;[Graph Clustering for Natural Language Processing](https://doi.org/10.5281/zenodo.1161505)&rdquo; tutorial at the [AINL&nbsp;2018](https://ainlconf.ru/2018/) conference.
+
 ## Contributing
 
 1. Fork it;
