@@ -32,17 +32,25 @@ import java.util.Map;
 public interface NodeWeighting<V, E> {
     double apply(Graph<V, E> graph, Map<V, Integer> labels, V node, V neighbor);
 
+    String LABEL = "label";
+
     static <V, E> NodeWeighting<V, E> label() {
         return (graph, labels, node, neighbor) -> labels.get(node);
     }
+
+    String TOP = "top";
 
     static <V, E> NodeWeighting<V, E> top() {
         return (graph, labels, node, neighbor) -> graph.getEdgeWeight(graph.getEdge(node, neighbor));
     }
 
+    String LOG = "log";
+
     static <V, E> NodeWeighting<V, E> log() {
         return (graph, labels, node, neighbor) -> graph.getEdgeWeight(graph.getEdge(node, neighbor)) / Math.log(1 + graph.degreeOf(neighbor));
     }
+
+    String LIN = "lin";
 
     static <V, E> NodeWeighting<V, E> lin() {
         return (graph, labels, node, neighbor) -> graph.getEdgeWeight(graph.getEdge(node, neighbor)) / graph.degreeOf(neighbor);
