@@ -3,7 +3,6 @@ language: java
 jdk:
 - oraclejdk8
 - openjdk11
-- oraclejdk11
 - openjdk12
 before_script:
 - mvn versions:display-dependency-updates versions:display-plugin-updates
