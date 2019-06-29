@@ -80,7 +80,7 @@ public class ChineseWhispers<V, E> implements Clustering<V> {
         for (steps = 0; steps < iterations; steps++) {
             Collections.shuffle(nodes, random);
 
-            if (!step(nodes)) break;
+            if (step(nodes) == 0) break;
         }
 
         return this;
@@ -92,8 +92,8 @@ public class ChineseWhispers<V, E> implements Clustering<V> {
      * @param nodes node list
      * @return whether the labels changed or not.
      */
-    protected boolean step(List<V> nodes) {
-        boolean changed = false;
+    protected int step(List<V> nodes) {
+        int changed = 0;
 
         for (final V node : nodes) {
             final Map<Integer, Double> scores = score(graph, labels, weighting, node);
@@ -104,7 +104,10 @@ public class ChineseWhispers<V, E> implements Clustering<V> {
 
             // labels.put() never returns null for a known node
             @SuppressWarnings("ConstantConditions") final int previous = labels.put(node, updated);
-            changed = changed || (previous != updated);
+
+            if (previous != updated) {
+                changed++;
+            }
         }
 
         return changed;
