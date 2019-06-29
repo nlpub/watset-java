@@ -153,6 +153,11 @@ public class ChineseWhispers<V, E> implements Clustering<V> {
     }
 
     @SuppressWarnings("unused")
+    public int getIterations() {
+        return iterations;
+    }
+
+    @SuppressWarnings("unused")
     public int getSteps() {
         return steps;
     }
