@@ -49,6 +49,8 @@ public class ChineseWhispers<V, E> implements Clustering<V> {
     protected final Random random;
     protected Map<V, Integer> labels;
 
+    protected int steps;
+
     public ChineseWhispers(Graph<V, E> graph, NodeWeighting<V, E> weighting, int iterations, Random random) {
         this.graph = requireNonNull(graph);
         this.weighting = requireNonNull(weighting);
@@ -75,27 +77,37 @@ public class ChineseWhispers<V, E> implements Clustering<V> {
             labels.put(node, i++);
         }
 
-        for (i = 0; i < iterations; i++) {
-            boolean changed = false;
-
+        for (steps = 0; steps < iterations; steps++) {
             Collections.shuffle(nodes, random);
 
-            for (final V node : nodes) {
-                final Map<Integer, Double> scores = score(graph, labels, weighting, node);
-
-                final Optional<Map.Entry<Integer, Double>> label = argmax(scores.entrySet().iterator(), Map.Entry::getValue);
-
-                final int updated = label.isPresent() ? label.get().getKey() : labels.get(node);
-
-                // labels.put() never returns null for a known node
-                @SuppressWarnings("ConstantConditions") final int previous = labels.put(node, updated);
-                changed = changed || (previous != updated);
-            }
-
-            if (!changed) break;
+            if (!step(nodes)) break;
         }
 
         return this;
+    }
+
+    /**
+     * Performs one iteration of the algorithm.
+     *
+     * @param nodes node list
+     * @return whether the labels changed or not.
+     */
+    protected boolean step(List<V> nodes) {
+        boolean changed = false;
+
+        for (final V node : nodes) {
+            final Map<Integer, Double> scores = score(graph, labels, weighting, node);
+
+            final Optional<Map.Entry<Integer, Double>> label = argmax(scores.entrySet().iterator(), Map.Entry::getValue);
+
+            final int updated = label.isPresent() ? label.get().getKey() : labels.get(node);
+
+            // labels.put() never returns null for a known node
+            @SuppressWarnings("ConstantConditions") final int previous = labels.put(node, updated);
+            changed = changed || (previous != updated);
+        }
+
+        return changed;
     }
 
     /**
@@ -135,5 +147,10 @@ public class ChineseWhispers<V, E> implements Clustering<V> {
         });
 
         return weights;
+    }
+
+    @SuppressWarnings("unused")
+    public int getSteps() {
+        return steps;
     }
 }
