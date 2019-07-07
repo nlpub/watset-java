@@ -1,6 +1,6 @@
 # Watset
 
-This is an open source implementation of the [Watset] algorithm for fuzzy graph clustering (aka [soft clustering](https://en.wikipedia.org/wiki/Soft_clustering)). The implementation is multi-threaded, extensible, contains several unit tests, and can be easily embedded into any Java-based graph processing pipeline. Also, it offers a convenient command-line tool for running [Watset] over the edge lists in text files.
+This is an open source implementation of the [Watset] algorithm for [fuzzy graph clustering](https://en.wikipedia.org/wiki/Fuzzy_clustering) (aka soft clustering). The implementation is multi-threaded, extensible, contains several unit tests, and can be easily embedded into any Java-based graph processing pipeline. Also, it offers a convenient command-line tool for running [Watset] over the edge lists in text files.
 
 This package, written in Java, also includes implementations of the [Chinese Whispers] (2006), [Markov Clustering] (2000), and [MaxMax] (2013) graph clustering algorithms.
 
@@ -117,18 +117,19 @@ $ java -jar watset.jar -i graph.txt -o output.tsv maxmax
 
 ## Citation
 
-* [Ustalov, D.](https://github.com/dustalov), [Panchenko, A.](https://www.inf.uni-hamburg.de/en/inst/ab/lt/people/alexander-panchenko.html), [Biemann, C.](https://www.inf.uni-hamburg.de/en/inst/ab/lt/people/chris-biemann.html): [Watset: Automatic Induction of Synsets from a Graph of Synonyms](https://doi.org/10.18653/v1/P17-1145). In: Proceedings of the 55th Annual Meeting of the Association for Computational Linguistics (Volume&nbsp;1: Long Papers), Vancouver, BC, Canada, Association for Computational Linguistics (2017) 1579–1590
+* [Ustalov, D.](https://github.com/dustalov), [Panchenko, A.](https://github.com/alexanderpanchenko), [Biemann, C.](https://www.inf.uni-hamburg.de/en/inst/ab/lt/people/chris-biemann.html), [Ponzetto, S.P.](https://www.uni-mannheim.de/dws/people/professors/prof-dr-simone-paolo-ponzetto/): [Watset: Local-Global Graph Clustering with Applications in Sense and Frame Induction](https://doi.org/10.1162/COLI_a_00354). Computational Linguistics 45(3) (2019)
 
 ```latex
-@inproceedings{Ustalov:17:acl,
-  author    = {Ustalov, Dmitry and Panchenko, Alexander and Biemann, Chris},
-  title     = {{Watset: Automatic Induction of Synsets from a Graph of Synonyms}},
-  booktitle = {Proceedings of the 55th Annual Meeting of the Association for Computational Linguistics (Volume~1: Long Papers)},
-  year      = {2017},
-  pages     = {1579--1590},
-  doi       = {10.18653/v1/P17-1145},
-  address   = {Vancouver, BC, Canada},
-  publisher = {Association for Computational Linguistics},
+@article{Ustalov:19:cl,
+  author    = {Ustalov, Dmitry and Panchenko, Alexander and Biemann, Chris and Ponzetto, Simone Paolo},
+  title     = {{Watset: Local-Global Graph Clustering with Applications in Sense and Frame Induction}},
+  journal   = {Computational Linguistics},
+  year      = {2019},
+  volume    = {45},
+  number    = {3},
+  doi       = {10.1162/COLI_a_00354},
+  publisher = {MIT Press},
+  issn      = {0891-2017},
   language  = {english},
 }
 ```
@@ -147,10 +148,10 @@ Watset was featured in the &ldquo;[Graph Clustering for Natural Language Process
 
 ## Copyright
 
-Copyright (c) 2016-2019 [Dmitry Ustalov]. See LICENSE for details.
+Copyright (c) 2016&ndash;2019 [Dmitry Ustalov]. See LICENSE for details.
 
-[Watset]: https://doi.org/10.18653/v1/P17-1145
+[Watset]: https://doi.org/10.1162/COLI_a_00354
 [Chinese Whispers]: https://dl.acm.org/citation.cfm?id=1654774
 [Markov Clustering]: https://doi.org/10.1137/040608635
 [MaxMax]: https://doi.org/10.1007/978-3-642-37247-6_30
-[Dmitry Ustalov]: https://ustalov.com/
+[Dmitry Ustalov]: https://github.com/dustalov
