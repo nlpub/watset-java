@@ -22,7 +22,7 @@ deploy:
   skip_cleanup: true
   on:
     tags: true
-    jdk: oraclejdk8
+    jdk: openjdk8
     repo: nlpub/watset-java
 - provider: pages
   local-dir: target/site/apidocs
