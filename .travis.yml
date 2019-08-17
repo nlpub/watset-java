@@ -4,6 +4,8 @@ jdk:
 - openjdk8
 - openjdk11
 - openjdk12
+install:
+- mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dshade=true -B -V
 before_script:
 - mvn versions:display-dependency-updates versions:display-plugin-updates
 after_success:
