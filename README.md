@@ -19,7 +19,7 @@ There are two ways to obtain `watset-java`:
 
 1. to download the [recently released version](https://github.com/nlpub/watset-java/releases/latest) (look at the `watset.jar` file in the Assets section);
 
-2. to compile the `master` branch from source by cloning the [repository](https://github.com/nlpub/watset-java) and running `mvn package` in the repository root.
+2. to compile the `master` branch from source by cloning the [repository](https://github.com/nlpub/watset-java) and running `mvn package` in the repository root (or `mvn package -Dshade` to build a dependency-less jar file as in the previous option).
 
 This tool has several kinds of activity named the *commands*: most invoke different clustering algorithms (`watset`, `cw`, `mcl`, `maxmax`), one invokes graph-based word sense induction (`senses`).
 
