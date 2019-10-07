@@ -32,7 +32,7 @@ import static java.util.stream.Collectors.toSet;
  *
  * @param <V> a cluster element type.
  * @see <a href="https://aclweb.org/anthology/S10-1011">Manandhar et al. (SemEval 2010)</a>
- * @see <a href="https://doi.org/10.18653/v1/P17-1145">Ustalov et al. (ACL 2017)</a>
+ * @see <a href="https://doi.org/10.1162/COLI_a_00354">Ustalov et al. (COLI 45:3)</a>
  */
 public class Pairwise<V> {
     /**

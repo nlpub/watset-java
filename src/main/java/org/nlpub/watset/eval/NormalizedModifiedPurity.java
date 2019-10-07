@@ -33,7 +33,7 @@ import static java.util.stream.Collectors.*;
  * @param <V> a cluster element type.
  * @see <a href="https://nlp.stanford.edu/IR-book/html/htmledition/evaluation-of-clustering-1.html">Evaluation of clustering</a>
  * @see <a href="https://doi.org/10.3115/v1/P14-1097">Kawahara et al. (ACL 2014)</a>
- * @see <a href="https://aclweb.org/anthology/P18-2010">Ustalov et al. (ACL 2018)</a>
+ * @see <a href="https://doi.org/10.1162/COLI_a_00354">Ustalov et al. (COLI 45:3)</a>
  */
 public class NormalizedModifiedPurity<V> {
     /**

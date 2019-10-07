@@ -117,9 +117,9 @@ $ java -jar watset.jar -i graph.txt -o output.tsv maxmax
 
 ## Citation
 
-* [Ustalov, D.](https://github.com/dustalov), [Panchenko, A.](https://github.com/alexanderpanchenko), [Biemann, C.](https://www.inf.uni-hamburg.de/en/inst/ab/lt/people/chris-biemann.html), [Ponzetto, S.P.](https://www.uni-mannheim.de/dws/people/professors/prof-dr-simone-paolo-ponzetto/): [Watset: Local-Global Graph Clustering with Applications in Sense and Frame Induction](https://doi.org/10.1162/COLI_a_00354). Computational Linguistics 45(3) (2019)
+* [Ustalov, D.](https://github.com/dustalov), [Panchenko, A.](https://github.com/alexanderpanchenko), [Biemann, C.](https://www.inf.uni-hamburg.de/en/inst/ab/lt/people/chris-biemann.html), [Ponzetto, S.P.](https://www.uni-mannheim.de/dws/people/professors/prof-dr-simone-paolo-ponzetto/): [Watset: Local-Global Graph Clustering with Applications in Sense and Frame Induction](https://doi.org/10.1162/COLI_a_00354). Computational Linguistics 45(3), 423&ndash;479 (2019)
 
-```latex
+```bibtex
 @article{Ustalov:19:cl,
   author    = {Ustalov, Dmitry and Panchenko, Alexander and Biemann, Chris and Ponzetto, Simone Paolo},
   title     = {{Watset: Local-Global Graph Clustering with Applications in Sense and Frame Induction}},
@@ -127,6 +127,7 @@ $ java -jar watset.jar -i graph.txt -o output.tsv maxmax
   year      = {2019},
   volume    = {45},
   number    = {3},
+  pages     = {423--479},
   doi       = {10.1162/COLI_a_00354},
   publisher = {MIT Press},
   issn      = {0891-2017},

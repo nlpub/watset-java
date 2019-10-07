@@ -44,7 +44,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @param <V> node class.
  * @param <E> edge class.
- * @see <a href="https://doi.org/10.18653/v1/P17-1145">Ustalov et al. (ACL 2017)</a>
+ * @see <a href="https://doi.org/10.1162/COLI_a_00354">Ustalov et al. (COLI 45:3)</a>
  */
 public class Watset<V, E> implements Clustering<V> {
     /**
