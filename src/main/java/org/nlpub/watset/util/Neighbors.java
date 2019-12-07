@@ -26,6 +26,9 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * This utility class contains neighborhood graph iteration functions.
+ */
 public interface Neighbors {
     static <V, E> Iterator<V> neighborIterator(Graph<V, E> graph, V node) {
         return graph.edgesOf(node).stream().

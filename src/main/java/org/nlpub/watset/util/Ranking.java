@@ -20,6 +20,9 @@ package org.nlpub.watset.util;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Utility functions for rankings.
+ */
 public interface Ranking {
     static <V> Map<V, Number> getTopK(Map<V, Number> vector, long k) {
         return vector.entrySet().stream().
