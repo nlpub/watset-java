@@ -19,14 +19,26 @@ package org.nlpub.watset.util;
 
 import org.junit.Test;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
 
 import static org.junit.Assert.*;
 import static org.nlpub.watset.util.Maximizer.*;
 import static org.nlpub.watset.util.VectorsTest.bag1;
 
 public class MaximizerTest {
+    private final static Random random1 = new Random(1339);
+    private final static Random random2 = new Random(1337);
+    private final static Random random3 = new Random(1338);
+
+    private static final Map<String, Number> bag4 = new HashMap<String, Number>() {{
+        put("a", 1);
+        put("b", 1);
+        put("c", 1);
+    }};
+
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     final Optional<Map.Entry<String, Number>> arg1 = argmax(bag1.entrySet().iterator(), e -> e.getValue().doubleValue());
 
@@ -35,6 +47,15 @@ public class MaximizerTest {
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     final Optional<Map.Entry<String, Number>> arg3 = argmax(bag1.entrySet().iterator(), e -> e.getValue().doubleValue() < 0, e -> e.getValue().doubleValue());
+
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    final Optional<Map.Entry<String, Number>> arg4a = argmaxRandom(bag4.entrySet().iterator(), e -> e.getValue().doubleValue(), random1);
+
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    final Optional<Map.Entry<String, Number>> arg4b = argmaxRandom(bag4.entrySet().iterator(), e -> e.getValue().doubleValue(), random2);
+
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    final Optional<Map.Entry<String, Number>> arg4c = argmaxRandom(bag4.entrySet().iterator(), e -> e.getValue().doubleValue(), random3);
 
     @Test
     public void testAlwaysTrue() {
@@ -61,5 +82,17 @@ public class MaximizerTest {
     public void testArgmax3() {
         assertTrue(arg3.isPresent());
         assertEquals(-5, arg3.get().getValue());
+    }
+
+    @Test
+    public void testArgmax4() {
+        assertTrue(arg4a.isPresent());
+        assertEquals("a", arg4a.get().getKey());
+
+        assertTrue(arg4b.isPresent());
+        assertEquals("b", arg4b.get().getKey());
+
+        assertTrue(arg4c.isPresent());
+        assertEquals("c", arg4c.get().getKey());
     }
 }

@@ -25,12 +25,12 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
-import static org.nlpub.watset.util.Maximizer.argmax;
+import static org.nlpub.watset.util.Maximizer.argmaxRandom;
 
 /**
  * Implementation of the Chinese Whispers algorithm.
  *
- * @see <a href="http://dl.acm.org/citation.cfm?id=1654774">Biemann (TextGraphs-1)</a>
+ * @see <a href="https://doi.org/10.3115/1654758.1654774">Biemann (TextGraphs-1)</a>
  */
 public class ChineseWhispers<V, E> implements Clustering<V> {
     public static <V, E> Function<Graph<V, E>, Clustering<V>> provider(NodeWeighting<V, E> weighting) {
@@ -98,7 +98,7 @@ public class ChineseWhispers<V, E> implements Clustering<V> {
         for (final V node : nodes) {
             final Map<Integer, Double> scores = score(graph, labels, weighting, node);
 
-            final Optional<Map.Entry<Integer, Double>> label = argmax(scores.entrySet().iterator(), Map.Entry::getValue);
+            final Optional<Map.Entry<Integer, Double>> label = argmaxRandom(scores.entrySet().iterator(), Map.Entry::getValue, random);
 
             final int updated = label.isPresent() ? label.get().getKey() : labels.get(node);
 

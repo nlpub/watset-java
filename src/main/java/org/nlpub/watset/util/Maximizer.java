@@ -17,8 +17,7 @@
 
 package org.nlpub.watset.util;
 
-import java.util.Iterator;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -76,6 +75,40 @@ public interface Maximizer {
         }
 
         return Optional.ofNullable(result);
+    }
+
+    /**
+     * This is an utility method that randomly chooses an argument of the maxima for certain score function.
+     *
+     * @param it     finite iterator over the states.
+     * @param scorer the scoring function.
+     * @param random the random number generator.
+     * @param <V>    the argument type.
+     * @param <S>    the score type.
+     * @return non-empty optional that contains a randomly chosen argmax, otherwise an empty one.
+     */
+    static <V, S extends Comparable<S>> Optional<V> argmaxRandom(Iterator<V> it, Function<V, S> scorer, Random random) {
+        final List<V> results = new LinkedList<>();
+        S score = null;
+
+        while (it.hasNext()) {
+            final V current = it.next();
+
+            final S currentScore = scorer.apply(current);
+
+            final int compare = isNull(score) ? 1 : currentScore.compareTo(score);
+
+            if (compare > 0) {
+                results.clear();
+                score = currentScore;
+            }
+
+            if (compare >= 0) {
+                results.add(current);
+            }
+        }
+
+        return results.isEmpty() ? Optional.empty() : Optional.of(results.get(random.nextInt(results.size())));
     }
 
     /**
