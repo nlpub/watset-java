@@ -4,6 +4,7 @@ jdk:
 - openjdk8
 - openjdk11
 - openjdk12
+- openjdk13
 install:
 - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dshade=true -B -V
 before_script:
@@ -32,5 +33,5 @@ deploy:
   github-token: $GITHUB_TOKEN
   on:
     tags: true
-    jdk: openjdk12
+    jdk: openjdk13
     repo: nlpub/watset-java
