@@ -16,6 +16,6 @@
  */
 
 /**
- * Command-Line Interface.
+ * Command-line interface.
  */
 package org.nlpub.watset.cli;

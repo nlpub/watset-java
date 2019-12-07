@@ -35,6 +35,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
+/**
+ * Watset command-line interface.
+ */
 public class Application {
     private static final Logger logger = Logger.getLogger(Application.class.getSimpleName());
 

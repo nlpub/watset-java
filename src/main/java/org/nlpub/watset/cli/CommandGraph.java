@@ -36,7 +36,7 @@ import java.nio.file.Path;
 import java.util.Locale;
 
 @Parameters(commandDescription = "Sense Graph")
-public class CommandGraph {
+class CommandGraph {
     final Application application;
 
     @Parameter(required = true, description = "Local clustering algorithm", names = {"-l", "--local"})
