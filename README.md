@@ -152,7 +152,7 @@ Watset was featured in the &ldquo;[Graph Clustering for Natural Language Process
 Copyright (c) 2016&ndash;2019 [Dmitry Ustalov]. See LICENSE for details.
 
 [Watset]: https://doi.org/10.1162/COLI_a_00354
-[Chinese Whispers]: https://dl.acm.org/citation.cfm?id=1654774
+[Chinese Whispers]: https://doi.org/10.3115/1654758.1654774
 [Markov Clustering]: https://doi.org/10.1137/040608635
 [MaxMax]: https://doi.org/10.1007/978-3-642-37247-6_30
 [Dmitry Ustalov]: https://github.com/dustalov
