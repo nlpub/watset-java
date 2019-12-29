@@ -91,7 +91,6 @@ public class Application {
         final CommandGraph graph = new CommandGraph(application);
         final CommandWatset watset = new CommandWatset(application);
         final CommandMaxMax maxmax = new CommandMaxMax(application);
-        final CommandWatlink watlink = new CommandWatlink(application);
 
         final JCommander jc = JCommander.newBuilder()
                 .addObject(application)
@@ -102,7 +101,6 @@ public class Application {
                 .addCommand("graph", graph)
                 .addCommand("watset", watset)
                 .addCommand("maxmax", maxmax)
-                .addCommand("watlink", watlink)
                 .defaultProvider(DEFAULT_PROVIDER)
                 .build();
 
@@ -134,9 +132,6 @@ public class Application {
                 break;
             case "maxmax":
                 maxmax.run();
-                break;
-            case "watlink":
-                watlink.run();
                 break;
             default:
                 break;
