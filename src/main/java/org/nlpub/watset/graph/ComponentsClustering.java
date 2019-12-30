@@ -45,9 +45,8 @@ public class ComponentsClustering<V, E> implements Clustering<V> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public Clustering<V> fit() {
+    public void fit() {
         clusters = (Collection<Collection<V>>) (Collection<? extends Collection<V>>) inspector.connectedSets();
-        return this;
     }
 
     /**

@@ -66,7 +66,7 @@ public class ChineseWhispers<V, E> implements Clustering<V> {
      * {@inheritDoc}
      */
     @Override
-    public Clustering<V> fit() {
+    public void fit() {
         final List<V> nodes = new ArrayList<>(graph.vertexSet());
 
         labels = new HashMap<>(nodes.size());
@@ -82,8 +82,6 @@ public class ChineseWhispers<V, E> implements Clustering<V> {
 
             if (step(nodes) == 0) break;
         }
-
-        return this;
     }
 
     /**

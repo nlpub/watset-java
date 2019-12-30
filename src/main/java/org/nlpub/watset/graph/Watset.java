@@ -96,7 +96,7 @@ public class Watset<V, E> implements Clustering<V> {
      * {@inheritDoc}
      */
     @Override
-    public Clustering<V> fit() {
+    public void fit() {
         senseClusters = null;
         senseGraph = null;
         inventory = null;
@@ -154,8 +154,6 @@ public class Watset<V, E> implements Clustering<V> {
         senseClusters = globalClustering.getClusters();
 
         logger.info("Watset finished.");
-
-        return this;
     }
 
     /**

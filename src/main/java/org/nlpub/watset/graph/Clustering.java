@@ -27,10 +27,8 @@ import java.util.Collection;
 public interface Clustering<V> {
     /**
      * Runs the algorithm to induce the parameters of the clusters.
-     *
-     * @return itself.
      */
-    Clustering<V> fit();
+    void fit();
 
     /**
      * Return a collection of clusters, each cluster is a collection of objects.

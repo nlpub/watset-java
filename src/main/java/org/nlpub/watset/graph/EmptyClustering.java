@@ -34,8 +34,7 @@ public class EmptyClustering<V> implements Clustering<V> {
     }
 
     @Override
-    public Clustering<V> fit() {
-        return this;
+    public void fit() {
     }
 
     /**

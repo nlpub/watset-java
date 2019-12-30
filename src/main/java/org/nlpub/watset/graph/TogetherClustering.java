@@ -44,9 +44,8 @@ public class TogetherClustering<V, E> implements Clustering<V> {
     }
 
     @Override
-    public Clustering<V> fit() {
+    public void fit() {
         clusters = Collections.singletonList(graph.vertexSet());
-        return this;
     }
 
     /**

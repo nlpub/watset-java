@@ -69,7 +69,7 @@ public class SimplifiedWatset<V, E> implements Clustering<V> {
     }
 
     @Override
-    public Clustering<V> fit() {
+    public void fit() {
         senseClusters = null;
 
         inventory = new ConcurrentHashMap<>(graph.vertexSet().size());
@@ -147,8 +147,6 @@ public class SimplifiedWatset<V, E> implements Clustering<V> {
         senseClusters = globalClustering.getClusters();
 
         logger.info("Simplified Watset finished.");
-
-        return this;
     }
 
     @Override
