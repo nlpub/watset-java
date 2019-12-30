@@ -40,7 +40,7 @@ public interface ABCParser {
 
             builder.addVertices(split[0], split[1]);
 
-            builder.addEdge(split[0], split[1], Double.valueOf(split[2]));
+            builder.addEdge(split[0], split[1], Double.parseDouble(split[2]));
         });
 
         return builder.build();
