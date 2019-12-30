@@ -23,12 +23,10 @@ import com.beust.jcommander.Parameter;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.nlpub.watset.util.ABCParser;
-import org.nlpub.watset.util.ILEFormat;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collection;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.logging.Level;
