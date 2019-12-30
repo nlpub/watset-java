@@ -33,6 +33,11 @@ public class EmptyClustering<V> implements Clustering<V> {
         return graph -> new EmptyClustering<>();
     }
 
+    @Override
+    public Clustering<V> fit() {
+        return this;
+    }
+
     /**
      * {@inheritDoc}
      */

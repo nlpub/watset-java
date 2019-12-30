@@ -18,12 +18,18 @@
 package org.nlpub.watset.graph;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Collection;
 
 public class SingletonClusteringTest {
     private final SingletonClustering<String, ?> singleton = new SingletonClustering<>(ChineseWhispersTest.DISJOINT);
+
+    @Before
+    public void setup() {
+        singleton.fit();
+    }
 
     @Test
     public void testClustering() {

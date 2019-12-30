@@ -18,6 +18,7 @@
 package org.nlpub.watset.graph;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Collection;
@@ -26,6 +27,11 @@ import static org.junit.Assert.assertEquals;
 
 public class TogetherClusteringTest {
     private final TogetherClustering<String, ?> together = new TogetherClustering<>(ChineseWhispersTest.DISJOINT);
+
+    @Before
+    public void setup() {
+        together.fit();
+    }
 
     @Test
     public void testClustering() {

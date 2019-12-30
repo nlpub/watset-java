@@ -21,6 +21,8 @@ import org.jgrapht.Graph;
 import org.jgrapht.alg.connectivity.ConnectivityInspector;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 
@@ -32,6 +34,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class ComponentsClustering<V, E> implements Clustering<V> {
     private final ConnectivityInspector<V, E> inspector;
+    private Collection<Collection<V>> clusters;
 
     /**
      * Sets up a trivial clustering algorithm.
@@ -42,12 +45,18 @@ public class ComponentsClustering<V, E> implements Clustering<V> {
         this.inspector = new ConnectivityInspector<>(requireNonNull(graph));
     }
 
+    @Override
+    @SuppressWarnings("unchecked")
+    public Clustering<V> fit() {
+        clusters = (Collection<Collection<V>>) (Collection<? extends Collection<V>>) inspector.connectedSets();
+        return this;
+    }
+
     /**
      * {@inheritDoc}
      */
     @Override
-    @SuppressWarnings("unchecked")
     public Collection<Collection<V>> getClusters() {
-        return (Collection<Collection<V>>) (Collection<? extends Collection<V>>) inspector.connectedSets();
+        return requireNonNull(clusters);
     }
 }

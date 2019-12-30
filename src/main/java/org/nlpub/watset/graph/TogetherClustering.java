@@ -32,6 +32,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class TogetherClustering<V, E> implements Clustering<V> {
     private final Graph<V, E> graph;
+    private Collection<Collection<V>> clusters;
 
     /**
      * Sets up a trivial clustering algorithm.
@@ -42,11 +43,17 @@ public class TogetherClustering<V, E> implements Clustering<V> {
         this.graph = requireNonNull(graph);
     }
 
+    @Override
+    public Clustering<V> fit() {
+        clusters = Collections.singletonList(graph.vertexSet());
+        return this;
+    }
+
     /**
      * {@inheritDoc}
      */
     @Override
     public Collection<Collection<V>> getClusters() {
-        return Collections.singletonList(graph.vertexSet());
+        return requireNonNull(clusters);
     }
 }

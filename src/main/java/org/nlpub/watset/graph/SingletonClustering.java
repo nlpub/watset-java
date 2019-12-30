@@ -33,6 +33,7 @@ import static java.util.stream.Collectors.toList;
  */
 public class SingletonClustering<V, E> implements Clustering<V> {
     private final Graph<V, E> graph;
+    private Collection<Collection<V>> clusters;
 
     /**
      * Sets up a trivial clustering algorithm.
@@ -43,11 +44,17 @@ public class SingletonClustering<V, E> implements Clustering<V> {
         this.graph = requireNonNull(graph);
     }
 
+    @Override
+    public Clustering<V> fit() {
+        clusters = graph.vertexSet().stream().map(Collections::singleton).collect(toList());
+        return this;
+    }
+
     /**
      * {@inheritDoc}
      */
     @Override
     public Collection<Collection<V>> getClusters() {
-        return graph.vertexSet().stream().map(Collections::singleton).collect(toList());
+        return requireNonNull(clusters);
     }
 }

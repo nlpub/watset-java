@@ -30,9 +30,7 @@ public interface Clustering<V> {
      *
      * @return itself.
      */
-    default Clustering<V> fit() {
-        return this;
-    }
+    Clustering<V> fit();
 
     /**
      * Return a collection of clusters, each cluster is a collection of objects.
