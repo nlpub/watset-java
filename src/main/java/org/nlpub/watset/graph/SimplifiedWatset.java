@@ -42,6 +42,7 @@ import static java.util.Objects.requireNonNull;
  * @param <V> node class.
  * @param <E> edge class.
  * @see Watset
+ * @see <a href="https://doi.org/10.1162/COLI_a_00354">Ustalov et al. (COLI 45:3)</a>
  */
 public class SimplifiedWatset<V, E> implements Clustering<V> {
     private static final Logger logger = Logger.getLogger(SimplifiedWatset.class.getSimpleName());
