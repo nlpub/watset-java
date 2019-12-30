@@ -32,6 +32,7 @@ import static java.util.stream.Collectors.toMap;
 
 /**
  * This class creates an instance of an algorithm as according to the given parameters.
+ *
  * @param <V> node class.
  * @param <E> edge class.
  */

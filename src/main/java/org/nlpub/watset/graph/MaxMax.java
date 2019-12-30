@@ -19,6 +19,7 @@ package org.nlpub.watset.graph;
 
 import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
+import org.jgrapht.graph.AsUnmodifiableGraph;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 
@@ -113,6 +114,8 @@ public class MaxMax<V, E> implements Clustering<V> {
      * {@inheritDoc}
      */
     public Collection<Collection<V>> getClusters() {
+        requireNonNull(roots, "call fit() first");
+
         final Set<V> roots = this.roots.entrySet().stream().filter(Map.Entry::getValue).map(Map.Entry::getKey).collect(Collectors.toSet());
 
         return roots.stream().map(root -> {
@@ -139,7 +142,7 @@ public class MaxMax<V, E> implements Clustering<V> {
      */
     @SuppressWarnings("WeakerAccess")
     public Graph<V, DefaultEdge> getDigraph() {
-        return requireNonNull(digraph);
+        return new AsUnmodifiableGraph<>(requireNonNull(digraph, "call fit() first"));
     }
 
     /**
@@ -149,7 +152,7 @@ public class MaxMax<V, E> implements Clustering<V> {
      */
     @SuppressWarnings("unused")
     public Map<V, Set<V>> getMaximals() {
-        return requireNonNull(maximals);
+        return Collections.unmodifiableMap(requireNonNull(maximals, "call fit() first"));
     }
 
     /**
@@ -159,6 +162,6 @@ public class MaxMax<V, E> implements Clustering<V> {
      */
     @SuppressWarnings("WeakerAccess")
     public Map<V, Boolean> getRoots() {
-        return requireNonNull(roots);
+        return Collections.unmodifiableMap(requireNonNull(roots, "call fit() first"));
     }
 }

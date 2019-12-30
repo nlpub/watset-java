@@ -73,6 +73,9 @@ public class MarkovClusteringBinaryRunner<V, E> implements Clustering<V> {
      */
     @Override
     public Collection<Collection<V>> getClusters() {
+        requireNonNull(mapping, "call fit() first");
+        requireNonNull(output, "call fit() first");
+
         final Map<Integer, V> inverse = mapping.entrySet().stream().
                 collect(toMap(Map.Entry::getValue, Map.Entry::getKey));
 

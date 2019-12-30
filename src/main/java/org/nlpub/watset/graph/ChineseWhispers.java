@@ -118,6 +118,8 @@ public class ChineseWhispers<V, E> implements Clustering<V> {
      */
     @Override
     public Collection<Collection<V>> getClusters() {
+        requireNonNull(labels, "call fit() first");
+
         final Map<Integer, List<Map.Entry<V, Integer>>> groups = labels.entrySet().stream().
                 collect(Collectors.groupingBy(Map.Entry::getValue));
 

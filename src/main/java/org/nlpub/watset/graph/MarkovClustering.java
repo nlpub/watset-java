@@ -100,6 +100,9 @@ public class MarkovClustering<V, E> implements Clustering<V> {
      */
     @Override
     public Collection<Collection<V>> getClusters() {
+        requireNonNull(index, "call fit() first");
+        requireNonNull(matrix, "call fit() first");
+
         if (graph.vertexSet().isEmpty()) return Collections.emptySet();
 
         final Map<Integer, V> inverted = index.entrySet().stream().

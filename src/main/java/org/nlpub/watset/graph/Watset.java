@@ -163,7 +163,7 @@ public class Watset<V, E> implements Clustering<V> {
      */
     @Override
     public Collection<Collection<V>> getClusters() {
-        return senseClusters.stream().
+        return requireNonNull(senseClusters, "call fit() first").stream().
                 map(cluster -> cluster.stream().map(Sense::get).collect(Collectors.toSet())).
                 collect(Collectors.toSet());
     }
@@ -174,7 +174,7 @@ public class Watset<V, E> implements Clustering<V> {
      * @return a sense inventory.
      */
     public Map<V, Map<Sense<V>, Map<V, Number>>> getInventory() {
-        return Collections.unmodifiableMap(requireNonNull(inventory));
+        return Collections.unmodifiableMap(requireNonNull(inventory, "call fit() first"));
     }
 
     /**
@@ -183,7 +183,7 @@ public class Watset<V, E> implements Clustering<V> {
      * @return disambiguated contexts.
      */
     public Map<Sense<V>, Map<Sense<V>, Number>> getContexts() {
-        return Collections.unmodifiableMap(requireNonNull(contexts));
+        return Collections.unmodifiableMap(requireNonNull(contexts, "call fit() first"));
     }
 
     /**
@@ -192,7 +192,7 @@ public class Watset<V, E> implements Clustering<V> {
      * @return a sense graph.
      */
     public Graph<Sense<V>, DefaultWeightedEdge> getSenseGraph() {
-        return new AsUnmodifiableGraph<>(requireNonNull(senseGraph));
+        return new AsUnmodifiableGraph<>(requireNonNull(senseGraph, "call fit() first"));
     }
 
     /**

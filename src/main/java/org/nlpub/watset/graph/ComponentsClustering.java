@@ -21,8 +21,6 @@ import org.jgrapht.Graph;
 import org.jgrapht.alg.connectivity.ConnectivityInspector;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 
@@ -57,6 +55,6 @@ public class ComponentsClustering<V, E> implements Clustering<V> {
      */
     @Override
     public Collection<Collection<V>> getClusters() {
-        return requireNonNull(clusters);
+        return requireNonNull(clusters, "call fit() first");
     }
 }

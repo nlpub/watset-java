@@ -69,6 +69,8 @@ public class SimplifiedWatset<V, E> implements Clustering<V> {
 
     @Override
     public Clustering<V> fit() {
+        senseClusters = null;
+
         inventory = new ConcurrentHashMap<>(graph.vertexSet().size());
         senses = new ConcurrentHashMap<>(graph.vertexSet().size());
 
@@ -150,7 +152,7 @@ public class SimplifiedWatset<V, E> implements Clustering<V> {
 
     @Override
     public Collection<Collection<V>> getClusters() {
-        return senseClusters.stream().
+        return requireNonNull(senseClusters, "call fit() first").stream().
                 map(cluster -> cluster.stream().map(Sense::get).collect(Collectors.toSet())).
                 collect(Collectors.toSet());
     }
@@ -161,7 +163,7 @@ public class SimplifiedWatset<V, E> implements Clustering<V> {
      * @return a sense graph.
      */
     public Graph<Sense<V>, DefaultWeightedEdge> getSenseGraph() {
-        return new AsUnmodifiableGraph<>(requireNonNull(senseGraph));
+        return new AsUnmodifiableGraph<>(requireNonNull(senseGraph, "call fit() first"));
     }
 
     /**
@@ -172,7 +174,7 @@ public class SimplifiedWatset<V, E> implements Clustering<V> {
     public Map<Sense<V>, Map<Sense<V>, Number>> getContexts() {
         final Map<Sense<V>, Map<Sense<V>, Number>> contexts = new HashMap<>();
 
-        for (final DefaultWeightedEdge edge : requireNonNull(senseGraph).edgeSet()) {
+        for (final DefaultWeightedEdge edge : requireNonNull(senseGraph, "call fit() first").edgeSet()) {
             final Sense<V> source = senseGraph.getEdgeSource(edge), target = senseGraph.getEdgeTarget(edge);
             final double weight = senseGraph.getEdgeWeight(edge);
 

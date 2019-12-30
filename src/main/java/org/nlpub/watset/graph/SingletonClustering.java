@@ -55,6 +55,6 @@ public class SingletonClustering<V, E> implements Clustering<V> {
      */
     @Override
     public Collection<Collection<V>> getClusters() {
-        return requireNonNull(clusters);
+        return requireNonNull(clusters, "call fit() first");
     }
 }
