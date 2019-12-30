@@ -69,17 +69,6 @@ public class Application {
         }
     }
 
-    public Collection<Collection<String>> getClusters() {
-        try (final Stream<String> stream = Files.lines(input)) {
-            final Collection<Collection<String>> clusters = ILEFormat.parse(stream);
-            logger.log(Level.INFO, "Read {0} clusters from {1}.",
-                    new Object[]{clusters.size(), input.toAbsolutePath()});
-            return clusters;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public static void main(String[] args) {
         // TODO: Use the main argument for --input instead of the named one.
         final Application application = new Application();

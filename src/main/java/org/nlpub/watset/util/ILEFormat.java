@@ -39,20 +39,6 @@ public interface ILEFormat {
     String SEPARATOR = "\t";
     String DELIMITER = ", ";
 
-    static Collection<Collection<String>> parse(Stream<String> stream, String regex) {
-        return stream.map(line -> {
-            final String[] split = line.split(regex);
-
-            if (split.length < 2) return null;
-
-            return Arrays.asList(split[2].split(DELIMITER));
-        }).filter(Objects::nonNull).collect(toList());
-    }
-
-    static Collection<Collection<String>> parse(Stream<String> stream) {
-        return parse(stream, SEPARATOR);
-    }
-
     static void write(Path path, Clustering<String> clustering) throws IOException {
         try (final BufferedWriter writer = Files.newBufferedWriter(path)) {
             final AtomicInteger counter = new AtomicInteger(0);
@@ -61,9 +47,11 @@ public interface ILEFormat {
                     sorted((smaller, larger) -> Integer.compare(larger.size(), smaller.size())).
                     forEach(cluster -> {
                         try {
-                            writer.write(String.format(Locale.ROOT, "%d\t%d\t%s%n",
+                            writer.write(String.format(Locale.ROOT, "%d%s%d%s%s%n",
                                     counter.incrementAndGet(),
+                                    SEPARATOR,
                                     cluster.size(),
+                                    SEPARATOR,
                                     String.join(DELIMITER, cluster))
                             );
                         } catch (IOException e) {
