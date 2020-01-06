@@ -33,7 +33,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -94,11 +94,11 @@ public class SimplifiedWatset<V, E> implements Clustering<V> {
         graph.vertexSet().parallelStream().forEach(node -> {
             final Collection<Collection<V>> clusters = inducer.clusters(node);
 
-            if (!isNull(inventory.put(node, new HashMap<>()))) {
+            if (nonNull(inventory.put(node, new HashMap<>()))) {
                 throw new IllegalStateException("The target node is already in the inventory");
             }
 
-            if (!isNull(senses.put(node, new ArrayList<>(clusters.size())))) {
+            if (nonNull(senses.put(node, new ArrayList<>(clusters.size())))) {
                 throw new IllegalStateException("The target node is already in the sense index");
             }
 

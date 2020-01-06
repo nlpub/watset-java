@@ -26,7 +26,7 @@ import org.nlpub.watset.util.AlgorithmProvider;
 import java.util.HashMap;
 import java.util.Map;
 
-import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 
 @Parameters(commandDescription = "Chinese Whispers")
 class CommandChineseWhispers extends ClusteringCommand {
@@ -41,7 +41,7 @@ class CommandChineseWhispers extends ClusteringCommand {
     @Override
     public Clustering<String> getClustering() {
         final Map<String, String> params = new HashMap<String, String>() {{
-            if (!isNull(mode)) put("mode", mode);
+            if (nonNull(mode)) put("mode", mode);
         }};
 
         final AlgorithmProvider<String, DefaultWeightedEdge> algorithm = new AlgorithmProvider<>("cw", params);
