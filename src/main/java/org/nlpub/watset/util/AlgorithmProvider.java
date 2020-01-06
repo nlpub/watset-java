@@ -91,7 +91,7 @@ public class AlgorithmProvider<V, E> implements Function<Graph<V, E>, Clustering
                 return NodeWeighting.log();
             case "lin":
             case "nolog": // We used this notation in many papers; kept for compatibility
-                return NodeWeighting.lin();
+                return NodeWeighting.linear();
             default:
                 throw new IllegalArgumentException("Unknown mode is set.");
         }

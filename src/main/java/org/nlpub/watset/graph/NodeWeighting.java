@@ -72,7 +72,7 @@ public interface NodeWeighting<V, E> {
         }
     }
 
-    static <V, E> NodeWeighting<V, E> lin() {
+    static <V, E> NodeWeighting<V, E> linear() {
         return new LinearNodeWeighting<>();
     }
 }
