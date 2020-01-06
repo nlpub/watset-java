@@ -24,10 +24,11 @@ import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
+import static java.util.Objects.isNull;
+import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toMap;
 
 /**
@@ -43,8 +44,8 @@ public class AlgorithmProvider<V, E> implements Function<Graph<V, E>, Clustering
     private final Map<String, String> params;
 
     public AlgorithmProvider(String algorithm, Map<String, String> params) {
-        this.algorithm = algorithm;
-        this.params = params;
+        this.algorithm = requireNonNull(algorithm);
+        this.params = requireNonNull(params);
     }
 
     public AlgorithmProvider(String algorithm, String params) {
@@ -98,7 +99,7 @@ public class AlgorithmProvider<V, E> implements Function<Graph<V, E>, Clustering
     }
 
     static Map<String, String> parseParams(String params) {
-        if (Objects.isNull(params) || params.trim().isEmpty()) return Collections.emptyMap();
+        if (isNull(params) || params.trim().isEmpty()) return Collections.emptyMap();
 
         return SEPARATOR.splitAsStream(params).
                 map(s -> s.split("=", 2)).
