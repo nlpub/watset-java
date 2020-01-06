@@ -25,7 +25,8 @@ import org.nlpub.watset.util.AlgorithmProvider;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
+
+import static java.util.Objects.nonNull;
 
 class CommandMarkovClustering extends ClusteringCommand {
     private final boolean binary;
@@ -50,9 +51,9 @@ class CommandMarkovClustering extends ClusteringCommand {
     @Override
     public Clustering<String> getClustering() {
         final Map<String, String> params = new HashMap<String, String>() {{
-            if (Objects.nonNull(e)) put("e", Integer.toString(e));
-            if (Objects.nonNull(r)) put("r", Double.toString(r));
-            if (Objects.nonNull(binaryPath)) put("bin", binaryPath.toAbsolutePath().toString());
+            if (nonNull(e)) put("e", Integer.toString(e));
+            if (nonNull(r)) put("r", Double.toString(r));
+            if (nonNull(binaryPath)) put("bin", binaryPath.toAbsolutePath().toString());
         }};
 
         final AlgorithmProvider<String, DefaultWeightedEdge> algorithm = new AlgorithmProvider<>(binary ? "mcl-bin" : "mcl", params);

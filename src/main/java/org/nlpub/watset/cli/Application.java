@@ -28,10 +28,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
+
+import static java.util.Objects.isNull;
 
 /**
  * Watset command-line interface.
@@ -94,7 +95,7 @@ public class Application {
 
         jc.parse(args);
 
-        if (Objects.isNull(jc.getParsedCommand())) {
+        if (isNull(jc.getParsedCommand())) {
             System.err.println("Please read the documentation.");
             System.exit(1);
         }
