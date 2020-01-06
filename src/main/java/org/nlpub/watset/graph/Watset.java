@@ -62,6 +62,7 @@ public class Watset<V, E> implements Clustering<V> {
      * @param <E>    edge class.
      * @return an instance of Watset.
      */
+    @SuppressWarnings("unused")
     public static <V, E> Function<Graph<V, E>, Clustering<V>> provider(Function<Graph<V, E>, Clustering<V>> local, Function<Graph<Sense<V>, DefaultWeightedEdge>, Clustering<Sense<V>>> global) {
         return graph -> new Watset<>(graph, local, global, new CosineContextSimilarity<>());
     }
@@ -171,6 +172,7 @@ public class Watset<V, E> implements Clustering<V> {
      *
      * @return a sense inventory.
      */
+    @SuppressWarnings("unused")
     public Map<V, Map<Sense<V>, Map<V, Number>>> getInventory() {
         return Collections.unmodifiableMap(requireNonNull(inventory, "call fit() first"));
     }

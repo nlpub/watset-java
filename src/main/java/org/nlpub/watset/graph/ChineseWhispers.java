@@ -33,10 +33,12 @@ import static org.nlpub.watset.util.Maximizer.argmaxRandom;
  * @see <a href="https://doi.org/10.3115/1654758.1654774">Biemann (TextGraphs-1)</a>
  */
 public class ChineseWhispers<V, E> implements Clustering<V> {
+    @SuppressWarnings("unused")
     public static <V, E> Function<Graph<V, E>, Clustering<V>> provider(NodeWeighting<V, E> weighting) {
         return graph -> new ChineseWhispers<>(graph, weighting);
     }
 
+    @SuppressWarnings("unused")
     public static <V, E> Function<Graph<V, E>, Clustering<V>> provider(NodeWeighting<V, E> weighting, int iterations, Random random) {
         return graph -> new ChineseWhispers<>(graph, weighting, iterations, random);
     }

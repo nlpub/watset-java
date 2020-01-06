@@ -30,18 +30,23 @@ import org.nlpub.watset.wsi.Sense;
 
 @Parameters(commandDescription = "Watset")
 class CommandWatset extends ClusteringCommand {
+    @SuppressWarnings("unused")
     @Parameter(required = true, description = "Local clustering algorithm", names = {"-l", "--local"})
     private String local;
 
+    @SuppressWarnings("unused")
     @Parameter(description = "Local clustering algorithm parameters", names = {"-lp", "--local-params"})
     private String localParams;
 
+    @SuppressWarnings("unused")
     @Parameter(required = true, description = "Global clustering algorithm", names = {"-g", "--global"})
     private String global;
 
+    @SuppressWarnings("unused")
     @Parameter(description = "Global clustering algorithm parameters", names = {"-gp", "--global-params"})
     private String globalParams;
 
+    @SuppressWarnings("CanBeFinal")
     @Parameter(description = "Use Simplified Watset", names = {"-s", "--simplified"})
     boolean simplified = false;
 

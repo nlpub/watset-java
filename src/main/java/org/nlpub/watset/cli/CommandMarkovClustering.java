@@ -30,12 +30,15 @@ import java.util.Objects;
 class CommandMarkovClustering extends ClusteringCommand {
     private final boolean binary;
 
+    @SuppressWarnings("unused")
     @Parameter(names = "-e")
     private Integer e;
 
+    @SuppressWarnings("unused")
     @Parameter(names = "-r")
     private Double r;
 
+    @SuppressWarnings("unused")
     @Parameter(names = "--bin", converter = PathConverter.class)
     private Path binaryPath;
 

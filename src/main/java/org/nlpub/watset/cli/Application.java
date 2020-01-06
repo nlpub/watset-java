@@ -53,6 +53,7 @@ public class Application {
     @Parameter(names = {"-i", "--input"}, description = "Input file", converter = PathConverter.class)
     public Path input;
 
+    @SuppressWarnings("unused")
     @Parameter(names = {"-o", "--output"}, description = "Output file", converter = PathConverter.class)
     public Path output;
 

@@ -49,10 +49,12 @@ public class MarkovClusteringBinaryRunner<V, E> implements Clustering<V> {
     private Map<V, Integer> mapping;
     private File output;
 
+    @SuppressWarnings("unused")
     public static <V, E> Function<Graph<V, E>, Clustering<V>> provider(Path mcl, double r, int threads) {
         return graph -> new MarkovClusteringBinaryRunner<>(graph, mcl, r, threads);
     }
 
+    @SuppressWarnings("unused")
     public static <V, E> Function<Graph<V, E>, Clustering<V>> provider(Path mcl, double r) {
         return graph -> new MarkovClusteringBinaryRunner<>(graph, mcl, r);
     }

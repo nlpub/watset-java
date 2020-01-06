@@ -29,6 +29,7 @@ import java.util.Map;
 
 @Parameters(commandDescription = "Chinese Whispers")
 class CommandChineseWhispers extends ClusteringCommand {
+    @SuppressWarnings("CanBeFinal")
     @Parameter(names = {"-m", "--mode"})
     private String mode = NodeWeighting.TOP;
 

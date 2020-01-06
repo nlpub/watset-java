@@ -44,6 +44,7 @@ public class MaxMax<V, E> implements Clustering<V> {
      * @param <E> edge class.
      * @return an instance of MaxMax.
      */
+    @SuppressWarnings("unused")
     public static <V, E> Function<Graph<V, E>, Clustering<V>> provider() {
         return MaxMax::new;
     }

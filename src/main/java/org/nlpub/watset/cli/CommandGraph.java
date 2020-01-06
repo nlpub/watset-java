@@ -39,12 +39,15 @@ import java.util.Locale;
 class CommandGraph {
     final Application application;
 
+    @SuppressWarnings("unused")
     @Parameter(required = true, description = "Local clustering algorithm", names = {"-l", "--local"})
     private String local;
 
+    @SuppressWarnings("unused")
     @Parameter(description = "Local clustering algorithm parameters", names = {"-lp", "--local-params"})
     private String localParams;
 
+    @SuppressWarnings("CanBeFinal")
     @Parameter(description = "Use Simplified Watset", names = {"-s", "--simplified"})
     boolean simplified = false;
 

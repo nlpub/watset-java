@@ -34,6 +34,7 @@ public interface ContextSimilarity<V> extends BiFunction<Map<V, Number>, Map<V, 
      * @param <V> bag element class.
      * @return dummy similarity function.
      */
+    @SuppressWarnings("unused")
     static <V> ContextSimilarity<V> dummy() {
         return (bag1, bag2) -> 0;
     }

@@ -41,12 +41,15 @@ import static java.util.stream.Collectors.joining;
 class CommandSenses {
     final Application application;
 
+    @SuppressWarnings("unused")
     @Parameter(required = true, description = "Local clustering algorithm", names = {"-l", "--local"})
     String local;
 
+    @SuppressWarnings("unused")
     @Parameter(description = "Local clustering algorithm parameters", names = {"-lp", "--local-params"})
     String localParams;
 
+    @SuppressWarnings("CanBeFinal")
     @Parameter(description = "Use Simplified Watset", names = {"-s", "--simplified"})
     boolean simplified = false;
 
