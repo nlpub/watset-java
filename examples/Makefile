@@ -13,7 +13,7 @@ WATSET := 2.0.0-rc1
 all: HardClustering FuzzyClustering PickleGraph PickleClustering
 
 clean:
-	rm -fv *.pkl
+	rm -fv *.pkl *.jar
 
 %: %.groovy | watset.jar
 	groovy $<
