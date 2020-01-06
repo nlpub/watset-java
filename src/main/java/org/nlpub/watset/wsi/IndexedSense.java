@@ -29,17 +29,6 @@ import static java.util.Objects.requireNonNull;
  * @param <V> object class.
  */
 public class IndexedSense<V> extends Pair<V, Integer> implements Sense<V> {
-    /**
-     * Creates a sense of an object.
-     *
-     * @param object an object.
-     * @param sense  a sense identifier.
-     * @param <V>    object class.
-     * @return a sense of an object.
-     */
-    public static <V> IndexedSense<V> of(V object, int sense) {
-        return new IndexedSense<>(object, sense);
-    }
 
     /**
      * Creates a sense of an object.
