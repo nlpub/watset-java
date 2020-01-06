@@ -65,12 +65,10 @@ public class Measurer<V, E> {
         return graph;
     }
 
-    @SuppressWarnings("UnusedReturnValue")
     public List<Long> getDurations() {
         return Arrays.stream(durations).boxed().collect(Collectors.toList());
     }
 
-    @SuppressWarnings("UnusedReturnValue")
     public List<Integer> getClusters() {
         return Arrays.stream(clusters).boxed().collect(Collectors.toList());
     }
