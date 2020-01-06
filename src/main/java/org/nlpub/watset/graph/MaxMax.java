@@ -109,9 +109,6 @@ public class MaxMax<V, E> implements Clustering<V> {
         });
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public Collection<Collection<V>> getClusters() {
         requireNonNull(roots, "call fit() first");
 

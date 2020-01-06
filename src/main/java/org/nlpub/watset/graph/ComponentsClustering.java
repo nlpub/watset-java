@@ -49,9 +49,6 @@ public class ComponentsClustering<V, E> implements Clustering<V> {
         clusters = (Collection<Collection<V>>) (Collection<? extends Collection<V>>) inspector.connectedSets();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Collection<Collection<V>> getClusters() {
         return requireNonNull(clusters, "call fit() first");

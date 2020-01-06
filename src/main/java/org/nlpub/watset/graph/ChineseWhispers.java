@@ -64,9 +64,6 @@ public class ChineseWhispers<V, E> implements Clustering<V> {
         this(graph, weighting, ITERATIONS, new Random());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void fit() {
         final List<V> nodes = new ArrayList<>(graph.vertexSet());
@@ -113,9 +110,6 @@ public class ChineseWhispers<V, E> implements Clustering<V> {
         return changed;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Collection<Collection<V>> getClusters() {
         requireNonNull(labels, "call fit() first");

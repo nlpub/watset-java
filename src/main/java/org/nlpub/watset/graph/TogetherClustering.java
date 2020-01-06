@@ -48,9 +48,6 @@ public class TogetherClustering<V, E> implements Clustering<V> {
         clusters = Collections.singletonList(graph.vertexSet());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Collection<Collection<V>> getClusters() {
         return requireNonNull(clusters, "call fit() first");

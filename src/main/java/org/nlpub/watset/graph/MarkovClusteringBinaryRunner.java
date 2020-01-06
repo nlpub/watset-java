@@ -70,9 +70,6 @@ public class MarkovClusteringBinaryRunner<V, E> implements Clustering<V> {
         this(graph, mcl, r, 1);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Collection<Collection<V>> getClusters() {
         requireNonNull(mapping, "call fit() first");
@@ -92,9 +89,6 @@ public class MarkovClusteringBinaryRunner<V, E> implements Clustering<V> {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void fit() {
         logger.info("Preparing for Markov Clustering.");

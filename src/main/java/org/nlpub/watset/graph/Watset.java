@@ -93,9 +93,6 @@ public class Watset<V, E> implements Clustering<V> {
         this.inducer = new SenseInduction<>(graph, requireNonNull(local));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void fit() {
         senseClusters = null;
@@ -157,9 +154,6 @@ public class Watset<V, E> implements Clustering<V> {
         logger.info("Watset finished.");
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Collection<Collection<V>> getClusters() {
         return requireNonNull(senseClusters, "call fit() first").stream().

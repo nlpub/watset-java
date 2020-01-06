@@ -49,9 +49,6 @@ public class SingletonClustering<V, E> implements Clustering<V> {
         clusters = graph.vertexSet().stream().map(Collections::singleton).collect(toList());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Collection<Collection<V>> getClusters() {
         return requireNonNull(clusters, "call fit() first");

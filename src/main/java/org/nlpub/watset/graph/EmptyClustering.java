@@ -37,9 +37,6 @@ public class EmptyClustering<V> implements Clustering<V> {
     public void fit() {
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Collection<Collection<V>> getClusters() {
         return Collections.emptySet();

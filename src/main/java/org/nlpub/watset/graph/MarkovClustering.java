@@ -69,9 +69,6 @@ public class MarkovClustering<V, E> implements Clustering<V> {
         this.inflateVisitor = new InflateVisitor();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void fit() {
         index = null;
@@ -94,9 +91,6 @@ public class MarkovClustering<V, E> implements Clustering<V> {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Collection<Collection<V>> getClusters() {
         requireNonNull(index, "call fit() first");
