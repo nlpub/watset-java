@@ -45,6 +45,20 @@ import static java.util.Objects.requireNonNull;
  * @see <a href="https://doi.org/10.1162/COLI_a_00354">Ustalov et al. (COLI 45:3)</a>
  */
 public class SimplifiedWatset<V, E> implements Clustering<V> {
+    /**
+     * Sets up the Simplified Watset clustering algorithm in a functional style.
+     *
+     * @param local  a supplier for a local clustering algorithm.
+     * @param global a supplier for a global clustering algorithm.
+     * @param <V>    node class.
+     * @param <E>    edge class.
+     * @return an instance of Simplified Watset.
+     */
+    @SuppressWarnings("unused")
+    public static <V, E> Function<Graph<V, E>, Clustering<V>> provider(Function<Graph<V, E>, Clustering<V>> local, Function<Graph<Sense<V>, DefaultWeightedEdge>, Clustering<Sense<V>>> global) {
+        return graph -> new SimplifiedWatset<>(graph, local, global);
+    }
+
     private static final Logger logger = Logger.getLogger(SimplifiedWatset.class.getSimpleName());
 
     private final Graph<V, E> graph;
