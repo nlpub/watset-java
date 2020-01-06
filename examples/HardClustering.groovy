@@ -12,7 +12,7 @@ graph = SimpleWeightedGraph.<String, DefaultWeightedEdge> createBuilder(DefaultW
         addEdge('a', 'c').
         addEdge('a', 'c').
         addEdge('d', 'e').
-        build();
+        build()
 
 print('Graph: ')
 println(graph)
