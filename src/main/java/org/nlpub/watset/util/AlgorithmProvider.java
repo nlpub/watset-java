@@ -83,13 +83,13 @@ public class AlgorithmProvider<V, E> implements Function<Graph<V, E>, Clustering
 
     private NodeWeighting<V, E> parseChineseWhispersNodeWeighting() {
         switch (params.getOrDefault("mode", "top").toLowerCase(Locale.ROOT)) {
-            case NodeWeighting.LABEL:
+            case "label":
                 return NodeWeighting.label();
-            case NodeWeighting.TOP:
+            case "top":
                 return NodeWeighting.top();
-            case NodeWeighting.LOG:
+            case "log":
                 return NodeWeighting.log();
-            case NodeWeighting.LIN:
+            case "lin":
             case "nolog": // We used this notation in many papers; kept for compatibility
                 return NodeWeighting.lin();
             default:

@@ -21,17 +21,18 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.nlpub.watset.graph.Clustering;
-import org.nlpub.watset.graph.NodeWeighting;
 import org.nlpub.watset.util.AlgorithmProvider;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.util.Objects.isNull;
+
 @Parameters(commandDescription = "Chinese Whispers")
 class CommandChineseWhispers extends ClusteringCommand {
-    @SuppressWarnings("CanBeFinal")
+    @SuppressWarnings("unused")
     @Parameter(names = {"-m", "--mode"})
-    private String mode = NodeWeighting.TOP;
+    private String mode;
 
     public CommandChineseWhispers(Application application) {
         super(application);
@@ -40,7 +41,7 @@ class CommandChineseWhispers extends ClusteringCommand {
     @Override
     public Clustering<String> getClustering() {
         final Map<String, String> params = new HashMap<String, String>() {{
-            put("mode", mode);
+            if (!isNull(mode)) put("mode", mode);
         }};
 
         final AlgorithmProvider<String, DefaultWeightedEdge> algorithm = new AlgorithmProvider<>("cw", params);

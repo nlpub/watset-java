@@ -32,27 +32,47 @@ import java.util.Map;
 public interface NodeWeighting<V, E> {
     double apply(Graph<V, E> graph, Map<V, Integer> labels, V node, V neighbor);
 
-    String LABEL = "label";
+    class LabelNodeWeighting<V, E> implements NodeWeighting<V, E> {
+        @Override
+        public double apply(Graph<V, E> graph, Map<V, Integer> labels, V node, V neighbor) {
+            return labels.get(node);
+        }
+    }
 
     static <V, E> NodeWeighting<V, E> label() {
-        return (graph, labels, node, neighbor) -> labels.get(node);
+        return new LabelNodeWeighting<>();
     }
 
-    String TOP = "top";
+    class TopNodeWeighting<V, E> implements NodeWeighting<V, E> {
+        @Override
+        public double apply(Graph<V, E> graph, Map<V, Integer> labels, V node, V neighbor) {
+            return graph.getEdgeWeight(graph.getEdge(node, neighbor));
+        }
+    }
 
     static <V, E> NodeWeighting<V, E> top() {
-        return (graph, labels, node, neighbor) -> graph.getEdgeWeight(graph.getEdge(node, neighbor));
+        return new TopNodeWeighting<>();
     }
 
-    String LOG = "log";
+    class LogNodeWeighting<V, E> implements NodeWeighting<V, E> {
+        @Override
+        public double apply(Graph<V, E> graph, Map<V, Integer> labels, V node, V neighbor) {
+            return graph.getEdgeWeight(graph.getEdge(node, neighbor)) / Math.log1p(graph.degreeOf(neighbor));
+        }
+    }
 
     static <V, E> NodeWeighting<V, E> log() {
-        return (graph, labels, node, neighbor) -> graph.getEdgeWeight(graph.getEdge(node, neighbor)) / Math.log1p(graph.degreeOf(neighbor));
+        return new LogNodeWeighting<>();
     }
 
-    String LIN = "lin";
+    class LinearNodeWeighting<V, E> implements NodeWeighting<V, E> {
+        @Override
+        public double apply(Graph<V, E> graph, Map<V, Integer> labels, V node, V neighbor) {
+            return graph.getEdgeWeight(graph.getEdge(node, neighbor)) / graph.degreeOf(neighbor);
+        }
+    }
 
     static <V, E> NodeWeighting<V, E> lin() {
-        return (graph, labels, node, neighbor) -> graph.getEdgeWeight(graph.getEdge(node, neighbor)) / graph.degreeOf(neighbor);
+        return new LinearNodeWeighting<>();
     }
 }
