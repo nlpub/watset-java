@@ -47,7 +47,7 @@ public interface NodeWeighting<V, E> {
     String LOG = "log";
 
     static <V, E> NodeWeighting<V, E> log() {
-        return (graph, labels, node, neighbor) -> graph.getEdgeWeight(graph.getEdge(node, neighbor)) / Math.log(1 + graph.degreeOf(neighbor));
+        return (graph, labels, node, neighbor) -> graph.getEdgeWeight(graph.getEdge(node, neighbor)) / Math.log1p(graph.degreeOf(neighbor));
     }
 
     String LIN = "lin";
