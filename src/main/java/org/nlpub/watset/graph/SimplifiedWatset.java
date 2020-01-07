@@ -39,8 +39,8 @@ import static java.util.Objects.requireNonNull;
 /**
  * A simplified version of Watset that does not need a context similarity measure.
  *
- * @param <V> node class.
- * @param <E> edge class.
+ * @param <V> the type of nodes in the graph
+ * @param <E> the type of edges in the graph
  * @see Watset
  * @see <a href="https://doi.org/10.1162/COLI_a_00354">Ustalov et al. (COLI 45:3)</a>
  */
@@ -50,8 +50,8 @@ public class SimplifiedWatset<V, E> implements Clustering<V> {
      *
      * @param local  a supplier for a local clustering algorithm.
      * @param global a supplier for a global clustering algorithm.
-     * @param <V>    node class.
-     * @param <E>    edge class.
+     * @param <V>    the type of nodes in the graph
+     * @param <E>    the type of edges in the graph
      * @return an instance of Simplified Watset.
      */
     @SuppressWarnings("unused")

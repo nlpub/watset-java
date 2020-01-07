@@ -29,8 +29,8 @@ import static java.util.Objects.requireNonNull;
 /**
  * A simple graph-based word sense induction approach. It clusters node neighborhoods.
  *
- * @param <V> node class.
- * @param <E> edge class.
+ * @param <V> the type of nodes in the graph
+ * @param <E> the type of edges in the graph
  * @see <a href="https://doi.org/10.3115/1067737.1067753">Dorow &amp; Widdows (EACL '03)</a>
  */
 public class SenseInduction<V, E> {

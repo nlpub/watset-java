@@ -27,17 +27,17 @@ import static java.util.Objects.requireNonNull;
 /**
  * A trivial clustering algorithm that treats every connected component as a cluster.
  *
- * @param <V> node class.
- * @param <E> edge class.
+ * @param <V> the type of nodes in the graph
+ * @param <E> the type of edges in the graph
  */
 public class ComponentsClustering<V, E> implements Clustering<V> {
     private final ConnectivityInspector<V, E> inspector;
     private Collection<Collection<V>> clusters;
 
     /**
-     * Sets up a trivial clustering algorithm.
+     * Set up the trivial clustering algorithm.
      *
-     * @param graph an input graph.
+     * @param graph the graph
      */
     public ComponentsClustering(Graph<V, E> graph) {
         this.inspector = new ConnectivityInspector<>(requireNonNull(graph));

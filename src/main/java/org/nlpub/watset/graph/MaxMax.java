@@ -32,8 +32,8 @@ import static java.util.Objects.requireNonNull;
 /**
  * An implementation of the MaxMax clustering algorithm.
  *
- * @param <V> node class.
- * @param <E> edge class.
+ * @param <V> the type of nodes in the graph
+ * @param <E> the type of edges in the graph
  * @see <a href="https://doi.org/10.1007/978-3-642-37247-6_30">Hope &amp; Keller (CICLing 2013)</a>
  */
 public class MaxMax<V, E> implements Clustering<V> {

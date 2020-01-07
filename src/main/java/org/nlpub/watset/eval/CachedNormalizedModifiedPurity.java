@@ -22,33 +22,34 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * {@inheritDoc}
+ * Cached normalized modified purity evaluation measure for overlapping clustering.
  * <p>
- * This class creates an instance of {@link ConcurrentHashMap} to cache the scores
- * for the elements of clusters. It is designed under an assumption that the
- * <code>classes</code> <em>do not change</em>. This assumption is valid for computing
- * the precision (nmPU) in case of normalized modified purity as defined by
- * <a href="https://doi.org/10.3115/v1/P14-1097">Kawahara et al. (ACL 2014)</a>.
+ * This class creates an instance of {@link ConcurrentHashMap} to cache the cluster element scores.
+ * It is designed under assumption that the {@code classes} <em>do not change</em>.
+ * This assumption is valid for computing the precision (nmPU) in case of normalized modified purity
+ * as defined by <a href="https://doi.org/10.3115/v1/P14-1097">Kawahara et al. (ACL 2014)</a>.
  * <p>
- * Since the underlying data structure has no size limit, so this class is memory-greedy.
+ * Since the underlying data structure has no size limit, this class is memory-greedy.
  * Please make sure that you have tuned the JVM heap size when using it.
+ *
+ * @see NormalizedModifiedPurity
  */
 public class CachedNormalizedModifiedPurity<V> extends NormalizedModifiedPurity<V> {
     protected final Map<Map<V, Double>, Double> cache;
 
     /**
-     * Constructs a cached normalized modified purity calculator.
+     * Construct a cached normalized modified purity calculator.
      */
     public CachedNormalizedModifiedPurity() {
         this(true, true);
     }
 
     /**
-     * Constructs a cached normalized modified purity calculator that allows
+     * Construct a cached normalized modified purity calculator that allows
      * turning normalized and/or modified options off.
      *
-     * @param normalized normalized purity is on.
-     * @param modified   modified purity is on.
+     * @param normalized normalized purity is on
+     * @param modified   modified purity is on
      */
     public CachedNormalizedModifiedPurity(boolean normalized, boolean modified) {
         super(normalized, modified);

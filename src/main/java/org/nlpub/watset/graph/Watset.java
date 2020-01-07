@@ -42,8 +42,8 @@ import static java.util.Objects.requireNonNull;
  * It builds an intermediate undirected graph that addresses the element ambiguity by
  * inducing different senses of each node in the input graph.
  *
- * @param <V> node class.
- * @param <E> edge class.
+ * @param <V> the type of nodes in the graph
+ * @param <E> the type of edges in the graph
  * @see <a href="https://doi.org/10.1162/COLI_a_00354">Ustalov et al. (COLI 45:3)</a>
  */
 public class Watset<V, E> implements Clustering<V> {
@@ -58,8 +58,8 @@ public class Watset<V, E> implements Clustering<V> {
      *
      * @param local  a supplier for a local clustering algorithm.
      * @param global a supplier for a global clustering algorithm.
-     * @param <V>    node class.
-     * @param <E>    edge class.
+     * @param <V>    the type of nodes in the graph
+     * @param <E>    the type of edges in the graph
      * @return an instance of Watset.
      */
     @SuppressWarnings("unused")

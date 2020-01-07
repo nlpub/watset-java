@@ -30,29 +30,82 @@ import static org.nlpub.watset.util.Maximizer.argmaxRandom;
 /**
  * Implementation of the Chinese Whispers algorithm.
  *
+ * @param <V> the type of nodes in the graph
+ * @param <E> the type of edges in the graph
  * @see <a href="https://doi.org/10.3115/1654758.1654774">Biemann (TextGraphs-1)</a>
  */
 public class ChineseWhispers<V, E> implements Clustering<V> {
+    /**
+     * A factory function that sets up the algorithm for the given graph.
+     *
+     * @param weighting the node weighting approach
+     * @param <V>       the type of nodes in the graph
+     * @param <E>       the type of edges in the graph
+     * @return a factory function that sets up the algorithm for the given graph
+     */
     @SuppressWarnings("unused")
     public static <V, E> Function<Graph<V, E>, Clustering<V>> provider(NodeWeighting<V, E> weighting) {
         return graph -> new ChineseWhispers<>(graph, weighting);
     }
 
+    /**
+     * A factory function that sets up the algorithm for the given graph.
+     *
+     * @param weighting  the node weighting approach
+     * @param iterations the number of iterations
+     * @param random     the random number generator
+     * @param <V>        the type of nodes in the graph
+     * @param <E>        the type of edges in the graph
+     * @return a factory function that sets up the algorithm for the given graph
+     */
     @SuppressWarnings("unused")
     public static <V, E> Function<Graph<V, E>, Clustering<V>> provider(NodeWeighting<V, E> weighting, int iterations, Random random) {
         return graph -> new ChineseWhispers<>(graph, weighting, iterations, random);
     }
 
+    /**
+     * The default number of Chinese Whispers iterations.
+     */
     public static final int ITERATIONS = 20;
 
+    /**
+     * The graph.
+     */
     protected final Graph<V, E> graph;
+
+    /**
+     * The node weighting approach.
+     */
     protected final NodeWeighting<V, E> weighting;
+
+    /**
+     * The number of iterations.
+     */
     protected final int iterations;
+
+    /**
+     * The random number generator.
+     */
     protected final Random random;
+
+    /**
+     * The mapping of nodes to labels.
+     */
     protected Map<V, Integer> labels;
 
+    /**
+     * The number of actual algorithm iterations.
+     */
     protected int steps;
 
+    /**
+     * Create an instance of the Chinese Whispers algorithm.
+     *
+     * @param graph      the graph
+     * @param weighting  the node weighting approach
+     * @param iterations the number of iterations
+     * @param random     the random number generator
+     */
     public ChineseWhispers(Graph<V, E> graph, NodeWeighting<V, E> weighting, int iterations, Random random) {
         this.graph = requireNonNull(graph);
         this.weighting = requireNonNull(weighting);
@@ -60,6 +113,12 @@ public class ChineseWhispers<V, E> implements Clustering<V> {
         this.random = requireNonNull(random);
     }
 
+    /**
+     * Create an instance of the Chinese Whispers algorithm.
+     *
+     * @param graph     the graph
+     * @param weighting the node weighting approach
+     */
     public ChineseWhispers(Graph<V, E> graph, NodeWeighting<V, E> weighting) {
         this(graph, weighting, ITERATIONS, new Random());
     }
@@ -84,10 +143,10 @@ public class ChineseWhispers<V, E> implements Clustering<V> {
     }
 
     /**
-     * Performs one iteration of the algorithm.
+     * Perform one iteration of the algorithm.
      *
-     * @param nodes node list
-     * @return whether the labels changed or not.
+     * @param nodes the list of nodes
+     * @return whether any label changed or not
      */
     protected int step(List<V> nodes) {
         int changed = 0;
@@ -127,13 +186,14 @@ public class ChineseWhispers<V, E> implements Clustering<V> {
     }
 
     /**
-     * This label selector selects the label class having the maximal total weight in the neighborhood.
+     * Score the label weights in the given neighborhood graph, which is a subgraph of {@link #graph}.
+     * This method sums the node weights corresponding to each label.
      *
-     * @param graph     the graph.
-     * @param labels    node labels.
-     * @param weighting edge weighting.
-     * @param node      the target node.
-     * @return label-weight map.
+     * @param graph     the neighborhood graph
+     * @param labels    the map of graph nodes to their labels
+     * @param weighting the node weighting approach
+     * @param node      the target node
+     * @return a mapping of labels to sums of their weights
      */
     protected Map<Integer, Double> score(Graph<V, E> graph, Map<V, Integer> labels, NodeWeighting<V, E> weighting, V node) {
         final Map<Integer, Double> weights = new HashMap<>();
@@ -148,11 +208,23 @@ public class ChineseWhispers<V, E> implements Clustering<V> {
         return weights;
     }
 
+    /**
+     * Return the number of iterations specified in the constructor
+     *
+     * @return the number of iterations
+     * @see #ChineseWhispers(Graph, NodeWeighting, int, Random)
+     */
     @SuppressWarnings("unused")
     public int getIterations() {
         return iterations;
     }
 
+    /**
+     * Return the number of iterations actually performed during {@link #fit()}.
+     * Should be no larger than the value of {@link #getIterations()}.
+     *
+     * @return the number of iterations
+     */
     @SuppressWarnings("unused")
     public int getSteps() {
         return steps;

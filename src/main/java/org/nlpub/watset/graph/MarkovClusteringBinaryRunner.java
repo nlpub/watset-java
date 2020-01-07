@@ -33,10 +33,13 @@ import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
 
 /**
- * This is a weird thing. The implementation of MCL by its author is fast,
- * but is distributed under GPL. In order to use it, we need to run the separate
- * process and speak to it over standard input/output redirection.
+ * A wrapper for the official implementation of the Markov Clustering (MCL) algorithm in C.
+ * <p>
+ * This is a weird thing. The official implementation of MCL is very fast, but is distributed under GPL.
+ * In order to use it, we need to run the separate process and speak to it over standard input/output redirection.
  *
+ * @param <V> the type of nodes in the graph
+ * @param <E> the type of edges in the graph
  * @see <a href="https://micans.org/mcl/">van Dongen (2000)</a>
  */
 public class MarkovClusteringBinaryRunner<V, E> implements Clustering<V> {
@@ -49,16 +52,43 @@ public class MarkovClusteringBinaryRunner<V, E> implements Clustering<V> {
     private Map<V, Integer> mapping;
     private File output;
 
+    /**
+     * A factory function that sets up the algorithm for the given graph.
+     *
+     * @param mcl     the path to the MCL binary
+     * @param r       the inflation parameter
+     * @param threads the number of threads
+     * @param <V>     the type of nodes in the graph
+     * @param <E>     the type of edges in the graph
+     * @return a factory function that sets up the algorithm for the given graph
+     */
     @SuppressWarnings("unused")
     public static <V, E> Function<Graph<V, E>, Clustering<V>> provider(Path mcl, double r, int threads) {
         return graph -> new MarkovClusteringBinaryRunner<>(graph, mcl, r, threads);
     }
 
+    /**
+     * A factory function that sets up the algorithm for the given graph.
+     *
+     * @param mcl the path to the MCL binary
+     * @param r   the inflation parameter
+     * @param <V> the type of nodes in the graph
+     * @param <E> the type of edges in the graph
+     * @return a factory function that sets up the algorithm for the given graph
+     */
     @SuppressWarnings("unused")
     public static <V, E> Function<Graph<V, E>, Clustering<V>> provider(Path mcl, double r) {
         return graph -> new MarkovClusteringBinaryRunner<>(graph, mcl, r);
     }
 
+    /**
+     * Create an instance of the Markov Clustering algorithm wrapper.
+     *
+     * @param graph   the graph
+     * @param mcl     the path to the MCL binary
+     * @param r       the inflation parameter
+     * @param threads the number of threads
+     */
     public MarkovClusteringBinaryRunner(Graph<V, E> graph, Path mcl, double r, int threads) {
         this.graph = requireNonNull(graph);
         this.mcl = mcl;
@@ -66,6 +96,13 @@ public class MarkovClusteringBinaryRunner<V, E> implements Clustering<V> {
         this.threads = threads;
     }
 
+    /**
+     * Create an instance of the Markov Clustering algorithm wrapper.
+     *
+     * @param graph the graph
+     * @param mcl   the path to the MCL binary
+     * @param r     the inflation parameter
+     */
     public MarkovClusteringBinaryRunner(Graph<V, E> graph, Path mcl, double r) {
         this(graph, mcl, r, 1);
     }

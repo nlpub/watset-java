@@ -26,22 +26,22 @@ import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.*;
 
 /**
- * An implementation of the normalized modified purity evaluation measure for overlapping clustering.
+ * Normalized modified purity evaluation measure for overlapping clustering.
  * <p>
- * Please be especially careful with the hashCode and equals methods of the cluster elements.
+ * Please be especially careful with the {@code hashCode} and {@code equals} methods of the elements.
  *
- * @param <V> a cluster element type.
+ * @param <V> the type of cluster elements
  * @see <a href="https://nlp.stanford.edu/IR-book/html/htmledition/evaluation-of-clustering-1.html">Evaluation of clustering</a>
  * @see <a href="https://doi.org/10.3115/v1/P14-1097">Kawahara et al. (ACL 2014)</a>
  * @see <a href="https://doi.org/10.1162/COLI_a_00354">Ustalov et al. (COLI 45:3)</a>
  */
 public class NormalizedModifiedPurity<V> {
     /**
-     * Transforms a collection of clusters into a collection of weighted cluster elements.
+     * Transform a collection of clusters into a collection of weighted cluster elements.
      *
-     * @param clusters a collection of clusters.
-     * @param <V>      a cluster element type.
-     * @return a collection of weighted cluster elements.
+     * @param clusters the collection of clusters
+     * @param <V>      the type of cluster elements
+     * @return a collection of weighted cluster elements
      */
     public static <V> Collection<Map<V, Double>> transform(Collection<Collection<V>> clusters) {
         return clusters.stream().
@@ -51,11 +51,11 @@ public class NormalizedModifiedPurity<V> {
     }
 
     /**
-     * Normalizes clusters to allow using normalized (modified) purity.
+     * Normalize weights of the cluster elements to allow using normalized (modified) purity.
      *
-     * @param clusters a collection of clusters.
-     * @param <V>      a cluster element type.
-     * @return a collection of normalized clusters.
+     * @param clusters the collection of clusters
+     * @param <V>      the type of cluster elements
+     * @return a collection of weight-normalized clusters
      */
     public static <V> Collection<Map<V, Double>> normalize(Collection<Map<V, Double>> clusters) {
         final Map<V, Double> counter = new HashMap<>();
@@ -78,14 +78,14 @@ public class NormalizedModifiedPurity<V> {
     }
 
     /**
-     * Computes a precision and recall using purity and inverse purity, correspondingly.
+     * Compute a precision and recall using purity and inverse purity, correspondingly.
      *
-     * @param precision purity.
-     * @param recall    inverse purity.
-     * @param clusters  a collection of clusters.
-     * @param classes   a collection of classes.
-     * @param <V>       a cluster element type.
-     * @return precision and recall object.
+     * @param precision the purity
+     * @param recall    the inverse purity
+     * @param clusters  the collection of the clusters to evaluate
+     * @param classes   the collection of the gold standard clusters
+     * @param <V>       the type of cluster elements
+     * @return precision and recalled wrapped in an instance of {@link PrecisionRecall}
      */
     public static <V> PrecisionRecall evaluate(NormalizedModifiedPurity<V> precision, NormalizedModifiedPurity<V> recall, Collection<Map<V, Double>> clusters, Collection<Map<V, Double>> classes) {
         final double nmPU = precision.purity(requireNonNull(clusters), requireNonNull(classes));
@@ -96,18 +96,17 @@ public class NormalizedModifiedPurity<V> {
     final boolean normalized, modified;
 
     /**
-     * Constructs a normalized modified purity calculator.
+     * Construct a normalized modified purity calculator.
      */
     public NormalizedModifiedPurity() {
         this(true, true);
     }
 
     /**
-     * Constructs a normalized modified purity calculator that allows
-     * turning normalized and/or modified options off.
+     * Construct a normalized modified purity calculator that allows turning normalized and/or modified options off.
      *
-     * @param normalized normalized purity is on.
-     * @param modified   modified purity is on.
+     * @param normalized normalized purity is on
+     * @param modified   modified purity is on
      */
     public NormalizedModifiedPurity(boolean normalized, boolean modified) {
         this.normalized = normalized;
@@ -118,8 +117,8 @@ public class NormalizedModifiedPurity<V> {
      * Computes the (modified) purity of the given clusters as according
      * to the gold standard clustering, classes.
      *
-     * @param clusters clustering
-     * @param classes  gold clustering
+     * @param clusters the collection of the clusters to evaluate
+     * @param classes  the collection of the gold standard clusters
      * @return (modified) purity
      * @see <a href="https://doi.org/10.3115/v1/P14-1097">Kawahara et al. (ACL 2014)</a>
      */
@@ -141,10 +140,10 @@ public class NormalizedModifiedPurity<V> {
     }
 
     /**
-     * Computes the (modified) cluster score on a defined collection of classes.
+     * Compute the (modified) cluster score on a defined collection of classes.
      *
-     * @param cluster a cluster.
-     * @param classes a collection of classes.
+     * @param cluster the cluster to evaluate
+     * @param classes the collection of the gold standard clusters
      * @return cluster score
      */
     public double score(Map<V, Double> cluster, Collection<Map<V, Double>> classes) {
@@ -152,11 +151,12 @@ public class NormalizedModifiedPurity<V> {
     }
 
     /**
-     * Computes the fuzzy overlap between two clusters, cluster and klass. In case of modified purity
-     * the singleton clusters are ignored.
+     * Compute the fuzzy overlap between two clusters, {@code cluster} and {@code klass}.
+     * <p>
+     * In case of modified purity the singleton clusters are ignored.
      *
-     * @param cluster one cluster
-     * @param klass   another cluster
+     * @param cluster the first cluster
+     * @param klass   the second cluster
      * @return cluster overlap measure
      * @see <a href="https://doi.org/10.3115/v1/P14-1097">Kawahara et al. (ACL 2014)</a>
      */

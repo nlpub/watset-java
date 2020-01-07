@@ -30,18 +30,29 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
- * This is a clustering algorithm performance evaluator. Given a clustering algorithm provider and
- * a set of graphs, it measures the running time of the clustering algorithm on every input graph.
+ * A clustering algorithm performance measurement class.
+ * <p>
+ * Given a clustering algorithm provider and a graph, it measures the running time of the clustering
+ * algorithm on every input graph.
+ * <p>
  * Before recording the measurements, it <em>warms up</em> by running exactly the same operation to
  * leverage the influence of JIT and other VM optimizations.
  *
- * @param <V> node class.
- * @param <E> edge class.
+ * @param <V> the type of nodes in the graph
+ * @param <E> the type of edges in the graph
+ * @see Clustering
  */
 public class Measurer<V, E> {
     private static final Logger logger = Logger.getLogger(Measurer.class.getSimpleName());
 
+    /**
+     * The default number of repetitions.
+     */
     final static public int REPETITIONS = 10;
+
+    /**
+     * The default number of warmup runs kept off-record before {@link #REPETITIONS}.
+     */
     final static public int WARMUP = 5;
 
     private final Function<Graph<V, E>, Clustering<V>> provider;
@@ -50,10 +61,14 @@ public class Measurer<V, E> {
     private long[] durations;
     private int[] clusters;
 
-    public Measurer(Function<Graph<V, E>, Clustering<V>> provider, Graph<V, E> graph) {
-        this(provider, graph, REPETITIONS, WARMUP);
-    }
-
+    /**
+     * Create an instance of {@code Measurer}.
+     *
+     * @param provider    the clustering algorithm provider
+     * @param graph       the graph
+     * @param repetitions the number of repetitions
+     * @param warmup      the number of off-record repetitions
+     */
     public Measurer(Function<Graph<V, E>, Clustering<V>> provider, Graph<V, E> graph, int repetitions, int warmup) {
         this.provider = provider;
         this.repetitions = repetitions;
@@ -61,18 +76,47 @@ public class Measurer<V, E> {
         this.graph = graph;
     }
 
+    /**
+     * Create an instance of {@code Measurer}.
+     *
+     * @param provider the clustering algorithm provider
+     * @param graph    the graph
+     */
+    public Measurer(Function<Graph<V, E>, Clustering<V>> provider, Graph<V, E> graph) {
+        this(provider, graph, REPETITIONS, WARMUP);
+    }
+
+    /**
+     * Return the input graph.
+     *
+     * @return the graph
+     */
     public Graph<V, E> getGraph() {
         return graph;
     }
 
+    /**
+     * Return the list of the measured graph clustering durations in milliseconds.
+     *
+     * @return the list of durations
+     */
     public List<Long> getDurations() {
         return Arrays.stream(durations).boxed().collect(Collectors.toList());
     }
 
+    /**
+     * Return the list of the measured number of clusters.
+     *
+     * @return the list of cluster sizes
+     */
     public List<Integer> getClusters() {
         return Arrays.stream(clusters).boxed().collect(Collectors.toList());
     }
 
+    /**
+     * Perform the measurement. First, {@code warmup} iterations are performed off-record.
+     * Then, the actual {@code repetitions} are performed to measure the performance of the clustering algorithm.
+     */
     public void run() {
         System.gc();
 

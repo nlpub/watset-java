@@ -18,19 +18,19 @@
 package org.nlpub.watset.eval;
 
 /**
- * A simple class that contains precision and recall, and computes F-score.
+ * A wrapper for precision and recall values that computes F-score.
  *
- * @see <a href="https://en.wikipedia.org/wiki/Precision_and_recall">Precision and recall</a>
+ * @see <a href="https://nlp.stanford.edu/IR-book/html/htmledition/evaluation-of-unranked-retrieval-sets-1.html">Evaluation of unranked retrieval sets</a>
  */
 public class PrecisionRecall {
     private final double precision;
     private final double recall;
 
     /**
-     * Wraps the precision and recall values.
+     * Wrap the precision and recall values.
      *
-     * @param precision precision value.
-     * @param recall    recall value.
+     * @param precision precision
+     * @param recall    recall
      */
     public PrecisionRecall(double precision, double recall) {
         this.precision = precision;
@@ -38,37 +38,37 @@ public class PrecisionRecall {
     }
 
     /**
-     * Gets the value of precision.
+     * Get the value of precision.
      *
-     * @return precision value.
+     * @return precision
      */
     public double getPrecision() {
         return precision;
     }
 
     /**
-     * Gets the value of recall.
+     * Get the value of recall.
      *
-     * @return recall value.
+     * @return recall
      */
     public double getRecall() {
         return recall;
     }
 
     /**
-     * Computes the F<sub>1</sub>-score using precision and recall.
+     * Compute the F<sub>1</sub>-score using precision and recall.
      *
-     * @return F-score value.
+     * @return F<sub>1</sub>-score
      */
     public double getF1Score() {
         return getFScore(1);
     }
 
     /**
-     * Computes the F<sub>&beta;</sub>-score using precision and recall.
+     * Compute the F<sub>&beta;</sub>-score using precision and recall.
      *
-     * @param beta beta value.
-     * @return F-score value.
+     * @param beta beta value
+     * @return F<sub>&beta;</sub>-score value
      */
     public double getFScore(double beta) {
         double beta2 = Math.pow(beta, 2);

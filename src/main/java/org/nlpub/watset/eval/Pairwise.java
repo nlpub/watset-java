@@ -28,31 +28,32 @@ import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toSet;
 
 /**
- * An implementation of a pairwise precision, recall, and F-score.
+ * Pairwise precision, recall, and F-score for cluster evaluation.
  *
- * @param <V> a cluster element type.
+ * @param <V> the type of cluster elements
+ * @see <a href="https://nlp.stanford.edu/IR-book/html/htmledition/evaluation-of-clustering-1.html">Evaluation of clustering</a>
  * @see <a href="https://aclweb.org/anthology/S10-1011">Manandhar et al. (SemEval 2010)</a>
  * @see <a href="https://doi.org/10.1162/COLI_a_00354">Ustalov et al. (COLI 45:3)</a>
  */
 public class Pairwise<V> {
     /**
-     * Transforms a collection of clusters into a collection of pairs
+     * Transform a collection of clusters to a collection of pairs
      * generated using 2-combinations of the cluster elements.
      *
-     * @param clusters a collection of clusters.
-     * @param <V>      an element class.
-     * @return a collection of pairs.
+     * @param clusters the collection of clusters
+     * @param <V>      the type of cluster elements
+     * @return a collection of pairs
      */
     public static <V> Set<Pair<V, V>> transform(Collection<Collection<V>> clusters) {
         return clusters.parallelStream().flatMap(Pairwise::combination).collect(toSet());
     }
 
     /**
-     * Returns a stream of pairs generated as 2-combinations of the cluster elements.
+     * Return a stream of pairs generated as 2-combinations of the cluster elements.
      *
-     * @param cluster a cluster.
-     * @param <V>     an element class.
-     * @return a stream of 2-combinations.
+     * @param cluster the cluster
+     * @param <V>     the type of cluster elements
+     * @return a stream of 2-combinations
      */
     public static <V> Stream<Pair<V, V>> combination(Collection<V> cluster) {
         return cluster.stream().
@@ -61,23 +62,29 @@ public class Pairwise<V> {
     }
 
     /**
-     * Creates a pair of elements ordered by hashCode.
+     * Create a pair of elements ordered by hashCode.
      *
-     * @param first  an object.
-     * @param second an object.
-     * @param <V>    an object type.
-     * @return a pair.
+     * @param first  the first object
+     * @param second the second object
+     * @param <V>    the type of objects
+     * @return a pair
      */
     public static <V> Pair<V, V> pairOf(V first, V second) {
         return (first.hashCode() <= second.hashCode()) ? Pair.of(first, second) : Pair.of(second, first);
     }
 
     /**
-     * Computes a pairwise precision, recall, and F-score.
+     * Create an instance of pairwise precision and recall calculator.
+     */
+    public Pairwise() {
+    }
+
+    /**
+     * Compute a pairwise precision, recall, and F-score.
      *
-     * @param clusters a collection of clusters.
-     * @param classes  a collection of gold standard clusters.
-     * @return precision-recall report.
+     * @param clusters the collection of the clusters to evaluate
+     * @param classes  the collection of the gold standard clusters
+     * @return precision and recalled wrapped in an instance of {@link PrecisionRecall}
      */
     public PrecisionRecall evaluate(Collection<Collection<V>> clusters, Collection<Collection<V>> classes) {
         final Set<Pair<V, V>> clusterPairs = transform(requireNonNull(clusters));

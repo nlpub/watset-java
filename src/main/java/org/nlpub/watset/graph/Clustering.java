@@ -22,19 +22,19 @@ import java.util.Collection;
 /**
  * An instance of Clustering returns clusters after running the underlying algorithm.
  *
- * @param <V> node class.
+ * @param <V> the type of nodes in the graph
  */
 public interface Clustering<V> {
     /**
-     * Runs the algorithm to induce the parameters of the clusters.
+     * Run the algorithm to induce the parameters of the clusters.
      */
     void fit();
 
     /**
      * Return a collection of clusters, each cluster is a collection of objects.
-     * Usually this method is called after the fit method.
+     * Usually this method is called after the {@link #fit} method.
      *
-     * @return clusters.
+     * @return clusters
      */
     Collection<Collection<V>> getClusters();
 }

@@ -28,8 +28,8 @@ import static java.util.stream.Collectors.toList;
 /**
  * A trivial clustering algorithm that puts every node in a separate cluster.
  *
- * @param <V> node class.
- * @param <E> edge class.
+ * @param <V> the type of nodes in the graph
+ * @param <E> the type of edges in the graph
  */
 public class SingletonClustering<V, E> implements Clustering<V> {
     private final Graph<V, E> graph;

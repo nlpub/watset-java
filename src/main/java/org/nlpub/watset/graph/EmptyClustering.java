@@ -26,11 +26,17 @@ import java.util.function.Function;
 /**
  * A trivial clustering algorithm that returns no clusters.
  *
- * @param <V> node class.
+ * @param <V> the type of nodes in the graph
  */
 public class EmptyClustering<V> implements Clustering<V> {
     public static <V, E> Function<Graph<V, E>, Clustering<V>> provider() {
         return graph -> new EmptyClustering<>();
+    }
+
+    /**
+     * Set up the trivial clustering algorithm.
+     */
+    public EmptyClustering() {
     }
 
     @Override

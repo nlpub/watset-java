@@ -29,39 +29,121 @@ import java.util.stream.Collectors;
 import static java.util.Objects.requireNonNull;
 
 /**
- * This is an implementation of the Markov Clustering (MCL) algorithm.
- * It assumes processing of relatively small graphs due to the lack of
- * pruning optimizations.
+ * Na&iuml;ve implementation of the Markov Clustering (MCL) algorithm.
+ * <p>
+ * This implementation assumes processing of relatively small graphs due to the lack of pruning optimizations.
  *
- * @param <V> vertices
- * @param <E> edges
+ * @param <V> the type of nodes in the graph
+ * @param <E> the type of edges in the graph
  * @see <a href="https://doi.org/10.1137/040608635">van Dongen (2008)</a>
  */
 public class MarkovClustering<V, E> implements Clustering<V> {
+    /**
+     * A factory function that sets up the algorithm for the given graph.
+     *
+     * @param e   the expansion parameter
+     * @param r   the inflation parameter
+     * @param <V> the type of nodes in the graph
+     * @param <E> the type of edges in the graph
+     * @return a factory function that sets up the algorithm for the given graph
+     */
     @SuppressWarnings("unused")
     public static <V, E> Function<Graph<V, E>, Clustering<V>> provider(int e, double r) {
         return graph -> new MarkovClustering<>(graph, e, r);
     }
 
     /**
-     * A stateless visitor that raises the power of each element to the power of <code>r</code>.
+     * A visitor that raises each element to the power of {@link MarkovClustering#r}.
      */
-    class InflateVisitor extends DefaultRealMatrixChangingVisitor {
+    public class InflateVisitor extends DefaultRealMatrixChangingVisitor {
+        private InflateVisitor() {
+        }
+
+        /**
+         * Raise the value of a single element to the power of {@code r}.
+         *
+         * @param row    row
+         * @param column column
+         * @param value  the value
+         * @return the value raised to the power of {@code r}
+         */
         @Override
         public double visit(int row, int column, double value) {
             return Math.pow(value, r);
         }
     }
 
+    /**
+     * A visitor that normalizes columns.
+     */
+    public static class NormalizeVisitor extends DefaultRealMatrixChangingVisitor {
+        private final RealMatrix sums;
+
+        /**
+         * Create an instance of the normalizer.
+         *
+         * @param sums the column vector containing row sums
+         */
+        public NormalizeVisitor(RealMatrix sums) {
+            this.sums = sums;
+        }
+
+        /**
+         * Divide the value of a single element by the corresponding column of {@code sums}.
+         *
+         * @param row    row
+         * @param column column
+         * @param value  the value
+         * @return the normalized value
+         */
+        @Override
+        public double visit(int row, int column, double value) {
+            return value / sums.getEntry(0, column);
+        }
+    }
+
+    /**
+     * The default number of Markov Clustering iterations.
+     */
     public static final Integer ITERATIONS = 20;
 
+    /**
+     * The graph.
+     */
     protected final Graph<V, E> graph;
+
+    /**
+     * The expansion parameter.
+     */
     protected final int e;
+
+    /**
+     * The inflation parameter.
+     */
     protected final double r;
+
+    /**
+     * The inflation visitor that raises each element of {@code matrix} to the power of {@code r}.
+     */
     protected final InflateVisitor inflateVisitor;
+
+    /**
+     * The stochastic matrix.
+     */
     protected RealMatrix matrix;
+
+    /**
+     * The mapping of graph nodes to the columns of {@code matrix}.
+     */
     protected Map<V, Integer> index;
 
+    /**
+     * Create an instance of the Markov Clustering algorithm.
+     *
+     * @param graph the graph
+     * @param e     the expansion parameter
+     * @param r     the inflation parameter
+     */
     public MarkovClustering(Graph<V, E> graph, int e, double r) {
         this.graph = requireNonNull(graph);
         this.e = e;
@@ -76,8 +158,8 @@ public class MarkovClustering<V, E> implements Clustering<V> {
 
         if (graph.vertexSet().isEmpty()) return;
 
-        index = buildIndex(graph);
-        matrix = buildMatrix(graph, index);
+        index = buildIndex();
+        matrix = buildMatrix(index);
 
         normalize(matrix);
 
@@ -119,10 +201,9 @@ public class MarkovClustering<V, E> implements Clustering<V> {
     /**
      * Index the nodes of the input graph.
      *
-     * @param graph an input graph.
-     * @return a node index.
+     * @return a node index
      */
-    protected Map<V, Integer> buildIndex(Graph<V, E> graph) {
+    protected Map<V, Integer> buildIndex() {
         final Map<V, Integer> index = new HashMap<>();
 
         int i = 0;
@@ -133,13 +214,14 @@ public class MarkovClustering<V, E> implements Clustering<V> {
     }
 
     /**
-     * Construct an adjacency sums for a given graph. Note that the loops are ignored.
+     * Construct an adjacency matrix for the given graph.
+     * <p>
+     * Note that the loops in the graph are ignored.
      *
-     * @param graph a graph.
-     * @param index a node index for the graph.
-     * @return an adjacency sums.
+     * @param index the node index
+     * @return an adjacency matrix
      */
-    protected RealMatrix buildMatrix(Graph<V, E> graph, Map<V, Integer> index) {
+    protected RealMatrix buildMatrix(Map<V, Integer> index) {
         final RealMatrix matrix = MatrixUtils.createRealIdentityMatrix(graph.vertexSet().size());
 
         for (final E edge : graph.edgeSet()) {
@@ -153,22 +235,6 @@ public class MarkovClustering<V, E> implements Clustering<V> {
         }
 
         return matrix;
-    }
-
-    /**
-     * A visitor that normalizes columns.
-     */
-    static class NormalizeVisitor extends DefaultRealMatrixChangingVisitor {
-        private final RealMatrix sums;
-
-        public NormalizeVisitor(RealMatrix sums) {
-            this.sums = sums;
-        }
-
-        @Override
-        public double visit(int row, int column, double value) {
-            return value / sums.getEntry(0, column);
-        }
     }
 
     protected void normalize(RealMatrix matrix) {
