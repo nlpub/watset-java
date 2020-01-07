@@ -21,11 +21,11 @@ This package, written in Java, also includes implementations of the [Chinese Whi
 
 There are two ways to obtain `watset-java`:
 
-1. to download the [recently released version](https://github.com/nlpub/watset-java/releases/latest) (look at the `watset.jar` file in the Assets section);
+1. download the [recently released version](https://github.com/nlpub/watset-java/releases/latest) (look at the `watset.jar` file in the Assets section);
 
-2. to compile the `master` branch from source by cloning the [repository](https://github.com/nlpub/watset-java) and running `mvn package` in the repository root (or `mvn package -Dshade` to build a dependency-less jar file as in the previous option).
+2. compile the `master` branch from source by cloning the [repository](https://github.com/nlpub/watset-java) and running `mvn package` in the repository root (or `mvn package -Dshade` to build a dependency-less jar file as in the previous option).
 
-This tool has several kinds of activity named the *commands*: most invoke different clustering algorithms (`watset`, `cw`, `mcl`, `maxmax`), one invokes graph-based word sense induction (`senses`).
+This tool has several kinds of activity titled the *commands*. Such commands as `watset`, `cw`, `mcl`, and `maxmax` invoke different clustering algorithms, while `senses` invokes graph-based word sense induction.
 
 There are two global command-line arguments: `-i` (or `--input`) that specifies the path of input file and `-o` (or `--output`) that specifies the path of the output file. The default values for these parameters are `/dev/stdin` and `/dev/stdout`, correspondingly.
 
@@ -56,10 +56,10 @@ $ java -jar watset.jar -i graph.txt -o output.tsv singleton
 
 ### Chinese Whispers
 
-[Chinese Whispers] is a hard clustering algorithm that resembles the popular children's game. This tool offers four different modes of this algorithm that can be set using the `-m` (`--mode`) option:
+[Chinese Whispers] (CW) is a hard clustering algorithm that resembles a popular children's game. This tool offers three different variations of this algorithm that can be set using the `-m` (`--mode`) option:
 
-* `top`: the node selection approach that chooses the label having the highest total edge weight;
-* `lin`: the `top` mode divided by the node degree (also known as `nolog`);
+* `top`: the node weighting approach that chooses the label with the highest total edge weight in the neighborhood;
+* `lin`: the `top` mode divided by the node degree (also known as `nolog` in some references);
 * `log`: the `top` mode divided by the logarithm of the node degree.
 
 ```bash
@@ -68,7 +68,7 @@ $ java -jar watset.jar -i graph.txt -o output.tsv cw -m top
 
 ### Markov Clustering
 
-[Markov Clustering] is a hard clustering algorithm that simulates random walks on the graph. It is possible to specify two options of this algorithm:
+[Markov Clustering] (MCL) is a hard clustering algorithm that simulates random walks on the graph. It is possible to specify two options of this algorithm:
 
 * the number of expansion operations `-e` (the default value is 2);
 * the power coefficient `-r` (the default value is also 2).
@@ -77,7 +77,7 @@ $ java -jar watset.jar -i graph.txt -o output.tsv cw -m top
 $ java -jar watset.jar -i graph.txt -o output.tsv mcl -e 2 -r 2
 ```
 
-This implementation is not optimized, so the processing of large graphs will likely be quite slow. For that, it is recommended to use the original implementation of this [MCL](https://micans.org/mcl/) algorithm, which is written in C and thus really fast.
+This implementation is not optimized, so the processing of large graphs will likely be quite slow. So, for large graphs it is recommended to use the original implementation of the [MCL](https://micans.org/mcl/) algorithm, which is written in C and thus is really fast.
 
 ### Watset
 
@@ -109,7 +109,7 @@ It is also possible to print the intermediate word sense graph built by [Watset]
 $ java -jar watset.jar -i graph.txt -o sense-graph.txt graph -s -l mcl
 ```
 
-The output file will be written virtually in the same ABC format as the input graph, but each node will be provided with the numerical sense identifier preceded by the suffix `#`. This feature simplifies the integration into the other graph processing pipelines.
+The output file will be written virtually in the same ABC format as the input graph, but each node will be provided with a numerical sense identifier preceded by the suffix `#`. This feature simplifies the integration into other graph processing pipelines.
 
 ### MaxMax
 
@@ -153,7 +153,7 @@ Watset was featured in the &ldquo;[Graph Clustering for Natural Language Process
 
 ## Copyright
 
-Copyright (c) 2016&ndash;2020 [Dmitry Ustalov]. See LICENSE for details.
+Copyright (c) 2016&ndash;2020 [Dmitry Ustalov]. See [LICENSE](LICENSE) for details.
 
 [Watset]: https://doi.org/10.1162/COLI_a_00354
 [Chinese Whispers]: https://doi.org/10.3115/1654758.1654774
