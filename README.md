@@ -39,7 +39,7 @@ c	d	2
 
 The default output format is a tab-separated file, each line of which contains three elements: `id`, `size` and a comma-and-space-separated list of elements.
 
-In fact, `watset-java` is not just a tool, it also features a complete API for graph clustering. This API can easily be embedded into your application or library. Consider the Javadoc at <https://nlpub.github.io/watset-java/>.
+In fact, `watset-java` is not just a tool, it also features a complete API for graph clustering. This API can easily be embedded into your application or library. Consider [examples](examples/) and Javadoc at <https://nlpub.github.io/watset-java/>.
 
 ### Dummy Clustering
 
