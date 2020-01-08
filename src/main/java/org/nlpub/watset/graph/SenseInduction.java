@@ -18,7 +18,6 @@
 package org.nlpub.watset.graph;
 
 import org.jgrapht.Graph;
-import org.nlpub.watset.graph.Clustering;
 import org.nlpub.watset.util.Neighbors;
 
 import java.util.*;
