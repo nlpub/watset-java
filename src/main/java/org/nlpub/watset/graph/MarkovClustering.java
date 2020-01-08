@@ -53,7 +53,7 @@ public class MarkovClustering<V, E> implements Clustering<V> {
     }
 
     /**
-     * A visitor that raises each element to the power of {@link MarkovClustering#r}.
+     * Visitor that raises each element to the power of {@link MarkovClustering#r}.
      */
     public class InflateVisitor extends DefaultRealMatrixChangingVisitor {
         private InflateVisitor() {
@@ -74,7 +74,7 @@ public class MarkovClustering<V, E> implements Clustering<V> {
     }
 
     /**
-     * A visitor that normalizes columns.
+     * Visitor that normalizes columns.
      */
     public static class NormalizeVisitor extends DefaultRealMatrixChangingVisitor {
         private final RealMatrix sums;

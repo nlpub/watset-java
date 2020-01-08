@@ -36,7 +36,7 @@ import static java.util.stream.Collectors.toSet;
  * A wrapper for the official implementation of the Markov Clustering (MCL) algorithm in C.
  * <p>
  * This is a weird thing. The official implementation of MCL is very fast, but is distributed under GPL.
- * In order to use it, we need to run the separate process and speak to it over standard input/output redirection.
+ * In order to use it we need to run the separate process and speak to it over standard input/output redirection.
  *
  * @param <V> the type of nodes in the graph
  * @param <E> the type of edges in the graph
@@ -122,7 +122,7 @@ public class MarkovClusteringBinaryRunner<V, E> implements Clustering<V> {
                             collect(toSet())).
                     collect(toSet());
         } catch (IOException ex) {
-            throw new IllegalStateException("The clusters cannot be read.", ex);
+            throw new IllegalStateException("Clusters cannot be read.", ex);
         }
     }
 

@@ -29,7 +29,7 @@ import java.util.stream.Stream;
  */
 public interface ABCFormat {
     /**
-     * The default separator, which is the tab symbol.
+     * The default separator, expressed by the tab symbol.
      */
     String SEPARATOR = "\t";
 

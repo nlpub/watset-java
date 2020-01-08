@@ -120,7 +120,7 @@ public class SimplifiedWatset<V, E> implements Clustering<V> {
         });
 
         final int count = senses.values().stream().mapToInt(List::size).sum();
-        logger.log(Level.INFO, "Simplified Watset: sense inventory constructed having {0} senses.", count);
+        logger.log(Level.INFO, "Simplified Watset: sense inventory constructed including {0} senses.", count);
 
         final GraphBuilder<Sense<V>, DefaultWeightedEdge, ? extends SimpleWeightedGraph<Sense<V>, DefaultWeightedEdge>> builder = SimpleWeightedGraph.createBuilder(DefaultWeightedEdge.class);
 
@@ -145,7 +145,7 @@ public class SimplifiedWatset<V, E> implements Clustering<V> {
         senseGraph = builder.build();
 
         if (graph.edgeSet().size() != senseGraph.edgeSet().size()) {
-            throw new IllegalStateException("Mismatch in the number of edges: expected " +
+            throw new IllegalStateException("Mismatch in number of edges: expected " +
                     graph.edgeSet().size() +
                     ", but got " +
                     senseGraph.edgeSet().size());
@@ -199,7 +199,7 @@ public class SimplifiedWatset<V, E> implements Clustering<V> {
         }
 
         if (contexts.size() != senseGraph.vertexSet().size()) {
-            throw new IllegalStateException("Mismatch in the number of senses: expected " +
+            throw new IllegalStateException("Mismatch in number of senses: expected " +
                     senseGraph.vertexSet().size() +
                     ", but got " +
                     contexts.size());

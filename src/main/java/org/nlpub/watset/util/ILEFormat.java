@@ -31,12 +31,12 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public interface ILEFormat {
     /**
-     * The default separator, which is the tab symbol.
+     * The default separator, expressed by the tab symbol.
      */
     String SEPARATOR = "\t";
 
     /**
-     * The default delimiter, which is comma and space.
+     * The default delimiter, expressed by comma and space.
      */
     String DELIMITER = ", ";
 

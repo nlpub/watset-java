@@ -36,7 +36,7 @@ public class SingletonClustering<V, E> implements Clustering<V> {
     private Collection<Collection<V>> clusters;
 
     /**
-     * Set up the trivial clustering algorithm.
+     * Set up the trivial clustering algorithm that puts every node in a separate cluster.
      *
      * @param graph the graph
      */

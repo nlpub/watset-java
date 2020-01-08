@@ -39,7 +39,7 @@ import static java.util.stream.Collectors.toMap;
  */
 public class AlgorithmProvider<V, E> implements Function<Graph<V, E>, Clustering<V>> {
     /**
-     * The default separator in parameter strings.
+     * The default separator in parameter strings, expressed by the colon symbol.
      */
     public static final Pattern SEPARATOR = Pattern.compile(":");
 

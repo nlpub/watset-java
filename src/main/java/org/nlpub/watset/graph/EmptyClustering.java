@@ -34,7 +34,7 @@ public class EmptyClustering<V> implements Clustering<V> {
     }
 
     /**
-     * Set up the trivial clustering algorithm.
+     * Set up the empty clustering algorithm.
      */
     public EmptyClustering() {
     }

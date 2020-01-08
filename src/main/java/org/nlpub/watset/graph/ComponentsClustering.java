@@ -35,7 +35,7 @@ public class ComponentsClustering<V, E> implements Clustering<V> {
     private Collection<Collection<V>> clusters;
 
     /**
-     * Set up the trivial clustering algorithm.
+     * Set up the trivial clustering algorithm that treats every connected component as a cluster.
      *
      * @param graph the graph
      */

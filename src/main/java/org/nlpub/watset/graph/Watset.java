@@ -120,7 +120,7 @@ public class Watset<V, E> implements Clustering<V> {
 
         final int senses = inventory.values().stream().mapToInt(Map::size).sum();
 
-        logger.log(Level.INFO, "Watset: sense inventory constructed having {0} senses.", senses);
+        logger.log(Level.INFO, "Watset: sense inventory constructed including {0} senses.", senses);
 
         contexts = new ConcurrentHashMap<>(senses);
 
@@ -138,7 +138,7 @@ public class Watset<V, E> implements Clustering<V> {
         senseGraph = buildSenseGraph(contexts);
 
         if (graph.edgeSet().size() > senseGraph.edgeSet().size()) {
-            throw new IllegalStateException("Mismatch in the number of edges: expected at least " +
+            throw new IllegalStateException("Mismatch in number of edges: expected at least " +
                     graph.edgeSet().size() +
                     ", but got " +
                     senseGraph.edgeSet().size());
