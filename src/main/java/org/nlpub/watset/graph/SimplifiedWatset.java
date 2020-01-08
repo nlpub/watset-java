@@ -22,9 +22,8 @@ import org.jgrapht.graph.AsUnmodifiableGraph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
 import org.jgrapht.graph.builder.GraphBuilder;
-import org.nlpub.watset.wsi.IndexedSense;
-import org.nlpub.watset.wsi.Sense;
-import org.nlpub.watset.wsi.SenseInduction;
+import org.nlpub.watset.util.IndexedSense;
+import org.nlpub.watset.util.Sense;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -37,22 +36,23 @@ import static java.util.Objects.nonNull;
 import static java.util.Objects.requireNonNull;
 
 /**
- * A simplified version of Watset that does not need a context similarity measure.
+ * A faster and simplified version of Watset that does not need a context similarity measure.
+ * <p>
+ * This is the recommended implementation of the Watset clustering algorithm.
  *
  * @param <V> the type of nodes in the graph
  * @param <E> the type of edges in the graph
- * @see Watset
  * @see <a href="https://doi.org/10.1162/COLI_a_00354">Ustalov et al. (COLI 45:3)</a>
  */
 public class SimplifiedWatset<V, E> implements Clustering<V> {
     /**
-     * Sets up the Simplified Watset clustering algorithm in a functional style.
+     * A factory function that sets up the algorithm for the given graph.
      *
-     * @param local  a supplier for a local clustering algorithm.
-     * @param global a supplier for a global clustering algorithm.
+     * @param local  the local clustering algorithm supplier
+     * @param global the global clustering algorithm supplier
      * @param <V>    the type of nodes in the graph
      * @param <E>    the type of edges in the graph
-     * @return an instance of Simplified Watset.
+     * @return a factory function that sets up the algorithm for the given graph
      */
     @SuppressWarnings("unused")
     public static <V, E> Function<Graph<V, E>, Clustering<V>> provider(Function<Graph<V, E>, Clustering<V>> local, Function<Graph<Sense<V>, DefaultWeightedEdge>, Clustering<Sense<V>>> global) {
@@ -70,11 +70,11 @@ public class SimplifiedWatset<V, E> implements Clustering<V> {
     private Map<V, List<Sense<V>>> senses;
 
     /**
-     * Sets up the Watset clustering algorithm.
+     * Create an instance of the Simplified Watset clustering algorithm.
      *
-     * @param graph  an input graph.
-     * @param local  a supplier for a local clustering algorithm.
-     * @param global a supplier for a global clustering algorithm.
+     * @param graph  the graph
+     * @param local  the local clustering algorithm supplier
+     * @param global the global clustering algorithm supplier
      */
     public SimplifiedWatset(Graph<V, E> graph, Function<Graph<V, E>, Clustering<V>> local, Function<Graph<Sense<V>, DefaultWeightedEdge>, Clustering<Sense<V>>> global) {
         this.graph = requireNonNull(graph);
@@ -171,18 +171,18 @@ public class SimplifiedWatset<V, E> implements Clustering<V> {
     }
 
     /**
-     * Gets an intermediate sense-aware graph.
+     * Get the intermediate node sense graph built during {@link #fit()}.
      *
-     * @return a sense graph.
+     * @return the sense graph
      */
     public Graph<Sense<V>, DefaultWeightedEdge> getSenseGraph() {
         return new AsUnmodifiableGraph<>(requireNonNull(senseGraph, "call fit() first"));
     }
 
     /**
-     * Gets disambiguated contexts.
+     * Get the disambiguated contexts built during {@link #fit()}.
      *
-     * @return disambiguated contexts.
+     * @return the disambiguated contexts
      */
     public Map<Sense<V>, Map<Sense<V>, Number>> getContexts() {
         final Map<Sense<V>, Map<Sense<V>, Number>> contexts = new HashMap<>();

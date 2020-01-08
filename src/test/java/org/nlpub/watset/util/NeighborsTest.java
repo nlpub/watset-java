@@ -21,7 +21,7 @@ import org.jgrapht.Graph;
 import org.jgrapht.graph.AsSubgraph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.junit.Test;
-import org.nlpub.watset.wsi.SenseInductionTest;
+import org.nlpub.watset.graph.SenseInductionTest;
 
 import java.util.HashSet;
 import java.util.Set;

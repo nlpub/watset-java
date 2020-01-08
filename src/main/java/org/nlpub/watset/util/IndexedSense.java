@@ -15,7 +15,7 @@
  *
  */
 
-package org.nlpub.watset.wsi;
+package org.nlpub.watset.util;
 
 import org.jgrapht.alg.util.Pair;
 
@@ -24,20 +24,19 @@ import java.util.Locale;
 import static java.util.Objects.requireNonNull;
 
 /**
- * A simple integer sense identifier.
+ * An integer sense identifier.
  *
- * @param <V> object class.
+ * @param <V> the type of value
  */
 public class IndexedSense<V> extends Pair<V, Integer> implements Sense<V> {
-
     /**
-     * Creates a sense of an object.
+     * Create a sense of an object.
      *
-     * @param object an object.
-     * @param sense  a sense identifier.
+     * @param value the object
+     * @param sense the sense identifier
      */
-    public IndexedSense(V object, Integer sense) {
-        super(object, requireNonNull(sense));
+    public IndexedSense(V value, Integer sense) {
+        super(value, requireNonNull(sense));
     }
 
     @Override
@@ -46,9 +45,9 @@ public class IndexedSense<V> extends Pair<V, Integer> implements Sense<V> {
     }
 
     /**
-     * Gets a sense identifier.
+     * Get the sense identifier.
      *
-     * @return a sense identifier.
+     * @return the sense identifier
      */
     public Integer getSense() {
         return second;

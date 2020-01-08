@@ -32,22 +32,39 @@ import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toMap;
 
 /**
- * This class creates an instance of an algorithm as according to the given parameters.
+ * A utility class that creates instances of the graph clustering algorithms.
  *
  * @param <V> the type of nodes in the graph
  * @param <E> the type of edges in the graph
  */
 public class AlgorithmProvider<V, E> implements Function<Graph<V, E>, Clustering<V>> {
+    /**
+     * The default separator in parameter strings.
+     */
     public static final Pattern SEPARATOR = Pattern.compile(":");
 
     private final String algorithm;
     private final Map<String, String> params;
 
+    /**
+     * Create an instance of this utility class.
+     *
+     * @param algorithm the algorithm identifier
+     * @param params    the parameter map for the algorithm
+     */
     public AlgorithmProvider(String algorithm, Map<String, String> params) {
         this.algorithm = requireNonNull(algorithm);
         this.params = requireNonNull(params);
     }
 
+    /**
+     * Create an instance of this utility class.
+     * <p>
+     * This constructor parses the parameter string {@code params} using {@link #parseParams(String)}.
+     *
+     * @param algorithm the algorithm identifier
+     * @param params    the parameter string for the algorithm
+     */
     public AlgorithmProvider(String algorithm, String params) {
         this(algorithm, parseParams(params));
     }
@@ -98,6 +115,13 @@ public class AlgorithmProvider<V, E> implements Function<Graph<V, E>, Clustering
         }
     }
 
+    /**
+     * Parse the algorithm parameter string similarly to how HTTP query strings are parsed.
+     * However, instead of {@code &} delimiter {@code :} is used.
+     *
+     * @param params the parameter string
+     * @return the parsed parameter map
+     */
     static Map<String, String> parseParams(String params) {
         if (isNull(params) || params.trim().isEmpty()) return Collections.emptyMap();
 

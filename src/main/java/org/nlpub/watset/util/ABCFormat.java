@@ -25,11 +25,21 @@ import org.jgrapht.graph.builder.GraphBuilder;
 import java.util.stream.Stream;
 
 /**
- * Utilities to handle the ABC (source, target, weight) edge list format.
+ * Utilities for handling the ABC {@code (source, target, weight)} edge list format.
  */
-public interface ABCParser {
+public interface ABCFormat {
+    /**
+     * The default separator, which is the tab symbol.
+     */
     String SEPARATOR = "\t";
 
+    /**
+     * Parse the string stream of ABC-formatted edges.
+     *
+     * @param stream the input stream
+     * @param regex  the separator regular expression
+     * @return the graph represented in the stream
+     */
     static Graph<String, DefaultWeightedEdge> parse(Stream<String> stream, String regex) {
         final GraphBuilder<String, DefaultWeightedEdge, ? extends SimpleWeightedGraph<String, DefaultWeightedEdge>> builder = SimpleWeightedGraph.createBuilder(DefaultWeightedEdge.class);
 
@@ -46,6 +56,12 @@ public interface ABCParser {
         return builder.build();
     }
 
+    /**
+     * Parse the string stream of ABC-formatted edges.
+     *
+     * @param stream the input stream
+     * @return the graph represented in the stream
+     */
     static Graph<String, DefaultWeightedEdge> parse(Stream<String> stream) {
         return parse(stream, SEPARATOR);
     }

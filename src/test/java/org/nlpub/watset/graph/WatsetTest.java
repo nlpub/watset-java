@@ -22,8 +22,7 @@ import org.jgrapht.graph.DefaultWeightedEdge;
 import org.junit.Before;
 import org.junit.Test;
 import org.nlpub.watset.util.CosineContextSimilarity;
-import org.nlpub.watset.wsi.Sense;
-import org.nlpub.watset.wsi.SenseInductionTest;
+import org.nlpub.watset.util.Sense;
 
 import java.util.Collection;
 import java.util.Random;

@@ -15,9 +15,10 @@
  *
  */
 
-package org.nlpub.watset.util;
+package org.nlpub.watset.eval;
 
 import org.junit.Test;
+import org.nlpub.watset.eval.Sampling;
 
 import java.util.Collections;
 import java.util.List;

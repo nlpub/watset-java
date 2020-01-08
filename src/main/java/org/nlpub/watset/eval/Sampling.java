@@ -15,7 +15,7 @@
  *
  */
 
-package org.nlpub.watset.util;
+package org.nlpub.watset.eval;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,19 +23,18 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * This interface includes utility functions which are useful in
- * statistical evaluation of the results.
+ * Utilities for statistical evaluation of computational experiments.
  */
 public interface Sampling {
     /**
-     * Creates a bootstrapped dataset using sampling with replacement
-     * from the given dataset. The dataset can be obtained using
-     * {@link Collection#toArray(Object[])}.
+     * Creates a bootstrapped dataset using sampling with replacement from the given dataset.
+     * <p>
+     * The dataset can be obtained using {@link Collection#toArray(Object[])}.
      *
-     * @param dataset a dataset to sample from.
-     * @param random  a random number generator.
-     * @param <T>     an element class.
-     * @return a sampled dataset.
+     * @param dataset the dataset to sample from
+     * @param random  the random number generator
+     * @param <T>     the type of dataset elements
+     * @return a sampled dataset
      */
     static <T> Collection<T> sample(T[] dataset, Random random) {
         final List<T> sample = new ArrayList<>(dataset.length);

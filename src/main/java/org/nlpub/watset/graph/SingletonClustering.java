@@ -36,9 +36,9 @@ public class SingletonClustering<V, E> implements Clustering<V> {
     private Collection<Collection<V>> clusters;
 
     /**
-     * Sets up a trivial clustering algorithm.
+     * Set up the trivial clustering algorithm.
      *
-     * @param graph an input graph.
+     * @param graph the graph
      */
     public SingletonClustering(Graph<V, E> graph) {
         this.graph = requireNonNull(graph);

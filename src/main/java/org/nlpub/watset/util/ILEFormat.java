@@ -27,12 +27,26 @@ import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Utilities to handle the ILE (identifier, length, elements) file format.
+ * Utilities for handling the ILE {@code (identifier, length, elements)} file format.
  */
 public interface ILEFormat {
+    /**
+     * The default separator, which is the tab symbol.
+     */
     String SEPARATOR = "\t";
+
+    /**
+     * The default delimiter, which is comma and space.
+     */
     String DELIMITER = ", ";
 
+    /**
+     * Write the ILE-formatted file representing the clusters.
+     *
+     * @param path       the path
+     * @param clustering the clusters
+     * @throws IOException if an I/O error occurs
+     */
     static void write(Path path, Clustering<String> clustering) throws IOException {
         try (final BufferedWriter writer = Files.newBufferedWriter(path)) {
             final AtomicInteger counter = new AtomicInteger(0);

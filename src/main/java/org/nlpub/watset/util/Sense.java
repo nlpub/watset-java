@@ -15,9 +15,7 @@
  *
  */
 
-package org.nlpub.watset.wsi;
-
-import org.nlpub.watset.util.ContextSimilarity;
+package org.nlpub.watset.util;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -28,21 +26,22 @@ import java.util.function.Supplier;
 import static org.nlpub.watset.util.Maximizer.argmax;
 
 /**
- * A sense is a simple wrapper over an object that has a different address in the memory.
+ * A monad that provides the wrapped value with a sense identifier.
  *
- * @param <V> wrapped class.
+ * @param <V> the type of value
  */
 public interface Sense<V> extends Supplier<V> {
     /**
-     * Disambiguate a context as according to its similarity to the senses in the inventory.
-     * The method skips context keys which are marked as ignored.
+     * Disambiguate each element of the context by maximizing its similarity to the senses in the inventory.
+     * <p>
+     * The method skips context keys marked as {@code ignored}.
      *
-     * @param inventory  sense inventory.
-     * @param similarity similarity measure.
-     * @param context    context to disambiguate.
-     * @param ignored    blacklisted keys.
-     * @param <V>        context element class.
-     * @return disambiguated context.
+     * @param inventory  the sense inventory
+     * @param similarity the similarity measure
+     * @param context    the context to disambiguate
+     * @param ignored    the ignored elements of {@code context}
+     * @param <V>        the context element class
+     * @return the disambiguated context
      */
     static <V> Map<Sense<V>, Number> disambiguate(Map<V, Map<Sense<V>, Map<V, Number>>> inventory, ContextSimilarity<V> similarity, Map<V, Number> context, Collection<V> ignored) {
         final Map<Sense<V>, Number> dcontext = new HashMap<>(context.size());

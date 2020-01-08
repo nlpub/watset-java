@@ -24,9 +24,8 @@ import org.jgrapht.graph.SimpleWeightedGraph;
 import org.jgrapht.graph.builder.GraphBuilder;
 import org.nlpub.watset.util.ContextSimilarity;
 import org.nlpub.watset.util.CosineContextSimilarity;
-import org.nlpub.watset.wsi.IndexedSense;
-import org.nlpub.watset.wsi.Sense;
-import org.nlpub.watset.wsi.SenseInduction;
+import org.nlpub.watset.util.IndexedSense;
+import org.nlpub.watset.util.Sense;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -39,12 +38,15 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * Watset is a local-global meta-algorithm for fuzzy graph clustering.
- * It builds an intermediate undirected graph that addresses the element ambiguity by
- * inducing different senses of each node in the input graph.
+ * <p>
+ * Watset builds an intermediate undirected graph by inducing different senses of each node in the input graph.
+ * <p>
+ * We recommend using {@link SimplifiedWatset} instead of this class.
  *
  * @param <V> the type of nodes in the graph
  * @param <E> the type of edges in the graph
  * @see <a href="https://doi.org/10.1162/COLI_a_00354">Ustalov et al. (COLI 45:3)</a>
+ * @see SimplifiedWatset
  */
 public class Watset<V, E> implements Clustering<V> {
     /**
@@ -54,13 +56,13 @@ public class Watset<V, E> implements Clustering<V> {
     private final static Number DEFAULT_CONTEXT_WEIGHT = 1;
 
     /**
-     * Sets up the Watset clustering algorithm in a functional style.
+     * A factory function that sets up the algorithm for the given graph.
      *
-     * @param local  a supplier for a local clustering algorithm.
-     * @param global a supplier for a global clustering algorithm.
+     * @param local  the local clustering algorithm supplier
+     * @param global the global clustering algorithm supplier
      * @param <V>    the type of nodes in the graph
      * @param <E>    the type of edges in the graph
-     * @return an instance of Watset.
+     * @return a factory function that sets up the algorithm for the given graph
      */
     @SuppressWarnings("unused")
     public static <V, E> Function<Graph<V, E>, Clustering<V>> provider(Function<Graph<V, E>, Clustering<V>> local, Function<Graph<Sense<V>, DefaultWeightedEdge>, Clustering<Sense<V>>> global) {
@@ -79,12 +81,12 @@ public class Watset<V, E> implements Clustering<V> {
     private Graph<Sense<V>, DefaultWeightedEdge> senseGraph;
 
     /**
-     * Sets up the Watset clustering algorithm.
+     * Create an instance of the Watset clustering algorithm.
      *
-     * @param graph      an input graph.
-     * @param local      a supplier for a local clustering algorithm.
-     * @param global     a supplier for a global clustering algorithm.
-     * @param similarity a context similarity measure.
+     * @param graph      the graph
+     * @param local      the local clustering algorithm supplier
+     * @param global     the global clustering algorithm supplier
+     * @param similarity the context similarity measure
      */
     public Watset(Graph<V, E> graph, Function<Graph<V, E>, Clustering<V>> local, Function<Graph<Sense<V>, DefaultWeightedEdge>, Clustering<Sense<V>>> global, ContextSimilarity<V> similarity) {
         this.graph = requireNonNull(graph);
@@ -162,9 +164,9 @@ public class Watset<V, E> implements Clustering<V> {
     }
 
     /**
-     * Gets a built sense inventory.
+     * Get the sense inventory built during {@link #fit()}.
      *
-     * @return a sense inventory.
+     * @return the sense inventory
      */
     @SuppressWarnings("unused")
     public Map<V, Map<Sense<V>, Map<V, Number>>> getInventory() {
@@ -172,30 +174,30 @@ public class Watset<V, E> implements Clustering<V> {
     }
 
     /**
-     * Gets the disambiguated contexts.
+     * Get the disambiguated contexts built during {@link #fit()}.
      *
-     * @return disambiguated contexts.
+     * @return the disambiguated contexts
      */
     public Map<Sense<V>, Map<Sense<V>, Number>> getContexts() {
         return Collections.unmodifiableMap(requireNonNull(contexts, "call fit() first"));
     }
 
     /**
-     * Gets an intermediate sense-aware graph.
+     * Get the intermediate node sense graph built during {@link #fit()}.
      *
-     * @return a sense graph.
+     * @return the sense graph
      */
     public Graph<Sense<V>, DefaultWeightedEdge> getSenseGraph() {
         return new AsUnmodifiableGraph<>(requireNonNull(senseGraph, "call fit() first"));
     }
 
     /**
-     * Disambiguates the context of the given node sense as according to the sense inventory
+     * Disambiguate the context of the given node sense as according to the sense inventory
      * using {@link Sense#disambiguate(Map, ContextSimilarity, Map, Collection)}.
      *
-     * @param inventory a sense inventory.
-     * @param sense     a target sense.
-     * @return a disambiguated context.
+     * @param inventory the sense inventory
+     * @param sense     the target sense
+     * @return the disambiguated context of {@code sense}
      */
     private Map<Sense<V>, Number> disambiguateContext(Map<V, Map<Sense<V>, Map<V, Number>>> inventory, Sense<V> sense) {
         final Map<V, Number> context = new HashMap<>(inventory.get(sense.get()).get(sense));
@@ -206,10 +208,10 @@ public class Watset<V, E> implements Clustering<V> {
     }
 
     /**
-     * Builds an intermediate sense-aware representation of the input graph.
+     * Build an intermediate sense-aware representation of the input graph called the <em>node sense graph</em>.
      *
-     * @param contexts disambiguated contexts.
-     * @return a sense graph.
+     * @param contexts the disambiguated contexts
+     * @return the sense graph
      */
     private Graph<Sense<V>, DefaultWeightedEdge> buildSenseGraph(Map<Sense<V>, Map<Sense<V>, Number>> contexts) {
         final GraphBuilder<Sense<V>, DefaultWeightedEdge, ? extends SimpleWeightedGraph<Sense<V>, DefaultWeightedEdge>> builder = SimpleWeightedGraph.createBuilder(DefaultWeightedEdge.class);

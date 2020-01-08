@@ -15,7 +15,7 @@
  *
  */
 
-package org.nlpub.watset.wsi;
+package org.nlpub.watset.graph;
 
 import org.jgrapht.Graph;
 import org.nlpub.watset.graph.Clustering;
@@ -27,21 +27,23 @@ import java.util.function.Function;
 import static java.util.Objects.requireNonNull;
 
 /**
- * A simple graph-based word sense induction approach. It clusters node neighborhoods.
+ * A simple graph-based word sense induction approach that clusters node neighborhoods.
  *
  * @param <V> the type of nodes in the graph
  * @param <E> the type of edges in the graph
+ * @see <a href="https://doi.org/10.3115/1654758.1654774">Biemann (TextGraphs-1)</a>
  * @see <a href="https://doi.org/10.3115/1067737.1067753">Dorow &amp; Widdows (EACL '03)</a>
+ * @see <a href="https://doi.org/10.1162/COLI_a_00354">Ustalov et al. (COLI 45:3)</a>
  */
 public class SenseInduction<V, E> {
     private final Graph<V, E> graph;
     private final Function<Graph<V, E>, Clustering<V>> local;
 
     /**
-     * Constructs a sense inducer.
+     * Create an instance of {@code SenseInduction}.
      *
-     * @param graph an input graph.
-     * @param local a neighborhood clustering local provider.
+     * @param graph the graph
+     * @param local the neighborhood clustering algorithm supplier
      */
     public SenseInduction(Graph<V, E> graph, Function<Graph<V, E>, Clustering<V>> local) {
         this.graph = requireNonNull(graph);
@@ -49,10 +51,10 @@ public class SenseInduction<V, E> {
     }
 
     /**
-     * Gets the induced sense clusters.
+     * Get the induced sense clusters.
      *
-     * @param target a target node.
-     * @return a map of senses to their contexts.
+     * @param target the target node
+     * @return a map of senses to their contexts
      */
     public Collection<Collection<V>> clusters(V target) {
         final Graph<V, E> ego = Neighbors.neighborhoodGraph(graph, requireNonNull(target));
@@ -64,10 +66,10 @@ public class SenseInduction<V, E> {
     }
 
     /**
-     * Gets the induced senses and their non-disambiguated contexts.
+     * Get the induced senses and their non-disambiguated contexts.
      *
-     * @param target a target node.
-     * @return a map of senses to their contexts.
+     * @param target the target node
+     * @return maps of senses to their contexts
      */
     public List<Map<V, Number>> contexts(V target) {
         final Collection<Collection<V>> clusters = clusters(target);

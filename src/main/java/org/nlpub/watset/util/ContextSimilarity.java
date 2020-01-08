@@ -21,21 +21,22 @@ import java.util.Map;
 import java.util.function.BiFunction;
 
 /**
- * This functional interface computes a similarity measure between a pair of bag-of-words.
- * It maps a pair of bags to a number.
+ * A similarity measure between two bags-of-words that maps them to a number.
  *
- * @param <V> bag element class.
+ * @param <V> the type of bag elements
  * @see <a href="https://nlp.stanford.edu/IR-book/html/htmledition/dot-products-1.html">Dot products</a>
  */
 public interface ContextSimilarity<V> extends BiFunction<Map<V, Number>, Map<V, Number>, Number> {
     /**
-     * Returns a dummy similarity function that always returns zero.
+     * A simple context similarity measure that always returns zero.
      *
-     * @param <V> bag element class.
-     * @return dummy similarity function.
+     * @param <V> the type of bag elements
      */
     @SuppressWarnings("unused")
-    static <V> ContextSimilarity<V> dummy() {
-        return (bag1, bag2) -> 0;
+    class DummyContextSimilarity<V> implements ContextSimilarity<V> {
+        @Override
+        public Number apply(Map<V, Number> vNumberMap, Map<V, Number> vNumberMap2) {
+            return 0;
+        }
     }
 }

@@ -24,14 +24,14 @@ import java.util.function.Predicate;
 import static java.util.Objects.isNull;
 
 /**
- * This is an utility class that implements a naïve approach for search a local maximum of a function.
+ * Utilities for searching arguments of the maxima of the function.
  */
 public interface Maximizer {
     /**
      * A predicate that is always true.
      *
-     * @param <T> the type.
-     * @return the absolute truth.
+     * @param <T> the type
+     * @return the absolute truth
      */
     static <T> Predicate<T> alwaysTrue() {
         return (o) -> true;
@@ -40,22 +40,22 @@ public interface Maximizer {
     /**
      * A predicate that is always false.
      *
-     * @param <T> the type.
-     * @return the absolute non-truth.
+     * @param <T> the type
+     * @return the absolute non-truth
      */
     static <T> Predicate<T> alwaysFalse() {
         return (o) -> false;
     }
 
     /**
-     * This is an utility method that finds an argument of the maxima for certain score function.
+     * Find the first argument of the maximum (argmax) of the function.
      *
-     * @param it      finite iterator over the states.
-     * @param checker the predicate that checks the suitability of an argument for the scoring.
-     * @param scorer  the scoring function.
-     * @param <V>     the argument type.
-     * @param <S>     the score type.
-     * @return non-empty optional that contains the first found argmax, otherwise an empty one.
+     * @param it      the finite iterator
+     * @param checker the predicate that evaluates the suitability of the argument
+     * @param scorer  the scoring function
+     * @param <V>     the argument type
+     * @param <S>     the score type
+     * @return a non-empty optional that contains the first found argmax, otherwise the empty one
      */
     static <V, S extends Comparable<S>> Optional<V> argmax(Iterator<V> it, Predicate<V> checker, Function<V, S> scorer) {
         V result = null;
@@ -78,14 +78,28 @@ public interface Maximizer {
     }
 
     /**
-     * This is an utility method that randomly chooses an argument of the maxima for certain score function.
+     * Find the first argument of the maximum (argmax) of the function.
      *
-     * @param it     finite iterator over the states.
-     * @param scorer the scoring function.
-     * @param random the random number generator.
-     * @param <V>    the argument type.
-     * @param <S>    the score type.
-     * @return non-empty optional that contains a randomly chosen argmax, otherwise an empty one.
+     * @param it     the finite iterator
+     * @param scorer the scoring function
+     * @param <V>    the argument type
+     * @param <S>    the score type
+     * @return a non-empty optional that contains the first found argmax, otherwise the empty one
+     * @see #argmax(Iterator, Predicate, Function)
+     */
+    static <V, S extends Comparable<S>> Optional<V> argmax(Iterator<V> it, Function<V, S> scorer) {
+        return argmax(it, alwaysTrue(), scorer);
+    }
+
+    /**
+     * Find the arguments of the maxima (argmax) of the function and randomly choose any of them.
+     *
+     * @param it     the finite iterator
+     * @param scorer the scoring function
+     * @param random the random number generator
+     * @param <V>    the argument type
+     * @param <S>    the score type
+     * @return a non-empty optional that contains the randomly chosen argmax, otherwise the empty one
      */
     static <V, S extends Comparable<S>> Optional<V> argmaxRandom(Iterator<V> it, Function<V, S> scorer, Random random) {
         final List<V> results = new LinkedList<>();
@@ -109,19 +123,5 @@ public interface Maximizer {
         }
 
         return results.isEmpty() ? Optional.empty() : Optional.of(results.get(random.nextInt(results.size())));
-    }
-
-    /**
-     * This is a simplified method that finds the argmax.
-     *
-     * @param it     finite iterator over the states.
-     * @param scorer the scoring function.
-     * @param <V>    the argument type.
-     * @param <S>    the score type.
-     * @return non-empty optional that contains the first found argmax, otherwise an empty one.
-     * @see Maximizer#argmax(Iterator, Predicate, Function)
-     */
-    static <V, S extends Comparable<S>> Optional<V> argmax(Iterator<V> it, Function<V, S> scorer) {
-        return argmax(it, alwaysTrue(), scorer);
     }
 }

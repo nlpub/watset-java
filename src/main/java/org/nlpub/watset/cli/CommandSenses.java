@@ -25,8 +25,8 @@ import org.nlpub.watset.graph.SimplifiedWatset;
 import org.nlpub.watset.graph.Watset;
 import org.nlpub.watset.util.AlgorithmProvider;
 import org.nlpub.watset.util.CosineContextSimilarity;
-import org.nlpub.watset.wsi.IndexedSense;
-import org.nlpub.watset.wsi.Sense;
+import org.nlpub.watset.util.IndexedSense;
+import org.nlpub.watset.util.Sense;
 
 import java.io.BufferedWriter;
 import java.io.IOException;

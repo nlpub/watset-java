@@ -24,30 +24,33 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * This interface contains useful vector-space model transformations
- * from bag-of-words representations to real-valued vectors.
+ * Utilities for mapping bags-of-words to real-valued vectors.
+ *
+ * @see <a href="https://nlp.stanford.edu/IR-book/html/htmledition/dot-products-1.html">Dot products</a>
  */
 public interface Vectors {
     /**
-     * Transforms a bag-of-words into a real-valued vector.
-     * The number of elements in the vector is equals to the size of the key set of the given bag.
+     * Transform the bag-of-words into a real-valued vector.
+     * <p>
+     * The number of elements in the vector is equal to the size of the key set of the given bag.
      *
-     * @param bag bag-of-words.
-     * @param <V> bag element class.
-     * @return real-valued vector.
+     * @param bag the bag-of-words
+     * @param <V> the type of bag elements
+     * @return a real-valued vector
      */
     static <V> RealVector transform(Map<V, Number> bag) {
         return transform(bag, bag.keySet());
     }
 
     /**
-     * Transforms a bag-of-words into a real-valued vector.
-     * The number of elements in the vector is equals to the size of the domain set.
+     * Transform the bag-of-words into a real-valued vector.
+     * <p>
+     * The number of elements in the vector is equal to the size of the domain set.
      *
-     * @param bag    bag-of-words.
-     * @param domain set of dimensions.
-     * @param <V>    bag element class.
-     * @return real-valued vector.
+     * @param bag    the bag-of-words
+     * @param domain the set of allowed elements of {@code bag}
+     * @param <V>    the type of bag elements
+     * @return a real-valued vector
      */
     static <V> RealVector transform(Map<V, Number> bag, Set<V> domain) {
         final double[] data = new double[domain.size()];

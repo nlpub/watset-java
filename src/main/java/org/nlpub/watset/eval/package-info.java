@@ -16,6 +16,6 @@
  */
 
 /**
- * Clustering evaluation and performance measurement tools.
+ * Clustering and performance evaluation tools.
  */
 package org.nlpub.watset.eval;

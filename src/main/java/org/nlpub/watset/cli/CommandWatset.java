@@ -26,7 +26,7 @@ import org.nlpub.watset.graph.SimplifiedWatset;
 import org.nlpub.watset.graph.Watset;
 import org.nlpub.watset.util.AlgorithmProvider;
 import org.nlpub.watset.util.CosineContextSimilarity;
-import org.nlpub.watset.wsi.Sense;
+import org.nlpub.watset.util.Sense;
 
 @Parameters(commandDescription = "Watset")
 class CommandWatset extends ClusteringCommand {

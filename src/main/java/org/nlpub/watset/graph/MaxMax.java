@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 import static java.util.Objects.requireNonNull;
 
 /**
- * An implementation of the MaxMax clustering algorithm.
+ * Implementation of the MaxMax soft clustering algorithm.
  *
  * @param <V> the type of nodes in the graph
  * @param <E> the type of edges in the graph
@@ -38,11 +38,11 @@ import static java.util.Objects.requireNonNull;
  */
 public class MaxMax<V, E> implements Clustering<V> {
     /**
-     * Sets up the MaxMax clustering algorithm in a functional style.
+     * A factory function that sets up the algorithm for the given graph.
      *
-     * @param <V> node class.
-     * @param <E> edge class.
-     * @return an instance of MaxMax.
+     * @param <V> the type of nodes in the graph
+     * @param <E> the type of edges in the graph
+     * @return a factory function that sets up the algorithm for the given graph
      */
     @SuppressWarnings("unused")
     public static <V, E> Function<Graph<V, E>, Clustering<V>> provider() {
@@ -55,9 +55,9 @@ public class MaxMax<V, E> implements Clustering<V> {
     private Map<V, Boolean> roots;
 
     /**
-     * Sets up the MaxMax clustering algorithm.
+     * Create an instance of the MaxMax algorithm.
      *
-     * @param graph an input graph.
+     * @param graph the graph
      */
     public MaxMax(Graph<V, E> graph) {
         this.graph = requireNonNull(graph);
@@ -109,6 +109,7 @@ public class MaxMax<V, E> implements Clustering<V> {
         });
     }
 
+    @Override
     public Collection<Collection<V>> getClusters() {
         requireNonNull(roots, "call fit() first");
 
@@ -132,9 +133,9 @@ public class MaxMax<V, E> implements Clustering<V> {
     }
 
     /**
-     * Returns the directed graph representation of the input graph.
+     * Return the directed graph representation of the input graph.
      *
-     * @return a directed graph.
+     * @return a directed graph
      */
     @SuppressWarnings("WeakerAccess")
     public Graph<V, DefaultEdge> getDigraph() {
@@ -142,9 +143,9 @@ public class MaxMax<V, E> implements Clustering<V> {
     }
 
     /**
-     * Returns the map of nodes to their maximal affinity nodes.
+     * Return the map of nodes to their maximal affinity nodes.
      *
-     * @return a map of maximal affinities.
+     * @return a map of maximal affinities
      */
     @SuppressWarnings("unused")
     public Map<V, Set<V>> getMaximals() {
@@ -154,7 +155,7 @@ public class MaxMax<V, E> implements Clustering<V> {
     /**
      * Return the map of root and non-root nodes.
      *
-     * @return a map of root and non-root nodes.
+     * @return a map of root and non-root nodes
      */
     @SuppressWarnings("WeakerAccess")
     public Map<V, Boolean> getRoots() {

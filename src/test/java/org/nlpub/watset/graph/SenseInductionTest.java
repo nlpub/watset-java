@@ -15,7 +15,7 @@
  *
  */
 
-package org.nlpub.watset.wsi;
+package org.nlpub.watset.graph;
 
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
@@ -24,6 +24,7 @@ import org.junit.Test;
 import org.nlpub.watset.graph.ChineseWhispers;
 import org.nlpub.watset.graph.Clustering;
 import org.nlpub.watset.graph.NodeWeighting;
+import org.nlpub.watset.graph.SenseInduction;
 
 import java.util.List;
 import java.util.Map;

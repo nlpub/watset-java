@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * A cosine similarity measure for bags-of-words.
+ * The classical cosine similarity measure for bags-of-words.
  *
  * @see <a href="https://nlp.stanford.edu/IR-book/html/htmledition/queries-as-vectors-1.html">Queries as vectors</a>
  */
