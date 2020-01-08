@@ -8,7 +8,7 @@ ifeq ($(shell which groovy),)
 $(error Please install Groovy and add it to PATH)
 endif
 
-WATSET := 2.0.0-rc1
+WATSET := 2.0.0-rc2
 
 all: HardClustering FuzzyClustering PickleGraph PickleClustering
 
