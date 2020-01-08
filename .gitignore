@@ -22,5 +22,9 @@ hs_err_pid*
 
 .attach_pid*
 
+# maven-release-plugin
+release.properties
+*.releaseBackup
+
 *.txt
 *.pkl
