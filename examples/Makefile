@@ -8,7 +8,7 @@ ifeq ($(shell which groovy),)
 $(error Please install Groovy and add it to PATH)
 endif
 
-WATSET := 2.0.0-rc2
+RELEASE := 2.0.0-rc2
 
 all: HardClustering FuzzyClustering PickleGraph PickleClustering
 
@@ -22,4 +22,4 @@ clean:
 	python3 $<
 
 watset.jar:
-	curl -sLo "$@" "https://github.com/nlpub/watset-java/releases/download/$(WATSET)/watset.jar"
+	curl -sLo "$@" "https://github.com/nlpub/watset-java/releases/download/$(RELEASE)/watset.jar"
