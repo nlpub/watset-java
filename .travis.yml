@@ -9,6 +9,9 @@ install:
 - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dshade=true -B -V
 before_script:
 - mvn versions:display-dependency-updates versions:display-plugin-updates
+script:
+- mvn test -B
+- WATSET=$PWD/target/watset.jar make -C examples CommandLine
 after_success:
 - mvn javadoc:javadoc
 env:
