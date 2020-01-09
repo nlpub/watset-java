@@ -5,6 +5,12 @@ INPUT=${INPUT-java.tsv}
 
 set -ex
 
+# Dummy Clustering
+java -jar $WATSET -i $INPUT empty
+java -jar $WATSET -i $INPUT singleton
+java -jar $WATSET -i $INPUT together
+java -jar $WATSET -i $INPUT components
+
 # Chinese Whispers
 for mode in top lin log ; do
   java -jar $WATSET -i $INPUT cw -m $mode

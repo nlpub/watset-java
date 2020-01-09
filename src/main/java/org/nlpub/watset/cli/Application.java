@@ -73,6 +73,10 @@ public class Application {
         // TODO: Use the main argument for --input instead of the named one.
         final Application application = new Application();
 
+        final CommandTrivial empty = new CommandTrivial(application, "empty");
+        final CommandTrivial singleton = new CommandTrivial(application, "singleton");
+        final CommandTrivial together = new CommandTrivial(application, "together");
+        final CommandTrivial components = new CommandTrivial(application, "components");
         final CommandChineseWhispers cw = new CommandChineseWhispers(application);
         final CommandMarkovClustering mcl = new CommandMarkovClustering(application, false);
         final CommandMarkovClustering mclBin = new CommandMarkovClustering(application, true);
@@ -83,6 +87,10 @@ public class Application {
 
         final JCommander jc = JCommander.newBuilder()
                 .addObject(application)
+                .addCommand("empty", empty)
+                .addCommand("singleton", singleton)
+                .addCommand("together", together)
+                .addCommand("components", components)
                 .addCommand("cw", cw)
                 .addCommand("mcl", mcl)
                 .addCommand("mcl-bin", mclBin)
@@ -101,6 +109,18 @@ public class Application {
         }
 
         switch (jc.getParsedCommand().toLowerCase(Locale.ROOT)) {
+            case "empty":
+                empty.run();
+                break;
+            case "singleton":
+                singleton.run();
+                break;
+            case "together":
+                together.run();
+                break;
+            case "components":
+                components.run();
+                break;
             case "cw":
                 cw.run();
                 break;
