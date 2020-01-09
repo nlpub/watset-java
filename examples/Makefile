@@ -10,7 +10,7 @@ endif
 
 RELEASE := 2.0.0-rc2
 
-all: HardClustering FuzzyClustering PickleGraph PickleClustering
+all: HardClustering FuzzyClustering PickleGraph PickleClustering CommandLine
 
 clean:
 	rm -fv *.pkl *.jar
@@ -20,6 +20,9 @@ clean:
 
 %: %.py
 	python3 $<
+
+%: %.sh
+	$(SHELL) $<
 
 watset.jar:
 	curl -sLo "$@" "https://github.com/nlpub/watset-java/releases/download/$(RELEASE)/watset.jar"
