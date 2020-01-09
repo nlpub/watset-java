@@ -26,5 +26,6 @@ hs_err_pid*
 release.properties
 *.releaseBackup
 
+.ipynb_checkpoints/
 *.txt
 *.pkl
