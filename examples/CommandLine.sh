@@ -23,6 +23,13 @@ for lmode in top lin log ; do
   java -jar $WATSET -i $INPUT senses -s -l cw -lp mode=$lmode
 done
 
+# Watset Sense Graph
+java -jar $WATSET -i $INPUT graph -s -l mcl
+
+for lmode in top lin log ; do
+  java -jar $WATSET -i $INPUT graph -s -l cw -lp mode=$lmode
+done
+
 # Watset Clustering
 java -jar $WATSET -i $INPUT watset -s -l mcl -g mcl # Watset[MCL, MCL]
 
