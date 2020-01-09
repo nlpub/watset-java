@@ -25,3 +25,11 @@ make FuzzyClustering
 ```shell
 make PickleGraph PickleClustering
 ```
+
+## Command-Line Interface
+
+[CommandLine.sh](CommandLine.sh) shows various features of the Watset command-line interface. As the input the graph [java.tsv](java.tsv) that is similar to the one shown in Figure&nbsp;16 in the [Watset article](https://doi.org/10.1162/coli_a_00354) is used.
+
+```shell
+make CommandLine
+```
