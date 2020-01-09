@@ -21,7 +21,7 @@ clean:
 %: %.py
 	python3 $<
 
-%: %.sh
+%: %.sh | watset.jar
 	$(SHELL) $<
 
 watset.jar:
