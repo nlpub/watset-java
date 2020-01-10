@@ -8,7 +8,7 @@ ifeq ($(shell which groovy),)
 $(error Please install Groovy and add it to PATH)
 endif
 
-RELEASE := 2.0.0-rc3
+RELEASE := 2.0.0
 
 all: HardClustering FuzzyClustering PickleGraph PickleClustering CommandLine
 
