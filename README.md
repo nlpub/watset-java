@@ -89,7 +89,7 @@ Watset requires two different clustering algorithms to be selected: the *local* 
 $ java -jar watset.jar -i graph.txt -o output.tsv watset -s -l mcl -lp e=1:r=3 -g cw -gp mode=lin
 ```
 
-In practice, the default parameters for MCL work well enough, so the `-lp` argument can be omitted in this example.
+In practice, the default parameters for MCL and CW work well enough, so the `-lp` and `-gp` arguments can be omitted in this example.
 
 #### Watset: Word Sense Induction
 
