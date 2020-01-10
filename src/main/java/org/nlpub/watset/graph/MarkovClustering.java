@@ -161,13 +161,13 @@ public class MarkovClustering<V, E> implements Clustering<V> {
         index = buildIndex();
         matrix = buildMatrix(index);
 
-        normalize(matrix);
+        normalize();
 
         for (int i = 0; i < ITERATIONS; i++) {
             final RealMatrix previous = matrix.copy();
 
-            expand(matrix);
-            inflate(matrix);
+            expand();
+            inflate();
 
             if (matrix.equals(previous)) break;
         }
@@ -237,17 +237,17 @@ public class MarkovClustering<V, E> implements Clustering<V> {
         return matrix;
     }
 
-    protected void normalize(RealMatrix matrix) {
+    protected void normalize() {
         final RealMatrix sums = createRowOnesRealMatrix(matrix.getRowDimension()).multiply(matrix);
         matrix.walkInOptimizedOrder(new NormalizeVisitor(sums));
     }
 
-    protected void expand(RealMatrix matrix) {
-        this.matrix = matrix.power(e);
+    protected void expand() {
+        matrix = matrix.power(e);
     }
 
-    protected void inflate(RealMatrix matrix) {
-        normalize(matrix);
+    protected void inflate() {
+        normalize();
         matrix.walkInOptimizedOrder(inflateVisitor);
     }
 
