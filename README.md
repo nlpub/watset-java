@@ -1,6 +1,6 @@
 # Watset
 
-This is an open source implementation of the [Watset] algorithm for [fuzzy graph clustering](https://en.wikipedia.org/wiki/Fuzzy_clustering) (aka soft clustering). The implementation is multi-threaded, extensible, contains several unit tests, and can be easily embedded into any Java-based graph processing pipeline. Also, it offers a convenient command-line tool for running [Watset] over the edge lists in text files.
+This is an open source implementation of the [Watset] algorithm for [fuzzy graph clustering](https://en.wikipedia.org/wiki/Fuzzy_clustering) (aka soft clustering). This implementation is multi-threaded, extensible, contains several unit tests, and can be easily embedded into any Java-based graph processing pipeline. Also, it offers a convenient command-line tool for running [Watset] over the edge lists in text files.
 
 ![Watset](src/main/javadoc/doc-files/Watset.svg)
 
@@ -39,7 +39,7 @@ c	d	2
 
 The default output format is a tab-separated file, each line of which contains three elements: `id`, `size` and a comma-and-space-separated list of elements.
 
-In fact, `watset-java` is not just a tool, it also features a complete API for graph clustering. This API can easily be embedded into your application or library. Consider [examples](examples/) and Javadoc at <https://nlpub.github.io/watset-java/>.
+In fact, `watset-java` is not only a tool, it also features a complete API for graph clustering. This API can easily be embedded into your application or library, see [examples](examples/). The complete Javadoc is available at <https://nlpub.github.io/watset-java/>.
 
 ### Dummy Clustering
 
