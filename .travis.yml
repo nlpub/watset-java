@@ -12,6 +12,7 @@ before_script:
 script:
 - mvn test -B
 - WATSET=$PWD/target/watset.jar make -C examples CommandLine
+- bash -c 'shopt -s globstar nullglob; shellcheck **/*.{sh,ksh,bash}'
 after_success:
 - mvn javadoc:javadoc
 env:
