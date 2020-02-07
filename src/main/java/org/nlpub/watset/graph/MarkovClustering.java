@@ -133,6 +133,11 @@ public class MarkovClustering<V, E> implements Clustering<V> {
     protected RealMatrix matrix;
 
     /**
+     * The row matrix filled by ones.
+     */
+    protected RealMatrix ones;
+
+    /**
      * The mapping of graph nodes to the columns of {@code matrix}.
      */
     protected Map<V, Integer> index;
@@ -155,11 +160,16 @@ public class MarkovClustering<V, E> implements Clustering<V> {
     public void fit() {
         index = null;
         matrix = null;
+        ones = null;
 
         if (graph.vertexSet().isEmpty()) return;
 
         index = buildIndex();
         matrix = buildMatrix(index);
+
+        final double[] onesData = new double[matrix.getRowDimension()];
+        Arrays.fill(onesData, 1);
+        ones = MatrixUtils.createRowRealMatrix(onesData);
 
         normalize();
 
@@ -238,7 +248,7 @@ public class MarkovClustering<V, E> implements Clustering<V> {
     }
 
     protected void normalize() {
-        final RealMatrix sums = createRowOnesRealMatrix(matrix.getRowDimension()).multiply(matrix);
+        final RealMatrix sums = ones.multiply(matrix);
         matrix.walkInOptimizedOrder(new NormalizeVisitor(sums));
     }
 
@@ -249,11 +259,5 @@ public class MarkovClustering<V, E> implements Clustering<V> {
     protected void inflate() {
         normalize();
         matrix.walkInOptimizedOrder(inflateVisitor);
-    }
-
-    private RealMatrix createRowOnesRealMatrix(int n) {
-        final double[] ones = new double[n];
-        Arrays.fill(ones, 1);
-        return MatrixUtils.createRowRealMatrix(ones);
     }
 }
