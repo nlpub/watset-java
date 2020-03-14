@@ -7,6 +7,9 @@ jdk:
 - openjdk13
 - openjdk14
 - openjdk-ea
+matrix:
+  allow_failures:
+  - jdk: openjdk-ea
 install:
 - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dshade=true -B -V
 before_script:
