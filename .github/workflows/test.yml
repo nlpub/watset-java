@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
     steps:
@@ -20,9 +20,9 @@ jobs:
       run: mvn versions:display-dependency-updates versions:display-plugin-updates
     - name: Run Unit Tests
       run: mvn -B test
-    - name: Run Shell Tests
-      run: WATSET={{ GITHUB_WORKSPACE }}/target/watset.jar make -C examples CommandLine
     - name: Build with Maven
       run: mvn -B package
+    - name: Run Shell Tests
+      run: WATSET=$GITHUB_WORKSPACE/target/watset.jar make -C examples CommandLine
     - name: Build with Maven (Shade)
       run: mvn -Dshade=true -B package
