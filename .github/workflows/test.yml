@@ -16,7 +16,13 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.8
+    - name: Check for Updates
+      run: mvn versions:display-dependency-updates versions:display-plugin-updates
+    - name: Run Unit Tests
+      run: mvn -B test
+    - name: Run Shell Tests
+      run: WATSET={{ GITHUB_WORKSPACE }}/target/watset.jar make -C examples CommandLine
     - name: Build with Maven
-      run: mvn -B package --file pom.xml
-    - name: Build with Maven (-Dshade)
-      run: mvn -Dshade=true -B package --file pom.xml
+      run: mvn -B package
+    - name: Build with Maven (Shade)
+      run: mvn -Dshade=true -B package
