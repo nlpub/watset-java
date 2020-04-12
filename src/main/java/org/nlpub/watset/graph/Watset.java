@@ -47,7 +47,10 @@ import static java.util.Objects.requireNonNull;
  * @param <E> the type of edges in the graph
  * @see <a href="https://doi.org/10.1162/COLI_a_00354">Ustalov et al. (COLI 45:3)</a>
  * @see SimplifiedWatset
+ * @deprecated use {@link SimplifiedWatset} instead.
  */
+@SuppressWarnings("DeprecatedIsStillUsed")
+@Deprecated
 public class Watset<V, E> implements Clustering<V> {
     /**
      * Watset inserts the target node during disambiguation.
