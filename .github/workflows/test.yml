@@ -17,7 +17,7 @@ jobs:
       with:
         java-version: 1.8
     - name: Check for Updates
-      run: mvn versions:display-dependency-updates versions:display-plugin-updates
+      run: mvn -B versions:display-dependency-updates versions:display-plugin-updates
     - name: Run Unit Tests
       run: mvn -B test
     - name: Build with Maven
