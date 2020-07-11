@@ -1,9 +1,8 @@
+name: Update Pages
+
 on:
   push:
-    tags:
-      - '*'
-
-name: Update Pages
+    branches: [ master ]
 
 jobs:
   pages:
