@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"org.nlpub.watset.cli"},{"l":"org.nlpub.watset.eval"},{"l":"org.nlpub.watset.graph"},{"l":"org.nlpub.watset.util"}]

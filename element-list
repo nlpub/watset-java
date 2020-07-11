@@ -1,0 +1,4 @@
+org.nlpub.watset.cli
+org.nlpub.watset.eval
+org.nlpub.watset.graph
+org.nlpub.watset.util
