@@ -6,7 +6,7 @@ on:
 name: Create Release
 
 jobs:
-  build:
+  release:
     name: Create Release
     runs-on: ubuntu-latest
     steps:
@@ -38,6 +38,18 @@ jobs:
         asset_path: ./target/watset.jar
         asset_name: watset.jar
         asset_content_type: application/java-archive
+  packages:
+    name: GitHub Packages
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Set up JDK 8
+      uses: actions/setup-java@v1
+      with:
+        java-version: 8
+        server-id: github
+        settings-path: ${{ github.workspace }}
     - name: Publish to GitHub Packages
       run: mvn deploy -DskipTests=true -Dmaven.javadoc.skip=true -s $GITHUB_WORKSPACE/settings.xml
       env:
