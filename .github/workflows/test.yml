@@ -43,10 +43,9 @@ jobs:
       run: WATSET=$PWD/target/watset.jar make -C examples CommandLine
 
   shellcheck:
-    name: ShellCheck
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@master
     - name: Run ShellCheck
       uses: ludeeus/action-shellcheck@master
