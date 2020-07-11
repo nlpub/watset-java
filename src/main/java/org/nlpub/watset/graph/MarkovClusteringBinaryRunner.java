@@ -112,7 +112,7 @@ public class MarkovClusteringBinaryRunner<V, E> implements Clustering<V> {
         requireNonNull(mapping, "call fit() first");
         requireNonNull(output, "call fit() first");
 
-        final Map<Integer, V> inverse = mapping.entrySet().stream().
+        final var inverse = mapping.entrySet().stream().
                 collect(toMap(Map.Entry::getValue, Map.Entry::getKey));
 
         try {
@@ -145,9 +145,9 @@ public class MarkovClusteringBinaryRunner<V, E> implements Clustering<V> {
         output = File.createTempFile("mcl", "output");
         output.deleteOnExit();
 
-        final File input = writeInputFile();
+        final var input = writeInputFile();
 
-        final ProcessBuilder builder = new ProcessBuilder(
+        final var builder = new ProcessBuilder(
                 mcl.toAbsolutePath().toString(),
                 input.toString(),
                 "-I", Double.toString(r),
@@ -157,13 +157,13 @@ public class MarkovClusteringBinaryRunner<V, E> implements Clustering<V> {
 
         logger.info("Command: " + String.join(" ", builder.command()));
 
-        final Process process = builder.start();
-        int status = process.waitFor();
+        final var process = builder.start();
+        var status = process.waitFor();
 
         if (status != 0) {
             try (final Reader isr = new InputStreamReader(process.getErrorStream(), StandardCharsets.UTF_8)) {
-                try (final BufferedReader reader = new BufferedReader(isr)) {
-                    final String stderr = reader.lines().collect(Collectors.joining(System.lineSeparator()));
+                try (final var reader = new BufferedReader(isr)) {
+                    final var stderr = reader.lines().collect(Collectors.joining(System.lineSeparator()));
 
                     if (stderr.isEmpty()) {
                         throw new IllegalStateException(mcl.toAbsolutePath() + " returned " + status);
@@ -178,9 +178,9 @@ public class MarkovClusteringBinaryRunner<V, E> implements Clustering<V> {
     private Map<V, Integer> translate(Graph<V, E> graph) {
         final Map<V, Integer> mapping = new HashMap<>(graph.vertexSet().size());
 
-        int i = 0;
+        var i = 0;
 
-        for (final V node : graph.vertexSet()) {
+        for (final var node : graph.vertexSet()) {
             mapping.put(node, i++);
         }
 
@@ -188,14 +188,14 @@ public class MarkovClusteringBinaryRunner<V, E> implements Clustering<V> {
     }
 
     private File writeInputFile() throws IOException {
-        final File input = File.createTempFile("mcl", "input");
+        final var input = File.createTempFile("mcl", "input");
         input.deleteOnExit();
 
-        try (final BufferedWriter writer = Files.newBufferedWriter(input.toPath())) {
-            for (final E edge : graph.edgeSet()) {
+        try (final var writer = Files.newBufferedWriter(input.toPath())) {
+            for (final var edge : graph.edgeSet()) {
                 final int source = mapping.get(graph.getEdgeSource(edge));
                 final int target = mapping.get(graph.getEdgeTarget(edge));
-                final double weight = graph.getEdgeWeight(edge);
+                final var weight = graph.getEdgeWeight(edge);
 
                 writer.write(String.format(Locale.ROOT, "%d\t%d\t%f%n", source, target, weight));
             }

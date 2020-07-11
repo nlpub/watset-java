@@ -21,13 +21,15 @@ import org.jgrapht.Graph;
 import org.jgrapht.graph.AsUnmodifiableGraph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
-import org.jgrapht.graph.builder.GraphBuilder;
 import org.nlpub.watset.util.ContextSimilarity;
 import org.nlpub.watset.util.CosineContextSimilarity;
 import org.nlpub.watset.util.IndexedSense;
 import org.nlpub.watset.util.Sense;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.logging.Level;
@@ -110,18 +112,18 @@ public class Watset<V, E> implements Clustering<V> {
         inventory = new ConcurrentHashMap<>();
 
         graph.vertexSet().parallelStream().forEach(node -> {
-            final List<Map<V, Number>> senses = inducer.contexts(node);
+            final var senses = inducer.contexts(node);
 
             final Map<Sense<V>, Map<V, Number>> senseMap = new HashMap<>(senses.size());
 
-            for (int i = 0; i < senses.size(); i++) {
+            for (var i = 0; i < senses.size(); i++) {
                 senseMap.put(new IndexedSense<>(node, i), senses.get(i));
             }
 
             inventory.put(node, senseMap);
         });
 
-        final int senses = inventory.values().stream().mapToInt(Map::size).sum();
+        final var senses = inventory.values().stream().mapToInt(Map::size).sum();
 
         logger.log(Level.INFO, "Watset: sense inventory constructed including {0} senses.", senses);
 
@@ -149,7 +151,7 @@ public class Watset<V, E> implements Clustering<V> {
 
         logger.info("Watset: sense graph constructed.");
 
-        final Clustering<Sense<V>> globalClustering = global.apply(senseGraph);
+        final var globalClustering = global.apply(senseGraph);
         globalClustering.fit();
 
         logger.info("Watset: extracting sense clusters.");
@@ -217,7 +219,7 @@ public class Watset<V, E> implements Clustering<V> {
      * @return the sense graph
      */
     private Graph<Sense<V>, DefaultWeightedEdge> buildSenseGraph(Map<Sense<V>, Map<Sense<V>, Number>> contexts) {
-        final GraphBuilder<Sense<V>, DefaultWeightedEdge, ? extends SimpleWeightedGraph<Sense<V>, DefaultWeightedEdge>> builder = SimpleWeightedGraph.createBuilder(DefaultWeightedEdge.class);
+        var builder = SimpleWeightedGraph.<Sense<V>, DefaultWeightedEdge>createBuilder(DefaultWeightedEdge.class);
 
         contexts.keySet().forEach(builder::addVertex);
 

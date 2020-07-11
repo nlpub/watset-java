@@ -31,7 +31,7 @@ public class CachedNormalizedModifiedPurityTest {
 
     @Test
     public void testGold() {
-        final PrecisionRecall result = NormalizedModifiedPurity.evaluate(mpu, pu, GOLD, GOLD);
+        final var result = NormalizedModifiedPurity.evaluate(mpu, pu, GOLD, GOLD);
         assertEquals(1, result.getPrecision(), .0001);
         assertEquals(1, result.getRecall(), .0001);
         assertEquals(1, result.getF1Score(), .0001);
@@ -39,7 +39,7 @@ public class CachedNormalizedModifiedPurityTest {
 
     @Test
     public void testGoldNormalized() {
-        final PrecisionRecall result = NormalizedModifiedPurity.evaluate(nmpu, npu, GOLD_NORMALIZED, GOLD_NORMALIZED);
+        final var result = NormalizedModifiedPurity.evaluate(nmpu, npu, GOLD_NORMALIZED, GOLD_NORMALIZED);
         assertEquals(1, result.getPrecision(), .0001);
         assertEquals(1, result.getRecall(), .0001);
         assertEquals(1, result.getF1Score(), .0001);
@@ -47,7 +47,7 @@ public class CachedNormalizedModifiedPurityTest {
 
     @Test
     public void testExample1() {
-        final PrecisionRecall result = NormalizedModifiedPurity.evaluate(mpu, pu, EXAMPLE_1, GOLD);
+        final var result = NormalizedModifiedPurity.evaluate(mpu, pu, EXAMPLE_1, GOLD);
         assertEquals(.71429, result.getPrecision(), .0001);
         assertEquals(.71429, result.getRecall(), .0001);
         assertEquals(.71429, result.getF1Score(), .0001);
@@ -55,7 +55,7 @@ public class CachedNormalizedModifiedPurityTest {
 
     @Test
     public void testExample1Normalized() {
-        final PrecisionRecall result = NormalizedModifiedPurity.evaluate(nmpu, npu, EXAMPLE_1_NORMALIZED, GOLD_NORMALIZED);
+        final var result = NormalizedModifiedPurity.evaluate(nmpu, npu, EXAMPLE_1_NORMALIZED, GOLD_NORMALIZED);
         assertEquals(.75, result.getPrecision(), .0001);
         assertEquals(.75, result.getRecall(), .0001);
         assertEquals(.75, result.getF1Score(), .0001);
@@ -63,7 +63,7 @@ public class CachedNormalizedModifiedPurityTest {
 
     @Test
     public void testExample2() {
-        final PrecisionRecall result = NormalizedModifiedPurity.evaluate(mpu, pu, EXAMPLE_2, GOLD);
+        final var result = NormalizedModifiedPurity.evaluate(mpu, pu, EXAMPLE_2, GOLD);
         assertEquals(.66667, result.getPrecision(), .0001);
         assertEquals(1, result.getRecall(), .0001);
         assertEquals(.80000, result.getF1Score(), .0001);
@@ -71,7 +71,7 @@ public class CachedNormalizedModifiedPurityTest {
 
     @Test
     public void testExample2Normalized() {
-        final PrecisionRecall result = NormalizedModifiedPurity.evaluate(nmpu, npu, EXAMPLE_2_NORMALIZED, GOLD_NORMALIZED);
+        final var result = NormalizedModifiedPurity.evaluate(nmpu, npu, EXAMPLE_2_NORMALIZED, GOLD_NORMALIZED);
         assertEquals(.66667, result.getPrecision(), .0001);
         assertEquals(1, result.getRecall(), .0001);
         assertEquals(.80000, result.getF1Score(), .0001);
@@ -79,7 +79,7 @@ public class CachedNormalizedModifiedPurityTest {
 
     @Test
     public void testExample3() {
-        final PrecisionRecall result = NormalizedModifiedPurity.evaluate(mpu, pu, EXAMPLE_3, GOLD);
+        final var result = NormalizedModifiedPurity.evaluate(mpu, pu, EXAMPLE_3, GOLD);
         assertEquals(0, result.getPrecision(), .0001);
         assertEquals(.28571, result.getRecall(), .0001);
         assertEquals(0, result.getF1Score(), .0001);
@@ -87,7 +87,7 @@ public class CachedNormalizedModifiedPurityTest {
 
     @Test
     public void testExample3Normalized() {
-        final PrecisionRecall result = NormalizedModifiedPurity.evaluate(nmpu, npu, EXAMPLE_3_NORMALIZED, GOLD_NORMALIZED);
+        final var result = NormalizedModifiedPurity.evaluate(nmpu, npu, EXAMPLE_3_NORMALIZED, GOLD_NORMALIZED);
         assertEquals(0, result.getPrecision(), .0001);
         assertEquals(.33333, result.getRecall(), .0001);
         assertEquals(0, result.getF1Score(), .0001);

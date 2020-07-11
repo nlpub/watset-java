@@ -92,7 +92,7 @@ public class SimplifiedWatset<V, E> implements Clustering<V> {
         logger.info("Simplified Watset started.");
 
         graph.vertexSet().parallelStream().forEach(node -> {
-            final Collection<Collection<V>> clusters = inducer.clusters(node);
+            final var clusters = inducer.clusters(node);
 
             if (nonNull(inventory.put(node, new HashMap<>()))) {
                 throw new IllegalStateException("The target node is already in the inventory");
@@ -106,12 +106,12 @@ public class SimplifiedWatset<V, E> implements Clustering<V> {
                 senses.get(node).add(new IndexedSense<>(node, 0));
             }
 
-            int i = 0;
+            var i = 0;
 
-            for (final Collection<V> cluster : clusters) {
+            for (final var cluster : clusters) {
                 senses.get(node).add(i, new IndexedSense<>(node, i));
 
-                for (final V neighbor : cluster) {
+                for (final var neighbor : cluster) {
                     inventory.get(node).put(neighbor, i);
                 }
 
@@ -119,24 +119,24 @@ public class SimplifiedWatset<V, E> implements Clustering<V> {
             }
         });
 
-        final int count = senses.values().stream().mapToInt(List::size).sum();
+        final var count = senses.values().stream().mapToInt(List::size).sum();
         logger.log(Level.INFO, "Simplified Watset: sense inventory constructed including {0} senses.", count);
 
-        final GraphBuilder<Sense<V>, DefaultWeightedEdge, ? extends SimpleWeightedGraph<Sense<V>, DefaultWeightedEdge>> builder = SimpleWeightedGraph.createBuilder(DefaultWeightedEdge.class);
+        final var builder = SimpleWeightedGraph.<Sense<V>, DefaultWeightedEdge>createBuilder(DefaultWeightedEdge.class);
 
-        for (final Map.Entry<V, Map<V, Integer>> sourceEntry : inventory.entrySet()) {
+        for (final var sourceEntry : inventory.entrySet()) {
             if (sourceEntry.getValue().isEmpty()) {
                 builder.addVertex(new IndexedSense<>(sourceEntry.getKey(), 0));
             }
 
-            final V source = sourceEntry.getKey();
+            final var source = sourceEntry.getKey();
 
-            for (final V target : sourceEntry.getValue().keySet()) {
-                final Sense<V> sourceSense = requireNonNull(senses.get(source).get(inventory.get(source).get(target)));
-                final Sense<V> targetSense = requireNonNull(senses.get(target).get(inventory.get(target).get(source)));
+            for (final var target : sourceEntry.getValue().keySet()) {
+                final var sourceSense = requireNonNull(senses.get(source).get(inventory.get(source).get(target)));
+                final var targetSense = requireNonNull(senses.get(target).get(inventory.get(target).get(source)));
 
-                final E edge = requireNonNull(graph.getEdge(source, target));
-                final double weight = graph.getEdgeWeight(edge);
+                final var edge = requireNonNull(graph.getEdge(source, target));
+                final var weight = graph.getEdgeWeight(edge);
 
                 builder.addEdge(sourceSense, targetSense, weight);
             }
@@ -153,7 +153,7 @@ public class SimplifiedWatset<V, E> implements Clustering<V> {
 
         logger.info("Simplified Watset: sense graph constructed.");
 
-        final Clustering<Sense<V>> globalClustering = global.apply(senseGraph);
+        final var globalClustering = global.apply(senseGraph);
         globalClustering.fit();
 
         logger.info("Simplified Watset: extracting sense clusters.");
@@ -187,9 +187,9 @@ public class SimplifiedWatset<V, E> implements Clustering<V> {
     public Map<Sense<V>, Map<Sense<V>, Number>> getContexts() {
         final Map<Sense<V>, Map<Sense<V>, Number>> contexts = new HashMap<>();
 
-        for (final DefaultWeightedEdge edge : requireNonNull(senseGraph, "call fit() first").edgeSet()) {
+        for (final var edge : requireNonNull(senseGraph, "call fit() first").edgeSet()) {
             final Sense<V> source = senseGraph.getEdgeSource(edge), target = senseGraph.getEdgeTarget(edge);
-            final double weight = senseGraph.getEdgeWeight(edge);
+            final var weight = senseGraph.getEdgeWeight(edge);
 
             if (!contexts.containsKey(source)) contexts.put(source, new HashMap<>());
             if (!contexts.containsKey(target)) contexts.put(target, new HashMap<>());

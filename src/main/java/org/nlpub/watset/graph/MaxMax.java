@@ -75,7 +75,7 @@ public class MaxMax<V, E> implements Clustering<V> {
         maximals = this.digraph.vertexSet().stream().collect(Collectors.toMap(Function.identity(), v -> new HashSet<>()));
 
         digraph.vertexSet().forEach(u -> {
-            final double max = graph.edgesOf(u).stream().mapToDouble(graph::getEdgeWeight).max().orElse(-1);
+            final var max = graph.edgesOf(u).stream().mapToDouble(graph::getEdgeWeight).max().orElse(-1);
             graph.edgesOf(u).stream().
                     filter(e -> graph.getEdgeWeight(e) == max).
                     map(e -> Graphs.getOppositeVertex(graph, e, u)).
@@ -99,7 +99,7 @@ public class MaxMax<V, E> implements Clustering<V> {
                 final Queue<V> queue = new LinkedList<>(Graphs.successorListOf(digraph, v));
                 visited.add(v);
                 while (!queue.isEmpty()) {
-                    final V u = queue.remove();
+                    final var u = queue.remove();
                     if (visited.contains(u)) continue;
                     roots.put(u, false);
                     visited.add(u);
@@ -113,7 +113,7 @@ public class MaxMax<V, E> implements Clustering<V> {
     public Collection<Collection<V>> getClusters() {
         requireNonNull(roots, "call fit() first");
 
-        final Set<V> roots = this.roots.entrySet().stream().filter(Map.Entry::getValue).map(Map.Entry::getKey).collect(Collectors.toSet());
+        final var roots = this.roots.entrySet().stream().filter(Map.Entry::getValue).map(Map.Entry::getKey).collect(Collectors.toSet());
 
         return roots.stream().map(root -> {
             final Set<V> visited = new HashSet<>();
@@ -122,7 +122,7 @@ public class MaxMax<V, E> implements Clustering<V> {
             queue.add(root);
 
             while (!queue.isEmpty()) {
-                final V v = queue.remove();
+                final var v = queue.remove();
                 if (visited.contains(v)) continue;
                 visited.add(v);
                 queue.addAll(Graphs.successorListOf(digraph, v));

@@ -21,8 +21,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Collection;
-
 public class SingletonClusteringTest {
     private final SingletonClustering<String, ?> singleton = new SingletonClustering<>(ChineseWhispersTest.DISJOINT);
 
@@ -33,7 +31,7 @@ public class SingletonClusteringTest {
 
     @Test
     public void testClustering() {
-        final Collection<Collection<String>> clusters = singleton.getClusters();
+        final var clusters = singleton.getClusters();
         Assert.assertEquals(ChineseWhispersTest.DISJOINT.vertexSet().size(), clusters.size());
     }
 }

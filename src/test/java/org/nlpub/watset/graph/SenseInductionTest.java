@@ -22,8 +22,6 @@ import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
 import org.junit.Test;
 
-import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.function.Function;
 
@@ -52,7 +50,7 @@ public class SenseInductionTest {
 
     @Test
     public void getSensesA() {
-        final List<Map<String, Number>> senses = senseInduction.contexts("a");
+        final var senses = senseInduction.contexts("a");
         assertEquals(3, senses.size());
     }
 }

@@ -167,14 +167,14 @@ public class MarkovClustering<V, E> implements Clustering<V> {
         index = buildIndex();
         matrix = buildMatrix(index);
 
-        final double[] onesData = new double[matrix.getRowDimension()];
+        final var onesData = new double[matrix.getRowDimension()];
         Arrays.fill(onesData, 1);
         ones = MatrixUtils.createRowRealMatrix(onesData);
 
         normalize();
 
-        for (int i = 0; i < ITERATIONS; i++) {
-            final RealMatrix previous = matrix.copy();
+        for (var i = 0; i < ITERATIONS; i++) {
+            final var previous = matrix.copy();
 
             expand();
             inflate();
@@ -190,15 +190,15 @@ public class MarkovClustering<V, E> implements Clustering<V> {
 
         if (graph.vertexSet().isEmpty()) return Collections.emptySet();
 
-        final Map<Integer, V> inverted = index.entrySet().stream().
+        final var inverted = index.entrySet().stream().
                 collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
 
         final Set<Collection<V>> clusters = new HashSet<>();
 
-        for (int r = 0; r < matrix.getRowDimension(); r++) {
+        for (var r = 0; r < matrix.getRowDimension(); r++) {
             final Set<V> cluster = new HashSet<>();
 
-            for (int c = 0; c < matrix.getColumnDimension(); c++) {
+            for (var c = 0; c < matrix.getColumnDimension(); c++) {
                 if (matrix.getEntry(r, c) > 0) cluster.add(inverted.get(c));
             }
 
@@ -216,9 +216,9 @@ public class MarkovClustering<V, E> implements Clustering<V> {
     protected Map<V, Integer> buildIndex() {
         final Map<V, Integer> index = new HashMap<>();
 
-        int i = 0;
+        var i = 0;
 
-        for (final V vertex : graph.vertexSet()) index.put(vertex, i++);
+        for (final var vertex : graph.vertexSet()) index.put(vertex, i++);
 
         return index;
     }
@@ -232,13 +232,13 @@ public class MarkovClustering<V, E> implements Clustering<V> {
      * @return an adjacency matrix
      */
     protected RealMatrix buildMatrix(Map<V, Integer> index) {
-        final RealMatrix matrix = MatrixUtils.createRealIdentityMatrix(graph.vertexSet().size());
+        final var matrix = MatrixUtils.createRealIdentityMatrix(graph.vertexSet().size());
 
-        for (final E edge : graph.edgeSet()) {
+        for (final var edge : graph.edgeSet()) {
             final int i = index.get(graph.getEdgeSource(edge)), j = index.get(graph.getEdgeTarget(edge));
 
             if (i != j) {
-                final double weight = graph.getEdgeWeight(edge);
+                final var weight = graph.getEdgeWeight(edge);
                 matrix.setEntry(i, j, weight);
                 matrix.setEntry(j, i, weight);
             }
@@ -251,7 +251,7 @@ public class MarkovClustering<V, E> implements Clustering<V> {
      * Normalize the matrix.
      */
     protected void normalize() {
-        final RealMatrix sums = ones.multiply(matrix);
+        final var sums = ones.multiply(matrix);
         matrix.walkInOptimizedOrder(new NormalizeVisitor(sums));
     }
 

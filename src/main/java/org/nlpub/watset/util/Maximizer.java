@@ -62,11 +62,11 @@ public interface Maximizer {
         S score = null;
 
         while (it.hasNext()) {
-            final V current = it.next();
+            final var current = it.next();
 
             if (!checker.test(current)) continue;
 
-            final S currentScore = scorer.apply(current);
+            final var currentScore = scorer.apply(current);
 
             if (isNull(score) || (currentScore.compareTo(score) > 0)) {
                 result = current;
@@ -106,11 +106,11 @@ public interface Maximizer {
         S score = null;
 
         while (it.hasNext()) {
-            final V current = it.next();
+            final var current = it.next();
 
-            final S currentScore = scorer.apply(current);
+            final var currentScore = scorer.apply(current);
 
-            final int compare = isNull(score) ? 1 : currentScore.compareTo(score);
+            final var compare = isNull(score) ? 1 : currentScore.compareTo(score);
 
             if (compare > 0) {
                 results.clear();

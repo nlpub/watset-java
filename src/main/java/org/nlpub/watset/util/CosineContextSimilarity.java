@@ -17,8 +17,6 @@
 
 package org.nlpub.watset.util;
 
-import org.apache.commons.math3.linear.RealVector;
-
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -34,11 +32,11 @@ public class CosineContextSimilarity<V> implements ContextSimilarity<V> {
         final Set<V> union = new LinkedHashSet<>(bag1.keySet());
         union.addAll(bag2.keySet());
 
-        final RealVector vec1 = Vectors.transform(bag1, union);
-        final RealVector vec2 = Vectors.transform(bag2, union);
+        final var vec1 = Vectors.transform(bag1, union);
+        final var vec2 = Vectors.transform(bag2, union);
 
-        final double norm1 = vec1.getNorm();
-        final double norm2 = vec2.getNorm();
+        final var norm1 = vec1.getNorm();
+        final var norm2 = vec2.getNorm();
 
         if (norm1 == 0 || norm2 == 0) {
             return 0d;

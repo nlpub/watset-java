@@ -23,7 +23,6 @@ import net.razorvine.pickle.objects.ClassDict;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
-import org.jgrapht.graph.builder.GraphBuilder;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -63,19 +62,18 @@ public interface NetworkXFormat {
             throw new PickleException("graph is not networkx.classes.graph.Graph");
         }
 
-        GraphBuilder<Object, DefaultWeightedEdge, ? extends SimpleWeightedGraph<Object, DefaultWeightedEdge>> builder =
-                SimpleWeightedGraph.createBuilder(DefaultWeightedEdge.class);
+        var builder = SimpleWeightedGraph.createBuilder(DefaultWeightedEdge.class);
 
-        @SuppressWarnings("unchecked") final Map<Object, Object> nodes = (Map<Object, Object>) nx.get("_node");
+        @SuppressWarnings("unchecked") final var nodes = (Map<Object, Object>) nx.get("_node");
 
-        for (Object node : nodes.keySet()) {
+        for (var node : nodes.keySet()) {
             builder.addVertex(node);
         }
 
-        @SuppressWarnings("unchecked") final Map<Object, Map<Object, Object>> edges = (Map<Object, Map<Object, Object>>) nx.get("_adj");
+        @SuppressWarnings("unchecked") final var edges = (Map<Object, Map<Object, Object>>) nx.get("_adj");
 
-        for (Map.Entry<Object, Map<Object, Object>> source : edges.entrySet()) {
-            for (Object target : source.getValue().keySet()) {
+        for (var source : edges.entrySet()) {
+            for (var target : source.getValue().keySet()) {
                 builder.addEdge(source.getKey(), target);
             }
         }

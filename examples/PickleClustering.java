@@ -18,25 +18,20 @@
  *
  */
 
-import net.razorvine.pickle.Unpickler;
-import net.razorvine.pickle.objects.ClassDict;
-import org.jgrapht.Graph;
-import org.jgrapht.graph.DefaultWeightedEdge;
-import org.nlpub.watset.graph.*;
+import org.nlpub.watset.graph.ChineseWhispers;
+import org.nlpub.watset.graph.NodeWeighting;
 import org.nlpub.watset.util.NetworkXFormat;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class PickleClustering {
     public static void main(String[] args) throws IOException {
-        try (InputStream stream = Files.newInputStream(Paths.get("karate_club_graph.pkl"))) {
-            ClassDict nx = NetworkXFormat.parse(stream);
-            Graph<Object, DefaultWeightedEdge> graph = NetworkXFormat.load(nx);
+        try (var stream = Files.newInputStream(Paths.get("karate_club_graph.pkl"))) {
+            var graph = NetworkXFormat.load(NetworkXFormat.parse(stream));
 
-            ChineseWhispers<Object, DefaultWeightedEdge> cw = new ChineseWhispers<>(graph, NodeWeighting.top());
+            var cw = new ChineseWhispers<>(graph, NodeWeighting.top());
             cw.fit();
 
             System.out.print("Chinese Whispers Clusters: ");

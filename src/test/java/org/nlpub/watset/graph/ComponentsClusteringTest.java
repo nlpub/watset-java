@@ -20,8 +20,6 @@ package org.nlpub.watset.graph;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Collection;
-
 import static org.junit.Assert.assertEquals;
 
 public class ComponentsClusteringTest {
@@ -34,7 +32,7 @@ public class ComponentsClusteringTest {
 
     @Test
     public void testClustering() {
-        final Collection<Collection<String>> clusters = components.getClusters();
+        final var clusters = components.getClusters();
         assertEquals(2, clusters.size());
     }
 }

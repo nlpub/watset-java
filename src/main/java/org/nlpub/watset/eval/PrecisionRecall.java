@@ -71,8 +71,8 @@ public class PrecisionRecall {
      * @return F<sub>&beta;</sub>-score value
      */
     public double getFScore(double beta) {
-        double beta2 = Math.pow(beta, 2);
-        double denominator = beta2 * precision + recall;
+        var beta2 = Math.pow(beta, 2);
+        var denominator = beta2 * precision + recall;
 
         if (denominator == 0d) return 0;
 

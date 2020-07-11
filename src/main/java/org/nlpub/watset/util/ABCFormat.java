@@ -20,7 +20,6 @@ package org.nlpub.watset.util;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
-import org.jgrapht.graph.builder.GraphBuilder;
 
 import java.util.stream.Stream;
 
@@ -41,10 +40,10 @@ public interface ABCFormat {
      * @return the graph represented in the stream
      */
     static Graph<String, DefaultWeightedEdge> parse(Stream<String> stream, String regex) {
-        final GraphBuilder<String, DefaultWeightedEdge, ? extends SimpleWeightedGraph<String, DefaultWeightedEdge>> builder = SimpleWeightedGraph.createBuilder(DefaultWeightedEdge.class);
+        var builder = SimpleWeightedGraph.<String, DefaultWeightedEdge>createBuilder(DefaultWeightedEdge.class);
 
         stream.forEach(line -> {
-            final String[] split = line.split(regex);
+            final var split = line.split(regex);
 
             if (split.length != 3 || split[0].equals(split[1])) return;
 

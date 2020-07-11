@@ -44,7 +44,7 @@ class CommandChineseWhispers extends ClusteringCommand {
             if (nonNull(mode)) put("mode", mode);
         }};
 
-        final AlgorithmProvider<String, DefaultWeightedEdge> algorithm = new AlgorithmProvider<>("cw", params);
+        final var algorithm = new AlgorithmProvider<String, DefaultWeightedEdge>("cw", params);
 
         return algorithm.apply(application.getGraph());
     }

@@ -35,7 +35,7 @@ public class NeighborsTest {
 
     @Test
     public void testNeighborhoodGraph() {
-        final Graph<String, DefaultWeightedEdge> ego = Neighbors.neighborhoodGraph(SenseInductionTest.WORDS, "a");
+        final var ego = Neighbors.neighborhoodGraph(SenseInductionTest.WORDS, "a");
         assertEquals(EGO_SUBGRAPH.vertexSet(), ego.vertexSet());
         assertEquals(EGO_SUBGRAPH.edgeSet(), ego.edgeSet());
         assertFalse(ego.containsVertex("a"));

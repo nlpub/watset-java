@@ -21,8 +21,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Collection;
-
 import static org.junit.Assert.assertEquals;
 
 public class TogetherClusteringTest {
@@ -35,7 +33,7 @@ public class TogetherClusteringTest {
 
     @Test
     public void testClustering() {
-        final Collection<Collection<String>> clusters = together.getClusters();
+        final var clusters = together.getClusters();
         assertEquals(1, clusters.size());
         Assert.assertEquals(ChineseWhispersTest.DISJOINT.vertexSet(), clusters.toArray()[0]);
     }

@@ -56,7 +56,7 @@ class CommandMarkovClustering extends ClusteringCommand {
             if (nonNull(binaryPath)) put("bin", binaryPath.toAbsolutePath().toString());
         }};
 
-        final AlgorithmProvider<String, DefaultWeightedEdge> algorithm = new AlgorithmProvider<>(binary ? "mcl-bin" : "mcl", params);
+        final var algorithm = new AlgorithmProvider<String, DefaultWeightedEdge>(binary ? "mcl-bin" : "mcl", params);
         return algorithm.apply(application.getGraph());
     }
 }

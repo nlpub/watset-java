@@ -56,9 +56,9 @@ public class SenseInduction<V, E> {
      * @return a map of senses to their contexts
      */
     public Collection<Collection<V>> clusters(V target) {
-        final Graph<V, E> ego = Neighbors.neighborhoodGraph(graph, requireNonNull(target));
+        final var ego = Neighbors.neighborhoodGraph(graph, requireNonNull(target));
 
-        final Clustering<V> clustering = local.apply(ego);
+        final var clustering = local.apply(ego);
         clustering.fit();
 
         return clustering.getClusters();
@@ -71,14 +71,14 @@ public class SenseInduction<V, E> {
      * @return maps of senses to their contexts
      */
     public List<Map<V, Number>> contexts(V target) {
-        final Collection<Collection<V>> clusters = clusters(target);
+        final var clusters = clusters(target);
 
         final List<Map<V, Number>> senses = new ArrayList<>(clusters.size());
 
-        for (final Collection<V> cluster : clusters) {
+        for (final var cluster : clusters) {
             final Map<V, Number> context = new HashMap<>(cluster.size());
 
-            for (final V neighbor : cluster) {
+            for (final var neighbor : cluster) {
                 context.put(neighbor, graph.getEdgeWeight(graph.getEdge(target, neighbor)));
             }
 

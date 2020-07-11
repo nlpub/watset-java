@@ -70,18 +70,18 @@ public interface Neighbors {
      * @return a neighborhood of {@code node}
      */
     static <V, E> Graph<V, E> neighborhoodGraph(Graph<V, E> graph, V node) {
-        final GraphBuilder<V, E, ? extends SimpleWeightedGraph<V, E>> builder = SimpleWeightedGraph.createBuilder(graph.getEdgeSupplier());
+        var builder = SimpleWeightedGraph.<V, E>createBuilder(graph.getEdgeSupplier());
 
-        final Set<V> neighborhood = neighborSetOf(graph, node);
+        final var neighborhood = neighborSetOf(graph, node);
         neighborhood.forEach(builder::addVertex);
 
-        for (final V neighbor : neighborhood) {
-            for (final E edge : graph.edgesOf(neighbor)) {
-                final V source = graph.getEdgeSource(edge);
-                final V target = graph.getEdgeTarget(edge);
+        for (final var neighbor : neighborhood) {
+            for (final var edge : graph.edgesOf(neighbor)) {
+                final var source = graph.getEdgeSource(edge);
+                final var target = graph.getEdgeTarget(edge);
 
                 if (neighborhood.contains(source) && neighborhood.contains(target)) {
-                    final double weight = graph.getEdgeWeight(edge);
+                    final var weight = graph.getEdgeWeight(edge);
                     builder.addEdge(source, target, edge, weight);
                 }
             }

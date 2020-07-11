@@ -87,18 +87,18 @@ public class Pairwise<V> {
      * @return precision and recalled wrapped in an instance of {@link PrecisionRecall}
      */
     public PrecisionRecall evaluate(Collection<Collection<V>> clusters, Collection<Collection<V>> classes) {
-        final Set<Pair<V, V>> clusterPairs = transform(requireNonNull(clusters));
-        final Set<Pair<V, V>> classPairs = transform(requireNonNull(classes));
+        final var clusterPairs = transform(requireNonNull(clusters));
+        final var classPairs = transform(requireNonNull(classes));
 
         final Set<Pair<V, V>> union = new HashSet<>(clusterPairs);
         union.addAll(classPairs);
 
-        final boolean[] preds = new boolean[union.size()];
-        final boolean[] trues = new boolean[union.size()];
+        final var preds = new boolean[union.size()];
+        final var trues = new boolean[union.size()];
 
-        int i = 0;
+        var i = 0;
 
-        for (final Pair<V, V> pair : union) {
+        for (final var pair : union) {
             preds[i] = clusterPairs.contains(pair);
             trues[i] = classPairs.contains(pair);
             i++;

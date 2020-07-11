@@ -72,8 +72,8 @@ public class Application {
      * @see ABCFormat#parse(Stream)
      */
     public Graph<String, DefaultWeightedEdge> getGraph() {
-        try (final Stream<String> stream = Files.lines(input)) {
-            final Graph<String, DefaultWeightedEdge> graph = ABCFormat.parse(stream);
+        try (final var stream = Files.lines(input)) {
+            final var graph = ABCFormat.parse(stream);
             logger.log(Level.INFO, "Read {0} nodes and {1} edges from {2}.",
                     new Object[]{graph.vertexSet().size(), graph.edgeSet().size(), input.toAbsolutePath()});
             return graph;
@@ -89,21 +89,21 @@ public class Application {
      */
     public static void main(String[] args) {
         // TODO: Use the main argument for --input instead of the named one.
-        final Application application = new Application();
+        final var application = new Application();
 
-        final CommandTrivial empty = new CommandTrivial(application, "empty");
-        final CommandTrivial singleton = new CommandTrivial(application, "singleton");
-        final CommandTrivial together = new CommandTrivial(application, "together");
-        final CommandTrivial components = new CommandTrivial(application, "components");
-        final CommandChineseWhispers cw = new CommandChineseWhispers(application);
-        final CommandMarkovClustering mcl = new CommandMarkovClustering(application, false);
-        final CommandMarkovClustering mclBin = new CommandMarkovClustering(application, true);
-        final CommandSenses senses = new CommandSenses(application);
-        final CommandGraph graph = new CommandGraph(application);
-        final CommandWatset watset = new CommandWatset(application);
-        final CommandMaxMax maxmax = new CommandMaxMax(application);
+        final var empty = new CommandTrivial(application, "empty");
+        final var singleton = new CommandTrivial(application, "singleton");
+        final var together = new CommandTrivial(application, "together");
+        final var components = new CommandTrivial(application, "components");
+        final var cw = new CommandChineseWhispers(application);
+        final var mcl = new CommandMarkovClustering(application, false);
+        final var mclBin = new CommandMarkovClustering(application, true);
+        final var senses = new CommandSenses(application);
+        final var graph = new CommandGraph(application);
+        final var watset = new CommandWatset(application);
+        final var maxmax = new CommandMaxMax(application);
 
-        final JCommander jc = JCommander.newBuilder()
+        final var jc = JCommander.newBuilder()
                 .addObject(application)
                 .addCommand("empty", empty)
                 .addCommand("singleton", singleton)

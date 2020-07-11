@@ -29,7 +29,6 @@ import org.nlpub.watset.util.CosineContextSimilarity;
 import org.nlpub.watset.util.IndexedSense;
 import org.nlpub.watset.util.Sense;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -56,11 +55,11 @@ class CommandGraph {
     }
 
     public void run() {
-        final AlgorithmProvider<String, DefaultWeightedEdge> localProvider = new AlgorithmProvider<>(local, localParams);
+        final var localProvider = new AlgorithmProvider<String, DefaultWeightedEdge>(local, localParams);
 
-        final Graph<String, DefaultWeightedEdge> graph = application.getGraph();
+        final var graph = application.getGraph();
 
-        final Graph<Sense<String>, DefaultWeightedEdge> senseGraph = simplified ? getSimplifiedWatsetGraph(graph, localProvider) : getWatsetGraph(graph, localProvider);
+        final var senseGraph = simplified ? getSimplifiedWatsetGraph(graph, localProvider) : getWatsetGraph(graph, localProvider);
 
         try {
             write(application.output, senseGraph);
@@ -70,10 +69,10 @@ class CommandGraph {
     }
 
     private void write(Path path, Graph<Sense<String>, DefaultWeightedEdge> graph) throws IOException {
-        try (final BufferedWriter writer = Files.newBufferedWriter(path)) {
-            for (final DefaultWeightedEdge edge : graph.edgeSet()) {
-                final IndexedSense<String> source = (IndexedSense<String>) graph.getEdgeSource(edge);
-                final IndexedSense<String> target = (IndexedSense<String>) graph.getEdgeTarget(edge);
+        try (final var writer = Files.newBufferedWriter(path)) {
+            for (final var edge : graph.edgeSet()) {
+                final var source = (IndexedSense<String>) graph.getEdgeSource(edge);
+                final var target = (IndexedSense<String>) graph.getEdgeTarget(edge);
 
                 writer.write(String.format(Locale.ROOT, "%s#%d\t%s#%d\t%f%n",
                         source.get(), source.getSense(),
@@ -84,7 +83,7 @@ class CommandGraph {
     }
 
     private Graph<Sense<String>, DefaultWeightedEdge> getWatsetGraph(Graph<String, DefaultWeightedEdge> graph, AlgorithmProvider<String, DefaultWeightedEdge> localProvider) {
-        final Watset<String, DefaultWeightedEdge> watset = new Watset<>(graph, localProvider, EmptyClustering.provider(), new CosineContextSimilarity<>());
+        final var watset = new Watset<>(graph, localProvider, EmptyClustering.provider(), new CosineContextSimilarity<>());
 
         watset.fit();
 
@@ -92,7 +91,7 @@ class CommandGraph {
     }
 
     private Graph<Sense<String>, DefaultWeightedEdge> getSimplifiedWatsetGraph(Graph<String, DefaultWeightedEdge> graph, AlgorithmProvider<String, DefaultWeightedEdge> localProvider) {
-        final SimplifiedWatset<String, DefaultWeightedEdge> watset = new SimplifiedWatset<>(graph, localProvider, EmptyClustering.provider());
+        final var watset = new SimplifiedWatset<>(graph, localProvider, EmptyClustering.provider());
 
         watset.fit();
 

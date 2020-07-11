@@ -17,7 +17,6 @@
 
 package org.nlpub.watset.eval;
 
-import org.jgrapht.alg.util.Pair;
 import org.junit.Test;
 
 import java.util.*;
@@ -58,7 +57,7 @@ public class PairwiseTest {
 
     @Test
     public void testGold() {
-        final PrecisionRecall result = pairwise.evaluate(GOLD, GOLD);
+        final var result = pairwise.evaluate(GOLD, GOLD);
         assertEquals(1, result.getPrecision(), .0001);
         assertEquals(1, result.getRecall(), .0001);
         assertEquals(1, result.getF1Score(), .0001);
@@ -66,7 +65,7 @@ public class PairwiseTest {
 
     @Test
     public void testExample1() {
-        final PrecisionRecall result = pairwise.evaluate(EXAMPLE_1, GOLD);
+        final var result = pairwise.evaluate(EXAMPLE_1, GOLD);
         assertEquals(1, result.getPrecision(), .0001);
         assertEquals(.44444, result.getRecall(), .0001);
         assertEquals(.61538, result.getF1Score(), .0001);
@@ -74,7 +73,7 @@ public class PairwiseTest {
 
     @Test
     public void testExample2() {
-        final PrecisionRecall result = pairwise.evaluate(EXAMPLE_2, GOLD);
+        final var result = pairwise.evaluate(EXAMPLE_2, GOLD);
         assertEquals(.6, result.getPrecision(), .0001);
         assertEquals(1, result.getRecall(), .0001);
         assertEquals(.74999, result.getF1Score(), .0001);
@@ -82,7 +81,7 @@ public class PairwiseTest {
 
     @Test
     public void testExample3() {
-        final PrecisionRecall result = pairwise.evaluate(EXAMPLE_3, GOLD);
+        final var result = pairwise.evaluate(EXAMPLE_3, GOLD);
         assertEquals(0, result.getPrecision(), .0001);
         assertEquals(0, result.getRecall(), .0001);
         assertEquals(0, result.getF1Score(), .0001);
@@ -90,7 +89,7 @@ public class PairwiseTest {
 
     @Test
     public void testTransform() {
-        final Set<Pair<String, String>> pairs1 = transform(Collections.singleton(ABC));
+        final var pairs1 = transform(Collections.singleton(ABC));
         assertEquals(3, pairs1.size());
         assertTrue(pairs1.contains(Pairwise.pairOf("a", "b")));
         assertTrue(pairs1.contains(Pairwise.pairOf("b", "c")));

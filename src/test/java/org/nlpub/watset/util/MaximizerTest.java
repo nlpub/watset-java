@@ -22,7 +22,6 @@ import org.junit.Test;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -75,7 +74,7 @@ public class MaximizerTest {
 
     @Test
     public void testArgmaxRandom() {
-        @SuppressWarnings("OptionalGetWithoutIsPresent") final Set<String> samples = IntStream.range(0, SAMPLES).
+        @SuppressWarnings("OptionalGetWithoutIsPresent") final var samples = IntStream.range(0, SAMPLES).
                 mapToObj(i -> argmaxRandom(bag4.entrySet().iterator(), e -> e.getValue().doubleValue(), random).get().getKey()).
                 collect(Collectors.toSet());
 

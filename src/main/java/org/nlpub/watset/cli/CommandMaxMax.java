@@ -30,7 +30,7 @@ class CommandMaxMax extends ClusteringCommand {
 
     @Override
     public Clustering<String> getClustering() {
-        final AlgorithmProvider<String, DefaultWeightedEdge> algorithm = new AlgorithmProvider<>("maxmax", Collections.emptyMap());
+        final var algorithm = new AlgorithmProvider<String, DefaultWeightedEdge>("maxmax", Collections.emptyMap());
         return algorithm.apply(application.getGraph());
     }
 }

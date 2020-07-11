@@ -129,9 +129,9 @@ public class ChineseWhispers<V, E> implements Clustering<V> {
 
         labels = new HashMap<>(nodes.size());
 
-        int i = 0;
+        var i = 0;
 
-        for (final V node : graph.vertexSet()) {
+        for (final var node : graph.vertexSet()) {
             labels.put(node, i++);
         }
 
@@ -149,12 +149,12 @@ public class ChineseWhispers<V, E> implements Clustering<V> {
      * @return whether any label changed or not
      */
     protected int step(List<V> nodes) {
-        int changed = 0;
+        var changed = 0;
 
-        for (final V node : nodes) {
-            final Map<Integer, Double> scores = score(graph, labels, weighting, node);
+        for (final var node : nodes) {
+            final var scores = score(graph, labels, weighting, node);
 
-            final Optional<Map.Entry<Integer, Double>> label = argmaxRandom(scores.entrySet().iterator(), Map.Entry::getValue, random);
+            final var label = argmaxRandom(scores.entrySet().iterator(), Map.Entry::getValue, random);
 
             final int updated = label.isPresent() ? label.get().getKey() : labels.get(node);
 
@@ -173,12 +173,12 @@ public class ChineseWhispers<V, E> implements Clustering<V> {
     public Collection<Collection<V>> getClusters() {
         requireNonNull(labels, "call fit() first");
 
-        final Map<Integer, List<Map.Entry<V, Integer>>> groups = labels.entrySet().stream().
+        final var groups = labels.entrySet().stream().
                 collect(Collectors.groupingBy(Map.Entry::getValue));
 
         final List<Collection<V>> clusters = new ArrayList<>(groups.size());
 
-        for (final List<Map.Entry<V, Integer>> cluster : groups.values()) {
+        for (final var cluster : groups.values()) {
             clusters.add(cluster.stream().map(Map.Entry::getKey).collect(Collectors.toSet()));
         }
 
@@ -198,7 +198,7 @@ public class ChineseWhispers<V, E> implements Clustering<V> {
     protected Map<Integer, Double> score(Graph<V, E> graph, Map<V, Integer> labels, NodeWeighting<V, E> weighting, V node) {
         final Map<Integer, Double> weights = new HashMap<>();
 
-        final Iterator<V> neighbors = Neighbors.neighborIterator(graph, node);
+        final var neighbors = Neighbors.neighborIterator(graph, node);
 
         neighbors.forEachRemaining(neighbor -> {
             final int label = labels.get(neighbor);

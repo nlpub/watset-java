@@ -19,7 +19,6 @@ package org.nlpub.watset.util;
 
 import org.nlpub.watset.graph.Clustering;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -48,8 +47,8 @@ public interface ILEFormat {
      * @throws IOException if an I/O error occurs
      */
     static void write(Path path, Clustering<String> clustering) throws IOException {
-        try (final BufferedWriter writer = Files.newBufferedWriter(path)) {
-            final AtomicInteger counter = new AtomicInteger(0);
+        try (final var writer = Files.newBufferedWriter(path)) {
+            final var counter = new AtomicInteger(0);
 
             clustering.getClusters().stream().
                     sorted((smaller, larger) -> Integer.compare(larger.size(), smaller.size())).

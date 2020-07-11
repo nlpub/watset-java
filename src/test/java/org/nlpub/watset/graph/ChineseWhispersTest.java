@@ -23,7 +23,6 @@ import org.jgrapht.graph.SimpleWeightedGraph;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Collection;
 import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
@@ -48,7 +47,7 @@ public class ChineseWhispersTest {
 
     @Test
     public void testClustering() {
-        final Collection<Collection<String>> clusters = cw1.getClusters();
+        final var clusters = cw1.getClusters();
         assertEquals(2, clusters.size());
     }
 }

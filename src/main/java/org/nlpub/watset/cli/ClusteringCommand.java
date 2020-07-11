@@ -31,7 +31,7 @@ abstract class ClusteringCommand {
     }
 
     public void run() {
-        final Clustering<String> clustering = getClustering();
+        final var clustering = getClustering();
         clustering.fit();
 
         try {

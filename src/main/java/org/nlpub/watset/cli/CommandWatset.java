@@ -19,7 +19,6 @@ package org.nlpub.watset.cli;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
-import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.nlpub.watset.graph.Clustering;
 import org.nlpub.watset.graph.SimplifiedWatset;
@@ -56,10 +55,10 @@ class CommandWatset extends ClusteringCommand {
 
     @Override
     public Clustering<String> getClustering() {
-        final AlgorithmProvider<String, DefaultWeightedEdge> localProvider = new AlgorithmProvider<>(local, localParams);
-        final AlgorithmProvider<Sense<String>, DefaultWeightedEdge> globalProvider = new AlgorithmProvider<>(global, globalParams);
+        final var localProvider = new AlgorithmProvider<String, DefaultWeightedEdge>(local, localParams);
+        final var globalProvider = new AlgorithmProvider<Sense<String>, DefaultWeightedEdge>(global, globalParams);
 
-        final Graph<String, DefaultWeightedEdge> graph = application.getGraph();
+        final var graph = application.getGraph();
 
         if (simplified) {
             return new SimplifiedWatset<>(graph, localProvider, globalProvider);

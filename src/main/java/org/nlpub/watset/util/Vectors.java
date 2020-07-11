@@ -55,11 +55,11 @@ public interface Vectors {
      * @return a real-valued vector
      */
     static <V> RealVector transform(Map<V, Number> bag, Collection<V> domain) {
-        final double[] data = new double[domain.size()];
+        final var data = new double[domain.size()];
 
-        int i = 0;
+        var i = 0;
 
-        for (final V key : domain) {
+        for (final var key : domain) {
             data[i++] = bag.getOrDefault(key, 0).doubleValue();
         }
 

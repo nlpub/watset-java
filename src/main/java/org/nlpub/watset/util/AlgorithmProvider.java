@@ -81,12 +81,12 @@ public class AlgorithmProvider<V, E> implements Function<Graph<V, E>, Clustering
             case "components":
                 return new ComponentsClustering<>(graph);
             case "cw":
-                final NodeWeighting<V, E> weighting = parseChineseWhispersNodeWeighting();
+                final var weighting = parseChineseWhispersNodeWeighting();
                 return new ChineseWhispers<>(graph, weighting);
             case "mcl":
             case "mcl-bin":
-                final int e = Integer.parseInt(params.getOrDefault("e", "2"));
-                final double r = Double.parseDouble(params.getOrDefault("r", "2"));
+                final var e = Integer.parseInt(params.getOrDefault("e", "2"));
+                final var r = Double.parseDouble(params.getOrDefault("r", "2"));
                 if (algorithm.equalsIgnoreCase("mcl")) {
                     return new MarkovClustering<>(graph, e, r);
                 } else {

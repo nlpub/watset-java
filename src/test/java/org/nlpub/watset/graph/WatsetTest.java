@@ -24,7 +24,6 @@ import org.junit.Test;
 import org.nlpub.watset.util.CosineContextSimilarity;
 import org.nlpub.watset.util.Sense;
 
-import java.util.Collection;
 import java.util.Random;
 import java.util.function.Function;
 
@@ -43,7 +42,7 @@ public class WatsetTest {
 
     @Test
     public void testClustering() {
-        final Collection<Collection<String>> clusters = watset.getClusters();
+        final var clusters = watset.getClusters();
         assertEquals(4, clusters.size());
     }
 }

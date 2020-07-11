@@ -125,10 +125,10 @@ public class Measurer<V, E> {
         durations = new long[repetitions];
         clusters = new int[repetitions];
 
-        for (int i = -warmup; i < repetitions; i++) {
-            final Clustering<V> clustering = provider.apply(graph);
+        for (var i = -warmup; i < repetitions; i++) {
+            final var clustering = provider.apply(graph);
 
-            final Duration duration = measure(clustering);
+            final var duration = measure(clustering);
 
             if (i >= 0) {
                 durations[i] = duration.toMillis();
@@ -140,9 +140,9 @@ public class Measurer<V, E> {
     }
 
     private Duration measure(Clustering<V> clustering) {
-        final Instant start = Instant.now();
+        final var start = Instant.now();
         clustering.fit();
-        final Instant end = Instant.now();
+        final var end = Instant.now();
         return Duration.between(start, end);
     }
 }

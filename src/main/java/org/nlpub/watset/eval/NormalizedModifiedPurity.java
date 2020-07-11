@@ -64,7 +64,7 @@ public class NormalizedModifiedPurity<V> {
                 forEach(entry -> counter.put(entry.getKey(), counter.getOrDefault(entry.getKey(), 0d) + entry.getValue()));
 
         final Collection<Map<V, Double>> normalized = clusters.stream().map(cluster -> {
-            final Map<V, Double> normalizedCluster = cluster.entrySet().stream().
+            final var normalizedCluster = cluster.entrySet().stream().
                     collect(toMap(Map.Entry::getKey, entry -> entry.getValue() / counter.get(entry.getKey())));
 
             if (cluster.size() != normalizedCluster.size()) throw new IllegalArgumentException("Cluster size changed");
@@ -88,8 +88,8 @@ public class NormalizedModifiedPurity<V> {
      * @return precision and recalled wrapped in an instance of {@link PrecisionRecall}
      */
     public static <V> PrecisionRecall evaluate(NormalizedModifiedPurity<V> precision, NormalizedModifiedPurity<V> recall, Collection<Map<V, Double>> clusters, Collection<Map<V, Double>> classes) {
-        final double nmPU = precision.purity(requireNonNull(clusters), requireNonNull(classes));
-        final double niPU = recall.purity(classes, clusters);
+        final var nmPU = precision.purity(requireNonNull(clusters), requireNonNull(classes));
+        final var niPU = recall.purity(classes, clusters);
         return new PrecisionRecall(nmPU, niPU);
     }
 
@@ -133,7 +133,7 @@ public class NormalizedModifiedPurity<V> {
 
         if (denominator == 0) return 0;
 
-        final double numerator = clusters.parallelStream().
+        final var numerator = clusters.parallelStream().
                 mapToDouble(cluster -> score(cluster, classes)).sum();
 
         return numerator / denominator;

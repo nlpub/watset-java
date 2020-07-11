@@ -46,13 +46,13 @@ public interface Sense<V> extends Supplier<V> {
     static <V> Map<Sense<V>, Number> disambiguate(Map<V, Map<Sense<V>, Map<V, Number>>> inventory, ContextSimilarity<V> similarity, Map<V, Number> context, Collection<V> ignored) {
         final Map<Sense<V>, Number> dcontext = new HashMap<>(context.size());
 
-        for (final Map.Entry<V, Number> entry : context.entrySet()) {
-            final V target = entry.getKey();
+        for (final var entry : context.entrySet()) {
+            final var target = entry.getKey();
 
             if (ignored.contains(target)) continue;
 
-            final Sense<V> sense = argmax(inventory.getOrDefault(target, Collections.emptyMap()).keySet().iterator(), candidate -> {
-                final Map<V, Number> candidateContext = inventory.get(target).get(candidate);
+            final var sense = argmax(inventory.getOrDefault(target, Collections.emptyMap()).keySet().iterator(), candidate -> {
+                final var candidateContext = inventory.get(target).get(candidate);
                 return similarity.apply(context, candidateContext).doubleValue();
             }).orElseThrow(() -> new IllegalArgumentException("Cannot find the sense for the word in context."));
 

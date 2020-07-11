@@ -17,17 +17,17 @@
  *
  */
 
-import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
-import org.nlpub.watset.graph.*;
+import org.nlpub.watset.graph.ChineseWhispers;
+import org.nlpub.watset.graph.MaxMax;
+import org.nlpub.watset.graph.NodeWeighting;
+import org.nlpub.watset.graph.SimplifiedWatset;
 import org.nlpub.watset.util.Sense;
-
-import java.util.function.Function;
 
 public class FuzzyClustering {
     public static void main(String[] args) {
-        Graph<String, DefaultWeightedEdge> graph = SimpleWeightedGraph.<String, DefaultWeightedEdge>createBuilder(DefaultWeightedEdge.class).
+        var graph = SimpleWeightedGraph.<String, DefaultWeightedEdge>createBuilder(DefaultWeightedEdge.class).
                 addVertices("a", "b", "c", "d", "e").
                 addEdge("a", "b").
                 addEdge("a", "c").
@@ -39,7 +39,7 @@ public class FuzzyClustering {
         System.out.println(graph);
 
         // MaxMax Example
-        MaxMax<String, DefaultWeightedEdge> maxmax = new MaxMax<>(graph);
+        var maxmax = new MaxMax<>(graph);
         maxmax.fit();
 
         System.out.print("MaxMax Digraph: ");
@@ -49,10 +49,10 @@ public class FuzzyClustering {
         System.out.println(maxmax.getClusters());
 
         // Watset Example
-        Function<Graph<String, DefaultWeightedEdge>, Clustering<String>> local = ChineseWhispers.provider(NodeWeighting.top());
-        Function<Graph<Sense<String>, DefaultWeightedEdge>, Clustering<Sense<String>>> global = ChineseWhispers.provider(NodeWeighting.top());
+        var local = ChineseWhispers.<String, DefaultWeightedEdge>provider(NodeWeighting.top());
+        var global = ChineseWhispers.<Sense<String>, DefaultWeightedEdge>provider(NodeWeighting.top());
 
-        SimplifiedWatset<String, DefaultWeightedEdge> watset = new SimplifiedWatset<>(graph, local, global);
+        var watset = new SimplifiedWatset<>(graph, local, global);
         watset.fit();
 
         System.out.print("Watset Sense Graph: ");

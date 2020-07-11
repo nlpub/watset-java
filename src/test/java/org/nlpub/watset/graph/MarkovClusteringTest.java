@@ -23,8 +23,6 @@ import org.jgrapht.graph.SimpleWeightedGraph;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Collection;
-
 import static org.junit.Assert.assertEquals;
 
 public class MarkovClusteringTest {
@@ -67,13 +65,13 @@ public class MarkovClusteringTest {
 
     @Test
     public void testBipartiteClustering() {
-        final Collection<Collection<String>> clusters = mcl1.getClusters();
+        final var clusters = mcl1.getClusters();
         assertEquals(2, clusters.size());
     }
 
     @Test
     public void testClustering() {
-        final Collection<Collection<Integer>> clusters = mcl2.getClusters();
+        final var clusters = mcl2.getClusters();
         assertEquals(1, clusters.size());
     }
 }

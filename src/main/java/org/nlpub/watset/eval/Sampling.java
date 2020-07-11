@@ -39,7 +39,7 @@ public interface Sampling {
     static <T> Collection<T> sample(T[] dataset, Random random) {
         final List<T> sample = new ArrayList<>(dataset.length);
 
-        for (int i = 0; i < dataset.length; i++) {
+        for (var i = 0; i < dataset.length; i++) {
             sample.add(dataset[random.nextInt(dataset.length)]);
         }
 

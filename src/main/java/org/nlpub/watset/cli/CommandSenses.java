@@ -28,7 +28,6 @@ import org.nlpub.watset.util.CosineContextSimilarity;
 import org.nlpub.watset.util.IndexedSense;
 import org.nlpub.watset.util.Sense;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -60,11 +59,11 @@ class CommandSenses {
     public void run() {
         requireNonNull(local);
 
-        final AlgorithmProvider<String, DefaultWeightedEdge> algorithm = new AlgorithmProvider<>(local, localParams);
+        final var algorithm = new AlgorithmProvider<String, DefaultWeightedEdge>(local, localParams);
 
-        final Graph<String, DefaultWeightedEdge> graph = application.getGraph();
+        final var graph = application.getGraph();
 
-        final Map<Sense<String>, Map<Sense<String>, Number>> contexts = simplified ? getSimplifiedWatsetContexts(algorithm, graph) : getWatsetContexts(algorithm, graph);
+        final var contexts = simplified ? getSimplifiedWatsetContexts(algorithm, graph) : getWatsetContexts(algorithm, graph);
 
         try {
             write(application.output, contexts);
@@ -74,11 +73,11 @@ class CommandSenses {
     }
 
     void write(Path path, Map<Sense<String>, Map<Sense<String>, Number>> contexts) throws IOException {
-        try (final BufferedWriter writer = Files.newBufferedWriter(path)) {
-            for (final Map.Entry<Sense<String>, Map<Sense<String>, Number>> context : contexts.entrySet()) {
-                final IndexedSense<String> sense = ((IndexedSense<String>) context.getKey());
+        try (final var writer = Files.newBufferedWriter(path)) {
+            for (final var context : contexts.entrySet()) {
+                final var sense = ((IndexedSense<String>) context.getKey());
 
-                final String contextRecord = context.getValue().entrySet().stream().
+                final var contextRecord = context.getValue().entrySet().stream().
                         map(e -> String.format(Locale.ROOT, "%s#%d:%f",
                                 e.getKey().get(),
                                 ((IndexedSense<String>) e.getKey()).getSense(),
@@ -91,7 +90,7 @@ class CommandSenses {
     }
 
     public Map<Sense<String>, Map<Sense<String>, Number>> getWatsetContexts(AlgorithmProvider<String, DefaultWeightedEdge> algorithm, Graph<String, DefaultWeightedEdge> graph) {
-        final Watset<String, DefaultWeightedEdge> watset = new Watset<>(graph, algorithm, EmptyClustering.provider(), new CosineContextSimilarity<>());
+        final var watset = new Watset<>(graph, algorithm, EmptyClustering.provider(), new CosineContextSimilarity<>());
 
         watset.fit();
 
@@ -99,7 +98,7 @@ class CommandSenses {
     }
 
     public Map<Sense<String>, Map<Sense<String>, Number>> getSimplifiedWatsetContexts(AlgorithmProvider<String, DefaultWeightedEdge> algorithm, Graph<String, DefaultWeightedEdge> graph) {
-        final SimplifiedWatset<String, DefaultWeightedEdge> watset = new SimplifiedWatset<>(graph, algorithm, EmptyClustering.provider());
+        final var watset = new SimplifiedWatset<>(graph, algorithm, EmptyClustering.provider());
 
         watset.fit();
 
