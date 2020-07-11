@@ -27,3 +27,7 @@ jobs:
       run: mvn -B package
     - name: Build with Maven (Shade)
       run: mvn -Dshade=true -B package
+    - name: Test Shell Scripts
+      run:
+      - WATSET=$PWD/target/watset.jar make -C examples CommandLine
+      - bash -c 'shopt -s globstar nullglob; shellcheck **/*.{sh,ksh,bash}'
