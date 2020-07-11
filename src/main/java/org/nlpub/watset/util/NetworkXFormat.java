@@ -18,12 +18,15 @@
 package org.nlpub.watset.util;
 
 import net.razorvine.pickle.PickleException;
+import net.razorvine.pickle.Unpickler;
 import net.razorvine.pickle.objects.ClassDict;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
 import org.jgrapht.graph.builder.GraphBuilder;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
@@ -36,20 +39,30 @@ import static java.util.Objects.requireNonNull;
  */
 public interface NetworkXFormat {
     /**
+     * Unpickle the NetworkX graph from the input stream.
+     *
+     * @param stream the input stream with pickled data
+     * @return an unpickled NetworkX graph
+     */
+    static ClassDict parse(InputStream stream) throws IOException {
+        return (ClassDict) (new Unpickler().load(requireNonNull(stream)));
+    }
+
+    /**
      * Reconstruct a {@link Graph} object from the unpickled NetworkX graph.
      *
      * @param nx the unpickled NetworkX graph
-     * @return the graph represented in the unpickled graph
+     * @return a graph represented in the unpickled graph
      */
     static Graph<Object, DefaultWeightedEdge> load(ClassDict nx) {
         requireNonNull(nx);
 
-        GraphBuilder<Object, DefaultWeightedEdge, ? extends SimpleWeightedGraph<Object, DefaultWeightedEdge>> builder =
-                SimpleWeightedGraph.createBuilder(DefaultWeightedEdge.class);
-
         if (!nx.get("__class__").equals("networkx.classes.graph.Graph")) {
             throw new PickleException("graph is not networkx.classes.graph.Graph");
         }
+
+        GraphBuilder<Object, DefaultWeightedEdge, ? extends SimpleWeightedGraph<Object, DefaultWeightedEdge>> builder =
+                SimpleWeightedGraph.createBuilder(DefaultWeightedEdge.class);
 
         @SuppressWarnings("unchecked") final Map<Object, Object> nodes = (Map<Object, Object>) nx.get("_node");
 
