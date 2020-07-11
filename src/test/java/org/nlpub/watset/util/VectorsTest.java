@@ -61,11 +61,8 @@ public class VectorsTest {
         assertNotEquals(whitelist, bag1.keySet());
         assertNotEquals(whitelist, bag2.keySet());
         assertNotEquals(whitelist, bag3.keySet());
-        System.out.println(vec1t4);
         assertArrayEquals(new double[]{1, 3, -5, 0}, vec1t4.toArray(), 0);
-        System.out.println(vec2t4);
         assertArrayEquals(new double[]{4, -2, -1, 0}, vec2t4.toArray(), 0);
-        System.out.println(vec3t4);
         assertArrayEquals(new double[]{0, 4, -2, -1}, vec3t4.toArray(), 0);
     }
 
