@@ -33,6 +33,7 @@ public class WatsetTest {
     private final static Random random = new Random(1337);
     public final static Function<Graph<String, DefaultWeightedEdge>, Clustering<String>> local = ChineseWhispers.provider(NodeWeighting.top(), ChineseWhispers.ITERATIONS, random);
     public final static Function<Graph<Sense<String>, DefaultWeightedEdge>, Clustering<Sense<String>>> global = ChineseWhispers.provider(NodeWeighting.top(), ChineseWhispers.ITERATIONS, random);
+    @SuppressWarnings("deprecation")
     private final static Watset<String, DefaultWeightedEdge> watset = new Watset<>(SenseInductionTest.WORDS, local, global, new CosineContextSimilarity<>());
 
     @Before

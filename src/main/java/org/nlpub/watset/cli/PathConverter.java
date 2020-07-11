@@ -22,6 +22,7 @@ import com.beust.jcommander.IStringConverter;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+@SuppressWarnings("unused")
 class PathConverter implements IStringConverter<Path> {
     @Override
     public Path convert(String value) {

@@ -90,7 +90,7 @@ class CommandSenses {
     }
 
     public Map<Sense<String>, Map<Sense<String>, Number>> getWatsetContexts(AlgorithmProvider<String, DefaultWeightedEdge> algorithm, Graph<String, DefaultWeightedEdge> graph) {
-        final var watset = new Watset<>(graph, algorithm, EmptyClustering.provider(), new CosineContextSimilarity<>());
+        @SuppressWarnings("deprecation") final var watset = new Watset<>(graph, algorithm, EmptyClustering.provider(), new CosineContextSimilarity<>());
 
         watset.fit();
 

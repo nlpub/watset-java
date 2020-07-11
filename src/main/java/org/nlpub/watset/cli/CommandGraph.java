@@ -83,7 +83,7 @@ class CommandGraph {
     }
 
     private Graph<Sense<String>, DefaultWeightedEdge> getWatsetGraph(Graph<String, DefaultWeightedEdge> graph, AlgorithmProvider<String, DefaultWeightedEdge> localProvider) {
-        final var watset = new Watset<>(graph, localProvider, EmptyClustering.provider(), new CosineContextSimilarity<>());
+        @SuppressWarnings("deprecation") final var watset = new Watset<>(graph, localProvider, EmptyClustering.provider(), new CosineContextSimilarity<>());
 
         watset.fit();
 
