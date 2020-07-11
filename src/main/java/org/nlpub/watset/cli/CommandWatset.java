@@ -63,8 +63,8 @@ class CommandWatset extends ClusteringCommand {
         if (simplified) {
             return new SimplifiedWatset<>(graph, localProvider, globalProvider);
         } else {
-            //noinspection deprecation
-            return new Watset<>(graph, localProvider, globalProvider, new CosineContextSimilarity<>());
+            @SuppressWarnings("deprecation") final var watset = new Watset<>(graph, localProvider, globalProvider, new CosineContextSimilarity<>());
+            return watset;
         }
     }
 }
