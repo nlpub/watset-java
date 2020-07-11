@@ -50,7 +50,7 @@ class CommandMarkovClustering extends ClusteringCommand {
 
     @Override
     public Clustering<String> getClustering() {
-        final Map<String, String> params = new HashMap<String, String>() {{
+        final Map<String, String> params = new HashMap<>() {{
             if (nonNull(e)) put("e", Integer.toString(e));
             if (nonNull(r)) put("r", Double.toString(r));
             if (nonNull(binaryPath)) put("bin", binaryPath.toAbsolutePath().toString());

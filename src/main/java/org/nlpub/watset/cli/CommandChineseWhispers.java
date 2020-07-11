@@ -40,7 +40,7 @@ class CommandChineseWhispers extends ClusteringCommand {
 
     @Override
     public Clustering<String> getClustering() {
-        final Map<String, String> params = new HashMap<String, String>() {{
+        final Map<String, String> params = new HashMap<>() {{
             if (nonNull(mode)) put("mode", mode);
         }};
 

@@ -23,9 +23,6 @@ import org.jgrapht.graph.SimpleWeightedGraph;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
@@ -51,10 +48,7 @@ public class MaxMaxTest {
             addEdge("u", "v", 1).
             build();
 
-    private final static Set<Set<String>> CLUSTERS1 = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
-            new HashSet<>(Arrays.asList("r", "s", "t", "u", "v")),
-            new HashSet<>(Arrays.asList("w", "t", "x"))
-    )));
+    private final static Set<Set<String>> CLUSTERS1 = Set.of(Set.of("r", "s", "t", "u", "v"), Set.of("w", "t", "x"));
 
     private final static Graph<String, DefaultWeightedEdge> GRAPH2 = SimpleWeightedGraph.<String, DefaultWeightedEdge>createBuilder(DefaultWeightedEdge.class).
             addVertices("a", "b", "c", "d", "e").
@@ -68,10 +62,7 @@ public class MaxMaxTest {
             addEdge("d", "e", 3).
             build();
 
-    private final static Set<Set<String>> CLUSTERS2 = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
-            new HashSet<>(Arrays.asList("a", "b", "c")),
-            new HashSet<>(Arrays.asList("c", "d", "e"))
-    )));
+    private final static Set<Set<String>> CLUSTERS2 = Set.of(Set.of("a", "b", "c"), Set.of("c", "d", "e"));
 
     private final MaxMax<String, DefaultWeightedEdge> maxmax1 = new MaxMax<>(GRAPH1);
     private final MaxMax<String, DefaultWeightedEdge> maxmax2 = new MaxMax<>(GRAPH2);

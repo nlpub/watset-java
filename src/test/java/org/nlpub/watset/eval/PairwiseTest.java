@@ -28,31 +28,31 @@ import static org.nlpub.watset.eval.Pairwise.transform;
 
 public class PairwiseTest {
     static final Collection<Collection<String>> GOLD = Arrays.asList(
-            Arrays.asList("bank", "riverbank", "streambank", "streamside"),
-            Arrays.asList("bank", "building", "bank building")
+            List.of("bank", "riverbank", "streambank", "streamside"),
+            List.of("bank", "building", "bank building")
     );
 
     static final Collection<Collection<String>> EXAMPLE_1 = Arrays.asList(
-            Collections.singletonList("bank"),
-            Arrays.asList("bank", "building"),
-            Arrays.asList("riverbank", "streambank", "streamside"),
-            Collections.singletonList("bank building")
+            List.of("bank"),
+            List.of("bank", "building"),
+            List.of("riverbank", "streambank", "streamside"),
+            List.of("bank building")
     );
 
     static final Collection<Collection<String>> EXAMPLE_2 = Collections.singletonList(
-            Arrays.asList("bank", "riverbank", "streambank", "streamside", "building", "bank building")
+            List.of("bank", "riverbank", "streambank", "streamside", "building", "bank building")
     );
 
     static final Collection<Collection<String>> EXAMPLE_3 = Arrays.asList(
-            Collections.singletonList("bank"),
-            Collections.singletonList("building"),
-            Collections.singletonList("riverbank"),
-            Collections.singletonList("streambank"),
-            Collections.singletonList("streamside"),
-            Collections.singletonList("bank building")
+            List.of("bank"),
+            List.of("building"),
+            List.of("riverbank"),
+            List.of("streambank"),
+            List.of("streamside"),
+            List.of("bank building")
     );
 
-    private static final Set<String> ABC = new HashSet<>(Arrays.asList("a", "b", "c"));
+    private static final Set<String> ABC = Set.of("a", "b", "c");
 
     private static final Pairwise<String> pairwise = new Pairwise<>();
 

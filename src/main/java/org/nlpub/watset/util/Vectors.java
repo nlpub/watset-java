@@ -20,8 +20,8 @@ package org.nlpub.watset.util;
 import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.linear.RealVector;
 
+import java.util.Collection;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Utilities for mapping bags-of-words to real-valued vectors.
@@ -46,13 +46,15 @@ public interface Vectors {
      * Transform the bag-of-words into a real-valued vector.
      * <p>
      * The number of elements in the vector is equal to the size of the domain set.
+     * <p>
+     * Please make sure that all elements in {@code domain} are unique.
      *
      * @param bag    the bag-of-words
-     * @param domain the set of allowed elements of {@code bag}
+     * @param domain the collection of allowed elements of {@code bag}
      * @param <V>    the type of bag elements
      * @return a real-valued vector
      */
-    static <V> RealVector transform(Map<V, Number> bag, Set<V> domain) {
+    static <V> RealVector transform(Map<V, Number> bag, Collection<V> domain) {
         final double[] data = new double[domain.size()];
 
         int i = 0;

@@ -21,35 +21,19 @@ import org.apache.commons.math3.exception.DimensionMismatchException;
 import org.apache.commons.math3.linear.RealVector;
 import org.junit.Test;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 
 public class VectorsTest {
-    public static final Map<String, Number> bag1 = new HashMap<String, Number>() {{
-        put("a", 1);
-        put("b", 3);
-        put("c", -5);
-    }};
+    public static final Map<String, Number> bag1 = Map.of("a", 1, "b", 3, "c", -5);
 
-    private static final Map<String, Number> bag2 = new HashMap<String, Number>() {{
-        put("a", 4);
-        put("b", -2);
-        put("c", -1);
-    }};
+    private static final Map<String, Number> bag2 = Map.of("a", 4, "b", -2, "c", -1);
 
-    private static final Map<String, Number> bag3 = new HashMap<String, Number>() {{
-        put("b", 4);
-        put("c", -2);
-        put("d", -1);
-    }};
+    private static final Map<String, Number> bag3 = Map.of("b", 4, "c", -2, "d", -1);
 
-    private static final Set<String> whitelist = new LinkedHashSet<String>() {{
-        add("a");
-        add("b");
-        add("c");
-        add("d");
-    }};
+    private static final List<String> whitelist = List.of("a", "b", "c", "d");
 
     private static final RealVector vec1 = Vectors.transform(bag1);
     private static final RealVector vec2 = Vectors.transform(bag2);
@@ -69,7 +53,7 @@ public class VectorsTest {
         assertEquals(5.91, vec1.getNorm(), .01);
         assertEquals(4.58, vec2.getNorm(), .01);
         assertEquals(4.58, vec3.getNorm(), .01);
-        assertEquals(1, Vectors.transform(Collections.singletonMap(1, 1)).getNorm(), 0);
+        assertEquals(1, Vectors.transform(Map.of(1, 1)).getNorm(), 0);
     }
 
     @Test
@@ -77,8 +61,11 @@ public class VectorsTest {
         assertNotEquals(whitelist, bag1.keySet());
         assertNotEquals(whitelist, bag2.keySet());
         assertNotEquals(whitelist, bag3.keySet());
+        System.out.println(vec1t4);
         assertArrayEquals(new double[]{1, 3, -5, 0}, vec1t4.toArray(), 0);
+        System.out.println(vec2t4);
         assertArrayEquals(new double[]{4, -2, -1, 0}, vec2t4.toArray(), 0);
+        System.out.println(vec3t4);
         assertArrayEquals(new double[]{0, 4, -2, -1}, vec3t4.toArray(), 0);
     }
 
