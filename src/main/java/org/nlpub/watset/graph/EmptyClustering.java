@@ -29,6 +29,13 @@ import java.util.function.Function;
  * @param <V> the type of nodes in the graph
  */
 public class EmptyClustering<V> implements Clustering<V> {
+    /**
+     * A factory function that sets up the algorithm for the given graph.
+     *
+     * @param <V> the type of nodes in the graph
+     * @param <E> the type of edges in the graph
+     * @return a factory function that sets up the algorithm for the given graph
+     */
     public static <V, E> Function<Graph<V, E>, Clustering<V>> provider() {
         return graph -> new EmptyClustering<>();
     }

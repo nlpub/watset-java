@@ -51,13 +51,25 @@ public class Application {
         }
     };
 
+    /**
+     * The input file.
+     */
     @Parameter(names = {"-i", "--input"}, description = "Input file", converter = PathConverter.class)
     public Path input;
 
+    /**
+     * The output file.
+     */
     @SuppressWarnings("unused")
     @Parameter(names = {"-o", "--output"}, description = "Output file", converter = PathConverter.class)
     public Path output;
 
+    /**
+     * Read, parse, and return the input graph stored in {@link #input}.
+     *
+     * @return a graph
+     * @see ABCFormat#parse(Stream)
+     */
     public Graph<String, DefaultWeightedEdge> getGraph() {
         try (final Stream<String> stream = Files.lines(input)) {
             final Graph<String, DefaultWeightedEdge> graph = ABCFormat.parse(stream);
@@ -69,6 +81,11 @@ public class Application {
         }
     }
 
+    /**
+     * Watset Command-Line Interface Entry Point.
+     *
+     * @param args the command-line arguments
+     */
     public static void main(String[] args) {
         // TODO: Use the main argument for --input instead of the named one.
         final Application application = new Application();

@@ -43,6 +43,7 @@ public interface NetworkXFormat {
      *
      * @param stream the input stream with pickled data
      * @return an unpickled NetworkX graph
+     * @throws IOException if an I/O error occurs
      */
     static ClassDict parse(InputStream stream) throws IOException {
         return (ClassDict) (new Unpickler().load(requireNonNull(stream)));

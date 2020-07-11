@@ -247,15 +247,24 @@ public class MarkovClustering<V, E> implements Clustering<V> {
         return matrix;
     }
 
+    /**
+     * Normalize the matrix.
+     */
     protected void normalize() {
         final RealMatrix sums = ones.multiply(matrix);
         matrix.walkInOptimizedOrder(new NormalizeVisitor(sums));
     }
 
+    /**
+     * Perform the expansion step.
+     */
     protected void expand() {
         matrix = matrix.power(e);
     }
 
+    /**
+     * Perform the inflation step.
+     */
     protected void inflate() {
         normalize();
         matrix.walkInOptimizedOrder(inflateVisitor);

@@ -35,6 +35,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * @see NormalizedModifiedPurity
  */
 public class CachedNormalizedModifiedPurity<V> extends NormalizedModifiedPurity<V> {
+    /**
+     * The cache.
+     */
     protected final Map<Map<V, Double>, Double> cache;
 
     /**
