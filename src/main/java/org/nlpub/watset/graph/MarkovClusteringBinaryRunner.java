@@ -115,11 +115,10 @@ public class MarkovClusteringBinaryRunner<V, E> implements Clustering<V> {
         final var inverse = mapping.entrySet().stream().
                 collect(toMap(Map.Entry::getValue, Map.Entry::getKey));
 
-        try {
-            return Files.lines(output.toPath()).
-                    map(line -> Arrays.stream(line.split("\t")).
-                            map(id -> inverse.get(Integer.valueOf(id))).
-                            collect(toSet())).
+        try (var stream = Files.lines(output.toPath())) {
+            return stream.map(line -> Arrays.stream(line.split("\t")).
+                    map(id -> inverse.get(Integer.valueOf(id))).
+                    collect(toSet())).
                     collect(toSet());
         } catch (IOException ex) {
             throw new IllegalStateException("Clusters cannot be read.", ex);

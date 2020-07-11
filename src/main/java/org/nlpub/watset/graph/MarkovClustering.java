@@ -69,7 +69,7 @@ public class MarkovClustering<V, E> implements Clustering<V> {
          */
         @Override
         public double visit(int row, int column, double value) {
-            return Math.pow(value, r);
+            return StrictMath.pow(value, r);
         }
     }
 

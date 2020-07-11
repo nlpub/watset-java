@@ -100,7 +100,7 @@ public interface NodeWeighting<V, E> {
     class LogNodeWeighting<V, E> implements NodeWeighting<V, E> {
         @Override
         public double apply(Graph<V, E> graph, Map<V, Integer> labels, V node, V neighbor) {
-            return graph.getEdgeWeight(graph.getEdge(node, neighbor)) / Math.log1p(graph.degreeOf(neighbor));
+            return graph.getEdgeWeight(graph.getEdge(node, neighbor)) / StrictMath.log1p(graph.degreeOf(neighbor));
         }
     }
 
