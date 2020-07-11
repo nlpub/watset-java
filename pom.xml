@@ -91,7 +91,7 @@
     </developers>
 
     <properties>
-        <java.version>1.8</java.version>
+        <java.version>11</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
@@ -195,8 +195,7 @@
                 <version>3.2.0</version>
                 <configuration>
                     <docfilessubdirs>true</docfilessubdirs>
-                    <!-- JDK-8212233 -->
-                    <source>8</source>
+                    <source>11</source>
                 </configuration>
             </plugin>
             <plugin>
