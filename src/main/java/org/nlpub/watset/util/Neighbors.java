@@ -20,7 +20,6 @@ package org.nlpub.watset.util;
 import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
 import org.jgrapht.graph.SimpleWeightedGraph;
-import org.jgrapht.graph.builder.GraphBuilder;
 
 import java.util.Iterator;
 import java.util.Set;
