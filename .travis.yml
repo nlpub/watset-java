@@ -26,16 +26,6 @@ env:
 cache:
   directories:
   - "$HOME/.m2"
-deploy:
-- provider: releases
-  api_key:
-    secure: KD+OUHRDfiWWUGeVThdIbyQyglHLno49xqydKEWwUt4rY7F4wbofI8bkYTWg4PqGreKdMD6rJguFBeVXqSCfwkC6DkAqc1BXmglpN8vRqEhYYmjTIQrSoPQrdm/a5sRNNHzueM4XMK9Kqzo2f1K2pEzmSB0CyPfsLCBBa+Hdo72Z8Ev5s2kreZznmMLULd9jr8HUNpnQiXPNUGHA+KTOx5x340Si2sINUY9LJfyH3qLe2f7X4pILg+lLZZ1rnkXLgvvgw/beu1VcFmhzWwSkzPCJ303aMCJiMCYMKHPJSCu0UaDPnWvfRtdNS9ISzCC/QA2xtPPM4ZHk78qYwydqyccl/doIbMS5nUJ7qPACqW4hcddwYAOLH6hqnIBLHdOqOsUm5aN3/thopmnGJ9Q5c08PETBcIEXaZjnU6b3DzAa+UG6sWMTjzJg3XgcdG7Fkz7fS7dzrXu9oUwlYUyydwkJ608sMShX/6MCIMwPhZGNGUA+UQhfutPv5+5ElQjuHImRqvVrXA2DxQykuwF+ce6d+G9G2gnzzDoYcJQbdhFi53biMBGwg+ur6ddITRVSB5BflQHLoGqNJeeDjfj0CoSeAhr+gWoG8vF+AsLnOxcjd2fKBSmq6BoL6CPcnifatDJxtl+P4078IYCax33Be3iqP8hTZQX7E82IRxPMZhdA=
-  file: target/watset.jar
-  skip_cleanup: true
-  on:
-    tags: true
-    jdk: openjdk8
-    repo: nlpub/watset-java
 - provider: pages
   local-dir: target/site/apidocs
   skip-cleanup: true
