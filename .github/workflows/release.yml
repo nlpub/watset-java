@@ -44,13 +44,25 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-    - name: Set up JDK 11
+    - name: Set up GitHub Packages
       uses: actions/setup-java@v1
       with:
         java-version: 11
         server-id: github
         settings-path: ${{ github.workspace }}
     - name: Publish to GitHub Packages
-      run: mvn deploy -DskipTests=true -Dmaven.javadoc.skip=true -s $GITHUB_WORKSPACE/settings.xml
+      run: mvn deploy -B -Ddeploy=github -DskipTests=true -Dmaven.javadoc.skip=true -s $GITHUB_WORKSPACE/settings.xml
       env:
         GITHUB_TOKEN: ${{ github.token }}
+    - name: Set up Maven Central Repository
+      uses: actions/setup-java@v1
+      with:
+        java-version: 1.8
+        server-id: ossrh
+        server-username: MAVEN_USERNAME
+        server-password: MAVEN_PASSWORD
+    - name: Publish to Maven Central Repository
+      run: mvn deploy -B -Ddeploy=ossrh -DskipTests=true -Dmaven.javadoc.skip=true
+      env:
+        MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+        MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
