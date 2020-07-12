@@ -74,6 +74,26 @@
                 </plugins>
             </build>
         </profile>
+        <profile>
+            <id>ossrh</id>
+            <distributionManagement>
+                <repository>
+                    <id>ossrh</id>
+                    <name>Central Repository OSSRH</name>
+                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                </repository>
+            </distributionManagement>
+        </profile>
+        <profile>
+            <id>github</id>
+            <distributionManagement>
+                <repository>
+                    <id>github</id>
+                    <name>GitHub Packages</name>
+                    <url>https://maven.pkg.github.com/nlpub/watset-java</url>
+                </repository>
+            </distributionManagement>
+        </profile>
     </profiles>
 
     <scm>
@@ -204,12 +224,4 @@
             </plugin>
         </plugins>
     </build>
-
-    <distributionManagement>
-        <repository>
-            <id>github</id>
-            <name>GitHub nlpub Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/nlpub/watset-java</url>
-        </repository>
-    </distributionManagement>
 </project>
