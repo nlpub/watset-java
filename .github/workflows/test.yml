@@ -19,9 +19,7 @@ jobs:
       with:
         java-version: ${{ matrix.java-version }}
     - name: Check for Updates
-      run: mvn -B versions:display-dependency-updates versions:display-plugin-updates
-    - name: Run Unit Tests
-      run: mvn -B test
+      run: mvn -q -B versions:display-dependency-updates versions:display-plugin-updates
     - name: Build with Maven
       run: mvn -B package
     - name: Build with Maven (Shade)
