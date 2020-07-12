@@ -24,6 +24,9 @@
     <version>2.2.4-SNAPSHOT</version>
     <packaging>jar</packaging>
 
+    <name>Watset</name>
+    <description>An open source implementation of the Watset algorithm for fuzzy graph clustering.</description>
+    <url>https://github.com/nlpub/watset-java</url>
     <inceptionYear>2016</inceptionYear>
 
     <profiles>
@@ -82,6 +85,11 @@
                     <name>Central Repository OSSRH</name>
                     <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
                 </repository>
+                <snapshotRepository>
+                    <id>ossrh</id>
+                    <name>Central Repository OSSRH</name>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                </snapshotRepository>
             </distributionManagement>
         </profile>
         <profile>
