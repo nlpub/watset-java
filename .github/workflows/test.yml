@@ -45,8 +45,10 @@ jobs:
         java-version: 11
     - name: Build with Maven
       run: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dshade=true -B
+    - name: Symlink watset.jar
+      run: ln -sf $PWD/target/watset.jar examples/watset.jar
     - name: Run Examples
-      run: WATSET=$PWD/target/watset.jar make -C examples CommandLine
+      run: make -C examples CommandLine
   shellcheck:
     runs-on: ubuntu-latest
     steps:
