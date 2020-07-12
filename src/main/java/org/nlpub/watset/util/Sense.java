@@ -44,7 +44,7 @@ public interface Sense<V> extends Supplier<V> {
      * @return the disambiguated context
      */
     static <V> Map<Sense<V>, Number> disambiguate(Map<V, Map<Sense<V>, Map<V, Number>>> inventory, ContextSimilarity<V> similarity, Map<V, Number> context, Collection<V> ignored) {
-        final Map<Sense<V>, Number> dcontext = new HashMap<>(context.size());
+        final var dcontext = new HashMap<Sense<V>, Number>(context.size());
 
         for (final var entry : context.entrySet()) {
             final var target = entry.getKey();

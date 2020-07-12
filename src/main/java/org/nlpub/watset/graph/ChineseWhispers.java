@@ -125,7 +125,7 @@ public class ChineseWhispers<V, E> implements Clustering<V> {
 
     @Override
     public void fit() {
-        final List<V> nodes = new ArrayList<>(graph.vertexSet());
+        final var nodes = new ArrayList<>(graph.vertexSet());
 
         labels = new HashMap<>(nodes.size());
 
@@ -173,8 +173,7 @@ public class ChineseWhispers<V, E> implements Clustering<V> {
     public Collection<Collection<V>> getClusters() {
         requireNonNull(labels, "call fit() first");
 
-        final var groups = labels.entrySet().stream().
-                collect(Collectors.groupingBy(Map.Entry::getValue));
+        final var groups = labels.entrySet().stream().collect(Collectors.groupingBy(Map.Entry::getValue));
 
         final List<Collection<V>> clusters = new ArrayList<>(groups.size());
 
@@ -196,7 +195,7 @@ public class ChineseWhispers<V, E> implements Clustering<V> {
      * @return a mapping of labels to sums of their weights
      */
     protected Map<Integer, Double> score(Graph<V, E> graph, Map<V, Integer> labels, NodeWeighting<V, E> weighting, V node) {
-        final Map<Integer, Double> weights = new HashMap<>();
+        final var weights = new HashMap<Integer, Double>();
 
         final var neighbors = Neighbors.neighborIterator(graph, node);
 

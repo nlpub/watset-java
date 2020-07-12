@@ -19,7 +19,6 @@ package org.nlpub.watset.util;
 
 import java.util.LinkedHashSet;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * The classical cosine similarity measure for bags-of-words.
@@ -29,7 +28,7 @@ import java.util.Set;
 public class CosineContextSimilarity<V> implements ContextSimilarity<V> {
     @Override
     public Number apply(Map<V, Number> bag1, Map<V, Number> bag2) {
-        final Set<V> union = new LinkedHashSet<>(bag1.keySet());
+        final var union = new LinkedHashSet<>(bag1.keySet());
         union.addAll(bag2.keySet());
 
         final var vec1 = Vectors.transform(bag1, union);

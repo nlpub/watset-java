@@ -17,7 +17,10 @@
 
 package org.nlpub.watset.util;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Optional;
+import java.util.Random;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -102,7 +105,7 @@ public interface Maximizer {
      * @return a non-empty optional that contains the randomly chosen argmax, otherwise the empty one
      */
     static <V, S extends Comparable<S>> Optional<V> argmaxRandom(Iterator<V> it, Function<V, S> scorer, Random random) {
-        final List<V> results = new LinkedList<>();
+        final var results = new LinkedList<V>();
         S score = null;
 
         while (it.hasNext()) {

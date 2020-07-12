@@ -69,13 +69,14 @@ public class MaxMax<V, E> implements Clustering<V> {
         maximals = null;
         roots = null;
 
-        graph.vertexSet().forEach(digraph::addVertex);
+        Graphs.addAllVertices(digraph, graph.vertexSet());
 
         // Preparation: Compute Maximal Vertices
-        maximals = this.digraph.vertexSet().stream().collect(Collectors.toMap(Function.identity(), v -> new HashSet<>()));
+        maximals = digraph.vertexSet().stream().collect(Collectors.toMap(Function.identity(), v -> new HashSet<>()));
 
         digraph.vertexSet().forEach(u -> {
             final var max = graph.edgesOf(u).stream().mapToDouble(graph::getEdgeWeight).max().orElse(-1);
+
             graph.edgesOf(u).stream().
                     filter(e -> graph.getEdgeWeight(e) == max).
                     map(e -> Graphs.getOppositeVertex(graph, e, u)).
@@ -92,17 +93,23 @@ public class MaxMax<V, E> implements Clustering<V> {
         // Stage 2: Identifying Clusters
         roots = this.digraph.vertexSet().stream().collect(Collectors.toMap(Function.identity(), v -> true));
 
-        final Set<V> visited = new HashSet<>();
+        final var visited = new HashSet<V>();
 
         digraph.vertexSet().forEach(v -> {
             if (roots.get(v)) {
-                final Queue<V> queue = new LinkedList<>(Graphs.successorListOf(digraph, v));
+                final var queue = new LinkedList<>(Graphs.successorListOf(digraph, v));
+
                 visited.add(v);
+
                 while (!queue.isEmpty()) {
                     final var u = queue.remove();
+
                     if (visited.contains(u)) continue;
+
                     roots.put(u, false);
+
                     visited.add(u);
+
                     queue.addAll(Graphs.successorListOf(digraph, u));
                 }
             }
@@ -113,18 +120,24 @@ public class MaxMax<V, E> implements Clustering<V> {
     public Collection<Collection<V>> getClusters() {
         requireNonNull(roots, "call fit() first");
 
-        final var roots = this.roots.entrySet().stream().filter(Map.Entry::getValue).map(Map.Entry::getKey).collect(Collectors.toSet());
+        final var roots = this.roots.entrySet().stream().
+                filter(Map.Entry::getValue).
+                map(Map.Entry::getKey).
+                collect(Collectors.toSet());
 
         return roots.stream().map(root -> {
-            final Set<V> visited = new HashSet<>();
+            final var visited = new HashSet<V>();
 
-            final Queue<V> queue = new LinkedList<>();
+            final var queue = new LinkedList<V>();
             queue.add(root);
 
             while (!queue.isEmpty()) {
                 final var v = queue.remove();
+
                 if (visited.contains(v)) continue;
+
                 visited.add(v);
+
                 queue.addAll(Graphs.successorListOf(digraph, v));
             }
 

@@ -45,8 +45,7 @@ public class NormalizedModifiedPurity<V> {
      */
     public static <V> Collection<Map<V, Double>> transform(Collection<Collection<V>> clusters) {
         return clusters.stream().
-                map(cluster -> cluster.stream().
-                        collect(groupingBy(identity(), reducing(0d, e -> 1d, Double::sum)))).
+                map(cluster -> cluster.stream().collect(groupingBy(identity(), reducing(0d, e -> 1d, Double::sum)))).
                 collect(toList());
     }
 
@@ -60,7 +59,8 @@ public class NormalizedModifiedPurity<V> {
     public static <V> Collection<Map<V, Double>> normalize(Collection<Map<V, Double>> clusters) {
         final Map<V, Double> counter = new HashMap<>();
 
-        clusters.stream().flatMap(cluster -> cluster.entrySet().stream()).
+        clusters.stream().
+                flatMap(cluster -> cluster.entrySet().stream()).
                 forEach(entry -> counter.put(entry.getKey(), counter.getOrDefault(entry.getKey(), 0d) + entry.getValue()));
 
         final Collection<Map<V, Double>> normalized = clusters.stream().map(cluster -> {
@@ -133,8 +133,7 @@ public class NormalizedModifiedPurity<V> {
 
         if (denominator == 0) return 0;
 
-        final var numerator = clusters.parallelStream().
-                mapToDouble(cluster -> score(cluster, classes)).sum();
+        final var numerator = clusters.parallelStream().mapToDouble(cluster -> score(cluster, classes)).sum();
 
         return numerator / denominator;
     }
@@ -163,7 +162,7 @@ public class NormalizedModifiedPurity<V> {
     public double delta(Map<V, Double> cluster, Map<V, Double> klass) {
         if (modified && !(cluster.size() > 1)) return 0;
 
-        final Map<V, Double> intersection = new HashMap<>(cluster);
+        final var intersection = new HashMap<V, Double>(cluster);
 
         intersection.keySet().retainAll(klass.keySet());
 

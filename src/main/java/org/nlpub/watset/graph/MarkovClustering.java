@@ -193,10 +193,10 @@ public class MarkovClustering<V, E> implements Clustering<V> {
         final var inverted = index.entrySet().stream().
                 collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
 
-        final Set<Collection<V>> clusters = new HashSet<>();
+        final var clusters = new HashSet<Collection<V>>();
 
         for (var r = 0; r < matrix.getRowDimension(); r++) {
-            final Set<V> cluster = new HashSet<>();
+            final var cluster = new HashSet<V>();
 
             for (var c = 0; c < matrix.getColumnDimension(); c++) {
                 if (matrix.getEntry(r, c) > 0) cluster.add(inverted.get(c));
@@ -214,7 +214,7 @@ public class MarkovClustering<V, E> implements Clustering<V> {
      * @return a node index
      */
     protected Map<V, Integer> buildIndex() {
-        final Map<V, Integer> index = new HashMap<>();
+        final var index = new HashMap<V, Integer>();
 
         var i = 0;
 

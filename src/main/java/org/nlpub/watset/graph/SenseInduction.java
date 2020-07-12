@@ -73,10 +73,10 @@ public class SenseInduction<V, E> {
     public List<Map<V, Number>> contexts(V target) {
         final var clusters = clusters(target);
 
-        final List<Map<V, Number>> senses = new ArrayList<>(clusters.size());
+        final var senses = new ArrayList<Map<V, Number>>(clusters.size());
 
         for (final var cluster : clusters) {
-            final Map<V, Number> context = new HashMap<>(cluster.size());
+            final var context = new HashMap<V, Number>(cluster.size());
 
             for (final var neighbor : cluster) {
                 context.put(neighbor, graph.getEdgeWeight(graph.getEdge(target, neighbor)));

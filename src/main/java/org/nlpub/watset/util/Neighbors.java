@@ -81,6 +81,7 @@ public interface Neighbors {
 
                 if (neighborhood.contains(source) && neighborhood.contains(target)) {
                     final var weight = graph.getEdgeWeight(edge);
+
                     builder.addEdge(source, target, edge, weight);
                 }
             }

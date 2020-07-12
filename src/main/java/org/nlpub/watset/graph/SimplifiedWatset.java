@@ -184,7 +184,7 @@ public class SimplifiedWatset<V, E> implements Clustering<V> {
      * @return the disambiguated contexts
      */
     public Map<Sense<V>, Map<Sense<V>, Number>> getContexts() {
-        final Map<Sense<V>, Map<Sense<V>, Number>> contexts = new HashMap<>();
+        final var contexts = new HashMap<Sense<V>, Map<Sense<V>, Number>>();
 
         for (final var edge : requireNonNull(senseGraph, "call fit() first").edgeSet()) {
             final Sense<V> source = senseGraph.getEdgeSource(edge), target = senseGraph.getEdgeTarget(edge);

@@ -112,8 +112,7 @@ public class MarkovClusteringBinaryRunner<V, E> implements Clustering<V> {
         requireNonNull(mapping, "call fit() first");
         requireNonNull(output, "call fit() first");
 
-        final var inverse = mapping.entrySet().stream().
-                collect(toMap(Map.Entry::getValue, Map.Entry::getKey));
+        final var inverse = mapping.entrySet().stream().collect(toMap(Map.Entry::getValue, Map.Entry::getKey));
 
         try (var stream = Files.lines(output.toPath())) {
             return stream.map(line -> Arrays.stream(line.split("\t")).
@@ -175,7 +174,7 @@ public class MarkovClusteringBinaryRunner<V, E> implements Clustering<V> {
     }
 
     private Map<V, Integer> translate(Graph<V, E> graph) {
-        final Map<V, Integer> mapping = new HashMap<>(graph.vertexSet().size());
+        final var mapping = new HashMap<V, Integer>(graph.vertexSet().size());
 
         var i = 0;
 

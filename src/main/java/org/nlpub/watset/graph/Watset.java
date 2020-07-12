@@ -133,8 +133,7 @@ public class Watset<V, E> implements Clustering<V> {
             if (wordSenses.getValue().isEmpty()) {
                 contexts.put(new IndexedSense<>(wordSenses.getKey(), 0), Collections.emptyMap());
             } else {
-                wordSenses.getValue().forEach((sense, context) ->
-                        contexts.put(sense, disambiguateContext(inventory, sense)));
+                wordSenses.getValue().forEach((sense, context) -> contexts.put(sense, disambiguateContext(inventory, sense)));
             }
         });
 
@@ -205,7 +204,7 @@ public class Watset<V, E> implements Clustering<V> {
      * @return the disambiguated context of {@code sense}
      */
     private Map<Sense<V>, Number> disambiguateContext(Map<V, Map<Sense<V>, Map<V, Number>>> inventory, Sense<V> sense) {
-        final Map<V, Number> context = new HashMap<>(inventory.get(sense.get()).get(sense));
+        final var context = new HashMap<>(inventory.get(sense.get()).get(sense));
 
         context.put(sense.get(), DEFAULT_CONTEXT_WEIGHT);
 
@@ -223,9 +222,7 @@ public class Watset<V, E> implements Clustering<V> {
 
         contexts.keySet().forEach(builder::addVertex);
 
-        contexts.forEach((source, context) ->
-                context.forEach((target, weight) ->
-                        builder.addEdge(source, target, weight.doubleValue())));
+        contexts.forEach((source, context) -> context.forEach((target, weight) -> builder.addEdge(source, target, weight.doubleValue())));
 
         return builder.build();
     }
