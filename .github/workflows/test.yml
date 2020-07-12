@@ -12,7 +12,6 @@ jobs:
     strategy:
       matrix:
         java-version: [11, 12, 13, 14, 15-ea, 16-ea]
-
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK ${{ matrix.java-version }}
@@ -27,11 +26,17 @@ jobs:
       run: mvn -B package
     - name: Build with Maven (Shade)
       run: mvn -Dshade=true -B package
-
+    - name: Build Javadoc
+      run: mvn -B javadoc:javadoc
+    - name: Upload Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./target/site/apidocs
+      if: matrix.java-version == '16-ea' && github.ref == 'refs/heads/master'
   examples:
     runs-on: ubuntu-latest
     continue-on-error: true
-
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 11
@@ -42,10 +47,8 @@ jobs:
       run: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dshade=true -B
     - name: Run Examples
       run: WATSET=$PWD/target/watset.jar make -C examples CommandLine
-
   shellcheck:
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
     - name: Run ShellCheck
