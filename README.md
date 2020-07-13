@@ -6,12 +6,14 @@ This is an open source implementation of the [Watset] algorithm for [fuzzy graph
 
 This package, written in Java, also includes implementations of the [Chinese Whispers] (2006), [Markov Clustering] (2000), and [MaxMax] (2013) graph clustering algorithms.
 
-[![Build Status][github_tests_badge]][github_tests_link] [![JitPack][jitpack_badge]][jitpack_link] [![Maintainability][codeclimate_badge]][codeclimate_link] [![Javadoc][javadoc_badge]][javadoc_link]
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.nlpub/watset/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.nlpub/watset)
+
+[![Build Status][github_tests_badge]][github_tests_link] [![Maven Central][maven_badge]][maven_link] [![Maintainability][codeclimate_badge]][codeclimate_link] [![Javadoc][javadoc_badge]][javadoc_link]
 
 [github_tests_badge]: https://github.com/nlpub/watset-java/workflows/Unit%20Tests/badge.svg?branch=master
 [github_tests_link]: https://github.com/nlpub/watset-java/actions?query=workflow%3A%22Unit+Tests%22
-[jitpack_badge]: https://jitpack.io/v/nlpub/watset-java.svg
-[jitpack_link]: https://jitpack.io/#nlpub/watset-java
+[maven_badge]: https://maven-badges.herokuapp.com/maven-central/org.nlpub/watset/badge.svg
+[maven_link]: https://mvnrepository.com/artifact/org.nlpub/watset
 [codeclimate_badge]: https://api.codeclimate.com/v1/badges/2f2a90dd42ae703e9e5d/maintainability
 [codeclimate_link]: https://codeclimate.com/github/nlpub/watset-java/maintainability
 [javadoc_badge]: https://img.shields.io/badge/javadoc-master-brightgreen
@@ -19,11 +21,13 @@ This package, written in Java, also includes implementations of the [Chinese Whi
 
 ## Usage
 
-There are two ways to obtain `watset-java`:
+There are three ways to obtain `watset-java`:
 
 1. download the [recently released version](https://github.com/nlpub/watset-java/releases/latest) (look at the `watset.jar` file in the Assets section);
 
-2. compile the `master` branch from source by cloning the [repository](https://github.com/nlpub/watset-java) and running `mvn package` in the repository root (or `mvn package -Dshade` to build a dependency-less jar file as in the previous option).
+2. compile the `master` branch from source by cloning the [repository](https://github.com/nlpub/watset-java) and running `mvn package` in the repository root (or `mvn package -Dshade` to build a dependency-less jar file as in the previous option);
+
+3. get it from [Maven Central](https://mvnrepository.com/artifact/org.nlpub/watset) or [GitHub Packages](https://github.com/nlpub/watset-java/packages).
 
 This tool has several kinds of activity titled the *commands*. Such commands as `watset`, `cw`, `mcl`, and `maxmax` invoke different clustering algorithms, while `senses` invokes graph-based word sense induction.
 
@@ -157,6 +161,6 @@ Copyright (c) 2016&ndash;2020 [Dmitry Ustalov]. See [LICENSE](LICENSE) for detai
 
 [Watset]: https://doi.org/10.1162/COLI_a_00354
 [Chinese Whispers]: https://doi.org/10.3115/1654758.1654774
-[Markov Clustering]: https://doi.org/10.1137/040608635
+[Markov Clustering]: https://hdl.handle.net/1874/848
 [MaxMax]: https://doi.org/10.1007/978-3-642-37247-6_30
 [Dmitry Ustalov]: https://github.com/dustalov
