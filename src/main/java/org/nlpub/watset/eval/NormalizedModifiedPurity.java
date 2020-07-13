@@ -162,7 +162,7 @@ public class NormalizedModifiedPurity<V> {
     public double delta(Map<V, Double> cluster, Map<V, Double> klass) {
         if (modified && !(cluster.size() > 1)) return 0;
 
-        final var intersection = new HashMap<V, Double>(cluster);
+        final var intersection = new HashMap<>(cluster);
 
         intersection.keySet().retainAll(klass.keySet());
 

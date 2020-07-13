@@ -90,7 +90,7 @@ public class Pairwise<V> {
         final var clusterPairs = transform(requireNonNull(clusters));
         final var classPairs = transform(requireNonNull(classes));
 
-        final var union = new HashSet<Pair<V, V>>(clusterPairs);
+        final var union = new HashSet<>(clusterPairs);
         union.addAll(classPairs);
 
         final var preds = new boolean[union.size()];
