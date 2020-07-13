@@ -51,26 +51,29 @@ public interface NetworkXFormat {
 
     /**
      * Reconstruct a {@link Graph} object from the unpickled NetworkX graph.
+     * <p>
+     * Please be careful with the type of the nodes.
      *
-     * @param nx the unpickled NetworkX graph
+     * @param nx  the unpickled NetworkX graph
+     * @param <V> the type of nodes in the graph
      * @return a graph represented in the unpickled graph
      */
-    static Graph<Object, DefaultWeightedEdge> load(ClassDict nx) {
+    static <V> Graph<V, DefaultWeightedEdge> load(ClassDict nx) {
         requireNonNull(nx);
 
         if (!nx.get("__class__").equals("networkx.classes.graph.Graph")) {
             throw new PickleException("graph is not networkx.classes.graph.Graph");
         }
 
-        var builder = SimpleWeightedGraph.createBuilder(DefaultWeightedEdge.class);
+        var builder = SimpleWeightedGraph.<V, DefaultWeightedEdge>createBuilder(DefaultWeightedEdge.class);
 
-        @SuppressWarnings("unchecked") final var nodes = (Map<Object, Object>) nx.get("_node");
+        @SuppressWarnings("unchecked") final var nodes = (Map<V, Object>) nx.get("_node");
 
         for (var node : nodes.keySet()) {
             builder.addVertex(node);
         }
 
-        @SuppressWarnings("unchecked") final var edges = (Map<Object, Map<Object, Object>>) nx.get("_adj");
+        @SuppressWarnings("unchecked") final var edges = (Map<V, Map<V, Object>>) nx.get("_adj");
 
         for (var source : edges.entrySet()) {
             for (var target : source.getValue().keySet()) {

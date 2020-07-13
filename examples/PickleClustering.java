@@ -29,7 +29,7 @@ import java.nio.file.Paths;
 public class PickleClustering {
     public static void main(String[] args) throws IOException {
         try (var stream = Files.newInputStream(Paths.get("karate_club_graph.pkl"))) {
-            var graph = NetworkXFormat.load(NetworkXFormat.parse(stream));
+            var graph = NetworkXFormat.<Integer>load(NetworkXFormat.parse(stream));
 
             var cw = new ChineseWhispers<>(graph, NodeWeighting.top());
             cw.fit();
