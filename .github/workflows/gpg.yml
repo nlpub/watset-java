@@ -17,7 +17,7 @@ jobs:
       with:
         java-version: 11
     - name: Set up GnuPG
-      run: gpg --import -a < $GPG_SIGNING_KEY
+      run: gpg --import -a <<< $GPG_SIGNING_KEY
       env:
         GPG_SIGNING_KEY: ${{ secrets.OSSRH_SIGNING_KEY }}
     - name: Build with Maven
