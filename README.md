@@ -6,8 +6,6 @@ This is an open source implementation of the [Watset] algorithm for [fuzzy graph
 
 This package, written in Java, also includes implementations of the [Chinese Whispers] (2006), [Markov Clustering] (2000), and [MaxMax] (2013) graph clustering algorithms.
 
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.nlpub/watset/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.nlpub/watset)
-
 [![Build Status][github_tests_badge]][github_tests_link] [![Maven Central][maven_badge]][maven_link] [![Maintainability][codeclimate_badge]][codeclimate_link] [![Javadoc][javadoc_badge]][javadoc_link]
 
 [github_tests_badge]: https://github.com/nlpub/watset-java/workflows/Unit%20Tests/badge.svg?branch=master
