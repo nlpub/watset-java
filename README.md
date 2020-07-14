@@ -11,7 +11,7 @@ This package, written in Java, also includes implementations of the [Chinese Whi
 [github_tests_badge]: https://github.com/nlpub/watset-java/workflows/Unit%20Tests/badge.svg?branch=master
 [github_tests_link]: https://github.com/nlpub/watset-java/actions?query=workflow%3A%22Unit+Tests%22
 [maven_badge]: https://maven-badges.herokuapp.com/maven-central/org.nlpub/watset/badge.svg
-[maven_link]: https://mvnrepository.com/artifact/org.nlpub/watset
+[maven_link]: https://search.maven.org/artifact/org.nlpub/watset
 [codeclimate_badge]: https://api.codeclimate.com/v1/badges/2f2a90dd42ae703e9e5d/maintainability
 [codeclimate_link]: https://codeclimate.com/github/nlpub/watset-java/maintainability
 [javadoc_badge]: https://img.shields.io/badge/javadoc-master-brightgreen
@@ -25,7 +25,7 @@ There are three ways to obtain `watset-java`:
 
 2. compile the `master` branch from source by cloning the [repository](https://github.com/nlpub/watset-java) and running `mvn package` in the repository root (or `mvn package -Dshade` to build a dependency-less jar file as in the previous option);
 
-3. get it from [Maven Central](https://search.maven.org/artifact/org.nlpub/watset) or [GitHub Packages](https://github.com/nlpub/watset-java/packages).
+3. get it from [Maven Central][maven_link] or [GitHub Packages](https://github.com/nlpub/watset-java/packages).
 
 This tool has several kinds of activity titled the *commands*. Such commands as `watset`, `cw`, `mcl`, and `maxmax` invoke different clustering algorithms, while `senses` invokes graph-based word sense induction.
 
