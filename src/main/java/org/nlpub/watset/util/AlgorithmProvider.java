@@ -37,10 +37,11 @@ import static java.util.Objects.requireNonNull;
  * @param <E> the type of edges in the graph
  */
 public class AlgorithmProvider<V, E> implements Function<Graph<V, E>, Clustering<V>> {
-    private static final Logger logger = Logger.getLogger(SimplifiedWatset.class.getSimpleName());
+    private static final Logger logger = Logger.getLogger(AlgorithmProvider.class.getSimpleName());
 
     private final String algorithm;
     private final Map<String, String> params;
+    private NodeWeighting<V, E> weighting;
 
     /**
      * Create an instance of this utility class.
@@ -65,7 +66,7 @@ public class AlgorithmProvider<V, E> implements Function<Graph<V, E>, Clustering
             case "components":
                 return new ComponentsClustering<>(graph);
             case "cw":
-                final var weighting = parseChineseWhispersNodeWeighting();
+                weighting = isNull(weighting) ? parseChineseWhispersNodeWeighting() : weighting;
                 return new ChineseWhispers<>(graph, weighting);
             case "mcl":
             case "mcl-bin":
