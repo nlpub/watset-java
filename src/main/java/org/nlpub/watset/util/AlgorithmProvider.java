@@ -59,7 +59,7 @@ public class AlgorithmProvider<V, E> implements Function<Graph<V, E>, Clustering
      * @param params    the parameter map for the algorithm
      */
     public AlgorithmProvider(String algorithm, Map<String, String> params) {
-        this.algorithm = requireNonNull(algorithm);
+        this.algorithm = requireNonNull(algorithm, "algorithm is not specified");
         this.params = isNull(params) ? Collections.emptyMap() : params;
         this.weighting = parseChineseWhispersNodeWeighting();
     }
@@ -89,7 +89,7 @@ public class AlgorithmProvider<V, E> implements Function<Graph<V, E>, Clustering
             case "maxmax":
                 return new MaxMax<>(graph);
             default:
-                throw new IllegalArgumentException("Unknown algorithm is set.");
+                throw new IllegalArgumentException("Unknown algorithm: " + algorithm);
         }
     }
 
@@ -106,7 +106,7 @@ public class AlgorithmProvider<V, E> implements Function<Graph<V, E>, Clustering
             case "lin":
                 return NodeWeighting.linear();
             default:
-                throw new IllegalArgumentException("Unknown mode is set.");
+                throw new IllegalArgumentException("Unknown mode: " + params.get("mode"));
         }
     }
 }
