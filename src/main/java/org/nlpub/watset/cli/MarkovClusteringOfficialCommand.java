@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Dmitry Ustalov
+ * Copyright 2020 Dmitry Ustalov
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,20 +23,19 @@ import org.jgrapht.graph.DefaultWeightedEdge;
 import org.nlpub.watset.graph.Clustering;
 import org.nlpub.watset.util.AlgorithmProvider;
 
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
 import static java.util.Objects.nonNull;
 
-@Parameters(commandDescription = "Markov Clustering")
-class MarkovClusteringCommand extends ClusteringCommand {
-    @Parameter(description = "Expansion parameter", names = "-e")
-    protected Integer e;
+@Parameters(commandDescription = "Markov Clustering Official Binary")
+public class MarkovClusteringOfficialCommand extends MarkovClusteringCommand {
+    @SuppressWarnings("unused")
+    @Parameter(description = "Path to binary mcl", names = "--bin", converter = PathConverter.class)
+    private Path binary;
 
-    @Parameter(description = "Inflation parameter", names = "-r")
-    protected Double r;
-
-    public MarkovClusteringCommand(MainParameters parameters) {
+    public MarkovClusteringOfficialCommand(MainParameters parameters) {
         super(parameters);
     }
 
@@ -45,9 +44,10 @@ class MarkovClusteringCommand extends ClusteringCommand {
         final Map<String, String> params = new HashMap<>() {{
             if (nonNull(e)) put("e", Integer.toString(e));
             if (nonNull(r)) put("r", Double.toString(r));
+            if (nonNull(binary)) put("bin", binary.toAbsolutePath().toString());
         }};
 
-        final var algorithm = new AlgorithmProvider<String, DefaultWeightedEdge>("mcl", params);
+        final var algorithm = new AlgorithmProvider<String, DefaultWeightedEdge>("mcl-bin", params);
         return algorithm.apply(getGraph());
     }
 }
