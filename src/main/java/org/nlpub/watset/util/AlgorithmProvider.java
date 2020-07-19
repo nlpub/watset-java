@@ -27,8 +27,8 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.logging.Logger;
 
-import static java.util.Objects.isNull;
 import static java.util.Objects.requireNonNull;
+import static java.util.Objects.requireNonNullElse;
 
 /**
  * A utility class that creates instances of the graph clustering algorithms.
@@ -60,7 +60,7 @@ public class AlgorithmProvider<V, E> implements Function<Graph<V, E>, Clustering
      */
     public AlgorithmProvider(String algorithm, Map<String, String> params) {
         this.algorithm = requireNonNull(algorithm, "algorithm is not specified");
-        this.params = isNull(params) ? Collections.emptyMap() : params;
+        this.params = requireNonNullElse(params, Collections.emptyMap());
         this.weighting = parseChineseWhispersNodeWeighting();
     }
 
