@@ -42,6 +42,8 @@ done
 # Watset Clustering
 java -jar "$WATSET" -i "$INPUT" watset -s -l mcl -g mcl # Watset[MCL, MCL]
 
+java -jar "$WATSET" -i "$INPUT" watset -s -l mcl -g mcl-bin -gp bin="$PWD/mcl" # Watset[MCL, MCL]
+
 for gmode in top lin log ; do
   java -jar "$WATSET" -i "$INPUT" watset -s -l mcl -g cw -gp mode=$gmode # Watset[MCL, CW]
 done
