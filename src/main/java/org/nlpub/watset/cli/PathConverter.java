@@ -22,8 +22,10 @@ import com.beust.jcommander.IStringConverter;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-@SuppressWarnings("unused")
-class PathConverter implements IStringConverter<Path> {
+/**
+ * An interface that converts strings to {@link Path}.
+ */
+public class PathConverter implements IStringConverter<Path> {
     @Override
     public Path convert(String value) {
         return Paths.get(value);

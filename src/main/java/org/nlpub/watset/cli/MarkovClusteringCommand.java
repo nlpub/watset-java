@@ -28,7 +28,7 @@ import java.util.Map;
 
 import static java.util.Objects.nonNull;
 
-class CommandMarkovClustering extends ClusteringCommand {
+class MarkovClusteringCommand extends ClusteringCommand {
     private final boolean binary;
 
     @SuppressWarnings("unused")
@@ -43,8 +43,7 @@ class CommandMarkovClustering extends ClusteringCommand {
     @Parameter(names = "--bin", converter = PathConverter.class)
     private Path binaryPath;
 
-    public CommandMarkovClustering(Application application, boolean binary) {
-        super(application);
+    public MarkovClusteringCommand(boolean binary) {
         this.binary = binary;
     }
 
@@ -57,6 +56,6 @@ class CommandMarkovClustering extends ClusteringCommand {
         }};
 
         final var algorithm = new AlgorithmProvider<String, DefaultWeightedEdge>(binary ? "mcl-bin" : "mcl", params);
-        return algorithm.apply(application.getGraph());
+        return algorithm.apply(getGraph());
     }
 }

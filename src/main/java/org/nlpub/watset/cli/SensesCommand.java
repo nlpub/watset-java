@@ -30,8 +30,6 @@ import org.nlpub.watset.util.IndexedSense;
 import org.nlpub.watset.util.Sense;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -39,9 +37,7 @@ import java.util.Map;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.joining;
 
-class CommandSenses implements Runnable {
-    final Application application;
-
+class SensesCommand extends Command {
     @SuppressWarnings("unused")
     @Parameter(required = true, description = "Local clustering algorithm", names = {"-l", "--local"})
     private String local;
@@ -54,28 +50,24 @@ class CommandSenses implements Runnable {
     @Parameter(description = "Use Simplified Watset", names = {"-s", "--simplified"})
     private boolean simplified = false;
 
-    public CommandSenses(Application application) {
-        this.application = application;
-    }
-
     public void run() {
         requireNonNull(local);
 
         final var algorithm = new AlgorithmProvider<String, DefaultWeightedEdge>(local, localParams);
 
-        final var graph = application.getGraph();
+        final var graph = getGraph();
 
         final var contexts = simplified ? getSimplifiedWatsetContexts(algorithm, graph) : getWatsetContexts(algorithm, graph);
 
         try {
-            write(application.output, contexts);
+            write(contexts);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    void write(Path path, Map<Sense<String>, Map<Sense<String>, Number>> contexts) throws IOException {
-        try (final var writer = Files.newBufferedWriter(path)) {
+    void write(Map<Sense<String>, Map<Sense<String>, Number>> contexts) throws IOException {
+        try (final var writer = newOutputWriter()) {
             for (final var context : contexts.entrySet()) {
                 final var sense = ((IndexedSense<String>) context.getKey());
 

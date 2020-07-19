@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Dmitry Ustalov
+ * Copyright 2020 Dmitry Ustalov
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,22 +17,19 @@
 
 package org.nlpub.watset.cli;
 
+import org.jgrapht.graph.DefaultWeightedEdge;
 import org.nlpub.watset.graph.Clustering;
-import org.nlpub.watset.util.ILEFormat;
+import org.nlpub.watset.util.AlgorithmProvider;
 
-import java.io.IOException;
+class TrivialCommand extends ClusteringCommand {
+    private final String algorithm;
 
-abstract class ClusteringCommand extends Command {
-    public void run() {
-        final var clustering = getClustering();
-        clustering.fit();
-
-        try (final var writer = newOutputWriter()) {
-            ILEFormat.write(writer, clustering);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public TrivialCommand(String algorithm) {
+        this.algorithm = algorithm;
     }
 
-    public abstract Clustering<String> getClustering();
+    @Override
+    public Clustering<String> getClustering() {
+        return new AlgorithmProvider<String, DefaultWeightedEdge>(algorithm).apply(getGraph());
+    }
 }

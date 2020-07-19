@@ -19,9 +19,8 @@ package org.nlpub.watset.util;
 
 import org.nlpub.watset.graph.Clustering;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -42,29 +41,26 @@ public interface ILEFormat {
     /**
      * Write the ILE-formatted file representing the clusters.
      *
-     * @param path       the path
+     * @param writer     the writer
      * @param clustering the clusters
-     * @throws IOException if an I/O error occurs
      */
-    static void write(Path path, Clustering<String> clustering) throws IOException {
-        try (final var writer = Files.newBufferedWriter(path)) {
-            final var counter = new AtomicInteger(0);
+    static void write(BufferedWriter writer, Clustering<String> clustering) {
+        final var counter = new AtomicInteger(0);
 
-            clustering.getClusters().stream().
-                    sorted((smaller, larger) -> Integer.compare(larger.size(), smaller.size())).
-                    forEach(cluster -> {
-                        try {
-                            writer.write(String.format(Locale.ROOT, "%d%s%d%s%s%n",
-                                    counter.incrementAndGet(),
-                                    SEPARATOR,
-                                    cluster.size(),
-                                    SEPARATOR,
-                                    String.join(DELIMITER, cluster))
-                            );
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    });
-        }
+        clustering.getClusters().stream().
+                sorted((smaller, larger) -> Integer.compare(larger.size(), smaller.size())).
+                forEach(cluster -> {
+                    try {
+                        writer.write(String.format(Locale.ROOT, "%d%s%d%s%s%n",
+                                counter.incrementAndGet(),
+                                SEPARATOR,
+                                cluster.size(),
+                                SEPARATOR,
+                                String.join(DELIMITER, cluster))
+                        );
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
     }
 }

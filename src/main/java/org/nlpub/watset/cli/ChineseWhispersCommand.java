@@ -23,29 +23,23 @@ import org.jgrapht.graph.DefaultWeightedEdge;
 import org.nlpub.watset.graph.Clustering;
 import org.nlpub.watset.util.AlgorithmProvider;
 
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.Map;
 
 import static java.util.Objects.nonNull;
 
 @Parameters(commandDescription = "Chinese Whispers")
-class CommandChineseWhispers extends ClusteringCommand {
+class ChineseWhispersCommand extends ClusteringCommand {
     @SuppressWarnings("unused")
     @Parameter(names = {"-m", "--mode"})
     private String mode;
 
-    public CommandChineseWhispers(Application application) {
-        super(application);
-    }
-
     @Override
     public Clustering<String> getClustering() {
-        final Map<String, String> params = new HashMap<>() {{
-            if (nonNull(mode)) put("mode", mode);
-        }};
+        final Map<String, String> params = nonNull(mode) ? Map.of("mode", mode) : Collections.emptyMap();
 
         final var algorithm = new AlgorithmProvider<String, DefaultWeightedEdge>("cw", params);
 
-        return algorithm.apply(application.getGraph());
+        return algorithm.apply(getGraph());
     }
 }

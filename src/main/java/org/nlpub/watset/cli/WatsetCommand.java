@@ -32,7 +32,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Parameters(commandDescription = "Watset")
-class CommandWatset extends ClusteringCommand {
+class WatsetCommand extends ClusteringCommand {
     @SuppressWarnings("unused")
     @Parameter(required = true, description = "Local clustering algorithm", names = {"-l", "--local"})
     private String local;
@@ -53,16 +53,12 @@ class CommandWatset extends ClusteringCommand {
     @Parameter(description = "Use Simplified Watset", names = {"-s", "--simplified"})
     private boolean simplified = false;
 
-    public CommandWatset(Application application) {
-        super(application);
-    }
-
     @Override
     public Clustering<String> getClustering() {
         final var localProvider = new AlgorithmProvider<String, DefaultWeightedEdge>(local, localParams);
         final var globalProvider = new AlgorithmProvider<Sense<String>, DefaultWeightedEdge>(global, globalParams);
 
-        final var graph = application.getGraph();
+        final var graph = getGraph();
 
         if (simplified) {
             return new SimplifiedWatset<>(graph, localProvider, globalProvider);

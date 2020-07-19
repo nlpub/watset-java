@@ -53,7 +53,7 @@ As the baseline, it is possible to use the following four dummy clustering “al
 * `components`: each cluster is a connected component of the input graph.
 
 ```bash
-$ java -jar watset.jar -i graph.txt -o output.tsv singleton
+$ java -jar watset.jar singleton -i graph.txt -o output.tsv
 ```
 
 ### Chinese Whispers
@@ -65,7 +65,7 @@ $ java -jar watset.jar -i graph.txt -o output.tsv singleton
 * `log`: the `top` mode divided by the logarithm of the node degree.
 
 ```bash
-$ java -jar watset.jar -i graph.txt -o output.tsv cw -m top
+$ java -jar watset.jar cw -i graph.txt -o output.tsv -m top
 ```
 
 ### Markov Clustering
@@ -76,7 +76,7 @@ $ java -jar watset.jar -i graph.txt -o output.tsv cw -m top
 * the power coefficient `-r` (the default value is also 2).
 
 ```bash
-$ java -jar watset.jar -i graph.txt -o output.tsv mcl -e 2 -r 2
+$ java -jar watset.jar mcl -i graph.txt -o output.tsv -e 2 -r 2
 ```
 
 This implementation is not optimized, so the processing of large graphs will likely be quite slow. So, for large graphs it is recommended to use the original implementation of the [MCL](https://micans.org/mcl/) algorithm, which is written in C and thus is really fast.
@@ -88,7 +88,7 @@ This implementation is not optimized, so the processing of large graphs will lik
 Watset requires two different clustering algorithms to be selected: the *local* clustering algorithm for sense induction that is specified using `-l` (`--local`) and the *global* algorithm for the final clustering that is specified using `-g` (`--global`). It is possible to configure the algorithms using the similar options as shown above using the `-lp` (`--local-params`) and `-gp` (`--global-params`) options. Multiple parameters should be separated with ampersand.
 
 ```bash
-$ java -jar watset.jar -i graph.txt -o output.tsv watset -s -l mcl -lp e=1 -lp r=3 -g cw -gp mode=lin
+$ java -jar watset.jar watset -i graph.txt -o output.tsv -s -l mcl -lp e=1 -lp r=3 -g cw -gp mode=lin
 ```
 
 In practice, the default parameters for MCL and CW work well enough, so the `-lp` and `-gp` arguments can be omitted in this example.
@@ -98,7 +98,7 @@ In practice, the default parameters for MCL and CW work well enough, so the `-lp
 Since [Watset] performs curvature-based word sense induction, it is possible to extract the built sense inventory using the special command of this tool.
 
 ```bash
-$ java -jar watset.jar -i graph.txt -o inventory.tsv senses -s -l mcl
+$ java -jar watset.jar senses -i graph.txt -o inventory.tsv -s -l mcl
 ```
 
 The output of this operation is a tab-separated file containing three columns: the target word, the word sense identifier, and the set of related disambiguated senses in the given word sense (the *context*). Each sense is represented as `word#id`.
@@ -108,7 +108,7 @@ The output of this operation is a tab-separated file containing three columns: t
 It is also possible to print the intermediate word sense graph built by [Watset].
 
 ```bash
-$ java -jar watset.jar -i graph.txt -o sense-graph.txt graph -s -l mcl
+$ java -jar watset.jar graph -i graph.txt -o sense-graph.txt -s -l mcl
 ```
 
 The output file will be written virtually in the same ABC format as the input graph, but each node will be provided with a numerical sense identifier preceded by the suffix `#`. This feature simplifies the integration into other graph processing pipelines.
@@ -118,7 +118,7 @@ The output file will be written virtually in the same ABC format as the input gr
 [MaxMax] is a soft clustering algorithm for undirected graphs that constructs intermediate representation of the input graph as the directed graph. This algorithm has no options.
 
 ```bash
-$ java -jar watset.jar -i graph.txt -o output.tsv maxmax
+$ java -jar watset.jar maxmax -i graph.txt -o output.tsv
 ```
 
 ## Citation

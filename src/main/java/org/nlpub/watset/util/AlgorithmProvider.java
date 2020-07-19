@@ -41,7 +41,16 @@ public class AlgorithmProvider<V, E> implements Function<Graph<V, E>, Clustering
 
     private final String algorithm;
     private final Map<String, String> params;
-    private NodeWeighting<V, E> weighting;
+    private final NodeWeighting<V, E> weighting;
+
+    /**
+     * Create an instance of this utility class with empty parameter map.
+     *
+     * @param algorithm the algorithm identifier
+     */
+    public AlgorithmProvider(String algorithm) {
+        this(algorithm, null);
+    }
 
     /**
      * Create an instance of this utility class.
@@ -52,6 +61,7 @@ public class AlgorithmProvider<V, E> implements Function<Graph<V, E>, Clustering
     public AlgorithmProvider(String algorithm, Map<String, String> params) {
         this.algorithm = requireNonNull(algorithm);
         this.params = isNull(params) ? Collections.emptyMap() : params;
+        this.weighting = parseChineseWhispersNodeWeighting();
     }
 
     @Override
@@ -66,7 +76,6 @@ public class AlgorithmProvider<V, E> implements Function<Graph<V, E>, Clustering
             case "components":
                 return new ComponentsClustering<>(graph);
             case "cw":
-                weighting = isNull(weighting) ? parseChineseWhispersNodeWeighting() : weighting;
                 return new ChineseWhispers<>(graph, weighting);
             case "mcl":
             case "mcl-bin":

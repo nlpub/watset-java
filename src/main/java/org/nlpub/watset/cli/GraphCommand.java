@@ -31,15 +31,12 @@ import org.nlpub.watset.util.IndexedSense;
 import org.nlpub.watset.util.Sense;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
 @Parameters(commandDescription = "Sense Graph")
-class CommandGraph implements Runnable {
-    final Application application;
+class GraphCommand extends Command {
 
     @SuppressWarnings("unused")
     @Parameter(required = true, description = "Local clustering algorithm", names = {"-l", "--local"})
@@ -53,26 +50,22 @@ class CommandGraph implements Runnable {
     @Parameter(description = "Use Simplified Watset", names = {"-s", "--simplified"})
     private boolean simplified = false;
 
-    public CommandGraph(Application application) {
-        this.application = application;
-    }
-
     public void run() {
         final var localProvider = new AlgorithmProvider<String, DefaultWeightedEdge>(local, localParams);
 
-        final var graph = application.getGraph();
+        final var graph = getGraph();
 
         final var senseGraph = simplified ? getSimplifiedWatsetGraph(graph, localProvider) : getWatsetGraph(graph, localProvider);
 
         try {
-            write(application.output, senseGraph);
+            write(senseGraph);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void write(Path path, Graph<Sense<String>, DefaultWeightedEdge> graph) throws IOException {
-        try (final var writer = Files.newBufferedWriter(path)) {
+    private void write(Graph<Sense<String>, DefaultWeightedEdge> graph) throws IOException {
+        try (final var writer = newOutputWriter()) {
             for (final var edge : graph.edgeSet()) {
                 final var source = (IndexedSense<String>) graph.getEdgeSource(edge);
                 final var target = (IndexedSense<String>) graph.getEdgeTarget(edge);

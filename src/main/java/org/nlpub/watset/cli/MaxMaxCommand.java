@@ -23,14 +23,10 @@ import org.nlpub.watset.util.AlgorithmProvider;
 
 import java.util.Collections;
 
-class CommandMaxMax extends ClusteringCommand {
-    public CommandMaxMax(Application application) {
-        super(application);
-    }
-
+class MaxMaxCommand extends ClusteringCommand {
     @Override
     public Clustering<String> getClustering() {
         final var algorithm = new AlgorithmProvider<String, DefaultWeightedEdge>("maxmax", Collections.emptyMap());
-        return algorithm.apply(application.getGraph());
+        return algorithm.apply(getGraph());
     }
 }
