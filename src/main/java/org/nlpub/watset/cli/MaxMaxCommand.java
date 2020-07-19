@@ -17,12 +17,14 @@
 
 package org.nlpub.watset.cli;
 
+import com.beust.jcommander.Parameters;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.nlpub.watset.graph.Clustering;
 import org.nlpub.watset.util.AlgorithmProvider;
 
 import java.util.Collections;
 
+@Parameters(commandDescription = "MaxMax")
 class MaxMaxCommand extends ClusteringCommand {
     @Override
     public Clustering<String> getClustering() {

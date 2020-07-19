@@ -17,9 +17,8 @@
 
 package org.nlpub.watset.cli;
 
-import com.beust.jcommander.DynamicParameter;
-import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import com.beust.jcommander.ParametersDelegate;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.nlpub.watset.graph.Clustering;
 import org.nlpub.watset.graph.SimplifiedWatset;
@@ -28,42 +27,31 @@ import org.nlpub.watset.util.AlgorithmProvider;
 import org.nlpub.watset.util.CosineContextSimilarity;
 import org.nlpub.watset.util.Sense;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @Parameters(commandDescription = "Watset")
 class WatsetCommand extends ClusteringCommand {
-    @SuppressWarnings("unused")
-    @Parameter(required = true, description = "Local clustering algorithm", names = {"-l", "--local"})
-    private String local;
+    /**
+     * The local clustering command-line parameters.
+     */
+    @ParametersDelegate
+    public LocalParameters local = new LocalParameters();
 
-    @SuppressWarnings({"FieldMayBeFinal"})
-    @DynamicParameter(description = "Local clustering algorithm parameters", names = {"-lp", "--local-params"})
-    private Map<String, String> localParams = new HashMap<>();
-
-    @SuppressWarnings("unused")
-    @Parameter(required = true, description = "Global clustering algorithm", names = {"-g", "--global"})
-    private String global;
-
-    @SuppressWarnings({"FieldMayBeFinal"})
-    @DynamicParameter(description = "Global clustering algorithm parameters", names = {"-gp", "--global-params"})
-    private Map<String, String> globalParams = new HashMap<>();
-
-    @SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal"})
-    @Parameter(description = "Use Simplified Watset", names = {"-s", "--simplified"})
-    private boolean simplified = false;
+    /**
+     * The global clustering command-line parameters.
+     */
+    @ParametersDelegate
+    public GlobalParameters global = new GlobalParameters();
 
     @Override
     public Clustering<String> getClustering() {
-        final var localProvider = new AlgorithmProvider<String, DefaultWeightedEdge>(local, localParams);
-        final var globalProvider = new AlgorithmProvider<Sense<String>, DefaultWeightedEdge>(global, globalParams);
+        final var localAlgorithm = new AlgorithmProvider<String, DefaultWeightedEdge>(local.algorithm, local.params);
+        final var globalAlgorithm = new AlgorithmProvider<Sense<String>, DefaultWeightedEdge>(global.algorithm, global.params);
 
         final var graph = getGraph();
 
-        if (simplified) {
-            return new SimplifiedWatset<>(graph, localProvider, globalProvider);
+        if (local.simplified) {
+            return new SimplifiedWatset<>(graph, localAlgorithm, globalAlgorithm);
         } else {
-            @SuppressWarnings("deprecation") final var watset = new Watset<>(graph, localProvider, globalProvider, new CosineContextSimilarity<>());
+            @SuppressWarnings("deprecation") final var watset = new Watset<>(graph, localAlgorithm, globalAlgorithm, new CosineContextSimilarity<>());
             return watset;
         }
     }

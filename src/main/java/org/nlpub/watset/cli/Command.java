@@ -17,6 +17,7 @@
 
 package org.nlpub.watset.cli;
 
+import com.beust.jcommander.DynamicParameter;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParametersDelegate;
 import org.jgrapht.Graph;
@@ -26,6 +27,8 @@ import org.nlpub.watset.util.ABCFormat;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
@@ -40,7 +43,6 @@ public abstract class Command implements Runnable {
      * Watset command-line interface parameters.
      */
     public static class Parameters {
-
         /**
          * The input file.
          */
@@ -52,6 +54,46 @@ public abstract class Command implements Runnable {
          */
         @Parameter(names = {"-o", "--output"}, description = "Output file", converter = PathConverter.class)
         public Path output;
+    }
+
+    /**
+     * Local clustering command-line interface parameters.
+     */
+    public static class LocalParameters {
+        /**
+         * The local clustering algorithm.
+         */
+        @Parameter(required = true, description = "Local clustering algorithm", names = {"-l", "--local"})
+        public String algorithm;
+
+        /**
+         * The local clustering algorithm parameters.
+         */
+        @DynamicParameter(description = "Local clustering algorithm parameters", names = {"-lp", "--local-params"})
+        public Map<String, String> params = new HashMap<>();
+
+        /**
+         * The flag indicating the use of Simplified Watset.
+         */
+        @Parameter(description = "Use Simplified Watset", names = {"-s", "--simplified"})
+        public boolean simplified = false;
+    }
+
+    /**
+     * Global clustering command-line interface parameters.
+     */
+    public static class GlobalParameters {
+        /**
+         * The global clustering algorithm.
+         */
+        @Parameter(required = true, description = "Global clustering algorithm", names = {"-g", "--global"})
+        public String algorithm;
+
+        /**
+         * The global clustering algorithm parameters.
+         */
+        @DynamicParameter(description = "Global clustering algorithm parameters", names = {"-gp", "--global-params"})
+        public Map<String, String> params = new HashMap<>();
     }
 
     private static final Logger logger = Logger.getLogger(Command.class.getSimpleName());

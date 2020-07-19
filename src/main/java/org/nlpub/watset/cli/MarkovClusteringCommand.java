@@ -18,6 +18,7 @@
 package org.nlpub.watset.cli;
 
 import com.beust.jcommander.Parameter;
+import com.beust.jcommander.Parameters;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.nlpub.watset.graph.Clustering;
 import org.nlpub.watset.util.AlgorithmProvider;
@@ -28,6 +29,7 @@ import java.util.Map;
 
 import static java.util.Objects.nonNull;
 
+@Parameters(commandDescription = "Markov Clustering")
 class MarkovClusteringCommand extends ClusteringCommand {
     private final boolean binary;
 

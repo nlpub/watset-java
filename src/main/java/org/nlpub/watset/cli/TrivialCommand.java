@@ -17,10 +17,12 @@
 
 package org.nlpub.watset.cli;
 
+import com.beust.jcommander.Parameters;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.nlpub.watset.graph.Clustering;
 import org.nlpub.watset.util.AlgorithmProvider;
 
+@Parameters(commandDescription = "Trivial Clustering")
 class TrivialCommand extends ClusteringCommand {
     private final String algorithm;
 

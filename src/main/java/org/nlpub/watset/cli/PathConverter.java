@@ -23,7 +23,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
- * An interface that converts strings to {@link Path}.
+ * Converter of string options to {@link Path}.
  */
 public class PathConverter implements IStringConverter<Path> {
     @Override

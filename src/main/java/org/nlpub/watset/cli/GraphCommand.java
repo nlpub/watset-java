@@ -17,9 +17,8 @@
 
 package org.nlpub.watset.cli;
 
-import com.beust.jcommander.DynamicParameter;
-import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import com.beust.jcommander.ParametersDelegate;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.nlpub.watset.graph.EmptyClustering;
@@ -31,31 +30,24 @@ import org.nlpub.watset.util.IndexedSense;
 import org.nlpub.watset.util.Sense;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 @Parameters(commandDescription = "Sense Graph")
 class GraphCommand extends Command {
-
-    @SuppressWarnings("unused")
-    @Parameter(required = true, description = "Local clustering algorithm", names = {"-l", "--local"})
-    private String local;
-
-    @SuppressWarnings({"FieldMayBeFinal"})
-    @DynamicParameter(description = "Local clustering algorithm parameters", names = {"-lp", "--local-params"})
-    private Map<String, String> localParams = new HashMap<>();
-
-    @SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal"})
-    @Parameter(description = "Use Simplified Watset", names = {"-s", "--simplified"})
-    private boolean simplified = false;
+    /**
+     * The local clustering command-line parameters.
+     */
+    @ParametersDelegate
+    public LocalParameters local = new LocalParameters();
 
     public void run() {
-        final var localProvider = new AlgorithmProvider<String, DefaultWeightedEdge>(local, localParams);
+        final var algorithm = new AlgorithmProvider<String, DefaultWeightedEdge>(local.algorithm, local.params);
 
         final var graph = getGraph();
 
-        final var senseGraph = simplified ? getSimplifiedWatsetGraph(graph, localProvider) : getWatsetGraph(graph, localProvider);
+        final var senseGraph = local.simplified ?
+                getSimplifiedWatsetGraph(graph, algorithm) :
+                getWatsetGraph(graph, algorithm);
 
         try {
             write(senseGraph);
