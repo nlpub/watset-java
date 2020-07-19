@@ -21,15 +21,12 @@ import org.jgrapht.Graph;
 import org.nlpub.watset.graph.*;
 
 import java.nio.file.Paths;
-import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.regex.Pattern;
+import java.util.logging.Logger;
 
-import static java.util.Objects.isNull;
 import static java.util.Objects.requireNonNull;
-import static java.util.stream.Collectors.toMap;
 
 /**
  * A utility class that creates instances of the graph clustering algorithms.
@@ -38,10 +35,7 @@ import static java.util.stream.Collectors.toMap;
  * @param <E> the type of edges in the graph
  */
 public class AlgorithmProvider<V, E> implements Function<Graph<V, E>, Clustering<V>> {
-    /**
-     * The default separator in parameter strings, expressed by the colon symbol.
-     */
-    public static final Pattern SEPARATOR = Pattern.compile(":");
+    private static final Logger logger = Logger.getLogger(SimplifiedWatset.class.getSimpleName());
 
     private final String algorithm;
     private final Map<String, String> params;
@@ -55,18 +49,6 @@ public class AlgorithmProvider<V, E> implements Function<Graph<V, E>, Clustering
     public AlgorithmProvider(String algorithm, Map<String, String> params) {
         this.algorithm = requireNonNull(algorithm);
         this.params = requireNonNull(params);
-    }
-
-    /**
-     * Create an instance of this utility class.
-     * <p>
-     * This constructor parses the parameter string {@code params} using {@link #parseParams(String)}.
-     *
-     * @param algorithm the algorithm identifier
-     * @param params    the parameter string for the algorithm
-     */
-    public AlgorithmProvider(String algorithm, String params) {
-        this(algorithm, parseParams(params));
     }
 
     @Override
@@ -107,27 +89,12 @@ public class AlgorithmProvider<V, E> implements Function<Graph<V, E>, Clustering
                 return NodeWeighting.top();
             case "log":
                 return NodeWeighting.log();
-            case "lin":
             case "nolog": // We used this notation in many papers; kept for compatibility
+                logger.warning("Please update your code: 'nolog' weighting is renamed to 'lin'.");
+            case "lin":
                 return NodeWeighting.linear();
             default:
                 throw new IllegalArgumentException("Unknown mode is set.");
         }
-    }
-
-    /**
-     * Parse the algorithm parameter string similarly to how HTTP query strings are parsed.
-     * However, instead of {@code &} delimiter {@code :} is used.
-     *
-     * @param params the parameter string
-     * @return the parsed parameter map
-     */
-    static Map<String, String> parseParams(String params) {
-        if (isNull(params) || params.trim().isEmpty()) return Collections.emptyMap();
-
-        return SEPARATOR.splitAsStream(params).
-                map(s -> s.split("=", 2)).
-                filter(pair -> pair.length == 2).
-                collect(toMap(kv -> kv[0].toLowerCase(Locale.ROOT), kv -> kv[1]));
     }
 }

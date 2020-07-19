@@ -17,6 +17,7 @@
 
 package org.nlpub.watset.cli;
 
+import com.beust.jcommander.DynamicParameter;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import org.jgrapht.graph.DefaultWeightedEdge;
@@ -27,6 +28,8 @@ import org.nlpub.watset.util.AlgorithmProvider;
 import org.nlpub.watset.util.CosineContextSimilarity;
 import org.nlpub.watset.util.Sense;
 
+import java.util.Map;
+
 @Parameters(commandDescription = "Watset")
 class CommandWatset extends ClusteringCommand {
     @SuppressWarnings("unused")
@@ -34,20 +37,20 @@ class CommandWatset extends ClusteringCommand {
     private String local;
 
     @SuppressWarnings("unused")
-    @Parameter(description = "Local clustering algorithm parameters", names = {"-lp", "--local-params"})
-    private String localParams;
+    @DynamicParameter(description = "Local clustering algorithm parameters", names = {"-lp", "--local-params"})
+    private Map<String, String> localParams;
 
     @SuppressWarnings("unused")
     @Parameter(required = true, description = "Global clustering algorithm", names = {"-g", "--global"})
     private String global;
 
     @SuppressWarnings("unused")
-    @Parameter(description = "Global clustering algorithm parameters", names = {"-gp", "--global-params"})
-    private String globalParams;
+    @DynamicParameter(description = "Global clustering algorithm parameters", names = {"-gp", "--global-params"})
+    private Map<String, String> globalParams;
 
-    @SuppressWarnings("CanBeFinal")
+    @SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal"})
     @Parameter(description = "Use Simplified Watset", names = {"-s", "--simplified"})
-    boolean simplified = false;
+    private boolean simplified = false;
 
     public CommandWatset(Application application) {
         super(application);

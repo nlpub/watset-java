@@ -17,6 +17,7 @@
 
 package org.nlpub.watset.cli;
 
+import com.beust.jcommander.DynamicParameter;
 import com.beust.jcommander.Parameter;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
@@ -42,15 +43,15 @@ class CommandSenses {
 
     @SuppressWarnings("unused")
     @Parameter(required = true, description = "Local clustering algorithm", names = {"-l", "--local"})
-    String local;
+    private String local;
 
     @SuppressWarnings("unused")
-    @Parameter(description = "Local clustering algorithm parameters", names = {"-lp", "--local-params"})
-    String localParams;
+    @DynamicParameter(description = "Local clustering algorithm parameters", names = {"-lp", "--local-params"})
+    private Map<String, String> localParams;
 
-    @SuppressWarnings("CanBeFinal")
+    @SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal"})
     @Parameter(description = "Use Simplified Watset", names = {"-s", "--simplified"})
-    boolean simplified = false;
+    private boolean simplified = false;
 
     public CommandSenses(Application application) {
         this.application = application;

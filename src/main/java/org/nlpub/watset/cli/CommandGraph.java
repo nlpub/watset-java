@@ -17,6 +17,7 @@
 
 package org.nlpub.watset.cli;
 
+import com.beust.jcommander.DynamicParameter;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import org.jgrapht.Graph;
@@ -33,6 +34,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Locale;
+import java.util.Map;
 
 @Parameters(commandDescription = "Sense Graph")
 class CommandGraph {
@@ -43,12 +45,12 @@ class CommandGraph {
     private String local;
 
     @SuppressWarnings("unused")
-    @Parameter(description = "Local clustering algorithm parameters", names = {"-lp", "--local-params"})
-    private String localParams;
+    @DynamicParameter(description = "Local clustering algorithm parameters", names = {"-lp", "--local-params"})
+    private Map<String, String> localParams;
 
-    @SuppressWarnings("CanBeFinal")
+    @SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal"})
     @Parameter(description = "Use Simplified Watset", names = {"-s", "--simplified"})
-    boolean simplified = false;
+    private boolean simplified = false;
 
     public CommandGraph(Application application) {
         this.application = application;
