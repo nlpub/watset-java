@@ -21,11 +21,13 @@ import org.jgrapht.Graph;
 import org.nlpub.watset.graph.*;
 
 import java.nio.file.Paths;
+import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.logging.Logger;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -48,7 +50,7 @@ public class AlgorithmProvider<V, E> implements Function<Graph<V, E>, Clustering
      */
     public AlgorithmProvider(String algorithm, Map<String, String> params) {
         this.algorithm = requireNonNull(algorithm);
-        this.params = requireNonNull(params);
+        this.params = isNull(params) ? Collections.emptyMap() : params;
     }
 
     @Override
