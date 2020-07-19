@@ -84,7 +84,7 @@ public class AlgorithmProvider<V, E> implements Function<Graph<V, E>, Clustering
                 if (algorithm.equalsIgnoreCase("mcl")) {
                     return new MarkovClustering<>(graph, e, r);
                 } else {
-                    return new MarkovClusteringBinaryRunner<>(graph, Path.of(params.get("bin")), r, Runtime.getRuntime().availableProcessors());
+                    return new MarkovClusteringOfficial<>(graph, Path.of(params.get("bin")), r, Runtime.getRuntime().availableProcessors());
                 }
             case "maxmax":
                 return new MaxMax<>(graph);

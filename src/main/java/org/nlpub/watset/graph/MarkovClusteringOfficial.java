@@ -42,8 +42,8 @@ import static java.util.stream.Collectors.toSet;
  * @param <E> the type of edges in the graph
  * @see <a href="https://micans.org/mcl/">van Dongen (2000)</a>
  */
-public class MarkovClusteringBinaryRunner<V, E> implements Clustering<V> {
-    private static final Logger logger = Logger.getLogger(MarkovClusteringBinaryRunner.class.getSimpleName());
+public class MarkovClusteringOfficial<V, E> implements Clustering<V> {
+    private static final Logger logger = Logger.getLogger(MarkovClusteringOfficial.class.getSimpleName());
 
     private final Graph<V, E> graph;
     private final Path mcl;
@@ -64,7 +64,7 @@ public class MarkovClusteringBinaryRunner<V, E> implements Clustering<V> {
      */
     @SuppressWarnings("unused")
     public static <V, E> Function<Graph<V, E>, Clustering<V>> provider(Path mcl, double r, int threads) {
-        return graph -> new MarkovClusteringBinaryRunner<>(graph, mcl, r, threads);
+        return graph -> new MarkovClusteringOfficial<>(graph, mcl, r, threads);
     }
 
     /**
@@ -78,7 +78,7 @@ public class MarkovClusteringBinaryRunner<V, E> implements Clustering<V> {
      */
     @SuppressWarnings("unused")
     public static <V, E> Function<Graph<V, E>, Clustering<V>> provider(Path mcl, double r) {
-        return graph -> new MarkovClusteringBinaryRunner<>(graph, mcl, r);
+        return graph -> new MarkovClusteringOfficial<>(graph, mcl, r);
     }
 
     /**
@@ -89,7 +89,7 @@ public class MarkovClusteringBinaryRunner<V, E> implements Clustering<V> {
      * @param r       the inflation parameter
      * @param threads the number of threads
      */
-    public MarkovClusteringBinaryRunner(Graph<V, E> graph, Path mcl, double r, int threads) {
+    public MarkovClusteringOfficial(Graph<V, E> graph, Path mcl, double r, int threads) {
         this.graph = requireNonNull(graph);
         this.mcl = mcl;
         this.r = r;
@@ -103,7 +103,7 @@ public class MarkovClusteringBinaryRunner<V, E> implements Clustering<V> {
      * @param mcl   the path to the MCL binary
      * @param r     the inflation parameter
      */
-    public MarkovClusteringBinaryRunner(Graph<V, E> graph, Path mcl, double r) {
+    public MarkovClusteringOfficial(Graph<V, E> graph, Path mcl, double r) {
         this(graph, mcl, r, 1);
     }
 
