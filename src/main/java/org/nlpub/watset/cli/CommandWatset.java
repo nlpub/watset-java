@@ -28,6 +28,7 @@ import org.nlpub.watset.util.AlgorithmProvider;
 import org.nlpub.watset.util.CosineContextSimilarity;
 import org.nlpub.watset.util.Sense;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Parameters(commandDescription = "Watset")
@@ -36,17 +37,17 @@ class CommandWatset extends ClusteringCommand {
     @Parameter(required = true, description = "Local clustering algorithm", names = {"-l", "--local"})
     private String local;
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings({"FieldMayBeFinal"})
     @DynamicParameter(description = "Local clustering algorithm parameters", names = {"-lp", "--local-params"})
-    private Map<String, String> localParams;
+    private Map<String, String> localParams = new HashMap<>();
 
     @SuppressWarnings("unused")
     @Parameter(required = true, description = "Global clustering algorithm", names = {"-g", "--global"})
     private String global;
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings({"FieldMayBeFinal"})
     @DynamicParameter(description = "Global clustering algorithm parameters", names = {"-gp", "--global-params"})
-    private Map<String, String> globalParams;
+    private Map<String, String> globalParams = new HashMap<>();
 
     @SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal"})
     @Parameter(description = "Use Simplified Watset", names = {"-s", "--simplified"})

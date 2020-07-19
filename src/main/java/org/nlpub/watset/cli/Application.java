@@ -33,6 +33,7 @@ import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 import static java.util.Objects.isNull;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Watset command-line interface.
@@ -126,42 +127,8 @@ public class Application {
             System.exit(1);
         }
 
-        switch (jc.getParsedCommand().toLowerCase(Locale.ROOT)) {
-            case "empty":
-                empty.run();
-                break;
-            case "singleton":
-                singleton.run();
-                break;
-            case "together":
-                together.run();
-                break;
-            case "components":
-                components.run();
-                break;
-            case "cw":
-                cw.run();
-                break;
-            case "mcl":
-                mcl.run();
-                break;
-            case "mcl-bin":
-                mclBin.run();
-                break;
-            case "senses":
-                senses.run();
-                break;
-            case "graph":
-                graph.run();
-                break;
-            case "watset":
-                watset.run();
-                break;
-            case "maxmax":
-                maxmax.run();
-                break;
-            default:
-                break;
-        }
+        var objects = requireNonNull(jc.getCommands().get(jc.getParsedCommand()).getObjects());
+        var command = (Runnable) objects.get(0);
+        command.run();
     }
 }

@@ -33,20 +33,21 @@ import org.nlpub.watset.util.Sense;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
 @Parameters(commandDescription = "Sense Graph")
-class CommandGraph {
+class CommandGraph implements Runnable {
     final Application application;
 
     @SuppressWarnings("unused")
     @Parameter(required = true, description = "Local clustering algorithm", names = {"-l", "--local"})
     private String local;
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings({"FieldMayBeFinal"})
     @DynamicParameter(description = "Local clustering algorithm parameters", names = {"-lp", "--local-params"})
-    private Map<String, String> localParams;
+    private Map<String, String> localParams = new HashMap<>();
 
     @SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal"})
     @Parameter(description = "Use Simplified Watset", names = {"-s", "--simplified"})

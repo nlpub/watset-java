@@ -23,7 +23,7 @@ import java.io.IOException;
 
 import static org.nlpub.watset.util.ILEFormat.write;
 
-abstract class ClusteringCommand {
+abstract class ClusteringCommand implements Runnable {
     final Application application;
 
     public ClusteringCommand(Application application) {
