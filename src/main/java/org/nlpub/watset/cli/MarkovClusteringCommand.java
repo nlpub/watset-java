@@ -34,15 +34,15 @@ class MarkovClusteringCommand extends ClusteringCommand {
     private final boolean binary;
 
     @SuppressWarnings("unused")
-    @Parameter(names = "-e")
+    @Parameter(description = "Expansion parameter", names = "-e")
     private Integer e;
 
     @SuppressWarnings("unused")
-    @Parameter(names = "-r")
+    @Parameter(description = "Inflation parameter", names = "-r")
     private Double r;
 
     @SuppressWarnings("unused")
-    @Parameter(names = "--bin", converter = PathConverter.class)
+    @Parameter(description = "Path to binary mcl", names = "--bin", converter = PathConverter.class)
     private Path binaryPath;
 
     public MarkovClusteringCommand(boolean binary) {

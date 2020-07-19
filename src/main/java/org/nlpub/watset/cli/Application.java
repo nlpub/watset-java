@@ -52,7 +52,7 @@ public final class Application {
         jc.parse(args);
 
         if (isNull(jc.getParsedCommand())) {
-            System.err.println("Please read the documentation.");
+            jc.usage();
             System.exit(1);
         }
 

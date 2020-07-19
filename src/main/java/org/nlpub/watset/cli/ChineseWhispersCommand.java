@@ -31,7 +31,7 @@ import static java.util.Objects.nonNull;
 @Parameters(commandDescription = "Chinese Whispers")
 class ChineseWhispersCommand extends ClusteringCommand {
     @SuppressWarnings("unused")
-    @Parameter(names = {"-m", "--mode"})
+    @Parameter(description = "Node weighting mode (top, log, lin)", names = {"-m", "--mode"})
     private String mode;
 
     @Override
