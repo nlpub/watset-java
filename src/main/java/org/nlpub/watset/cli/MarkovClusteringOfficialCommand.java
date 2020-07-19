@@ -25,7 +25,6 @@ import org.nlpub.watset.util.AlgorithmProvider;
 
 import java.nio.file.Path;
 import java.util.HashMap;
-import java.util.Map;
 
 import static java.util.Objects.nonNull;
 
@@ -41,7 +40,7 @@ public class MarkovClusteringOfficialCommand extends MarkovClusteringCommand {
 
     @Override
     public Clustering<String> getClustering() {
-        final Map<String, String> params = new HashMap<>() {{
+        final var params = new HashMap<String, String>() {{
             if (nonNull(e)) put("e", Integer.toString(e));
             if (nonNull(r)) put("r", Double.toString(r));
             if (nonNull(binary)) put("bin", binary.toAbsolutePath().toString());

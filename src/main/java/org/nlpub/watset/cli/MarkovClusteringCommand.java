@@ -24,7 +24,6 @@ import org.nlpub.watset.graph.Clustering;
 import org.nlpub.watset.util.AlgorithmProvider;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import static java.util.Objects.nonNull;
 
@@ -42,7 +41,7 @@ class MarkovClusteringCommand extends ClusteringCommand {
 
     @Override
     public Clustering<String> getClustering() {
-        final Map<String, String> params = new HashMap<>() {{
+        final var params = new HashMap<String, String>() {{
             if (nonNull(e)) put("e", Integer.toString(e));
             if (nonNull(r)) put("r", Double.toString(r));
         }};
