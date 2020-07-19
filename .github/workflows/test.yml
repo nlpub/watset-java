@@ -35,7 +35,6 @@ jobs:
       if: matrix.java-version == '16-ea' && github.ref == 'refs/heads/master'
   examples:
     runs-on: ubuntu-latest
-    continue-on-error: true
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 11
