@@ -79,7 +79,7 @@ public abstract class Command implements Runnable {
     }
 
     /**
-     * Provide a stream to the output file.
+     * Provide a writer to the output file.
      *
      * @return a new buffered writer to write output
      * @throws IOException if an I/O error occurs
