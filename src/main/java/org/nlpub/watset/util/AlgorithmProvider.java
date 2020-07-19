@@ -20,7 +20,7 @@ package org.nlpub.watset.util;
 import org.jgrapht.Graph;
 import org.nlpub.watset.graph.*;
 
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
@@ -84,7 +84,7 @@ public class AlgorithmProvider<V, E> implements Function<Graph<V, E>, Clustering
                 if (algorithm.equalsIgnoreCase("mcl")) {
                     return new MarkovClustering<>(graph, e, r);
                 } else {
-                    return new MarkovClusteringBinaryRunner<>(graph, Paths.get(params.get("bin")), r, Runtime.getRuntime().availableProcessors());
+                    return new MarkovClusteringBinaryRunner<>(graph, Path.of(params.get("bin")), r, Runtime.getRuntime().availableProcessors());
                 }
             case "maxmax":
                 return new MaxMax<>(graph);
