@@ -29,7 +29,7 @@ import java.util.HashMap;
 import static java.util.Objects.nonNull;
 
 @Parameters(commandDescription = "Markov Clustering Official Binary")
-public class MarkovClusteringOfficialCommand extends MarkovClusteringCommand {
+class MarkovClusteringOfficialCommand extends MarkovClusteringCommand {
     @SuppressWarnings("unused")
     @Parameter(description = "Path to binary mcl", names = "--bin", converter = PathConverter.class)
     private Path binary;
