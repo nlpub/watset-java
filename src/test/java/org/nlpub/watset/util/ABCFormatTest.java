@@ -38,7 +38,7 @@ public class ABCFormatTest extends TestCase {
     public void testParseRegex() throws URISyntaxException, IOException {
         final var graph = ABCFormat.parse(Files.lines(Path.of(EDGE_TSV.toURI())), " ");
 
-        assertEquals(0, graph.vertexSet().size());
-        assertEquals(0, graph.edgeSet().size());
+        assertTrue(graph.vertexSet().isEmpty());
+        assertTrue(graph.edgeSet().isEmpty());
     }
 }
