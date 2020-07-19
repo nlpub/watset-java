@@ -24,7 +24,7 @@ import static java.util.Objects.isNull;
 /**
  * Watset command-line interface.
  */
-public class Application {
+public final class Application {
     /**
      * Watset Command-Line Interface Entry Point.
      *
