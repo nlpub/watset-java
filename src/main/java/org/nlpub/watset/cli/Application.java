@@ -36,17 +36,17 @@ public final class Application {
 
         final var jc = JCommander.newBuilder()
                 .addObject(parameters)
-                .addCommand("empty", new TrivialCommand("empty"))
-                .addCommand("singleton", new TrivialCommand("singleton"))
-                .addCommand("together", new TrivialCommand("together"))
-                .addCommand("components", new TrivialCommand("components"))
+                .addCommand("empty", new ProvidedClusteringCommand("empty"))
+                .addCommand("singleton", new ProvidedClusteringCommand("singleton"))
+                .addCommand("together", new ProvidedClusteringCommand("together"))
+                .addCommand("components", new ProvidedClusteringCommand("components"))
                 .addCommand("cw", new ChineseWhispersCommand())
                 .addCommand("mcl", new MarkovClusteringCommand(false))
                 .addCommand("mcl-bin", new MarkovClusteringCommand(true))
                 .addCommand("senses", new SensesCommand())
                 .addCommand("graph", new GraphCommand())
                 .addCommand("watset", new WatsetCommand())
-                .addCommand("maxmax", new MaxMaxCommand())
+                .addCommand("maxmax", new ProvidedClusteringCommand("maxmax"))
                 .build();
 
         jc.parse(args);

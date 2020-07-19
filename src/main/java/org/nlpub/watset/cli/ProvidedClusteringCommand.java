@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Dmitry Ustalov
+ * Copyright 2020 Dmitry Ustalov
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,13 +22,16 @@ import org.jgrapht.graph.DefaultWeightedEdge;
 import org.nlpub.watset.graph.Clustering;
 import org.nlpub.watset.util.AlgorithmProvider;
 
-import java.util.Collections;
+@Parameters(commandDescription = "Clustering")
+class ProvidedClusteringCommand extends ClusteringCommand {
+    private final String algorithm;
 
-@Parameters(commandDescription = "MaxMax")
-class MaxMaxCommand extends ClusteringCommand {
+    public ProvidedClusteringCommand(String algorithm) {
+        this.algorithm = algorithm;
+    }
+
     @Override
     public Clustering<String> getClustering() {
-        final var algorithm = new AlgorithmProvider<String, DefaultWeightedEdge>("maxmax", Collections.emptyMap());
-        return algorithm.apply(getGraph());
+        return new AlgorithmProvider<String, DefaultWeightedEdge>(algorithm).apply(getGraph());
     }
 }
