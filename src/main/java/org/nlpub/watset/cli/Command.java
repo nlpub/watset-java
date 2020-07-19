@@ -19,7 +19,6 @@ package org.nlpub.watset.cli;
 
 import com.beust.jcommander.DynamicParameter;
 import com.beust.jcommander.Parameter;
-import com.beust.jcommander.ParametersDelegate;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.nlpub.watset.util.ABCFormat;
@@ -34,6 +33,7 @@ import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 import static java.util.Objects.isNull;
+import static java.util.Objects.requireNonNull;
 
 /**
  * A generic command of the Watset command-line interface.
@@ -42,7 +42,7 @@ public abstract class Command implements Runnable {
     /**
      * Watset command-line interface parameters.
      */
-    public static class Parameters {
+    public static class MainParameters {
         /**
          * The input file.
          */
@@ -99,10 +99,18 @@ public abstract class Command implements Runnable {
     private static final Logger logger = Logger.getLogger(Command.class.getSimpleName());
 
     /**
-     * The command-line parameters.
+     * The main command-line parameters.
      */
-    @ParametersDelegate
-    public Parameters parameters = new Parameters();
+    public final MainParameters parameters;
+
+    /**
+     * Create an instance of command.
+     *
+     * @param parameters the parameters
+     */
+    public Command(MainParameters parameters) {
+        this.parameters = requireNonNull(parameters, "parameters are not initialized");
+    }
 
     /**
      * Provide a stream to the input file.
@@ -111,6 +119,8 @@ public abstract class Command implements Runnable {
      * @throws IOException if an I/O error occurs
      */
     public Stream<String> newInputStream() throws IOException {
+        requireNonNull(parameters, "parameters are not initialized");
+
         if (isNull(parameters.input)) {
             logger.info("Reading from standard input.");
             return new BufferedReader(new InputStreamReader(System.in)).lines();
@@ -127,6 +137,8 @@ public abstract class Command implements Runnable {
      * @throws IOException if an I/O error occurs
      */
     public BufferedWriter newOutputWriter() throws IOException {
+        requireNonNull(parameters, "parameters are not initialized");
+
         if (isNull(parameters.output)) {
             logger.info("Writing to standard output.");
             return new BufferedWriter(new OutputStreamWriter(System.out));
@@ -137,7 +149,7 @@ public abstract class Command implements Runnable {
     }
 
     /**
-     * Read, parse, and return the input graph stored in {@link Parameters#input}.
+     * Read, parse, and return the input graph stored in {@link MainParameters#input}.
      *
      * @return a graph
      * @see ABCFormat#parse(Stream)

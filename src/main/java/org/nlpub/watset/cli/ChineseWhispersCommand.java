@@ -34,6 +34,15 @@ class ChineseWhispersCommand extends ClusteringCommand {
     @Parameter(description = "Node weighting mode (top, log, lin)", names = {"-m", "--mode"})
     private String mode;
 
+    /**
+     * Create an instance of command.
+     *
+     * @param parameters the parameters
+     */
+    public ChineseWhispersCommand(MainParameters parameters) {
+        super(parameters);
+    }
+
     @Override
     public Clustering<String> getClustering() {
         final Map<String, String> params = nonNull(mode) ? Map.of("mode", mode) : Collections.emptyMap();

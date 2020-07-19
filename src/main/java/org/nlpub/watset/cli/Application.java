@@ -32,21 +32,21 @@ public final class Application {
      */
     public static void main(String[] args) {
         // TODO: Use the main argument for --input instead of the named one.
-        final var parameters = new Command.Parameters();
+        final var parameters = new Command.MainParameters();
 
         final var jc = JCommander.newBuilder()
                 .addObject(parameters)
-                .addCommand("empty", new ProvidedClusteringCommand("empty"))
-                .addCommand("singleton", new ProvidedClusteringCommand("singleton"))
-                .addCommand("together", new ProvidedClusteringCommand("together"))
-                .addCommand("components", new ProvidedClusteringCommand("components"))
-                .addCommand("cw", new ChineseWhispersCommand())
-                .addCommand("mcl", new MarkovClusteringCommand(false))
-                .addCommand("mcl-bin", new MarkovClusteringCommand(true))
-                .addCommand("senses", new SensesCommand())
-                .addCommand("graph", new GraphCommand())
-                .addCommand("watset", new WatsetCommand())
-                .addCommand("maxmax", new ProvidedClusteringCommand("maxmax"))
+                .addCommand("empty", new ProvidedClusteringCommand(parameters, "empty"))
+                .addCommand("singleton", new ProvidedClusteringCommand(parameters, "singleton"))
+                .addCommand("together", new ProvidedClusteringCommand(parameters, "together"))
+                .addCommand("components", new ProvidedClusteringCommand(parameters, "components"))
+                .addCommand("cw", new ChineseWhispersCommand(parameters))
+                .addCommand("mcl", new MarkovClusteringCommand(parameters, false))
+                .addCommand("mcl-bin", new MarkovClusteringCommand(parameters, true))
+                .addCommand("senses", new SensesCommand(parameters))
+                .addCommand("graph", new GraphCommand(parameters))
+                .addCommand("watset", new WatsetCommand(parameters))
+                .addCommand("maxmax", new ProvidedClusteringCommand(parameters, "maxmax"))
                 .build();
 
         jc.parse(args);

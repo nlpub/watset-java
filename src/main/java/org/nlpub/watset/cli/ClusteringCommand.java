@@ -23,6 +23,15 @@ import org.nlpub.watset.util.ILEFormat;
 import java.io.IOException;
 
 abstract class ClusteringCommand extends Command {
+    /**
+     * Create an instance of command.
+     *
+     * @param parameters the parameters
+     */
+    public ClusteringCommand(MainParameters parameters) {
+        super(parameters);
+    }
+
     public void run() {
         final var clustering = getClustering();
         clustering.fit();

@@ -26,7 +26,8 @@ import org.nlpub.watset.util.AlgorithmProvider;
 class ProvidedClusteringCommand extends ClusteringCommand {
     private final String algorithm;
 
-    public ProvidedClusteringCommand(String algorithm) {
+    public ProvidedClusteringCommand(MainParameters parameters, String algorithm) {
+        super(parameters);
         this.algorithm = algorithm;
     }
 

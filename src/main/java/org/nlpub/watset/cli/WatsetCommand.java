@@ -41,6 +41,15 @@ class WatsetCommand extends ClusteringCommand {
     @ParametersDelegate
     public GlobalParameters global = new GlobalParameters();
 
+    /**
+     * Create an instance of command.
+     *
+     * @param parameters the parameters
+     */
+    public WatsetCommand(MainParameters parameters) {
+        super(parameters);
+    }
+
     @Override
     public Clustering<String> getClustering() {
         final var localAlgorithm = new AlgorithmProvider<String, DefaultWeightedEdge>(local.algorithm, local.params);

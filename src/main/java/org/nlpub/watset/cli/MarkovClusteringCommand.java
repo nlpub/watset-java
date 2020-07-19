@@ -45,7 +45,8 @@ class MarkovClusteringCommand extends ClusteringCommand {
     @Parameter(description = "Path to binary mcl", names = "--bin", converter = PathConverter.class)
     private Path binaryPath;
 
-    public MarkovClusteringCommand(boolean binary) {
+    public MarkovClusteringCommand(MainParameters parameters, boolean binary) {
+        super(parameters);
         this.binary = binary;
     }
 

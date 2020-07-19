@@ -40,6 +40,15 @@ class GraphCommand extends Command {
     @ParametersDelegate
     public LocalParameters local = new LocalParameters();
 
+    /**
+     * Create an instance of command.
+     *
+     * @param parameters the parameters
+     */
+    public GraphCommand(MainParameters parameters) {
+        super(parameters);
+    }
+
     public void run() {
         final var algorithm = new AlgorithmProvider<String, DefaultWeightedEdge>(local.algorithm, local.params);
 
