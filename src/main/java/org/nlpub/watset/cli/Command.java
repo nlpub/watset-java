@@ -56,11 +56,17 @@ public abstract class Command implements Runnable {
 
     private static final Logger logger = Logger.getLogger(Command.class.getSimpleName());
 
+    /**
+     * The command-line parameters.
+     */
     @ParametersDelegate
     public Parameters parameters = new Parameters();
 
     /**
      * Provide a stream to the input file.
+     *
+     * @return the lines from the file as a {@code Stream}
+     * @throws IOException if an I/O error occurs
      */
     public Stream<String> newInputStream() throws IOException {
         if (isNull(parameters.input)) {
@@ -74,6 +80,9 @@ public abstract class Command implements Runnable {
 
     /**
      * Provide a stream to the output file.
+     *
+     * @return a new buffered writer to write output
+     * @throws IOException if an I/O error occurs
      */
     public BufferedWriter newOutputWriter() throws IOException {
         if (isNull(parameters.output)) {
