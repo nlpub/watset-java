@@ -36,16 +36,70 @@ import static org.nlpub.watset.util.Maximizer.argmaxRandom;
  */
 public class ChineseWhispers<V, E> implements Clustering<V> {
     /**
-     * A factory function that sets up the algorithm for the given graph.
+     * Builder for {@link ChineseWhispers}.
      *
-     * @param weighting the node weighting approach
-     * @param <V>       the type of nodes in the graph
-     * @param <E>       the type of edges in the graph
-     * @return a factory function that sets up the algorithm for the given graph
+     * @param <V> the type of nodes in the graph
+     * @param <E> the type of edges in the graph
      */
     @SuppressWarnings("unused")
-    public static <V, E> Function<Graph<V, E>, Clustering<V>> provider(NodeWeighting<V, E> weighting) {
-        return graph -> new ChineseWhispers<>(graph, weighting);
+    public static class Builder<V, E> implements ClusteringBuilder<V, E, ChineseWhispers<V, E>> {
+        /**
+         * The default number of Chinese Whispers iterations.
+         */
+        public static final int ITERATIONS = 20;
+
+        private NodeWeighting<V, E> weighting;
+        private int iterations;
+        private Random random;
+
+        public Builder() {
+            this.weighting = NodeWeighting.top();
+            this.iterations = ITERATIONS;
+            this.random = new Random();
+        }
+
+        @Override
+        public ChineseWhispers<V, E> build(Graph<V, E> graph) {
+            return new ChineseWhispers<>(graph, weighting, iterations, random);
+        }
+
+        @Override
+        public Function<Graph<V, E>, Clustering<V>> provider() {
+            return ChineseWhispers.provider(weighting, iterations, random);
+        }
+
+        /**
+         * Set the the node weighting approach.
+         *
+         * @param weighting the node weighting approach
+         * @return the builder
+         */
+        public Builder<V, E> setWeighting(NodeWeighting<V, E> weighting) {
+            this.weighting = requireNonNull(weighting);
+            return this;
+        }
+
+        /**
+         * Set the maximal number of iterations.
+         *
+         * @param iterations the maximal number of iterations
+         * @return the builder
+         */
+        public Builder<V, E> setIterations(int iterations) {
+            this.iterations = iterations;
+            return this;
+        }
+
+        /**
+         * Set the random number generator.
+         *
+         * @param random the random number generator
+         * @return the builder
+         */
+        public Builder<V, E> setRandom(Random random) {
+            this.random = requireNonNull(random);
+            return this;
+        }
     }
 
     /**
@@ -64,9 +118,18 @@ public class ChineseWhispers<V, E> implements Clustering<V> {
     }
 
     /**
-     * The default number of Chinese Whispers iterations.
+     * A factory function that sets up the algorithm for the given graph.
+     *
+     * @param weighting the node weighting approach
+     * @param <V>       the type of nodes in the graph
+     * @param <E>       the type of edges in the graph
+     * @return a factory function that sets up the algorithm for the given graph
      */
-    public static final int ITERATIONS = 20;
+    @SuppressWarnings("unused")
+    @Deprecated
+    public static <V, E> Function<Graph<V, E>, Clustering<V>> provider(NodeWeighting<V, E> weighting) {
+        return graph -> new ChineseWhispers<>(graph, weighting);
+    }
 
     /**
      * The graph.
@@ -119,8 +182,9 @@ public class ChineseWhispers<V, E> implements Clustering<V> {
      * @param graph     the graph
      * @param weighting the node weighting approach
      */
+    @Deprecated
     public ChineseWhispers(Graph<V, E> graph, NodeWeighting<V, E> weighting) {
-        this(graph, weighting, ITERATIONS, new Random());
+        this(graph, weighting, Builder.ITERATIONS, new Random());
     }
 
     @Override

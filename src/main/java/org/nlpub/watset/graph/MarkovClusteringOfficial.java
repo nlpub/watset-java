@@ -40,17 +40,109 @@ import static java.util.stream.Collectors.toSet;
  *
  * @param <V> the type of nodes in the graph
  * @param <E> the type of edges in the graph
- * @see <a href="https://micans.org/mcl/">van Dongen (2000)</a>
+ * @see <a href="https://hdl.handle.net/1874/848">van Dongen (2000)</a>
+ * @see <a href="https://doi.org/10.1137/040608635">van Dongen (2008)</a>
+ * @see <a href="https://micans.org/mcl/">MCL - a cluster algorithm for graphs</a>
  */
+@SuppressWarnings("ALL")
 public class MarkovClusteringOfficial<V, E> implements Clustering<V> {
+    /**
+     * Builder for {@link MarkovClustering}.
+     *
+     * @param <V> the type of nodes in the graph
+     * @param <E> the type of edges in the graph
+     */
+    @SuppressWarnings({"unused", "UnusedReturnValue"})
+    public static class Builder<V, E> implements ClusteringBuilder<V, E, MarkovClusteringOfficial<V, E>> {
+        /**
+         * The default value of the inflation parameter.
+         */
+        public static final int R = 2;
+
+        /**
+         * The default number of threads.
+         */
+        public static final int THREADS = 1;
+
+        private Path path;
+        private double r = R;
+        private int threads = THREADS;
+
+        @Override
+        public MarkovClusteringOfficial<V, E> build(Graph<V, E> graph) {
+            return new MarkovClusteringOfficial<>(graph, path, r, threads);
+        }
+
+        @Override
+        public Function<Graph<V, E>, Clustering<V>> provider() {
+            return MarkovClusteringOfficial.provider(path, r, threads);
+        }
+
+        /**
+         * Set the path to the MCL binary.
+         *
+         * @param path the path to the MCL binary
+         * @return the builder
+         */
+        public Builder<V, E> setPath(Path path) {
+            this.path = requireNonNull(path);
+            return this;
+        }
+
+        /**
+         * Set the inflation parameter.
+         *
+         * @param r the inflation parameter
+         * @return the builder
+         */
+        public Builder<V, E> setR(double r) {
+            this.r = r;
+            return this;
+        }
+
+        /**
+         * Set the number of threads.
+         *
+         * @param threads the number of threads
+         * @return the builder
+         */
+        public Builder<V, E> setThreads(int threads) {
+            this.threads = threads;
+            return this;
+        }
+    }
+
     private static final Logger logger = Logger.getLogger(MarkovClusteringOfficial.class.getSimpleName());
 
-    private final Graph<V, E> graph;
-    private final Path mcl;
-    private final double r;
-    private final int threads;
-    private Map<V, Integer> mapping;
-    private File output;
+    /**
+     * The graph.
+     */
+    protected final Graph<V, E> graph;
+
+    /**
+     * The path to the MCL binary.
+     */
+    protected final Path path;
+
+    /**
+     * The inflation parameter.
+     */
+    protected final double r;
+
+    /**
+     * The number of threads.
+     */
+    protected final int threads;
+
+    /**
+     * The mapping of nodes to indices.
+     */
+    protected Map<V, Integer> mapping;
+
+    /**
+     * The output file.
+     */
+    protected File output;
 
     /**
      * A factory function that sets up the algorithm for the given graph.
@@ -62,7 +154,6 @@ public class MarkovClusteringOfficial<V, E> implements Clustering<V> {
      * @param <E>     the type of edges in the graph
      * @return a factory function that sets up the algorithm for the given graph
      */
-    @SuppressWarnings("unused")
     public static <V, E> Function<Graph<V, E>, Clustering<V>> provider(Path mcl, double r, int threads) {
         return graph -> new MarkovClusteringOfficial<>(graph, mcl, r, threads);
     }
@@ -77,6 +168,7 @@ public class MarkovClusteringOfficial<V, E> implements Clustering<V> {
      * @return a factory function that sets up the algorithm for the given graph
      */
     @SuppressWarnings("unused")
+    @Deprecated
     public static <V, E> Function<Graph<V, E>, Clustering<V>> provider(Path mcl, double r) {
         return graph -> new MarkovClusteringOfficial<>(graph, mcl, r);
     }
@@ -85,13 +177,13 @@ public class MarkovClusteringOfficial<V, E> implements Clustering<V> {
      * Create an instance of the Markov Clustering algorithm wrapper.
      *
      * @param graph   the graph
-     * @param mcl     the path to the MCL binary
+     * @param path    the path to the MCL binary
      * @param r       the inflation parameter
      * @param threads the number of threads
      */
-    public MarkovClusteringOfficial(Graph<V, E> graph, Path mcl, double r, int threads) {
+    public MarkovClusteringOfficial(Graph<V, E> graph, Path path, double r, int threads) {
         this.graph = requireNonNull(graph);
-        this.mcl = mcl;
+        this.path = requireNonNull(path);
         this.r = r;
         this.threads = threads;
     }
@@ -100,11 +192,12 @@ public class MarkovClusteringOfficial<V, E> implements Clustering<V> {
      * Create an instance of the Markov Clustering algorithm wrapper.
      *
      * @param graph the graph
-     * @param mcl   the path to the MCL binary
+     * @param path  the path to the MCL binary
      * @param r     the inflation parameter
      */
-    public MarkovClusteringOfficial(Graph<V, E> graph, Path mcl, double r) {
-        this(graph, mcl, r, 1);
+    @Deprecated
+    public MarkovClusteringOfficial(Graph<V, E> graph, Path path, double r) {
+        this(graph, path, r, Builder.THREADS);
     }
 
     @Override
@@ -146,7 +239,7 @@ public class MarkovClusteringOfficial<V, E> implements Clustering<V> {
         final var input = writeInputFile();
 
         final var builder = new ProcessBuilder(
-                mcl.toAbsolutePath().toString(),
+                path.toAbsolutePath().toString(),
                 input.toString(),
                 "-I", Double.toString(r),
                 "-te", Integer.toString(threads),
@@ -164,9 +257,9 @@ public class MarkovClusteringOfficial<V, E> implements Clustering<V> {
                     final var stderr = reader.lines().collect(Collectors.joining(System.lineSeparator()));
 
                     if (stderr.isEmpty()) {
-                        throw new IllegalStateException(mcl.toAbsolutePath() + " returned " + status);
+                        throw new IllegalStateException(path.toAbsolutePath() + " returned " + status);
                     } else {
-                        throw new IllegalStateException(mcl.toAbsolutePath() + " returned " + status + ": " + stderr);
+                        throw new IllegalStateException(path.toAbsolutePath() + " returned " + status + ": " + stderr);
                     }
                 }
             }

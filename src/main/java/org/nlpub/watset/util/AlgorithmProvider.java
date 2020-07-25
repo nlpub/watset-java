@@ -68,26 +68,32 @@ public class AlgorithmProvider<V, E> implements Function<Graph<V, E>, Clustering
     public Clustering<V> apply(Graph<V, E> graph) {
         switch (algorithm.toLowerCase(Locale.ROOT)) {
             case "empty":
-                return new EmptyClustering<>();
+                return new EmptyClustering.Builder<V, E>().build(graph);
             case "together":
-                return new TogetherClustering<>(graph);
+                return new TogetherClustering.Builder<V, E>().build(graph);
             case "singleton":
-                return new SingletonClustering<>(graph);
+                return new SingletonClustering.Builder<V, E>().build(graph);
             case "components":
-                return new ComponentsClustering<>(graph);
+                return new ComponentsClustering.Builder<V, E>().build(graph);
             case "cw":
-                return new ChineseWhispers<>(graph, weighting);
+                return new ChineseWhispers.Builder<V, E>().setWeighting(weighting).build(graph);
             case "mcl":
+                final var mcl = new MarkovClustering.Builder<V, E>();
+
+                if (params.containsKey("e")) mcl.setE(Integer.parseInt(params.get("e")));
+                if (params.containsKey("r")) mcl.setR(Double.parseDouble(params.get("r")));
+
+                return mcl.build(graph);
             case "mcl-bin":
-                final var e = Integer.parseInt(params.getOrDefault("e", "2"));
-                final var r = Double.parseDouble(params.getOrDefault("r", "2"));
-                if (algorithm.equalsIgnoreCase("mcl")) {
-                    return new MarkovClustering<>(graph, e, r);
-                } else {
-                    return new MarkovClusteringOfficial<>(graph, Path.of(params.get("bin")), r, Runtime.getRuntime().availableProcessors());
-                }
+                final var mclOfficial = new MarkovClusteringOfficial.Builder<V, E>().
+                        setPath(Path.of(params.get("bin"))).
+                        setThreads(Runtime.getRuntime().availableProcessors());
+
+                if (params.containsKey("r")) mclOfficial.setR(Double.parseDouble(params.get("r")));
+
+                return mclOfficial.build(graph);
             case "maxmax":
-                return new MaxMax<>(graph);
+                return new MaxMax.Builder<V, E>().build(graph);
             default:
                 throw new IllegalArgumentException("Unknown algorithm: " + algorithm);
         }

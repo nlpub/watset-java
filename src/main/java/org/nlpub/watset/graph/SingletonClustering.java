@@ -21,6 +21,7 @@ import org.jgrapht.Graph;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.function.Function;
 
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toList;
@@ -32,6 +33,36 @@ import static java.util.stream.Collectors.toList;
  * @param <E> the type of edges in the graph
  */
 public class SingletonClustering<V, E> implements Clustering<V> {
+    /**
+     * Builder for {@link SingletonClustering}.
+     *
+     * @param <V> the type of nodes in the graph
+     * @param <E> the type of edges in the graph
+     */
+    @SuppressWarnings({"unused", "UnusedReturnValue"})
+    public static class Builder<V, E> implements ClusteringBuilder<V, E, SingletonClustering<V, E>> {
+        @Override
+        public SingletonClustering<V, E> build(Graph<V, E> graph) {
+            return new SingletonClustering<>(graph);
+        }
+
+        @Override
+        public Function<Graph<V, E>, Clustering<V>> provider() {
+            return SingletonClustering.provider();
+        }
+    }
+
+    /**
+     * A factory function that sets up the algorithm for the given graph.
+     *
+     * @param <V> the type of nodes in the graph
+     * @param <E> the type of edges in the graph
+     * @return a factory function that sets up the algorithm for the given graph
+     */
+    public static <V, E> Function<Graph<V, E>, Clustering<V>> provider() {
+        return SingletonClustering::new;
+    }
+
     private final Graph<V, E> graph;
     private Collection<Collection<V>> clusters;
 

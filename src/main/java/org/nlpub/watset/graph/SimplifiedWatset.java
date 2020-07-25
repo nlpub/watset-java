@@ -45,6 +45,48 @@ import static java.util.Objects.requireNonNull;
  */
 public class SimplifiedWatset<V, E> implements Clustering<V> {
     /**
+     * Builder for {@link SimplifiedWatset}.
+     *
+     * @param <V> the type of nodes in the graph
+     * @param <E> the type of edges in the graph
+     */
+    @SuppressWarnings({"unused", "UnusedReturnValue"})
+    public static class Builder<V, E> implements ClusteringBuilder<V, E, SimplifiedWatset<V, E>> {
+        private Function<Graph<V, E>, Clustering<V>> local;
+        private Function<Graph<Sense<V>, DefaultWeightedEdge>, Clustering<Sense<V>>> global;
+
+        @Override
+        public SimplifiedWatset<V, E> build(Graph<V, E> graph) {
+            return new SimplifiedWatset<>(graph, local, global);
+        }
+
+        @Override
+        public Function<Graph<V, E>, Clustering<V>> provider() {
+            return SimplifiedWatset.provider(local, global);
+        }
+
+        public Builder<V, E> setLocal(Function<Graph<V, E>, Clustering<V>> local) {
+            this.local = requireNonNull(local);
+            return this;
+        }
+
+        public Builder<V, E> setLocalBuilder(ClusteringBuilder<V, E, ?> localBuilder) {
+            this.local = localBuilder.provider();
+            return this;
+        }
+
+        public Builder<V, E> setGlobal(Function<Graph<Sense<V>, DefaultWeightedEdge>, Clustering<Sense<V>>> global) {
+            this.global = requireNonNull(global);
+            return this;
+        }
+
+        public Builder<V, E> setGlobalBuilder(ClusteringBuilder<Sense<V>, DefaultWeightedEdge, ?> globalBuilder) {
+            this.global = globalBuilder.provider();
+            return this;
+        }
+    }
+
+    /**
      * A factory function that sets up the algorithm for the given graph.
      *
      * @param local  the local clustering algorithm supplier
@@ -53,20 +95,46 @@ public class SimplifiedWatset<V, E> implements Clustering<V> {
      * @param <E>    the type of edges in the graph
      * @return a factory function that sets up the algorithm for the given graph
      */
-    @SuppressWarnings("unused")
     public static <V, E> Function<Graph<V, E>, Clustering<V>> provider(Function<Graph<V, E>, Clustering<V>> local, Function<Graph<Sense<V>, DefaultWeightedEdge>, Clustering<Sense<V>>> global) {
         return graph -> new SimplifiedWatset<>(graph, local, global);
     }
 
     private static final Logger logger = Logger.getLogger(SimplifiedWatset.class.getSimpleName());
 
-    private final Graph<V, E> graph;
-    private final SenseInduction<V, E> inducer;
-    private final Function<Graph<Sense<V>, DefaultWeightedEdge>, Clustering<Sense<V>>> global;
-    private Graph<Sense<V>, DefaultWeightedEdge> senseGraph;
-    private Collection<Collection<Sense<V>>> senseClusters;
-    private Map<V, Map<V, Integer>> inventory;
-    private Map<V, List<Sense<V>>> senses;
+    /**
+     * The graph.
+     */
+    protected final Graph<V, E> graph;
+
+    /**
+     * The node sense induction approach.
+     */
+    protected final SenseInduction<V, E> inducer;
+
+    /**
+     * The global clustering algorithm supplier.
+     */
+    protected final Function<Graph<Sense<V>, DefaultWeightedEdge>, Clustering<Sense<V>>> global;
+
+    /**
+     * The sense graph.
+     */
+    protected Graph<Sense<V>, DefaultWeightedEdge> senseGraph;
+
+    /**
+     * The node sense clusters.
+     */
+    protected Collection<Collection<Sense<V>>> senseClusters;
+
+    /**
+     * The sense inventory.
+     */
+    protected Map<V, Map<V, Integer>> inventory;
+
+    /**
+     * The sense mapping.
+     */
+    protected Map<V, List<Sense<V>>> senses;
 
     /**
      * Create an instance of the Simplified Watset clustering algorithm.

@@ -38,13 +38,31 @@ import static java.util.Objects.requireNonNull;
  */
 public class MaxMax<V, E> implements Clustering<V> {
     /**
+     * Builder for {@link MaxMax}.
+     *
+     * @param <V> the type of nodes in the graph
+     * @param <E> the type of edges in the graph
+     */
+    @SuppressWarnings({"unused", "UnusedReturnValue"})
+    public static class Builder<V, E> implements ClusteringBuilder<V, E, MaxMax<V, E>> {
+        @Override
+        public MaxMax<V, E> build(Graph<V, E> graph) {
+            return new MaxMax<>(graph);
+        }
+
+        @Override
+        public Function<Graph<V, E>, Clustering<V>> provider() {
+            return MaxMax.provider();
+        }
+    }
+
+    /**
      * A factory function that sets up the algorithm for the given graph.
      *
      * @param <V> the type of nodes in the graph
      * @param <E> the type of edges in the graph
      * @return a factory function that sets up the algorithm for the given graph
      */
-    @SuppressWarnings("unused")
     public static <V, E> Function<Graph<V, E>, Clustering<V>> provider() {
         return MaxMax::new;
     }

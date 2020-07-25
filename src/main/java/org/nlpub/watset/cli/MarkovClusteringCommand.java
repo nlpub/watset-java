@@ -21,19 +21,17 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.nlpub.watset.graph.Clustering;
-import org.nlpub.watset.util.AlgorithmProvider;
-
-import java.util.HashMap;
+import org.nlpub.watset.graph.MarkovClustering;
 
 import static java.util.Objects.nonNull;
 
 @Parameters(commandDescription = "Markov Clustering")
 class MarkovClusteringCommand extends ClusteringCommand {
     @Parameter(description = "Expansion parameter", names = "-e")
-    protected Integer e;
+    private Integer e;
 
     @Parameter(description = "Inflation parameter", names = "-r")
-    protected Double r;
+    private Double r;
 
     public MarkovClusteringCommand(MainParameters parameters) {
         super(parameters);
@@ -41,12 +39,11 @@ class MarkovClusteringCommand extends ClusteringCommand {
 
     @Override
     public Clustering<String> getClustering() {
-        final var params = new HashMap<String, String>() {{
-            if (nonNull(e)) put("e", Integer.toString(e));
-            if (nonNull(r)) put("r", Double.toString(r));
-        }};
+        final var builder = new MarkovClustering.Builder<String, DefaultWeightedEdge>();
 
-        final var algorithm = new AlgorithmProvider<String, DefaultWeightedEdge>("mcl", params);
-        return algorithm.apply(getGraph());
+        if (nonNull(e)) builder.setE(e);
+        if (nonNull(r)) builder.setR(r);
+
+        return builder.build(getGraph());
     }
 }

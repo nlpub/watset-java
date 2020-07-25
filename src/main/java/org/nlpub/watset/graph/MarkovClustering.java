@@ -35,9 +35,95 @@ import static java.util.Objects.requireNonNull;
  *
  * @param <V> the type of nodes in the graph
  * @param <E> the type of edges in the graph
+ * @see <a href="https://hdl.handle.net/1874/848">van Dongen (2000)</a>
  * @see <a href="https://doi.org/10.1137/040608635">van Dongen (2008)</a>
  */
 public class MarkovClustering<V, E> implements Clustering<V> {
+    /**
+     * Builder for {@link MarkovClustering}.
+     *
+     * @param <V> the type of nodes in the graph
+     * @param <E> the type of edges in the graph
+     */
+    @SuppressWarnings({"unused", "UnusedReturnValue"})
+    public static class Builder<V, E> implements ClusteringBuilder<V, E, MarkovClustering<V, E>> {
+        /**
+         * The default value of the expansion parameter.
+         */
+        public static final int E = 2;
+
+        /**
+         * The default value of the inflation parameter.
+         */
+        public static final double R = 2;
+
+        /**
+         * The default number of Markov Clustering iterations.
+         */
+        public static final int ITERATIONS = 20;
+
+        private int e = E;
+        private double r = R;
+        private int iterations = ITERATIONS;
+
+        @Override
+        public MarkovClustering<V, E> build(Graph<V, E> graph) {
+            return new MarkovClustering<>(graph, e, r, iterations);
+        }
+
+        @Override
+        public Function<Graph<V, E>, Clustering<V>> provider() {
+            return MarkovClustering.provider(e, r, iterations);
+        }
+
+        /**
+         * Set the expansion parameter.
+         *
+         * @param e the expansion parameter
+         * @return the builder
+         */
+        public Builder<V, E> setE(int e) {
+            this.e = e;
+            return this;
+        }
+
+        /**
+         * Set the inflation parameter.
+         *
+         * @param r the inflation parameter
+         * @return the builder
+         */
+        public Builder<V, E> setR(double r) {
+            this.r = r;
+            return this;
+        }
+
+        /**
+         * Set the maximal number of iterations.
+         *
+         * @param iterations the maximal number of iterations
+         * @return the builder
+         */
+        public Builder<V, E> setIterations(int iterations) {
+            this.iterations = iterations;
+            return this;
+        }
+    }
+
+    /**
+     * A factory function that sets up the algorithm for the given graph.
+     *
+     * @param e          the expansion parameter
+     * @param r          the inflation parameter
+     * @param iterations the maximal number of iterations
+     * @param <V>        the type of nodes in the graph
+     * @param <E>        the type of edges in the graph
+     * @return a factory function that sets up the algorithm for the given graph
+     */
+    public static <V, E> Function<Graph<V, E>, Clustering<V>> provider(int e, double r, int iterations) {
+        return graph -> new MarkovClustering<>(graph, e, r, iterations);
+    }
+
     /**
      * A factory function that sets up the algorithm for the given graph.
      *
@@ -48,8 +134,9 @@ public class MarkovClustering<V, E> implements Clustering<V> {
      * @return a factory function that sets up the algorithm for the given graph
      */
     @SuppressWarnings("unused")
+    @Deprecated
     public static <V, E> Function<Graph<V, E>, Clustering<V>> provider(int e, double r) {
-        return graph -> new MarkovClustering<>(graph, e, r);
+        return provider(e, r, Builder.ITERATIONS);
     }
 
     /**
@@ -103,11 +190,6 @@ public class MarkovClustering<V, E> implements Clustering<V> {
     }
 
     /**
-     * The default number of Markov Clustering iterations.
-     */
-    public static final Integer ITERATIONS = 20;
-
-    /**
      * The graph.
      */
     protected final Graph<V, E> graph;
@@ -121,6 +203,11 @@ public class MarkovClustering<V, E> implements Clustering<V> {
      * The inflation parameter.
      */
     protected final double r;
+
+    /**
+     * The maximal number of iterations.
+     */
+    protected final int iterations;
 
     /**
      * The inflation visitor that raises each element of {@code matrix} to the power of {@code r}.
@@ -145,15 +232,29 @@ public class MarkovClustering<V, E> implements Clustering<V> {
     /**
      * Create an instance of the Markov Clustering algorithm.
      *
+     * @param graph      the graph
+     * @param e          the expansion parameter
+     * @param r          the inflation parameter
+     * @param iterations the maximal number of iterations
+     */
+    public MarkovClustering(Graph<V, E> graph, int e, double r, int iterations) {
+        this.graph = requireNonNull(graph);
+        this.e = e;
+        this.r = r;
+        this.iterations = iterations;
+        this.inflateVisitor = new InflateVisitor();
+    }
+
+    /**
+     * Create an instance of the Markov Clustering algorithm.
+     *
      * @param graph the graph
      * @param e     the expansion parameter
      * @param r     the inflation parameter
      */
+    @Deprecated
     public MarkovClustering(Graph<V, E> graph, int e, double r) {
-        this.graph = requireNonNull(graph);
-        this.e = e;
-        this.r = r;
-        this.inflateVisitor = new InflateVisitor();
+        this(graph, e, r, Builder.ITERATIONS);
     }
 
     @Override
@@ -173,7 +274,7 @@ public class MarkovClustering<V, E> implements Clustering<V> {
 
         normalize();
 
-        for (var i = 0; i < ITERATIONS; i++) {
+        for (var i = 0; i < iterations; i++) {
             final var previous = matrix.copy();
 
             expand();

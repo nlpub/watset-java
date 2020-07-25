@@ -64,8 +64,11 @@ public class MaxMaxTest {
 
     private final static Set<Set<String>> CLUSTERS2 = Set.of(Set.of("a", "b", "c"), Set.of("c", "d", "e"));
 
-    private final MaxMax<String, DefaultWeightedEdge> maxmax1 = new MaxMax<>(GRAPH1);
-    private final MaxMax<String, DefaultWeightedEdge> maxmax2 = new MaxMax<>(GRAPH2);
+    private final static MaxMax.Builder<String, DefaultWeightedEdge> BUILDER = new MaxMax.Builder<>();
+
+    private final MaxMax<String, DefaultWeightedEdge> maxmax1 = BUILDER.build(GRAPH1);
+
+    private final MaxMax<String, DefaultWeightedEdge> maxmax2 = BUILDER.build(GRAPH2);
 
     @Before
     public void setup() {

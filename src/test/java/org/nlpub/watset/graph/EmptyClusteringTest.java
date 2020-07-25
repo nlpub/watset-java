@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Dmitry Ustalov
+ * Copyright 2020 Dmitry Ustalov
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,19 +21,19 @@ import org.jgrapht.graph.DefaultWeightedEdge;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-public class ComponentsClusteringTest {
-    private final ComponentsClustering<String, DefaultWeightedEdge> components = new ComponentsClustering.Builder<String, DefaultWeightedEdge>().build(ChineseWhispersTest.DISJOINT);
+public class EmptyClusteringTest {
+    private final EmptyClustering<String> empty = new EmptyClustering.Builder<String, DefaultWeightedEdge>().build(ChineseWhispersTest.DISJOINT);
 
     @Before
     public void setup() {
-        components.fit();
+        empty.fit();
     }
 
     @Test
     public void testClustering() {
-        final var clusters = components.getClusters();
-        assertEquals(2, clusters.size());
+        final var clusters = empty.getClusters();
+        assertTrue(clusters.isEmpty());
     }
 }

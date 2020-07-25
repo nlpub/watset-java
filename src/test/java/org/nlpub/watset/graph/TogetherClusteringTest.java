@@ -18,14 +18,13 @@
 package org.nlpub.watset.graph;
 
 import org.jgrapht.graph.DefaultWeightedEdge;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
 public class TogetherClusteringTest {
-    private final TogetherClustering<String, DefaultWeightedEdge> together = new TogetherClustering<>(ChineseWhispersTest.DISJOINT);
+    private final TogetherClustering<String, DefaultWeightedEdge> together = new TogetherClustering.Builder<String, DefaultWeightedEdge>().build(ChineseWhispersTest.DISJOINT);
 
     @Before
     public void setup() {
@@ -36,6 +35,6 @@ public class TogetherClusteringTest {
     public void testClustering() {
         final var clusters = together.getClusters();
         assertEquals(1, clusters.size());
-        Assert.assertEquals(ChineseWhispersTest.DISJOINT.vertexSet(), clusters.toArray()[0]);
+        assertEquals(ChineseWhispersTest.DISJOINT.vertexSet(), clusters.toArray()[0]);
     }
 }

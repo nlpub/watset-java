@@ -55,10 +55,72 @@ import static java.util.Objects.requireNonNull;
 @Deprecated
 public class Watset<V, E> implements Clustering<V> {
     /**
+     * Builder for {@link Watset}.
+     *
+     * @param <V> the type of nodes in the graph
+     * @param <E> the type of edges in the graph
+     */
+    @SuppressWarnings({"unused", "UnusedReturnValue"})
+    public static class Builder<V, E> implements ClusteringBuilder<V, E, Watset<V, E>> {
+        private Function<Graph<V, E>, Clustering<V>> local;
+        private Function<Graph<Sense<V>, DefaultWeightedEdge>, Clustering<Sense<V>>> global;
+        private ContextSimilarity<V> similarity = new CosineContextSimilarity<>();
+
+        @Override
+        public Watset<V, E> build(Graph<V, E> graph) {
+            return new Watset<>(graph, local, global, similarity);
+        }
+
+        @Override
+        public Function<Graph<V, E>, Clustering<V>> provider() {
+            return Watset.provider(local, global, similarity);
+        }
+
+        public Builder<V, E> setLocal(Function<Graph<V, E>, Clustering<V>> local) {
+            this.local = requireNonNull(local);
+            return this;
+        }
+
+        public Builder<V, E> setLocalBuilder(ClusteringBuilder<V, E, ?> localBuilder) {
+            this.local = requireNonNull(localBuilder).provider();
+            return this;
+        }
+
+        public Builder<V, E> setGlobal(Function<Graph<Sense<V>, DefaultWeightedEdge>, Clustering<Sense<V>>> global) {
+            this.global = requireNonNull(global);
+            return this;
+        }
+
+        public Builder<V, E> setGlobalBuilder(ClusteringBuilder<Sense<V>, DefaultWeightedEdge, ?> globalBuilder) {
+            this.global = requireNonNull(globalBuilder).provider();
+            return this;
+        }
+
+        public Builder<V, E> setSimilarity(ContextSimilarity<V> similarity) {
+            this.similarity = requireNonNull(similarity);
+            return this;
+        }
+    }
+
+    /**
      * Watset inserts the target node during disambiguation.
      * This constant specifies its weight which is equal to one.
      */
     private final static Number DEFAULT_CONTEXT_WEIGHT = 1;
+
+    /**
+     * A factory function that sets up the algorithm for the given graph.
+     *
+     * @param local      the local clustering algorithm supplier
+     * @param global     the global clustering algorithm supplier
+     * @param similarity the context similarity measure
+     * @param <V>        the type of nodes in the graph
+     * @param <E>        the type of edges in the graph
+     * @return a factory function that sets up the algorithm for the given graph
+     */
+    public static <V, E> Function<Graph<V, E>, Clustering<V>> provider(Function<Graph<V, E>, Clustering<V>> local, Function<Graph<Sense<V>, DefaultWeightedEdge>, Clustering<Sense<V>>> global, ContextSimilarity<V> similarity) {
+        return graph -> new Watset<>(graph, local, global, similarity);
+    }
 
     /**
      * A factory function that sets up the algorithm for the given graph.
@@ -69,21 +131,52 @@ public class Watset<V, E> implements Clustering<V> {
      * @param <E>    the type of edges in the graph
      * @return a factory function that sets up the algorithm for the given graph
      */
-    @SuppressWarnings("unused")
+    @Deprecated
     public static <V, E> Function<Graph<V, E>, Clustering<V>> provider(Function<Graph<V, E>, Clustering<V>> local, Function<Graph<Sense<V>, DefaultWeightedEdge>, Clustering<Sense<V>>> global) {
-        return graph -> new Watset<>(graph, local, global, new CosineContextSimilarity<>());
+        return provider(local, global, new CosineContextSimilarity<>());
     }
 
     private static final Logger logger = Logger.getLogger(Watset.class.getSimpleName());
 
-    private final Graph<V, E> graph;
-    private final Function<Graph<Sense<V>, DefaultWeightedEdge>, Clustering<Sense<V>>> global;
-    private final ContextSimilarity<V> similarity;
-    private final SenseInduction<V, E> inducer;
-    private Map<V, Map<Sense<V>, Map<V, Number>>> inventory;
-    private Map<Sense<V>, Map<Sense<V>, Number>> contexts;
-    private Collection<Collection<Sense<V>>> senseClusters;
-    private Graph<Sense<V>, DefaultWeightedEdge> senseGraph;
+    /**
+     * The graph.
+     */
+    protected final Graph<V, E> graph;
+
+    /**
+     * The global clustering algorithm supplier.
+     */
+    protected final Function<Graph<Sense<V>, DefaultWeightedEdge>, Clustering<Sense<V>>> global;
+
+    /**
+     * The context similarity measure.
+     */
+    protected final ContextSimilarity<V> similarity;
+
+    /**
+     * The node sense induction approach.
+     */
+    protected final SenseInduction<V, E> inducer;
+
+    /**
+     * The sense inventory.
+     */
+    protected Map<V, Map<Sense<V>, Map<V, Number>>> inventory;
+
+    /**
+     * The disambiguated contexts.
+     */
+    protected Map<Sense<V>, Map<Sense<V>, Number>> contexts;
+
+    /**
+     * The sense clusters.
+     */
+    protected Collection<Collection<Sense<V>>> senseClusters;
+
+    /**
+     * The sense graph.
+     */
+    protected Graph<Sense<V>, DefaultWeightedEdge> senseGraph;
 
     /**
      * Create an instance of the Watset clustering algorithm.

@@ -23,12 +23,34 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.function.Function;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * A trivial clustering algorithm that returns no clusters.
  *
  * @param <V> the type of nodes in the graph
  */
 public class EmptyClustering<V> implements Clustering<V> {
+    /**
+     * Builder for {@link EmptyClustering}.
+     *
+     * @param <V> the type of nodes in the graph
+     * @param <E> the type of edges in the graph
+     */
+    @SuppressWarnings({"unused", "UnusedReturnValue"})
+    public static class Builder<V, E> implements ClusteringBuilder<V, E, EmptyClustering<V>> {
+        @Override
+        public EmptyClustering<V> build(Graph<V, E> graph) {
+            requireNonNull(graph);
+            return new EmptyClustering<>();
+        }
+
+        @Override
+        public Function<Graph<V, E>, Clustering<V>> provider() {
+            return EmptyClustering.provider();
+        }
+    }
+
     /**
      * A factory function that sets up the algorithm for the given graph.
      *

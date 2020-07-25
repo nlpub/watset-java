@@ -35,8 +35,15 @@ import static java.util.Objects.requireNonNull;
  * @see <a href="https://doi.org/10.1162/COLI_a_00354">Ustalov et al. (COLI 45:3)</a>
  */
 public class SenseInduction<V, E> {
-    private final Graph<V, E> graph;
-    private final Function<Graph<V, E>, Clustering<V>> local;
+    /**
+     * The graph.
+     */
+    protected final Graph<V, E> graph;
+
+    /**
+     * The local clustering algorithm supplier.
+     */
+    protected final Function<Graph<V, E>, Clustering<V>> local;
 
     /**
      * Create an instance of {@code SenseInduction}.

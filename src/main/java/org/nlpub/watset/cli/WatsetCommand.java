@@ -24,7 +24,6 @@ import org.nlpub.watset.graph.Clustering;
 import org.nlpub.watset.graph.SimplifiedWatset;
 import org.nlpub.watset.graph.Watset;
 import org.nlpub.watset.util.AlgorithmProvider;
-import org.nlpub.watset.util.CosineContextSimilarity;
 import org.nlpub.watset.util.Sense;
 
 @Parameters(commandDescription = "Watset")
@@ -58,10 +57,11 @@ class WatsetCommand extends ClusteringCommand {
         final var graph = getGraph();
 
         if (local.simplified) {
-            return new SimplifiedWatset<>(graph, localAlgorithm, globalAlgorithm);
+            final var builder = new SimplifiedWatset.Builder<String, DefaultWeightedEdge>().setLocal(localAlgorithm).setGlobal(globalAlgorithm);
+            return builder.build(graph);
         } else {
-            @SuppressWarnings("deprecation") final var watset = new Watset<>(graph, localAlgorithm, globalAlgorithm, new CosineContextSimilarity<>());
-            return watset;
+            @SuppressWarnings("deprecation") final var builder = new Watset.Builder<String, DefaultWeightedEdge>().setLocal(localAlgorithm).setGlobal(globalAlgorithm);
+            return builder.build(graph);
         }
     }
 }

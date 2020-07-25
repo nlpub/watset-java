@@ -21,16 +21,17 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.nlpub.watset.graph.Clustering;
-import org.nlpub.watset.util.AlgorithmProvider;
+import org.nlpub.watset.graph.MarkovClusteringOfficial;
 
 import java.nio.file.Path;
-import java.util.HashMap;
 
 import static java.util.Objects.nonNull;
 
 @Parameters(commandDescription = "Markov Clustering Official Binary")
-class MarkovClusteringOfficialCommand extends MarkovClusteringCommand {
-    @SuppressWarnings("unused")
+class MarkovClusteringOfficialCommand extends ClusteringCommand {
+    @Parameter(description = "Inflation parameter", names = "-r")
+    private Double r;
+
     @Parameter(description = "Path to binary mcl", names = "--bin", converter = PathConverter.class)
     private Path binary;
 
@@ -40,13 +41,11 @@ class MarkovClusteringOfficialCommand extends MarkovClusteringCommand {
 
     @Override
     public Clustering<String> getClustering() {
-        final var params = new HashMap<String, String>() {{
-            if (nonNull(e)) put("e", Integer.toString(e));
-            if (nonNull(r)) put("r", Double.toString(r));
-            if (nonNull(binary)) put("bin", binary.toAbsolutePath().toString());
-        }};
+        final var builder = new MarkovClusteringOfficial.Builder<String, DefaultWeightedEdge>();
 
-        final var algorithm = new AlgorithmProvider<String, DefaultWeightedEdge>("mcl-bin", params);
-        return algorithm.apply(getGraph());
+        if (nonNull(binary)) builder.setPath(binary);
+        if (nonNull(r)) builder.setR(r);
+
+        return builder.build(getGraph());
     }
 }

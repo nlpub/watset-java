@@ -17,22 +17,23 @@
 
 package org.nlpub.watset.graph;
 
-import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.junit.Before;
 import org.junit.Test;
 import org.nlpub.watset.util.Sense;
 
 import java.util.Random;
-import java.util.function.Function;
 
 import static org.junit.Assert.assertEquals;
 
 public class SimplifiedWatsetTest {
     private final static Random random = new Random(1337);
-    public final static Function<Graph<String, DefaultWeightedEdge>, Clustering<String>> local = ChineseWhispers.provider(NodeWeighting.top(), ChineseWhispers.ITERATIONS, random);
-    public final static Function<Graph<Sense<String>, DefaultWeightedEdge>, Clustering<Sense<String>>> global = ChineseWhispers.provider(NodeWeighting.top(), ChineseWhispers.ITERATIONS, random);
-    private final static SimplifiedWatset<String, DefaultWeightedEdge> watset = new SimplifiedWatset<>(SenseInductionTest.WORDS, local, global);
+
+    private final static ChineseWhispers.Builder<String, DefaultWeightedEdge> localBuilder = new ChineseWhispers.Builder<String, DefaultWeightedEdge>().setRandom(random);
+
+    private final static ChineseWhispers.Builder<Sense<String>, DefaultWeightedEdge> globalBuilder = new ChineseWhispers.Builder<Sense<String>, DefaultWeightedEdge>().setRandom(random);
+
+    private final static SimplifiedWatset<String, DefaultWeightedEdge> watset = new SimplifiedWatset.Builder<String, DefaultWeightedEdge>().setLocalBuilder(localBuilder).setGlobalBuilder(globalBuilder).build(SenseInductionTest.WORDS);
 
     @Before
     public void setup() {

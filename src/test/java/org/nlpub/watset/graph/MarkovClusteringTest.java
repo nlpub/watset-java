@@ -54,8 +54,9 @@ public class MarkovClusteringTest {
             addEdge(2, 4).
             build();
 
-    private final MarkovClustering<String, ?> mcl1 = new MarkovClustering<>(BIPARTITE, 2, 2);
-    private final MarkovClustering<Integer, ?> mcl2 = new MarkovClustering<>(TWOCLUSTERS, 2, 2);
+    private final MarkovClustering<String, DefaultWeightedEdge> mcl1 = new MarkovClustering.Builder<String, DefaultWeightedEdge>().build(BIPARTITE);
+
+    private final MarkovClustering<Integer, DefaultWeightedEdge> mcl2 = new MarkovClustering.Builder<Integer, DefaultWeightedEdge>().build(TWOCLUSTERS);
 
     @Before
     public void setup() {

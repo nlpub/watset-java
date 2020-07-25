@@ -38,16 +38,18 @@ public class ChineseWhispersTest {
             addEdge("d", "e").
             build();
 
-    private final ChineseWhispers<String, ?> cw1 = new ChineseWhispers<>(DISJOINT, NodeWeighting.top(), ChineseWhispers.ITERATIONS, random);
+    public final static ChineseWhispers.Builder<String, DefaultWeightedEdge> BUILDER = new ChineseWhispers.Builder<String, DefaultWeightedEdge>().setRandom(random);
+
+    private final ChineseWhispers<String, DefaultWeightedEdge> cw = BUILDER.build(DISJOINT);
 
     @Before
     public void setup() {
-        cw1.fit();
+        cw.fit();
     }
 
     @Test
     public void testClustering() {
-        final var clusters = cw1.getClusters();
+        final var clusters = cw.getClusters();
         assertEquals(2, clusters.size());
     }
 }
