@@ -17,12 +17,13 @@
 
 package org.nlpub.watset.graph;
 
+import org.jgrapht.graph.DefaultWeightedEdge;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 public class SingletonClusteringTest {
-    private final SingletonClustering<String, ?> singleton = new SingletonClustering<>(ChineseWhispersTest.DISJOINT);
+    private final SingletonClustering<String, DefaultWeightedEdge> singleton = new SingletonClustering<>(ChineseWhispersTest.DISJOINT);
 
     @Before
     public void setup() {

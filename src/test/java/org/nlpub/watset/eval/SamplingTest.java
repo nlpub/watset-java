@@ -30,7 +30,7 @@ public class SamplingTest {
     static final List<Integer> EMPTY_LIST = Collections.emptyList();
 
     static final Integer[] ONE_ARRAY = {1};
-    static final List<Integer> ONE_LIST = Collections.singletonList(1);
+    static final List<Integer> ONE_LIST = List.of(1);
 
     static final Random random = new Random();
 

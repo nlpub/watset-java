@@ -17,6 +17,7 @@
 
 package org.nlpub.watset.graph;
 
+import org.jgrapht.graph.DefaultWeightedEdge;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,7 +25,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 public class TogetherClusteringTest {
-    private final TogetherClustering<String, ?> together = new TogetherClustering<>(ChineseWhispersTest.DISJOINT);
+    private final TogetherClustering<String, DefaultWeightedEdge> together = new TogetherClustering<>(ChineseWhispersTest.DISJOINT);
 
     @Before
     public void setup() {

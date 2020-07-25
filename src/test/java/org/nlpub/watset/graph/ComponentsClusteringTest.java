@@ -17,13 +17,14 @@
 
 package org.nlpub.watset.graph;
 
+import org.jgrapht.graph.DefaultWeightedEdge;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
 public class ComponentsClusteringTest {
-    private final ComponentsClustering<String, ?> components = new ComponentsClustering<>(ChineseWhispersTest.DISJOINT);
+    private final ComponentsClustering<String, DefaultWeightedEdge> components = new ComponentsClustering<>(ChineseWhispersTest.DISJOINT);
 
     @Before
     public void setup() {

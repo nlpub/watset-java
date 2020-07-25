@@ -19,30 +19,33 @@ package org.nlpub.watset.eval;
 
 import org.junit.Test;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.nlpub.watset.eval.Pairwise.transform;
 
 public class PairwiseTest {
-    static final Collection<Collection<String>> GOLD = Arrays.asList(
+    static final Collection<Collection<String>> GOLD = List.of(
             List.of("bank", "riverbank", "streambank", "streamside"),
             List.of("bank", "building", "bank building")
     );
 
-    static final Collection<Collection<String>> EXAMPLE_1 = Arrays.asList(
+    static final Collection<Collection<String>> EXAMPLE_1 = List.of(
             List.of("bank"),
             List.of("bank", "building"),
             List.of("riverbank", "streambank", "streamside"),
             List.of("bank building")
     );
 
-    static final Collection<Collection<String>> EXAMPLE_2 = Collections.singletonList(
+    static final Collection<Collection<String>> EXAMPLE_2 = List.of(
             List.of("bank", "riverbank", "streambank", "streamside", "building", "bank building")
     );
 
-    static final Collection<Collection<String>> EXAMPLE_3 = Arrays.asList(
+    static final Collection<Collection<String>> EXAMPLE_3 = List.of(
             List.of("bank"),
             List.of("building"),
             List.of("riverbank"),
