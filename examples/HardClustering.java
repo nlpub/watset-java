@@ -34,43 +34,43 @@ public class HardClustering {
         System.out.print("Graph: ");
         System.out.println(graph);
 
-        // Empty Example
-        var empty = new EmptyClustering<String>();
+        // Empty Clustering
+        var empty = new EmptyClustering.Builder<String, DefaultWeightedEdge>().build(graph);
         empty.fit();
 
         System.out.print("Empty Clusters: ");
         System.out.println(empty.getClusters());
 
-        // Singleton Example
-        var singleton = new SingletonClustering<>(graph);
+        // Singleton Clustering
+        var singleton = new SingletonClustering.Builder<String, DefaultWeightedEdge>().build(graph);
         singleton.fit();
 
         System.out.print("Singleton Clusters: ");
         System.out.println(singleton.getClusters());
 
-        // Together Example
-        var together = new TogetherClustering<>(graph);
+        // Together Clustering
+        var together = new TogetherClustering.Builder<String, DefaultWeightedEdge>().build(graph);
         together.fit();
 
         System.out.print("Together Clusters: ");
         System.out.println(together.getClusters());
 
-        // Components Clustering Example
-        var components = new ComponentsClustering<>(graph);
+        // Connected Components
+        var components = new ComponentsClustering.Builder<String, DefaultWeightedEdge>().build(graph);
         components.fit();
 
         System.out.print("Components Clusters: ");
         System.out.println(components.getClusters());
 
-        // Chinese Whispers Example
-        var cw = new ChineseWhispers<>(graph, NodeWeighting.top());
+        // Chinese Whispers
+        var cw = new ChineseWhispers.Builder<String, DefaultWeightedEdge>().build(graph);
         cw.fit();
 
         System.out.print("Chinese Whispers Clusters: ");
         System.out.println(cw.getClusters());
 
-        // Markov Clustering Example
-        var mcl = new MarkovClustering<>(graph, 2, 2);
+        // Markov Clustering
+        var mcl = new MarkovClustering.Builder<String, DefaultWeightedEdge>().build(graph);
         mcl.fit();
 
         System.out.print("Markov Clustering Clusters: ");

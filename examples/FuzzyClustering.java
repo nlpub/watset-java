@@ -19,10 +19,7 @@
 
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
-import org.nlpub.watset.graph.ChineseWhispers;
-import org.nlpub.watset.graph.MaxMax;
-import org.nlpub.watset.graph.NodeWeighting;
-import org.nlpub.watset.graph.SimplifiedWatset;
+import org.nlpub.watset.graph.*;
 import org.nlpub.watset.util.Sense;
 
 public class FuzzyClustering {
@@ -38,8 +35,8 @@ public class FuzzyClustering {
         System.out.print("Graph: ");
         System.out.println(graph);
 
-        // MaxMax Example
-        var maxmax = new MaxMax<>(graph);
+        // MaxMax
+        var maxmax = new MaxMax.Builder<String, DefaultWeightedEdge>().build(graph);
         maxmax.fit();
 
         System.out.print("MaxMax Digraph: ");
@@ -48,11 +45,15 @@ public class FuzzyClustering {
         System.out.print("MaxMax Clusters: ");
         System.out.println(maxmax.getClusters());
 
-        // Watset Example
-        var local = ChineseWhispers.<String, DefaultWeightedEdge>provider(NodeWeighting.top());
-        var global = ChineseWhispers.<Sense<String>, DefaultWeightedEdge>provider(NodeWeighting.top());
+        // Watset[MCL, CW]
+        var local = new MarkovClustering.Builder<String, DefaultWeightedEdge>().provider();
+        var global = new ChineseWhispers.Builder<Sense<String>, DefaultWeightedEdge>().provider();
 
-        var watset = new SimplifiedWatset<>(graph, local, global);
+        var watset = new SimplifiedWatset.Builder<String, DefaultWeightedEdge>().
+                setLocal(local).
+                setGlobal(global).
+                build(graph);
+
         watset.fit();
 
         System.out.print("Watset Sense Graph: ");

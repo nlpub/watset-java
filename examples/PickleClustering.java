@@ -18,6 +18,7 @@
  *
  */
 
+import org.jgrapht.graph.DefaultWeightedEdge;
 import org.nlpub.watset.graph.ChineseWhispers;
 import org.nlpub.watset.graph.NodeWeighting;
 import org.nlpub.watset.util.NetworkXFormat;
@@ -31,7 +32,7 @@ public class PickleClustering {
         try (var stream = Files.newInputStream(Paths.get("karate_club_graph.pkl"))) {
             var graph = NetworkXFormat.<Integer>load(NetworkXFormat.parse(stream));
 
-            var cw = new ChineseWhispers<>(graph, NodeWeighting.top());
+            var cw = new ChineseWhispers.Builder<Integer, DefaultWeightedEdge>().build(graph);
             cw.fit();
 
             System.out.print("Chinese Whispers Clusters: ");
