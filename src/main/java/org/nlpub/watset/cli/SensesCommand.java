@@ -25,7 +25,6 @@ import org.nlpub.watset.graph.EmptyClustering;
 import org.nlpub.watset.graph.SimplifiedWatset;
 import org.nlpub.watset.graph.Watset;
 import org.nlpub.watset.util.AlgorithmProvider;
-import org.nlpub.watset.util.CosineContextSimilarity;
 import org.nlpub.watset.util.IndexedSense;
 import org.nlpub.watset.util.Sense;
 
@@ -86,7 +85,10 @@ class SensesCommand extends Command {
     }
 
     public Map<Sense<String>, Map<Sense<String>, Number>> getWatsetContexts(AlgorithmProvider<String, DefaultWeightedEdge> algorithm, Graph<String, DefaultWeightedEdge> graph) {
-        @SuppressWarnings("deprecation") final var watset = new Watset<>(graph, algorithm, EmptyClustering.provider(), new CosineContextSimilarity<>());
+        @SuppressWarnings("deprecation") final var watset = new Watset.Builder<String, DefaultWeightedEdge>().
+                setLocal(algorithm).
+                setGlobal(EmptyClustering.provider()).
+                build(graph);
 
         watset.fit();
 
@@ -94,7 +96,10 @@ class SensesCommand extends Command {
     }
 
     public Map<Sense<String>, Map<Sense<String>, Number>> getSimplifiedWatsetContexts(AlgorithmProvider<String, DefaultWeightedEdge> algorithm, Graph<String, DefaultWeightedEdge> graph) {
-        final var watset = new SimplifiedWatset<>(graph, algorithm, EmptyClustering.provider());
+        final var watset = new SimplifiedWatset.Builder<String, DefaultWeightedEdge>().
+                setLocal(algorithm).
+                setGlobal(EmptyClustering.provider()).
+                build(graph);
 
         watset.fit();
 

@@ -25,7 +25,6 @@ import org.nlpub.watset.graph.EmptyClustering;
 import org.nlpub.watset.graph.SimplifiedWatset;
 import org.nlpub.watset.graph.Watset;
 import org.nlpub.watset.util.AlgorithmProvider;
-import org.nlpub.watset.util.CosineContextSimilarity;
 import org.nlpub.watset.util.IndexedSense;
 import org.nlpub.watset.util.Sense;
 
@@ -79,16 +78,22 @@ class GraphCommand extends Command {
         }
     }
 
-    private Graph<Sense<String>, DefaultWeightedEdge> getWatsetGraph(Graph<String, DefaultWeightedEdge> graph, AlgorithmProvider<String, DefaultWeightedEdge> localProvider) {
-        @SuppressWarnings("deprecation") final var watset = new Watset<>(graph, localProvider, EmptyClustering.provider(), new CosineContextSimilarity<>());
+    private Graph<Sense<String>, DefaultWeightedEdge> getWatsetGraph(Graph<String, DefaultWeightedEdge> graph, AlgorithmProvider<String, DefaultWeightedEdge> algorithm) {
+        @SuppressWarnings("deprecation") final var watset = new Watset.Builder<String, DefaultWeightedEdge>().
+                setLocal(algorithm).
+                setGlobal(EmptyClustering.provider()).
+                build(graph);
 
         watset.fit();
 
         return watset.getSenseGraph();
     }
 
-    private Graph<Sense<String>, DefaultWeightedEdge> getSimplifiedWatsetGraph(Graph<String, DefaultWeightedEdge> graph, AlgorithmProvider<String, DefaultWeightedEdge> localProvider) {
-        final var watset = new SimplifiedWatset<>(graph, localProvider, EmptyClustering.provider());
+    private Graph<Sense<String>, DefaultWeightedEdge> getSimplifiedWatsetGraph(Graph<String, DefaultWeightedEdge> graph, AlgorithmProvider<String, DefaultWeightedEdge> algorithm) {
+        final var watset = new SimplifiedWatset.Builder<String, DefaultWeightedEdge>().
+                setLocal(algorithm).
+                setGlobal(EmptyClustering.provider()).
+                build(graph);
 
         watset.fit();
 
