@@ -42,6 +42,7 @@ public abstract class Command implements Runnable {
     /**
      * Watset command-line interface parameters.
      */
+    @SuppressWarnings("unused")
     public static class MainParameters {
         /**
          * The input file.
@@ -59,6 +60,7 @@ public abstract class Command implements Runnable {
     /**
      * Local clustering command-line interface parameters.
      */
+    @SuppressWarnings("unused")
     public static class LocalParameters {
         /**
          * The local clustering algorithm.
@@ -82,6 +84,7 @@ public abstract class Command implements Runnable {
     /**
      * Global clustering command-line interface parameters.
      */
+    @SuppressWarnings("unused")
     public static class GlobalParameters {
         /**
          * The global clustering algorithm.

@@ -27,6 +27,7 @@ import java.nio.file.Path;
 
 import static java.util.Objects.nonNull;
 
+@SuppressWarnings("unused")
 @Parameters(commandDescription = "Markov Clustering Official Binary")
 class MarkovClusteringOfficialCommand extends ClusteringCommand {
     @Parameter(description = "Inflation parameter", names = "-r")

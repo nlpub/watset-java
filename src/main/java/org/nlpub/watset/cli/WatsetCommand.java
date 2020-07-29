@@ -31,12 +31,14 @@ class WatsetCommand extends ClusteringCommand {
     /**
      * The local clustering command-line parameters.
      */
+    @SuppressWarnings("CanBeFinal")
     @ParametersDelegate
     public LocalParameters local = new LocalParameters();
 
     /**
      * The global clustering command-line parameters.
      */
+    @SuppressWarnings("CanBeFinal")
     @ParametersDelegate
     public GlobalParameters global = new GlobalParameters();
 

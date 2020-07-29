@@ -25,6 +25,7 @@ import org.nlpub.watset.graph.MarkovClustering;
 
 import static java.util.Objects.nonNull;
 
+@SuppressWarnings("unused")
 @Parameters(commandDescription = "Markov Clustering")
 class MarkovClusteringCommand extends ClusteringCommand {
     @Parameter(description = "Expansion parameter", names = "-e")

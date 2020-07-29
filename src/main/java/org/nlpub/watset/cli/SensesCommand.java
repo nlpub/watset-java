@@ -39,6 +39,7 @@ class SensesCommand extends Command {
     /**
      * The local clustering command-line parameters.
      */
+    @SuppressWarnings("CanBeFinal")
     @ParametersDelegate
     public LocalParameters local = new LocalParameters();
 
