@@ -10,7 +10,7 @@ This package, written in Java, also includes implementations of the [Chinese Whi
 
 [github_tests_badge]: https://github.com/nlpub/watset-java/workflows/Unit%20Tests/badge.svg?branch=master
 [github_tests_link]: https://github.com/nlpub/watset-java/actions?query=workflow%3A%22Unit+Tests%22
-[maven_badge]: https://maven-badges.herokuapp.com/maven-central/org.nlpub/watset/badge.svg
+[maven_badge]: https://img.shields.io/maven-central/v/org.nlpub/watset.svg?label=Maven%20Central
 [maven_link]: https://search.maven.org/artifact/org.nlpub/watset
 [codeclimate_badge]: https://api.codeclimate.com/v1/badges/2f2a90dd42ae703e9e5d/maintainability
 [codeclimate_link]: https://codeclimate.com/github/nlpub/watset-java/maintainability
