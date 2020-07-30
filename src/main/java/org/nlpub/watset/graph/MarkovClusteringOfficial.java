@@ -47,7 +47,7 @@ import static java.util.stream.Collectors.toSet;
 @SuppressWarnings("ALL")
 public class MarkovClusteringOfficial<V, E> implements Clustering<V> {
     /**
-     * Builder for {@link MarkovClustering}.
+     * Builder for {@link MarkovClusteringOfficial}.
      *
      * @param <V> the type of nodes in the graph
      * @param <E> the type of edges in the graph
