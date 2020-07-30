@@ -12,7 +12,10 @@ jobs:
     strategy:
       matrix:
         java-version: [11, 12, 13, 14, 15-ea, 16-ea]
+    env:
+      MCL: $GITHUB_WORKSPACE/examples/mcl
     steps:
+    - run: set
     - uses: actions/checkout@v2
     - name: Build Markov Clustering
       run: make -C examples mcl
@@ -35,8 +38,6 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./target/site/apidocs
       if: matrix.java-version == '16-ea' && github.ref == 'refs/heads/master'
-    env:
-      MCL: ${{ env.GITHUB_WORKSPACE }}/examples/mcl
   examples:
     runs-on: ubuntu-latest
     steps:
