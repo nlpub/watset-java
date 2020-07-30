@@ -51,6 +51,7 @@ public class Application {
         }
     };
 
+    @SuppressWarnings("unused")
     @Parameter(names = {"-i", "--input"}, description = "Input file", converter = PathConverter.class)
     public Path input;
 

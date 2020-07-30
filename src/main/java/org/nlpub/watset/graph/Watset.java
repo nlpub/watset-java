@@ -49,7 +49,6 @@ import static java.util.Objects.requireNonNull;
  * @see SimplifiedWatset
  * @deprecated use {@link SimplifiedWatset} instead.
  */
-@SuppressWarnings("DeprecatedIsStillUsed")
 @Deprecated
 public class Watset<V, E> implements Clustering<V> {
     /**

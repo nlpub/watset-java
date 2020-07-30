@@ -23,7 +23,6 @@ import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.nlpub.watset.graph.EmptyClustering;
 import org.nlpub.watset.graph.SimplifiedWatset;
-import org.nlpub.watset.graph.Watset;
 import org.nlpub.watset.util.AlgorithmProvider;
 import org.nlpub.watset.util.CosineContextSimilarity;
 import org.nlpub.watset.util.IndexedSense;
@@ -84,7 +83,8 @@ class CommandGraph {
     }
 
     private Graph<Sense<String>, DefaultWeightedEdge> getWatsetGraph(Graph<String, DefaultWeightedEdge> graph, AlgorithmProvider<String, DefaultWeightedEdge> localProvider) {
-        final Watset<String, DefaultWeightedEdge> watset = new Watset<>(graph, localProvider, EmptyClustering.provider(), new CosineContextSimilarity<>());
+        @SuppressWarnings("deprecation") final org.nlpub.watset.graph.Watset<String, DefaultWeightedEdge> watset =
+                new org.nlpub.watset.graph.Watset<>(graph, localProvider, EmptyClustering.provider(), new CosineContextSimilarity<>());
 
         watset.fit();
 

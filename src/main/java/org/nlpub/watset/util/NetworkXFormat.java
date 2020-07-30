@@ -37,6 +37,7 @@ import static java.util.Objects.requireNonNull;
  * @see <a href="https://networkx.github.io/">NetworkX</a>
  * @see <a href="https://docs.python.org/3/library/pickle.html">Pickle</a>
  */
+@SuppressWarnings("unused")
 public interface NetworkXFormat {
     /**
      * Unpickle the NetworkX graph from the input stream.

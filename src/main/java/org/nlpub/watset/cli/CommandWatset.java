@@ -23,7 +23,6 @@ import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.nlpub.watset.graph.Clustering;
 import org.nlpub.watset.graph.SimplifiedWatset;
-import org.nlpub.watset.graph.Watset;
 import org.nlpub.watset.util.AlgorithmProvider;
 import org.nlpub.watset.util.CosineContextSimilarity;
 import org.nlpub.watset.util.Sense;
@@ -64,7 +63,9 @@ class CommandWatset extends ClusteringCommand {
         if (simplified) {
             return new SimplifiedWatset<>(graph, localProvider, globalProvider);
         } else {
-            return new Watset<>(graph, localProvider, globalProvider, new CosineContextSimilarity<>());
+            @SuppressWarnings("deprecation") final org.nlpub.watset.graph.Watset<String, DefaultWeightedEdge> watset =
+                    new org.nlpub.watset.graph.Watset<>(graph, localProvider, globalProvider, new CosineContextSimilarity<>());
+            return watset;
         }
     }
 }
