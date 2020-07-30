@@ -13,9 +13,8 @@ jobs:
       matrix:
         java-version: [11, 12, 13, 14, 15-ea, 16-ea]
     env:
-      MCL: $GITHUB_WORKSPACE/examples/mcl
+      MCL: ${GITHUB_WORKSPACE}/examples/mcl
     steps:
-    - run: set
     - uses: actions/checkout@v2
     - name: Build Markov Clustering
       run: make -C examples mcl
