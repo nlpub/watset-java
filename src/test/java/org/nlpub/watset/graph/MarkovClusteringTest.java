@@ -20,13 +20,12 @@ package org.nlpub.watset.graph;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
-import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
 public class MarkovClusteringTest {
-    private final static Graph<String, DefaultWeightedEdge> BIPARTITE = SimpleWeightedGraph.<String, DefaultWeightedEdge>createBuilder(DefaultWeightedEdge.class).
+    final static Graph<String, DefaultWeightedEdge> BIPARTITE = SimpleWeightedGraph.<String, DefaultWeightedEdge>createBuilder(DefaultWeightedEdge.class).
             addVertices("0", "1", "2", "3", "4", "5", "6", "7").
             addEdge("0", "1").
             addEdge("0", "2").
@@ -46,7 +45,7 @@ public class MarkovClusteringTest {
     /**
      * Example from https://www.cs.ucsb.edu/~xyan/classes/CS595D-2009winter/MCL_Presentation2.pdf.
      */
-    private final static Graph<Integer, DefaultWeightedEdge> TWOCLUSTERS = SimpleWeightedGraph.<Integer, DefaultWeightedEdge>createBuilder(DefaultWeightedEdge.class).
+    final static Graph<Integer, DefaultWeightedEdge> TWOCLUSTERS = SimpleWeightedGraph.<Integer, DefaultWeightedEdge>createBuilder(DefaultWeightedEdge.class).
             addVertices(1, 2, 3, 4).
             addEdge(1, 2).
             addEdge(1, 3).
@@ -58,20 +57,18 @@ public class MarkovClusteringTest {
 
     private final MarkovClustering<Integer, DefaultWeightedEdge> mcl2 = new MarkovClustering.Builder<Integer, DefaultWeightedEdge>().build(TWOCLUSTERS);
 
-    @Before
-    public void setup() {
-        mcl1.fit();
-        mcl2.fit();
-    }
-
     @Test
     public void testBipartiteClustering() {
+        mcl1.fit();
+
         final var clusters = mcl1.getClusters();
         assertEquals(2, clusters.size());
     }
 
     @Test
     public void testClustering() {
+        mcl2.fit();
+
         final var clusters = mcl2.getClusters();
         assertEquals(1, clusters.size());
     }

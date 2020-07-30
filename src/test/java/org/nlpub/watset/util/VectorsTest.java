@@ -23,6 +23,7 @@ import org.junit.Test;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static org.junit.Assert.*;
 
@@ -34,6 +35,7 @@ public class VectorsTest {
     private static final Map<String, Number> bag3 = Map.of("b", 4, "c", -2, "d", -1);
 
     private static final List<String> whitelist = List.of("a", "b", "c", "d");
+    private static final Set<String> whiteset = Set.copyOf(whitelist);
 
     private static final RealVector vec1 = Vectors.transform(bag1);
     private static final RealVector vec2 = Vectors.transform(bag2);
@@ -58,9 +60,9 @@ public class VectorsTest {
 
     @Test
     public void testTransform() {
-        assertNotEquals(whitelist, bag1.keySet());
-        assertNotEquals(whitelist, bag2.keySet());
-        assertNotEquals(whitelist, bag3.keySet());
+        assertNotEquals(whiteset, bag1.keySet());
+        assertNotEquals(whiteset, bag2.keySet());
+        assertNotEquals(whiteset, bag3.keySet());
         assertArrayEquals(new double[]{1, 3, -5, 0}, vec1t4.toArray(), 0);
         assertArrayEquals(new double[]{4, -2, -1, 0}, vec2t4.toArray(), 0);
         assertArrayEquals(new double[]{0, 4, -2, -1}, vec3t4.toArray(), 0);
