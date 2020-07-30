@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [ master ]
 
+env:
+  MCL: $GITHUB_WORKSPACE/examples/mcl
+
 jobs:
   test:
     runs-on: ubuntu-latest
