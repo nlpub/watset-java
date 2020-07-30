@@ -6,9 +6,6 @@ on:
   pull_request:
     branches: [ master ]
 
-env:
-  MCL: $GITHUB_WORKSPACE/examples/mcl
-
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -38,6 +35,8 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./target/site/apidocs
       if: matrix.java-version == '16-ea' && github.ref == 'refs/heads/master'
+    env:
+      MCL: ${{ env.GITHUB_WORKSPACE }}/examples/mcl
   examples:
     runs-on: ubuntu-latest
     steps:
