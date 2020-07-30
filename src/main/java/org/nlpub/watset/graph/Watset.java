@@ -75,26 +75,56 @@ public class Watset<V, E> implements Clustering<V> {
             return Watset.provider(local, global, similarity);
         }
 
+        /**
+         * Set the local clustering algorithm supplier.
+         *
+         * @param local the local clustering algorithm supplier
+         * @return the builder
+         */
         public Builder<V, E> setLocal(Function<Graph<V, E>, Clustering<V>> local) {
             this.local = requireNonNull(local);
             return this;
         }
 
+        /**
+         * Set the local clustering algorithm builder.
+         *
+         * @param localBuilder the local clustering algorithm builder
+         * @return the builder
+         */
         public Builder<V, E> setLocalBuilder(ClusteringBuilder<V, E, ?> localBuilder) {
             this.local = requireNonNull(localBuilder).provider();
             return this;
         }
 
+        /**
+         * Set the global clustering algorithm supplier.
+         *
+         * @param global the global clustering algorithm supplier
+         * @return the builder
+         */
         public Builder<V, E> setGlobal(Function<Graph<Sense<V>, DefaultWeightedEdge>, Clustering<Sense<V>>> global) {
             this.global = requireNonNull(global);
             return this;
         }
 
+        /**
+         * Set the global clustering algorithm builder.
+         *
+         * @param globalBuilder the global clustering algorithm builder
+         * @return the builder
+         */
         public Builder<V, E> setGlobalBuilder(ClusteringBuilder<Sense<V>, DefaultWeightedEdge, ?> globalBuilder) {
             this.global = requireNonNull(globalBuilder).provider();
             return this;
         }
 
+        /**
+         * Set the context similarity measure.
+         *
+         * @param similarity the context similarity measure
+         * @return the builder
+         */
         public Builder<V, E> setSimilarity(ContextSimilarity<V> similarity) {
             this.similarity = requireNonNull(similarity);
             return this;
