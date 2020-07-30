@@ -33,7 +33,7 @@ jobs:
       with:
         java-version: 8
     - name: Set up Groovy
-      run: apt update && apt install groovy
+      run: sudo apt-get update && sudo apt-get install groovy
     - name: Build with Maven
       run: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dshade=true -B
     - name: Symlink watset.jar
