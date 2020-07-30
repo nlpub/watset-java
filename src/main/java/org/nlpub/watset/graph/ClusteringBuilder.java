@@ -35,6 +35,7 @@ public interface ClusteringBuilder<V, E, C extends Clustering<V>> {
      * @param graph the graph
      * @return a fully-configured clustering algorithm
      */
+    @SuppressWarnings("unused")
     C build(Graph<V, E> graph);
 
     /**
