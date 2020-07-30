@@ -2,9 +2,9 @@ name: Unit Tests
 
 on:
   push:
-    branches: [ master ]
+    branches: [ java8 ]
   pull_request:
-    branches: [ master ]
+    branches: [ java8 ]
 
 jobs:
   test:
@@ -12,40 +12,36 @@ jobs:
     strategy:
       matrix:
         java-version: [8, 11, 12, 13, 14, 15-ea, 16-ea]
-
     steps:
     - uses: actions/checkout@v2
+    - name: Build Markov Clustering
+      run: make -C examples mcl
     - name: Set up JDK ${{ matrix.java-version }}
       uses: actions/setup-java@v1
       with:
         java-version: ${{ matrix.java-version }}
     - name: Check for Updates
       run: mvn -B versions:display-dependency-updates versions:display-plugin-updates
-    - name: Run Unit Tests
-      run: mvn -B test
     - name: Build with Maven
       run: mvn -B package
     - name: Build with Maven (Shade)
       run: mvn -Dshade=true -B package
-
   examples:
     runs-on: ubuntu-latest
-    continue-on-error: true
-
     steps:
     - uses: actions/checkout@v2
-    - name: Set up JDK 11
+    - name: Set up JDK 8
       uses: actions/setup-java@v1
       with:
-        java-version: 11
+        java-version: 8
     - name: Build with Maven
       run: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dshade=true -B
+    - name: Symlink watset.jar
+      run: ln -sf $PWD/target/watset.jar examples/watset.jar
     - name: Run Examples
-      run: WATSET=$PWD/target/watset.jar make -C examples CommandLine
-
+      run: make -C examples CommandLine
   shellcheck:
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
     - name: Run ShellCheck
