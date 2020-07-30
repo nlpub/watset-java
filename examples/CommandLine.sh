@@ -19,9 +19,6 @@ done
 # Markov Clustering
 java -jar "$WATSET" -i "$INPUT" mcl
 
-# Markov Clustering (Official)
-[ -x "$PWD/mcl" ] && java -jar "$WATSET" -i "$INPUT" mcl-bin --bin "$PWD/mcl"
-
 # MaxMax
 java -jar "$WATSET" -i "$INPUT" maxmax
 
@@ -48,8 +45,6 @@ done
 
 for lmode in top lin log ; do
   java -jar "$WATSET" -i "$INPUT" watset -s -l cw -lp mode=$lmode -g mcl # Watset[CW, MCL]
-
-  [ -x "$PWD/mcl" ] && java -jar "$WATSET" -i "$INPUT" watset -s -l cw -lp mode=$lmode -g mcl-bin -gp bin="$PWD/mcl" # Watset[CW, MCL]
 
   for gmode in top lin log ; do
     java -jar "$WATSET" -i "$INPUT" watset -s -l cw -lp mode=$lmode -g cw -gp mode=$gmode # Watset[CW, CW]

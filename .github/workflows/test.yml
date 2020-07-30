@@ -38,8 +38,6 @@ jobs:
       run: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dshade=true -B
     - name: Symlink watset.jar
       run: ln -sf $PWD/target/watset.jar examples/watset.jar
-    - name: Build Markov Clustering
-      run: make -C examples mcl
     - name: Run Examples
       run: make -C examples CommandLine
   shellcheck:
