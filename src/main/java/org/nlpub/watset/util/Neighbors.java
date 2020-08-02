@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 /**
  * Utilities for extracting neighborhood graphs and iterating over them.
  */
-public interface Neighbors {
+public final class Neighbors {
     /**
      * Create an iterator over the neighbors of the given node.
      *
@@ -38,7 +38,7 @@ public interface Neighbors {
      * @param <E>   the type of edges in the graph
      * @return an iterator
      */
-    static <V, E> Iterator<V> neighborIterator(Graph<V, E> graph, V node) {
+    public static <V, E> Iterator<V> neighborIterator(Graph<V, E> graph, V node) {
         return graph.edgesOf(node).stream().
                 map(e -> Graphs.getOppositeVertex(graph, e, node)).
                 iterator();
@@ -53,7 +53,7 @@ public interface Neighbors {
      * @param <E>   the type of edges in the graph
      * @return a set
      */
-    static <V, E> Set<V> neighborSetOf(Graph<V, E> graph, V node) {
+    public static <V, E> Set<V> neighborSetOf(Graph<V, E> graph, V node) {
         return graph.edgesOf(node).stream().
                 map(e -> Graphs.getOppositeVertex(graph, e, node)).
                 collect(Collectors.toSet());
@@ -68,7 +68,7 @@ public interface Neighbors {
      * @param <E>   the type of edges in the graph
      * @return a neighborhood of {@code node}
      */
-    static <V, E> Graph<V, E> neighborhoodGraph(Graph<V, E> graph, V node) {
+    public static <V, E> Graph<V, E> neighborhoodGraph(Graph<V, E> graph, V node) {
         var builder = SimpleWeightedGraph.<V, E>createBuilder(graph.getEdgeSupplier());
 
         final var neighborhood = neighborSetOf(graph, node);

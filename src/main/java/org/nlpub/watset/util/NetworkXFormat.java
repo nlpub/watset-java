@@ -37,7 +37,7 @@ import static java.util.Objects.requireNonNull;
  * @see <a href="https://docs.python.org/3/library/pickle.html">Pickle</a>
  */
 @SuppressWarnings("unused")
-public interface NetworkXFormat {
+public final class NetworkXFormat {
     /**
      * Unpickle the NetworkX graph from the input stream.
      *
@@ -45,7 +45,7 @@ public interface NetworkXFormat {
      * @return an unpickled NetworkX graph
      * @throws IOException if an I/O error occurs
      */
-    static ClassDict parse(InputStream stream) throws IOException {
+    public static ClassDict parse(InputStream stream) throws IOException {
         return (ClassDict) (new Unpickler().load(requireNonNull(stream)));
     }
 
@@ -58,7 +58,7 @@ public interface NetworkXFormat {
      * @param <V> the type of nodes in the graph
      * @return a graph represented in the unpickled graph
      */
-    static <V> Graph<V, DefaultWeightedEdge> load(ClassDict nx) {
+    public static <V> Graph<V, DefaultWeightedEdge> load(ClassDict nx) {
         requireNonNull(nx);
 
         if (!nx.get("__class__").equals("networkx.classes.graph.Graph")) {

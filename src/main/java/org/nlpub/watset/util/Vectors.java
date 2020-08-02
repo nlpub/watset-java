@@ -28,7 +28,7 @@ import java.util.Map;
  *
  * @see <a href="https://nlp.stanford.edu/IR-book/html/htmledition/dot-products-1.html">Dot products</a>
  */
-public interface Vectors {
+public final class Vectors {
     /**
      * Transform the bag-of-words into a real-valued vector.
      * <p>
@@ -38,7 +38,7 @@ public interface Vectors {
      * @param <V> the type of bag elements
      * @return a real-valued vector
      */
-    static <V> RealVector transform(Map<V, Number> bag) {
+    public static <V> RealVector transform(Map<V, Number> bag) {
         return transform(bag, bag.keySet());
     }
 
@@ -54,7 +54,7 @@ public interface Vectors {
      * @param <V>    the type of bag elements
      * @return a real-valued vector
      */
-    static <V> RealVector transform(Map<V, Number> bag, Collection<V> domain) {
+    public static <V> RealVector transform(Map<V, Number> bag, Collection<V> domain) {
         final var data = new double[domain.size()];
 
         var i = 0;

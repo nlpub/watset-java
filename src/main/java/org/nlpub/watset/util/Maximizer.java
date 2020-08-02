@@ -29,14 +29,14 @@ import static java.util.Objects.isNull;
 /**
  * Utilities for searching arguments of the maxima of the function.
  */
-public interface Maximizer {
+public final class Maximizer {
     /**
      * A predicate that is always true.
      *
      * @param <T> the type
      * @return the absolute truth
      */
-    static <T> Predicate<T> alwaysTrue() {
+    public static <T> Predicate<T> alwaysTrue() {
         return (o) -> true;
     }
 
@@ -46,7 +46,7 @@ public interface Maximizer {
      * @param <T> the type
      * @return the absolute non-truth
      */
-    static <T> Predicate<T> alwaysFalse() {
+    public static <T> Predicate<T> alwaysFalse() {
         return (o) -> false;
     }
 
@@ -60,7 +60,7 @@ public interface Maximizer {
      * @param <S>     the score type
      * @return a non-empty optional that contains the first found argmax, otherwise the empty one
      */
-    static <V, S extends Comparable<S>> Optional<V> argmax(Iterator<V> it, Predicate<V> checker, Function<V, S> scorer) {
+    public static <V, S extends Comparable<S>> Optional<V> argmax(Iterator<V> it, Predicate<V> checker, Function<V, S> scorer) {
         V result = null;
         S score = null;
 
@@ -90,7 +90,7 @@ public interface Maximizer {
      * @return a non-empty optional that contains the first found argmax, otherwise the empty one
      * @see #argmax(Iterator, Predicate, Function)
      */
-    static <V, S extends Comparable<S>> Optional<V> argmax(Iterator<V> it, Function<V, S> scorer) {
+    public static <V, S extends Comparable<S>> Optional<V> argmax(Iterator<V> it, Function<V, S> scorer) {
         return argmax(it, alwaysTrue(), scorer);
     }
 
@@ -104,7 +104,7 @@ public interface Maximizer {
      * @param <S>    the score type
      * @return a non-empty optional that contains the randomly chosen argmax, otherwise the empty one
      */
-    static <V, S extends Comparable<S>> Optional<V> argmaxRandom(Iterator<V> it, Function<V, S> scorer, Random random) {
+    public static <V, S extends Comparable<S>> Optional<V> argmaxRandom(Iterator<V> it, Function<V, S> scorer, Random random) {
         final var results = new LinkedList<V>();
         S score = null;
 
