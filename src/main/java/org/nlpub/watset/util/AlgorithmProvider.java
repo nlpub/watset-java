@@ -85,7 +85,7 @@ public class AlgorithmProvider<V, E> implements Function<Graph<V, E>, Clustering
 
                 return mcl.build(graph);
             case "mcl-bin":
-                final var mclOfficial = new MarkovClusteringOfficial.Builder<V, E>().
+                final var mclOfficial = new MarkovClusteringExternal.Builder<V, E>().
                         setPath(Path.of(params.get("bin"))).
                         setThreads(Runtime.getRuntime().availableProcessors());
 

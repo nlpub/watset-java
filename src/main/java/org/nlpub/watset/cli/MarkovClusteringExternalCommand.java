@@ -21,7 +21,7 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.nlpub.watset.graph.Clustering;
-import org.nlpub.watset.graph.MarkovClusteringOfficial;
+import org.nlpub.watset.graph.MarkovClusteringExternal;
 
 import java.nio.file.Path;
 
@@ -32,20 +32,20 @@ import static java.util.Objects.nonNull;
  */
 @SuppressWarnings("unused")
 @Parameters(commandDescription = "Markov Clustering Official Binary")
-class MarkovClusteringOfficialCommand extends ClusteringCommand {
+class MarkovClusteringExternalCommand extends ClusteringCommand {
     @Parameter(description = "Inflation parameter", names = "-r")
     private Double r;
 
     @Parameter(description = "Path to binary mcl", names = "--bin", converter = PathConverter.class)
     private Path binary;
 
-    public MarkovClusteringOfficialCommand(MainParameters parameters) {
+    public MarkovClusteringExternalCommand(MainParameters parameters) {
         super(parameters);
     }
 
     @Override
     public Clustering<String> getClustering() {
-        final var builder = new MarkovClusteringOfficial.Builder<String, DefaultWeightedEdge>();
+        final var builder = new MarkovClusteringExternal.Builder<String, DefaultWeightedEdge>();
 
         if (nonNull(binary)) builder.setPath(binary);
         if (nonNull(r)) builder.setR(r);

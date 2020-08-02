@@ -35,8 +35,8 @@ import static java.util.stream.Collectors.toSet;
 /**
  * A wrapper for the official implementation of the Markov Clustering (MCL) algorithm in C.
  * <p>
- * This is a weird thing. The official implementation of MCL is very fast, but is distributed under GPL.
- * In order to use it we need to run the separate process and speak to it over standard input/output redirection.
+ * This is a weird thing. The official implementation of MCL is very fast, but we need to run
+ * the separate process and speak to it over standard input/output redirection.
  *
  * @param <V> the type of nodes in the graph
  * @param <E> the type of edges in the graph
@@ -45,15 +45,15 @@ import static java.util.stream.Collectors.toSet;
  * @see <a href="https://micans.org/mcl/">MCL - a cluster algorithm for graphs</a>
  */
 @SuppressWarnings("ALL")
-public class MarkovClusteringOfficial<V, E> implements Clustering<V> {
+public class MarkovClusteringExternal<V, E> implements Clustering<V> {
     /**
-     * Builder for {@link MarkovClusteringOfficial}.
+     * Builder for {@link MarkovClusteringExternal}.
      *
      * @param <V> the type of nodes in the graph
      * @param <E> the type of edges in the graph
      */
     @SuppressWarnings({"unused", "UnusedReturnValue"})
-    public static class Builder<V, E> implements ClusteringBuilder<V, E, MarkovClusteringOfficial<V, E>> {
+    public static class Builder<V, E> implements ClusteringBuilder<V, E, MarkovClusteringExternal<V, E>> {
         /**
          * The default value of the inflation parameter.
          */
@@ -69,13 +69,13 @@ public class MarkovClusteringOfficial<V, E> implements Clustering<V> {
         private int threads = THREADS;
 
         @Override
-        public MarkovClusteringOfficial<V, E> build(Graph<V, E> graph) {
-            return new MarkovClusteringOfficial<>(graph, path, r, threads);
+        public MarkovClusteringExternal<V, E> build(Graph<V, E> graph) {
+            return new MarkovClusteringExternal<>(graph, path, r, threads);
         }
 
         @Override
         public Function<Graph<V, E>, Clustering<V>> provider() {
-            return MarkovClusteringOfficial.provider(path, r, threads);
+            return MarkovClusteringExternal.provider(path, r, threads);
         }
 
         /**
@@ -112,7 +112,7 @@ public class MarkovClusteringOfficial<V, E> implements Clustering<V> {
         }
     }
 
-    private static final Logger logger = Logger.getLogger(MarkovClusteringOfficial.class.getSimpleName());
+    private static final Logger logger = Logger.getLogger(MarkovClusteringExternal.class.getSimpleName());
 
     /**
      * The graph.
@@ -155,7 +155,7 @@ public class MarkovClusteringOfficial<V, E> implements Clustering<V> {
      * @return a factory function that sets up the algorithm for the given graph
      */
     public static <V, E> Function<Graph<V, E>, Clustering<V>> provider(Path mcl, double r, int threads) {
-        return graph -> new MarkovClusteringOfficial<>(graph, mcl, r, threads);
+        return graph -> new MarkovClusteringExternal<>(graph, mcl, r, threads);
     }
 
     /**
@@ -171,7 +171,7 @@ public class MarkovClusteringOfficial<V, E> implements Clustering<V> {
     @SuppressWarnings("unused")
     @Deprecated
     public static <V, E> Function<Graph<V, E>, Clustering<V>> provider(Path mcl, double r) {
-        return graph -> new MarkovClusteringOfficial<>(graph, mcl, r);
+        return graph -> new MarkovClusteringExternal<>(graph, mcl, r);
     }
 
     /**
@@ -182,7 +182,7 @@ public class MarkovClusteringOfficial<V, E> implements Clustering<V> {
      * @param r       the inflation parameter
      * @param threads the number of threads
      */
-    public MarkovClusteringOfficial(Graph<V, E> graph, Path path, double r, int threads) {
+    public MarkovClusteringExternal(Graph<V, E> graph, Path path, double r, int threads) {
         this.graph = requireNonNull(graph);
         this.path = requireNonNull(path);
         this.r = r;
@@ -195,10 +195,10 @@ public class MarkovClusteringOfficial<V, E> implements Clustering<V> {
      * @param graph the graph
      * @param path  the path to the MCL binary
      * @param r     the inflation parameter
-     * @deprecated {@link #MarkovClusteringOfficial(Graph, Path, double, int)}
+     * @deprecated {@link #MarkovClusteringExternal(Graph, Path, double, int)}
      */
     @Deprecated
-    public MarkovClusteringOfficial(Graph<V, E> graph, Path path, double r) {
+    public MarkovClusteringExternal(Graph<V, E> graph, Path path, double r) {
         this(graph, path, r, Builder.THREADS);
     }
 

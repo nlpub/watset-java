@@ -91,7 +91,7 @@ public final class Application implements Runnable {
                 .addCommand("components", new ProvidedClusteringCommand(parameters, "components"))
                 .addCommand("cw", new ChineseWhispersCommand(parameters))
                 .addCommand("mcl", new MarkovClusteringCommand(parameters))
-                .addCommand("mcl-bin", new MarkovClusteringOfficialCommand(parameters))
+                .addCommand("mcl-bin", new MarkovClusteringExternalCommand(parameters))
                 .addCommand("senses", new SensesCommand(parameters))
                 .addCommand("graph", new GraphCommand(parameters))
                 .addCommand("watset", new WatsetCommand(parameters))

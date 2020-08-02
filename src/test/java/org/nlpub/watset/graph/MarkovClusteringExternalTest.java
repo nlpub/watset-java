@@ -29,11 +29,11 @@ import static org.junit.Assume.assumeTrue;
 import static org.nlpub.watset.graph.MarkovClusteringTest.BIPARTITE;
 import static org.nlpub.watset.graph.MarkovClusteringTest.TWOCLUSTERS;
 
-public class MarkovClusteringOfficialTest {
+public class MarkovClusteringExternalTest {
     Path path;
 
-    MarkovClusteringOfficial<String, DefaultWeightedEdge> mcl1;
-    MarkovClusteringOfficial<Integer, DefaultWeightedEdge> mcl2;
+    MarkovClusteringExternal<String, DefaultWeightedEdge> mcl1;
+    MarkovClusteringExternal<Integer, DefaultWeightedEdge> mcl2;
 
     @Before
     public void setup() {
@@ -43,8 +43,8 @@ public class MarkovClusteringOfficialTest {
         path = Path.of(env);
         assumeTrue(path.toFile().canExecute());
 
-        mcl1 = new MarkovClusteringOfficial.Builder<String, DefaultWeightedEdge>().setPath(path).build(BIPARTITE);
-        mcl2 = new MarkovClusteringOfficial.Builder<Integer, DefaultWeightedEdge>().setPath(path).build(TWOCLUSTERS);
+        mcl1 = new MarkovClusteringExternal.Builder<String, DefaultWeightedEdge>().setPath(path).build(BIPARTITE);
+        mcl2 = new MarkovClusteringExternal.Builder<Integer, DefaultWeightedEdge>().setPath(path).build(TWOCLUSTERS);
     }
 
     @Test
