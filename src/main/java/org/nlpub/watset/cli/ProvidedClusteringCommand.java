@@ -22,6 +22,9 @@ import org.jgrapht.graph.DefaultWeightedEdge;
 import org.nlpub.watset.graph.Clustering;
 import org.nlpub.watset.util.AlgorithmProvider;
 
+/**
+ * A command that uses {@link AlgorithmProvider} to resolve the clustering algorithm.
+ */
 @Parameters(commandDescription = "Clustering")
 class ProvidedClusteringCommand extends ClusteringCommand {
     private final String algorithm;
