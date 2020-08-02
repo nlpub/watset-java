@@ -1,11 +1,8 @@
 package org.nlpub.watset.cli;
 
 import com.beust.jcommander.ParametersDelegate;
-import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
-import org.nlpub.watset.graph.EmptyClustering;
 import org.nlpub.watset.graph.SimplifiedWatset;
-import org.nlpub.watset.graph.Watset;
 import org.nlpub.watset.util.AlgorithmProvider;
 
 /**
@@ -13,7 +10,7 @@ import org.nlpub.watset.util.AlgorithmProvider;
  *
  * @see SimplifiedWatset
  */
-abstract class LocalWatsetCommand extends Command {
+abstract class LocalWatsetCommand extends Command implements WatsetGetter<String, DefaultWeightedEdge> {
     /**
      * The local clustering command-line parameters.
      */
@@ -37,34 +34,5 @@ abstract class LocalWatsetCommand extends Command {
      */
     public AlgorithmProvider<String, DefaultWeightedEdge> getAlgorithm() {
         return new AlgorithmProvider<>(local.algorithm, local.params);
-    }
-
-    /**
-     * Construct an instance of {@link SimplifiedWatset}.
-     *
-     * @param algorithm the local clustering algorithm provider
-     * @param graph     the graph
-     * @return an instance of Simplified Watset
-     */
-    public SimplifiedWatset<String, DefaultWeightedEdge> getSimplifiedWatset(AlgorithmProvider<String, DefaultWeightedEdge> algorithm, Graph<String, DefaultWeightedEdge> graph) {
-        return new SimplifiedWatset.Builder<String, DefaultWeightedEdge>().
-                setLocal(algorithm).
-                setGlobal(EmptyClustering.provider()).
-                build(graph);
-    }
-
-    /**
-     * Construct an instance of {@link Watset}.
-     *
-     * @param algorithm the local clustering algorithm provider
-     * @param graph     the graph
-     * @return an instance of Watset
-     */
-    @SuppressWarnings("deprecation")
-    public Watset<String, DefaultWeightedEdge> getWatset(AlgorithmProvider<String, DefaultWeightedEdge> algorithm, Graph<String, DefaultWeightedEdge> graph) {
-        return new Watset.Builder<String, DefaultWeightedEdge>().
-                setLocal(algorithm).
-                setGlobal(EmptyClustering.provider()).
-                build(graph);
     }
 }

@@ -21,13 +21,11 @@ import com.beust.jcommander.Parameters;
 import com.beust.jcommander.ParametersDelegate;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.nlpub.watset.graph.Clustering;
-import org.nlpub.watset.graph.SimplifiedWatset;
-import org.nlpub.watset.graph.Watset;
 import org.nlpub.watset.util.AlgorithmProvider;
 import org.nlpub.watset.util.Sense;
 
 @Parameters(commandDescription = "Watset")
-class WatsetCommand extends ClusteringCommand {
+class WatsetCommand extends ClusteringCommand implements WatsetGetter<String, DefaultWeightedEdge> {
     /**
      * The local clustering command-line parameters.
      */
@@ -55,15 +53,10 @@ class WatsetCommand extends ClusteringCommand {
     public Clustering<String> getClustering() {
         final var localAlgorithm = new AlgorithmProvider<String, DefaultWeightedEdge>(local.algorithm, local.params);
         final var globalAlgorithm = new AlgorithmProvider<Sense<String>, DefaultWeightedEdge>(global.algorithm, global.params);
-
         final var graph = getGraph();
 
-        if (local.simplified) {
-            final var builder = new SimplifiedWatset.Builder<String, DefaultWeightedEdge>().setLocal(localAlgorithm).setGlobal(globalAlgorithm);
-            return builder.build(graph);
-        } else {
-            @SuppressWarnings("deprecation") final var builder = new Watset.Builder<String, DefaultWeightedEdge>().setLocal(localAlgorithm).setGlobal(globalAlgorithm);
-            return builder.build(graph);
-        }
+        return local.simplified ?
+                getSimplifiedWatset(localAlgorithm, globalAlgorithm, graph) :
+                getWatset(localAlgorithm, globalAlgorithm, graph);
     }
 }
