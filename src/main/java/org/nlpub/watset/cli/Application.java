@@ -19,22 +19,40 @@ package org.nlpub.watset.cli;
 
 import com.beust.jcommander.JCommander;
 
-import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 
 /**
  * Watset command-line interface.
  */
-public final class Application {
+public final class Application implements Runnable {
     /**
-     * Watset Command-Line Interface Entry Point.
+     * The command-line argument parser.
+     */
+    private final JCommander jc;
+
+    /**
+     * Watset command-line interface entry point.
      *
      * @param args the command-line arguments
      */
     public static void main(String[] args) {
-        // TODO: Use the main argument for --input instead of the named one.
+        var app = new Application();
+
+        if (app.parse(args)) {
+            app.run();
+        } else {
+            app.jc.usage();
+        }
+    }
+
+    /**
+     * Create an instance of the Watset command-line interface.
+     */
+    public Application() {
         final var parameters = new Command.MainParameters();
 
-        final var jc = JCommander.newBuilder()
+        // TODO: Use the main argument for --input instead of the named one.
+        jc = JCommander.newBuilder()
                 .addObject(parameters)
                 .addCommand("empty", new ProvidedClusteringCommand(parameters, "empty"))
                 .addCommand("singleton", new ProvidedClusteringCommand(parameters, "singleton"))
@@ -48,16 +66,24 @@ public final class Application {
                 .addCommand("watset", new WatsetCommand(parameters))
                 .addCommand("maxmax", new ProvidedClusteringCommand(parameters, "maxmax"))
                 .build();
+    }
 
+    /**
+     * Parse the command-line arguments.
+     *
+     * @param args the command-line arguments
+     * @return {@code true} if the parsed command is present
+     */
+    public boolean parse(String... args) {
         jc.parse(args);
+        return nonNull(jc.getParsedCommand());
+    }
 
-        if (isNull(jc.getParsedCommand())) {
-            jc.usage();
-            System.exit(1);
-        }
-
+    /**
+     * Run the specified command.
+     */
+    public void run() {
         var objects = jc.getCommands().get(jc.getParsedCommand()).getObjects();
-
         var command = (Command) objects.get(0);
         command.run();
     }
