@@ -21,9 +21,6 @@ import com.beust.jcommander.Parameters;
 import com.beust.jcommander.ParametersDelegate;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
-import org.nlpub.watset.graph.EmptyClustering;
-import org.nlpub.watset.graph.SimplifiedWatset;
-import org.nlpub.watset.graph.Watset;
 import org.nlpub.watset.util.AlgorithmProvider;
 import org.nlpub.watset.util.IndexedSense;
 import org.nlpub.watset.util.Sense;
@@ -36,7 +33,7 @@ import java.util.Map;
 import static java.util.stream.Collectors.joining;
 
 @Parameters(commandDescription = "Sense Induction")
-class SensesCommand extends Command {
+class SensesCommand extends LocalWatsetCommand {
     /**
      * The local clustering command-line parameters.
      */
@@ -54,13 +51,7 @@ class SensesCommand extends Command {
     }
 
     public void run() {
-        final var algorithm = new AlgorithmProvider<String, DefaultWeightedEdge>(local.algorithm, local.params);
-
-        final var graph = getGraph();
-
-        final var contexts = local.simplified ?
-                getSimplifiedWatsetContexts(algorithm, graph) :
-                getWatsetContexts(algorithm, graph);
+        final var contexts = fitContexts(getAlgorithm(), getGraph());
 
         try {
             write(contexts);
@@ -69,7 +60,19 @@ class SensesCommand extends Command {
         }
     }
 
-    void write(Map<Sense<String>, Map<Sense<String>, Number>> contexts) throws IOException {
+    private Map<Sense<String>, Map<Sense<String>, Number>> fitContexts(AlgorithmProvider<String, DefaultWeightedEdge> algorithm, Graph<String, DefaultWeightedEdge> graph) {
+        if (local.simplified) {
+            var watset = getSimplifiedWatset(algorithm, graph);
+            watset.fit();
+            return watset.getContexts();
+        } else {
+            var watset = getWatset(algorithm, graph);
+            watset.fit();
+            return watset.getContexts();
+        }
+    }
+
+    private void write(Map<Sense<String>, Map<Sense<String>, Number>> contexts) throws IOException {
         try (final var writer = newOutputWriter()) {
             for (final var context : contexts.entrySet()) {
                 final var sense = ((IndexedSense<String>) context.getKey());
@@ -84,27 +87,5 @@ class SensesCommand extends Command {
                 writer.write(String.format(Locale.ROOT, "%s\t%d\t%s%n", sense.get(), sense.getSense(), contextRecord));
             }
         }
-    }
-
-    public Map<Sense<String>, Map<Sense<String>, Number>> getWatsetContexts(AlgorithmProvider<String, DefaultWeightedEdge> algorithm, Graph<String, DefaultWeightedEdge> graph) {
-        @SuppressWarnings("deprecation") final var watset = new Watset.Builder<String, DefaultWeightedEdge>().
-                setLocal(algorithm).
-                setGlobal(EmptyClustering.provider()).
-                build(graph);
-
-        watset.fit();
-
-        return watset.getContexts();
-    }
-
-    public Map<Sense<String>, Map<Sense<String>, Number>> getSimplifiedWatsetContexts(AlgorithmProvider<String, DefaultWeightedEdge> algorithm, Graph<String, DefaultWeightedEdge> graph) {
-        final var watset = new SimplifiedWatset.Builder<String, DefaultWeightedEdge>().
-                setLocal(algorithm).
-                setGlobal(EmptyClustering.provider()).
-                build(graph);
-
-        watset.fit();
-
-        return watset.getContexts();
     }
 }

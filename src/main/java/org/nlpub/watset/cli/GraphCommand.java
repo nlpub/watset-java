@@ -21,9 +21,6 @@ import com.beust.jcommander.Parameters;
 import com.beust.jcommander.ParametersDelegate;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
-import org.nlpub.watset.graph.EmptyClustering;
-import org.nlpub.watset.graph.SimplifiedWatset;
-import org.nlpub.watset.graph.Watset;
 import org.nlpub.watset.util.AlgorithmProvider;
 import org.nlpub.watset.util.IndexedSense;
 import org.nlpub.watset.util.Sense;
@@ -33,7 +30,7 @@ import java.io.UncheckedIOException;
 import java.util.Locale;
 
 @Parameters(commandDescription = "Sense Graph")
-class GraphCommand extends Command {
+class GraphCommand extends LocalWatsetCommand {
     /**
      * The local clustering command-line parameters.
      */
@@ -51,18 +48,24 @@ class GraphCommand extends Command {
     }
 
     public void run() {
-        final var algorithm = new AlgorithmProvider<String, DefaultWeightedEdge>(local.algorithm, local.params);
-
-        final var graph = getGraph();
-
-        final var senseGraph = local.simplified ?
-                getSimplifiedWatsetGraph(graph, algorithm) :
-                getWatsetGraph(graph, algorithm);
+        final var senseGraph = fitSenseGraph(getAlgorithm(), getGraph());
 
         try {
             write(senseGraph);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
+        }
+    }
+
+    private Graph<Sense<String>, DefaultWeightedEdge> fitSenseGraph(AlgorithmProvider<String, DefaultWeightedEdge> algorithm, Graph<String, DefaultWeightedEdge> graph) {
+        if (local.simplified) {
+            var watset = getSimplifiedWatset(algorithm, graph);
+            watset.fit();
+            return watset.getSenseGraph();
+        } else {
+            var watset = getWatset(algorithm, graph);
+            watset.fit();
+            return watset.getSenseGraph();
         }
     }
 
@@ -78,27 +81,5 @@ class GraphCommand extends Command {
                         graph.getEdgeWeight(edge)));
             }
         }
-    }
-
-    private Graph<Sense<String>, DefaultWeightedEdge> getWatsetGraph(Graph<String, DefaultWeightedEdge> graph, AlgorithmProvider<String, DefaultWeightedEdge> algorithm) {
-        @SuppressWarnings("deprecation") final var watset = new Watset.Builder<String, DefaultWeightedEdge>().
-                setLocal(algorithm).
-                setGlobal(EmptyClustering.provider()).
-                build(graph);
-
-        watset.fit();
-
-        return watset.getSenseGraph();
-    }
-
-    private Graph<Sense<String>, DefaultWeightedEdge> getSimplifiedWatsetGraph(Graph<String, DefaultWeightedEdge> graph, AlgorithmProvider<String, DefaultWeightedEdge> algorithm) {
-        final var watset = new SimplifiedWatset.Builder<String, DefaultWeightedEdge>().
-                setLocal(algorithm).
-                setGlobal(EmptyClustering.provider()).
-                build(graph);
-
-        watset.fit();
-
-        return watset.getSenseGraph();
     }
 }

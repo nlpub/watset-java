@@ -23,6 +23,9 @@ import org.nlpub.watset.util.ILEFormat;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 
+/**
+ * A command that performs graph clustering.
+ */
 abstract class ClusteringCommand extends Command {
     /**
      * Create an instance of command.
