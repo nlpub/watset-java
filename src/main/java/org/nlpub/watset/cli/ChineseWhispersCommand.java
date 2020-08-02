@@ -28,6 +28,9 @@ import java.util.Map;
 
 import static java.util.Objects.nonNull;
 
+/**
+ * A command that runs Chinese Whispers.
+ */
 @Parameters(commandDescription = "Chinese Whispers")
 class ChineseWhispersCommand extends ClusteringCommand {
     @SuppressWarnings("unused")

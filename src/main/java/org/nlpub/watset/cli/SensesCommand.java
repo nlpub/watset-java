@@ -32,6 +32,9 @@ import java.util.Map;
 
 import static java.util.stream.Collectors.joining;
 
+/**
+ * A command that induces node senses with Watset.
+ */
 @Parameters(commandDescription = "Sense Induction")
 class SensesCommand extends LocalWatsetCommand {
     /**
@@ -43,6 +46,7 @@ class SensesCommand extends LocalWatsetCommand {
         super(parameters);
     }
 
+    @Override
     public void run() {
         final var contexts = fitContexts(getAlgorithm(), getGraph());
 

@@ -29,6 +29,9 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.Locale;
 
+/**
+ * A command that builds a sense graph with Watset.
+ */
 @Parameters(commandDescription = "Sense Graph")
 class GraphCommand extends LocalWatsetCommand {
     /**
@@ -40,6 +43,7 @@ class GraphCommand extends LocalWatsetCommand {
         super(parameters);
     }
 
+    @Override
     public void run() {
         final var senseGraph = fitSenseGraph(getAlgorithm(), getGraph());
 

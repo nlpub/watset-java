@@ -24,6 +24,9 @@ import org.nlpub.watset.graph.Clustering;
 import org.nlpub.watset.util.AlgorithmProvider;
 import org.nlpub.watset.util.Sense;
 
+/**
+ * A command that runs Watset.
+ */
 @Parameters(commandDescription = "Watset")
 class WatsetCommand extends ClusteringCommand implements WatsetGetter<String, DefaultWeightedEdge> {
     /**

@@ -36,6 +36,7 @@ abstract class ClusteringCommand extends Command {
         super(parameters);
     }
 
+    @Override
     public void run() {
         final var clustering = getClustering();
         clustering.fit();
@@ -47,5 +48,10 @@ abstract class ClusteringCommand extends Command {
         }
     }
 
+    /**
+     * Construct an instance of the clustering algorithm.
+     *
+     * @return a fully-configured clustering algorithm
+     */
     public abstract Clustering<String> getClustering();
 }

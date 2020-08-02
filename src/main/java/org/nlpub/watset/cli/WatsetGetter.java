@@ -27,7 +27,7 @@ import org.nlpub.watset.util.Sense;
 import java.util.function.Function;
 
 /**
- * Routines for constructing instances of two variations of Watset.
+ * Routines for constructing instances of two Watset variations.
  *
  * @param <V> the type of nodes in the graph
  * @param <E> the type of edges in the graph

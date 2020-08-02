@@ -21,6 +21,9 @@ import com.beust.jcommander.Parameters;
 
 import java.util.Optional;
 
+/**
+ * A command that reports the Watset version.
+ */
 @Parameters(commandDescription = "Version Information")
 class VersionCommand extends Command {
     /**

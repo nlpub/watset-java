@@ -27,7 +27,7 @@ import static java.util.Objects.requireNonNull;
  */
 public final class Application implements Runnable {
     /**
-     * Status of command-line arguments parsing.
+     * Status of command-line argument parsing.
      */
     public enum ParseStatus {
         /**
@@ -36,12 +36,12 @@ public final class Application implements Runnable {
         COMMAND,
 
         /**
-         * No command was found.
+         * No command has been found.
          */
         EMPTY,
 
         /**
-         * No command was found, but the version information has been requested.
+         * No command has been found, but the version has been requested.
          */
         EMPTY_BUT_VERSION
     }

@@ -27,6 +27,9 @@ import java.nio.file.Path;
 
 import static java.util.Objects.nonNull;
 
+/**
+ * A command that runs the official binary for Markov Clustering.
+ */
 @SuppressWarnings("unused")
 @Parameters(commandDescription = "Markov Clustering Official Binary")
 class MarkovClusteringOfficialCommand extends ClusteringCommand {

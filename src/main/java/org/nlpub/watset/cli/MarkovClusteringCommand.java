@@ -25,6 +25,9 @@ import org.nlpub.watset.graph.MarkovClustering;
 
 import static java.util.Objects.nonNull;
 
+/**
+ * A command that runs Markov Clustering.
+ */
 @SuppressWarnings("unused")
 @Parameters(commandDescription = "Markov Clustering")
 class MarkovClusteringCommand extends ClusteringCommand {
