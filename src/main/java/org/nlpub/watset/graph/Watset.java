@@ -21,8 +21,8 @@ import org.jgrapht.Graph;
 import org.jgrapht.graph.AsUnmodifiableGraph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
+import org.nlpub.watset.util.ContextSimilarities;
 import org.nlpub.watset.util.ContextSimilarity;
-import org.nlpub.watset.util.CosineContextSimilarity;
 import org.nlpub.watset.util.IndexedSense;
 import org.nlpub.watset.util.Sense;
 
@@ -63,7 +63,7 @@ public class Watset<V, E> implements Clustering<V> {
     public static class Builder<V, E> implements ClusteringBuilder<V, E, Watset<V, E>> {
         private Function<Graph<V, E>, Clustering<V>> local;
         private Function<Graph<Sense<V>, DefaultWeightedEdge>, Clustering<Sense<V>>> global;
-        private ContextSimilarity<V> similarity = new CosineContextSimilarity<>();
+        private ContextSimilarity<V> similarity = ContextSimilarities.cosine();
 
         @Override
         public Watset<V, E> build(Graph<V, E> graph) {
@@ -163,7 +163,7 @@ public class Watset<V, E> implements Clustering<V> {
      */
     @Deprecated
     public static <V, E> Function<Graph<V, E>, Clustering<V>> provider(Function<Graph<V, E>, Clustering<V>> local, Function<Graph<Sense<V>, DefaultWeightedEdge>, Clustering<Sense<V>>> global) {
-        return provider(local, global, new CosineContextSimilarity<>());
+        return provider(local, global, ContextSimilarities.cosine());
     }
 
     private static final Logger logger = Logger.getLogger(Watset.class.getSimpleName());

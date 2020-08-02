@@ -102,16 +102,16 @@ public class AlgorithmProvider<V, E> implements Function<Graph<V, E>, Clustering
     private NodeWeighting<V, E> parseChineseWhispersNodeWeighting() {
         switch (params.getOrDefault("mode", "top").toLowerCase(Locale.ROOT)) {
             case "label":
-                return NodeWeighting.label();
+                return NodeWeightings.label();
             case "top":
-                return NodeWeighting.top();
+                return NodeWeightings.top();
             case "log":
-                return NodeWeighting.log();
+                return NodeWeightings.log();
             case "nolog": // We used this notation in many papers; kept for compatibility
                 logger.warning("Please update your code: 'nolog' weighting is renamed to 'lin'.");
-                return NodeWeighting.linear();
+                return NodeWeightings.linear();
             case "lin":
-                return NodeWeighting.linear();
+                return NodeWeightings.linear();
             default:
                 throw new IllegalArgumentException("Unknown mode: " + params.get("mode"));
         }

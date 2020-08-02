@@ -56,7 +56,7 @@ public class ChineseWhispers<V, E> implements Clustering<V> {
          * Create an instance of {@link ChineseWhispers} builder.
          */
         public Builder() {
-            this.weighting = NodeWeighting.top();
+            this.weighting = NodeWeightings.top();
             this.iterations = ITERATIONS;
             this.random = new Random();
         }
