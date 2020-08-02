@@ -19,8 +19,9 @@ public interface WatsetGetter<V, E> {
     /**
      * Construct an instance of {@link SimplifiedWatset}.
      *
-     * @param local the local clustering algorithm provider
-     * @param graph the graph
+     * @param local  the local clustering algorithm supplier
+     * @param global the global clustering algorithm supplier
+     * @param graph  the graph
      * @return an instance of Simplified Watset
      */
     default SimplifiedWatset<V, E> getSimplifiedWatset(Function<Graph<V, E>, Clustering<V>> local, Function<Graph<Sense<V>, DefaultWeightedEdge>, Clustering<Sense<V>>> global, Graph<V, E> graph) {
@@ -33,8 +34,9 @@ public interface WatsetGetter<V, E> {
     /**
      * Construct an instance of {@link Watset}.
      *
-     * @param local the local clustering algorithm provider
-     * @param graph the graph
+     * @param local  the local clustering algorithm supplier
+     * @param global the global clustering algorithm supplier
+     * @param graph  the graph
      * @return an instance of Watset
      */
     @SuppressWarnings("deprecation")
