@@ -248,7 +248,7 @@ public class MarkovClusteringOfficial<V, E> implements Clustering<V> {
                 "--abc",
                 "-o", output.toString());
 
-        logger.info("Command: " + String.join(" ", builder.command()));
+        logger.info(() -> "Command: " + String.join(" ", builder.command()));
 
         final var process = builder.start();
 
