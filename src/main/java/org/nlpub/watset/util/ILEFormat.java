@@ -28,6 +28,10 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Utilities for handling the ILE {@code (identifier, length, elements)} file format.
  */
 public final class ILEFormat {
+    private ILEFormat() {
+        throw new AssertionError();
+    }
+
     /**
      * The default separator, expressed by the tab symbol.
      */

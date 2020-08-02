@@ -27,6 +27,10 @@ import java.util.stream.Stream;
  * Utilities for handling the ABC {@code (source, target, weight)} edge list format.
  */
 public final class ABCFormat {
+    private ABCFormat() {
+        throw new AssertionError();
+    }
+
     /**
      * The default separator, expressed by the tab symbol.
      */

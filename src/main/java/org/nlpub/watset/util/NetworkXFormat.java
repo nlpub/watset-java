@@ -38,6 +38,10 @@ import static java.util.Objects.requireNonNull;
  */
 @SuppressWarnings("unused")
 public final class NetworkXFormat {
+    private NetworkXFormat() {
+        throw new AssertionError();
+    }
+
     /**
      * Unpickle the NetworkX graph from the input stream.
      *

@@ -30,6 +30,10 @@ import static java.util.Objects.isNull;
  * Utilities for searching arguments of the maxima of the function.
  */
 public final class Maximizer {
+    private Maximizer() {
+        throw new AssertionError();
+    }
+
     /**
      * A predicate that is always true.
      *

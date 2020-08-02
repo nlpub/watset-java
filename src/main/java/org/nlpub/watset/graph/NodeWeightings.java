@@ -25,6 +25,10 @@ import java.util.Map;
  * Useful implementations of {@link NodeWeighting}.
  */
 public final class NodeWeightings {
+    private NodeWeightings() {
+        throw new AssertionError();
+    }
+
     /**
      * A static factory method providing a convenient way to create an instance of {@link LabelNodeWeighting}.
      *

@@ -29,6 +29,10 @@ import java.util.Map;
  * @see <a href="https://nlp.stanford.edu/IR-book/html/htmledition/dot-products-1.html">Dot products</a>
  */
 public final class Vectors {
+    private Vectors() {
+        throw new AssertionError();
+    }
+
     /**
      * Transform the bag-of-words into a real-valued vector.
      * <p>

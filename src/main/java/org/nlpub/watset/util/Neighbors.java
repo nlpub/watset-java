@@ -29,6 +29,10 @@ import java.util.stream.Collectors;
  * Utilities for extracting neighborhood graphs and iterating over them.
  */
 public final class Neighbors {
+    private Neighbors() {
+        throw new AssertionError();
+    }
+
     /**
      * Create an iterator over the neighbors of the given node.
      *

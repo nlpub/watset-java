@@ -24,6 +24,10 @@ import java.util.Map;
  * Useful implementations of {@link ContextSimilarity}.
  */
 public final class ContextSimilarities {
+    private ContextSimilarities() {
+        throw new AssertionError();
+    }
+
     /**
      * A static factory method providing a convenient way to create an instance of {@link DummyContextSimilarity}.
      *
