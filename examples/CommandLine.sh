@@ -5,6 +5,9 @@ INPUT=${INPUT-java.tsv}
 
 set -ex
 
+# Version
+java -jar "$WATSET" -v
+
 # Dummy Clustering
 java -jar "$WATSET" -i "$INPUT" empty
 java -jar "$WATSET" -i "$INPUT" singleton

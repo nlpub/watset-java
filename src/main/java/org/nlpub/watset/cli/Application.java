@@ -20,15 +20,26 @@ package org.nlpub.watset.cli;
 import com.beust.jcommander.JCommander;
 
 import static java.util.Objects.nonNull;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Watset command-line interface.
  */
 public final class Application implements Runnable {
     /**
+     * Status of command-line arguments parsing.
+     */
+    public enum ParseStatus {COMMAND, EMPTY, EMPTY_BUT_VERSION}
+
+    /**
      * The command-line argument parser.
      */
     private final JCommander jc;
+
+    /**
+     * The parsing status.
+     */
+    private ParseStatus status = ParseStatus.EMPTY;
 
     /**
      * Watset command-line interface entry point.
@@ -38,10 +49,15 @@ public final class Application implements Runnable {
     public static void main(String[] args) {
         var app = new Application();
 
-        if (app.parse(args)) {
-            app.run();
-        } else {
-            app.jc.usage();
+        switch (app.parse(args)) {
+            case COMMAND:
+            case EMPTY_BUT_VERSION:
+                app.run();
+                break;
+            default:
+                app.jc.usage();
+                System.exit(1);
+                break;
         }
     }
 
@@ -65,6 +81,7 @@ public final class Application implements Runnable {
                 .addCommand("graph", new GraphCommand(parameters))
                 .addCommand("watset", new WatsetCommand(parameters))
                 .addCommand("maxmax", new ProvidedClusteringCommand(parameters, "maxmax"))
+                .addCommand("version", new VersionCommand(parameters))
                 .build();
     }
 
@@ -72,19 +89,43 @@ public final class Application implements Runnable {
      * Parse the command-line arguments.
      *
      * @param args the command-line arguments
-     * @return {@code true} if the parsed command is present
+     * @return the status
      */
-    public boolean parse(String... args) {
+    public ParseStatus parse(String... args) {
+        status = ParseStatus.EMPTY;
+
         jc.parse(args);
-        return nonNull(jc.getParsedCommand());
+
+        final var parameters = (Command.MainParameters) jc.getObjects().get(0);
+
+        if (nonNull(jc.getParsedCommand())) {
+            status = ParseStatus.COMMAND;
+        } else if (parameters.version) {
+            status = ParseStatus.EMPTY_BUT_VERSION;
+        }
+
+        return status;
+    }
+
+    /**
+     * Run the parsed command.
+     */
+    public void run() {
+        var command = status == ParseStatus.EMPTY_BUT_VERSION ?
+                "version" :
+                requireNonNull(jc.getParsedCommand(), "command should not be null");
+
+        run(command);
     }
 
     /**
      * Run the specified command.
+     *
+     * @param command the command
      */
-    public void run() {
-        var objects = jc.getCommands().get(jc.getParsedCommand()).getObjects();
-        var command = (Command) objects.get(0);
-        command.run();
+    public void run(String command) {
+        var objects = jc.getCommands().get(command).getObjects();
+        var runnable = (Command) objects.get(0);
+        runnable.run();
     }
 }

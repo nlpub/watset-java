@@ -56,6 +56,12 @@ public abstract class Command implements Runnable {
          */
         @Parameter(names = {"-o", "--output"}, description = "Output file", converter = PathConverter.class)
         public Path output;
+
+        /**
+         * The version information flag.
+         */
+        @Parameter(names = {"-v", "--version"}, description = "Print version information")
+        public boolean version;
     }
 
     /**
