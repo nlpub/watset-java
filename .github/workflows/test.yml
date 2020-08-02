@@ -37,6 +37,17 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./target/site/apidocs
       if: matrix.java-version == '16-ea' && github.ref == 'refs/heads/master'
+    - name: Set up GnuPG
+      run: gpg --import -a <<< $GPG_SIGNING_KEY
+      env:
+        GPG_SIGNING_KEY: ${{ secrets.OSSRH_SIGNING_KEY }}
+      if: matrix.java-version == '11' && github.ref == 'refs/heads/master'
+    - name: Publish to Maven Central Repository
+      run: mvn deploy -B -P ossrh -DskipTests=true
+      env:
+        MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+        MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
+      if: matrix.java-version == '11' && github.ref == 'refs/heads/master'
   examples:
     runs-on: ubuntu-latest
     steps:
