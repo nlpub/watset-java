@@ -27,6 +27,7 @@ import java.util.Map;
  * @param <V> the type of nodes in the graph
  * @param <E> the type of edges in the graph
  * @see ChineseWhispers
+ * @see NodeWeightings
  */
 @FunctionalInterface
 public interface NodeWeighting<V, E> {

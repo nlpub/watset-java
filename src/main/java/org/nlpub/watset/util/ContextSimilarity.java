@@ -25,6 +25,7 @@ import java.util.function.BiFunction;
  *
  * @param <V> the type of bag elements
  * @see <a href="https://nlp.stanford.edu/IR-book/html/htmledition/dot-products-1.html">Dot products</a>
+ * @see ContextSimilarities
  */
 public interface ContextSimilarity<V> extends BiFunction<Map<V, Number>, Map<V, Number>, Number> {
 }
