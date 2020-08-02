@@ -18,13 +18,16 @@
 package org.nlpub.watset.util;
 
 import java.util.Map;
-import java.util.function.BiFunction;
 
 /**
- * A similarity measure between two bags-of-words that maps them to a number.
+ * A simple context similarity measure that always returns zero.
  *
  * @param <V> the type of bag elements
- * @see <a href="https://nlp.stanford.edu/IR-book/html/htmledition/dot-products-1.html">Dot products</a>
  */
-public interface ContextSimilarity<V> extends BiFunction<Map<V, Number>, Map<V, Number>, Number> {
+@SuppressWarnings("unused")
+public class DummyContextSimilarity<V> implements ContextSimilarity<V> {
+    @Override
+    public Number apply(Map<V, Number> vNumberMap, Map<V, Number> vNumberMap2) {
+        return 0;
+    }
 }
