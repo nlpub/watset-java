@@ -30,6 +30,7 @@ public final class ContextSimilarities {
      * @param <V> the type of bag elements
      * @return an instance of {@link DummyContextSimilarity}
      */
+    @SuppressWarnings("unused")
     public static <V> ContextSimilarity<V> dummy() {
         return new DummyContextSimilarity<>();
     }
