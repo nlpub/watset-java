@@ -26,11 +26,11 @@ import java.util.stream.Stream;
 /**
  * Utilities for handling the ABC {@code (source, target, weight)} edge list format.
  */
-public interface ABCFormat {
+public final class ABCFormat {
     /**
      * The default separator, expressed by the tab symbol.
      */
-    String SEPARATOR = "\t";
+    public static final String SEPARATOR = "\t";
 
     /**
      * Parse the string stream of ABC-formatted edges.
@@ -39,7 +39,7 @@ public interface ABCFormat {
      * @param regex  the separator regular expression
      * @return the graph represented in the stream
      */
-    static Graph<String, DefaultWeightedEdge> parse(Stream<String> stream, String regex) {
+    public static Graph<String, DefaultWeightedEdge> parse(Stream<String> stream, String regex) {
         var builder = SimpleWeightedGraph.<String, DefaultWeightedEdge>createBuilder(DefaultWeightedEdge.class);
 
         stream.forEach(line -> {
@@ -61,7 +61,7 @@ public interface ABCFormat {
      * @param stream the input stream
      * @return the graph represented in the stream
      */
-    static Graph<String, DefaultWeightedEdge> parse(Stream<String> stream) {
+    public static Graph<String, DefaultWeightedEdge> parse(Stream<String> stream) {
         return parse(stream, SEPARATOR);
     }
 }
