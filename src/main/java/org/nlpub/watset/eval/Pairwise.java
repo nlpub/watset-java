@@ -74,12 +74,6 @@ public class Pairwise<V> {
     }
 
     /**
-     * Create an instance of pairwise precision and recall calculator.
-     */
-    public Pairwise() {
-    }
-
-    /**
      * Compute a pairwise precision, recall, and F-score.
      *
      * @param clusters the collection of the clusters to evaluate

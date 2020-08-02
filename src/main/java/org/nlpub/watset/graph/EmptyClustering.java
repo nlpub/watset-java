@@ -62,14 +62,9 @@ public class EmptyClustering<V> implements Clustering<V> {
         return graph -> new EmptyClustering<>();
     }
 
-    /**
-     * Set up the empty clustering algorithm.
-     */
-    public EmptyClustering() {
-    }
-
     @Override
     public void fit() {
+        // This method should not do anything.
     }
 
     @Override

@@ -166,6 +166,7 @@ public class MarkovClusteringOfficial<V, E> implements Clustering<V> {
      * @param <V> the type of nodes in the graph
      * @param <E> the type of edges in the graph
      * @return a factory function that sets up the algorithm for the given graph
+     * @deprecated Replaced with {@link #provider(Path, double, int)}
      */
     @SuppressWarnings("unused")
     @Deprecated
@@ -194,6 +195,7 @@ public class MarkovClusteringOfficial<V, E> implements Clustering<V> {
      * @param graph the graph
      * @param path  the path to the MCL binary
      * @param r     the inflation parameter
+     * @deprecated {@link #MarkovClusteringOfficial(Graph, Path, double, int)}
      */
     @Deprecated
     public MarkovClusteringOfficial(Graph<V, E> graph, Path path, double r) {
@@ -225,14 +227,14 @@ public class MarkovClusteringOfficial<V, E> implements Clustering<V> {
 
         try {
             process();
-        } catch (IOException | InterruptedException ex) {
-            throw new RuntimeException(ex);
+        } catch (IOException ex) {
+            throw new UncheckedIOException(ex);
         }
 
         logger.info("Markov Clustering finished.");
     }
 
-    private void process() throws IOException, InterruptedException {
+    private void process() throws IOException {
         output = File.createTempFile("mcl", "output");
         output.deleteOnExit();
 
@@ -249,7 +251,14 @@ public class MarkovClusteringOfficial<V, E> implements Clustering<V> {
         logger.info("Command: " + String.join(" ", builder.command()));
 
         final var process = builder.start();
-        var status = process.waitFor();
+
+        int status = 0;
+
+        try {
+            status = process.waitFor();
+        } catch (InterruptedException e) {
+            throw new IllegalStateException(path.toAbsolutePath() + " has been interrupted", e);
+        }
 
         if (status != 0) {
             try (final Reader isr = new InputStreamReader(process.getErrorStream(), StandardCharsets.UTF_8)) {

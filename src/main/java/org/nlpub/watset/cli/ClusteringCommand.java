@@ -21,6 +21,7 @@ import org.nlpub.watset.graph.Clustering;
 import org.nlpub.watset.util.ILEFormat;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 
 abstract class ClusteringCommand extends Command {
     /**
@@ -39,7 +40,7 @@ abstract class ClusteringCommand extends Command {
         try (final var writer = newOutputWriter()) {
             ILEFormat.write(writer, clustering);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new UncheckedIOException(e);
         }
     }
 

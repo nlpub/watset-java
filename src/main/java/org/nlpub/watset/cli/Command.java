@@ -167,7 +167,7 @@ public abstract class Command implements Runnable {
 
             return graph;
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new UncheckedIOException(e);
         }
     }
 }

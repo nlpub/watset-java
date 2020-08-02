@@ -49,7 +49,7 @@ import static java.util.Objects.requireNonNull;
  * @param <E> the type of edges in the graph
  * @see <a href="https://doi.org/10.1162/COLI_a_00354">Ustalov et al. (COLI 45:3)</a>
  * @see SimplifiedWatset
- * @deprecated use {@link SimplifiedWatset} instead.
+ * @deprecated Replaced with {@link SimplifiedWatset}
  */
 @Deprecated
 public class Watset<V, E> implements Clustering<V> {
@@ -159,6 +159,7 @@ public class Watset<V, E> implements Clustering<V> {
      * @param <V>    the type of nodes in the graph
      * @param <E>    the type of edges in the graph
      * @return a factory function that sets up the algorithm for the given graph
+     * @deprecated Replaced with {@link #provider(Function, Function, ContextSimilarity)}
      */
     @Deprecated
     public static <V, E> Function<Graph<V, E>, Clustering<V>> provider(Function<Graph<V, E>, Clustering<V>> local, Function<Graph<Sense<V>, DefaultWeightedEdge>, Clustering<Sense<V>>> global) {

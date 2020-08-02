@@ -109,6 +109,7 @@ public class AlgorithmProvider<V, E> implements Function<Graph<V, E>, Clustering
                 return NodeWeighting.log();
             case "nolog": // We used this notation in many papers; kept for compatibility
                 logger.warning("Please update your code: 'nolog' weighting is renamed to 'lin'.");
+                return NodeWeighting.linear();
             case "lin":
                 return NodeWeighting.linear();
             default:

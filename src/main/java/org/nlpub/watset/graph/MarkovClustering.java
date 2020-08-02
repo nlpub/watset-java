@@ -132,6 +132,7 @@ public class MarkovClustering<V, E> implements Clustering<V> {
      * @param <V> the type of nodes in the graph
      * @param <E> the type of edges in the graph
      * @return a factory function that sets up the algorithm for the given graph
+     * @deprecated Replaced with {@link #provider(int, double, int)}
      */
     @SuppressWarnings("unused")
     @Deprecated
@@ -251,6 +252,7 @@ public class MarkovClustering<V, E> implements Clustering<V> {
      * @param graph the graph
      * @param e     the expansion parameter
      * @param r     the inflation parameter
+     * @deprecated Replaced with {@link #MarkovClustering(Graph, int, double, int)}
      */
     @Deprecated
     public MarkovClustering(Graph<V, E> graph, int e, double r) {
@@ -296,11 +298,11 @@ public class MarkovClustering<V, E> implements Clustering<V> {
 
         final var clusters = new HashSet<Collection<V>>();
 
-        for (var r = 0; r < matrix.getRowDimension(); r++) {
+        for (var i = 0; i < matrix.getRowDimension(); i++) {
             final var cluster = new HashSet<V>();
 
-            for (var c = 0; c < matrix.getColumnDimension(); c++) {
-                if (matrix.getEntry(r, c) > 0) cluster.add(inverted.get(c));
+            for (var j = 0; j < matrix.getColumnDimension(); j++) {
+                if (matrix.getEntry(i, j) > 0) cluster.add(inverted.get(j));
             }
 
             if (!cluster.isEmpty()) clusters.add(cluster);
@@ -315,7 +317,7 @@ public class MarkovClustering<V, E> implements Clustering<V> {
      * @return a node index
      */
     protected Map<V, Integer> buildIndex() {
-        final var index = new HashMap<V, Integer>();
+        final var index = new HashMap<V, Integer>(graph.vertexSet().size());
 
         var i = 0;
 

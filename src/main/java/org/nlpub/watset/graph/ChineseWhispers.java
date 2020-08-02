@@ -127,6 +127,7 @@ public class ChineseWhispers<V, E> implements Clustering<V> {
      * @param <V>       the type of nodes in the graph
      * @param <E>       the type of edges in the graph
      * @return a factory function that sets up the algorithm for the given graph
+     * @deprecated Replaced with {@link #provider(NodeWeighting, int, Random)}
      */
     @SuppressWarnings("unused")
     @Deprecated
@@ -184,6 +185,7 @@ public class ChineseWhispers<V, E> implements Clustering<V> {
      *
      * @param graph     the graph
      * @param weighting the node weighting approach
+     * @deprecated Replaced with {{@link #ChineseWhispers(Graph, NodeWeighting, int, Random)}}
      */
     @Deprecated
     public ChineseWhispers(Graph<V, E> graph, NodeWeighting<V, E> weighting) {

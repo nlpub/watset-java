@@ -29,6 +29,7 @@ import org.nlpub.watset.util.IndexedSense;
 import org.nlpub.watset.util.Sense;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.Locale;
 import java.util.Map;
 
@@ -64,7 +65,7 @@ class SensesCommand extends Command {
         try {
             write(contexts);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new UncheckedIOException(e);
         }
     }
 
