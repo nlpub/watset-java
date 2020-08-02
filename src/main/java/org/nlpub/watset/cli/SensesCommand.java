@@ -36,13 +36,6 @@ import static java.util.stream.Collectors.joining;
 @Parameters(commandDescription = "Sense Induction")
 class SensesCommand extends LocalWatsetCommand {
     /**
-     * The local clustering command-line parameters.
-     */
-    @SuppressWarnings("CanBeFinal")
-    @ParametersDelegate
-    public LocalParameters local = new LocalParameters();
-
-    /**
      * Create an instance of command.
      *
      * @param parameters the parameters

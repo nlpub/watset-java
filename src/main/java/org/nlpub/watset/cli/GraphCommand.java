@@ -33,13 +33,6 @@ import java.util.Locale;
 @Parameters(commandDescription = "Sense Graph")
 class GraphCommand extends LocalWatsetCommand {
     /**
-     * The local clustering command-line parameters.
-     */
-    @SuppressWarnings("CanBeFinal")
-    @ParametersDelegate
-    public LocalParameters local = new LocalParameters();
-
-    /**
      * Create an instance of command.
      *
      * @param parameters the parameters
