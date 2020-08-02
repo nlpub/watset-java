@@ -29,7 +29,22 @@ public final class Application implements Runnable {
     /**
      * Status of command-line arguments parsing.
      */
-    public enum ParseStatus {COMMAND, EMPTY, EMPTY_BUT_VERSION}
+    public enum ParseStatus {
+        /**
+         * A command has been parsed successfully.
+         */
+        COMMAND,
+
+        /**
+         * No command was found.
+         */
+        EMPTY,
+
+        /**
+         * No command was found, but the version information has been requested.
+         */
+        EMPTY_BUT_VERSION
+    }
 
     /**
      * The command-line argument parser.
