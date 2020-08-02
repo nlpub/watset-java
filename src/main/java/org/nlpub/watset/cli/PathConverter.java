@@ -25,7 +25,7 @@ import java.nio.file.Path;
  * Converter of string options to {@link Path}.
  */
 @SuppressWarnings("unused")
-public class PathConverter implements IStringConverter<Path> {
+class PathConverter implements IStringConverter<Path> {
     @Override
     public Path convert(String value) {
         return Path.of(value);
