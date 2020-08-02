@@ -18,7 +18,6 @@
 package org.nlpub.watset.cli;
 
 import com.beust.jcommander.Parameters;
-import com.beust.jcommander.ParametersDelegate;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.nlpub.watset.graph.EmptyClustering;
