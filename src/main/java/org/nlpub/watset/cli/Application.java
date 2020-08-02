@@ -62,7 +62,7 @@ public final class Application implements Runnable {
      * @param args the command-line arguments
      */
     public static void main(String[] args) {
-        var app = new Application();
+        final var app = new Application();
 
         switch (app.parse(args)) {
             case COMMAND:
@@ -126,7 +126,7 @@ public final class Application implements Runnable {
      * Run the parsed command.
      */
     public void run() {
-        var command = status == ParseStatus.EMPTY_BUT_VERSION ?
+        final var command = status == ParseStatus.EMPTY_BUT_VERSION ?
                 "version" :
                 requireNonNull(jc.getParsedCommand(), "command should not be null");
 
@@ -139,8 +139,8 @@ public final class Application implements Runnable {
      * @param command the command
      */
     public void run(String command) {
-        var objects = jc.getCommands().get(command).getObjects();
-        var runnable = (Command) objects.get(0);
+        final var objects = jc.getCommands().get(command).getObjects();
+        final var runnable = (Command) objects.get(0);
         runnable.run();
     }
 }

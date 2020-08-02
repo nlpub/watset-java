@@ -341,7 +341,7 @@ public class Watset<V, E> implements Clustering<V> {
      * @return the sense graph
      */
     private Graph<Sense<V>, DefaultWeightedEdge> buildSenseGraph(Map<Sense<V>, Map<Sense<V>, Number>> contexts) {
-        var builder = SimpleWeightedGraph.<Sense<V>, DefaultWeightedEdge>createBuilder(DefaultWeightedEdge.class);
+        final var builder = SimpleWeightedGraph.<Sense<V>, DefaultWeightedEdge>createBuilder(DefaultWeightedEdge.class);
 
         contexts.keySet().forEach(builder::addVertex);
 

@@ -44,7 +44,7 @@ public final class ABCFormat {
      * @return the graph represented in the stream
      */
     public static Graph<String, DefaultWeightedEdge> parse(Stream<String> stream, String regex) {
-        var builder = SimpleWeightedGraph.<String, DefaultWeightedEdge>createBuilder(DefaultWeightedEdge.class);
+        final var builder = SimpleWeightedGraph.<String, DefaultWeightedEdge>createBuilder(DefaultWeightedEdge.class);
 
         stream.forEach(line -> {
             final var split = line.split(regex);

@@ -69,7 +69,7 @@ public final class NetworkXFormat {
             throw new PickleException("graph is not networkx.classes.graph.Graph");
         }
 
-        var builder = SimpleWeightedGraph.<V, DefaultWeightedEdge>createBuilder(DefaultWeightedEdge.class);
+        final var builder = SimpleWeightedGraph.<V, DefaultWeightedEdge>createBuilder(DefaultWeightedEdge.class);
 
         @SuppressWarnings("unchecked") final var nodes = (Map<V, Object>) nx.get("_node");
 

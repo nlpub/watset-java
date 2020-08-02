@@ -73,7 +73,7 @@ public final class Neighbors {
      * @return a neighborhood of {@code node}
      */
     public static <V, E> Graph<V, E> neighborhoodGraph(Graph<V, E> graph, V node) {
-        var builder = SimpleWeightedGraph.<V, E>createBuilder(graph.getEdgeSupplier());
+        final var builder = SimpleWeightedGraph.<V, E>createBuilder(graph.getEdgeSupplier());
 
         final var neighborhood = neighborSetOf(graph, node);
         neighborhood.forEach(builder::addVertex);

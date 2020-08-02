@@ -59,11 +59,11 @@ class SensesCommand extends LocalWatsetCommand {
 
     private Map<Sense<String>, Map<Sense<String>, Number>> fitContexts(AlgorithmProvider<String, DefaultWeightedEdge> algorithm, Graph<String, DefaultWeightedEdge> graph) {
         if (local.simplified) {
-            var watset = getSimplifiedWatset(algorithm, EmptyClustering.provider(), graph);
+            final var watset = getSimplifiedWatset(algorithm, EmptyClustering.provider(), graph);
             watset.fit();
             return watset.getContexts();
         } else {
-            var watset = getWatset(algorithm, EmptyClustering.provider(), graph);
+            final var watset = getWatset(algorithm, EmptyClustering.provider(), graph);
             watset.fit();
             return watset.getContexts();
         }

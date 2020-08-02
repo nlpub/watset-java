@@ -24,7 +24,7 @@ import static org.junit.Assert.assertEquals;
 public class ApplicationTest {
     @Test
     public void testVersion() {
-        var app = new Application();
+        final var app = new Application();
         assertEquals(Application.ParseStatus.EMPTY_BUT_VERSION, app.parse("-v"));
         app.run();
     }
