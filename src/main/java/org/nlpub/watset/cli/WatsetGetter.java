@@ -32,7 +32,7 @@ import java.util.function.Function;
  * @param <V> the type of nodes in the graph
  * @param <E> the type of edges in the graph
  */
-public interface WatsetGetter<V, E> {
+interface WatsetGetter<V, E> {
     /**
      * Construct an instance of {@link SimplifiedWatset}.
      *

@@ -39,7 +39,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * A generic command of the Watset command-line interface.
  */
-public abstract class Command implements Runnable {
+abstract class Command implements Runnable {
     /**
      * Watset command-line interface parameters.
      */
