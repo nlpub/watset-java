@@ -21,10 +21,14 @@ import org.apache.commons.math3.linear.DefaultRealMatrixChangingVisitor;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.jgrapht.Graph;
+import org.jgrapht.Graphs;
+import org.jgrapht.util.VertexToIntegerMapping;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
 
@@ -228,7 +232,7 @@ public class MarkovClustering<V, E> implements Clustering<V> {
     /**
      * The mapping of graph nodes to the columns of {@code matrix}.
      */
-    protected Map<V, Integer> index;
+    protected VertexToIntegerMapping<V> mapping;
 
     /**
      * Create an instance of the Markov Clustering algorithm.
@@ -261,14 +265,15 @@ public class MarkovClustering<V, E> implements Clustering<V> {
 
     @Override
     public void fit() {
-        index = null;
+        mapping = null;
         matrix = null;
         ones = null;
 
         if (graph.vertexSet().isEmpty()) return;
 
-        index = buildIndex();
-        matrix = buildMatrix(index);
+        mapping = Graphs.getVertexToIntegerMapping(graph);
+
+        matrix = buildMatrix();
 
         final var onesData = new double[matrix.getRowDimension()];
         Arrays.fill(onesData, 1);
@@ -288,13 +293,10 @@ public class MarkovClustering<V, E> implements Clustering<V> {
 
     @Override
     public Collection<Collection<V>> getClusters() {
-        requireNonNull(index, "call fit() first");
+        requireNonNull(mapping, "call fit() first");
         requireNonNull(matrix, "call fit() first");
 
         if (graph.vertexSet().isEmpty()) return Collections.emptySet();
-
-        final var inverted = index.entrySet().stream().
-                collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
 
         final var clusters = new HashSet<Collection<V>>();
 
@@ -302,7 +304,7 @@ public class MarkovClustering<V, E> implements Clustering<V> {
             final var cluster = new HashSet<V>();
 
             for (var j = 0; j < matrix.getColumnDimension(); j++) {
-                if (matrix.getEntry(i, j) > 0) cluster.add(inverted.get(j));
+                if (matrix.getEntry(i, j) > 0) cluster.add(mapping.getIndexList().get(j));
             }
 
             if (!cluster.isEmpty()) clusters.add(cluster);
@@ -312,33 +314,18 @@ public class MarkovClustering<V, E> implements Clustering<V> {
     }
 
     /**
-     * Index the nodes of the input graph.
-     *
-     * @return a node index
-     */
-    protected Map<V, Integer> buildIndex() {
-        final var index = new HashMap<V, Integer>(graph.vertexSet().size());
-
-        var i = 0;
-
-        for (final var vertex : graph.vertexSet()) index.put(vertex, i++);
-
-        return index;
-    }
-
-    /**
      * Construct an adjacency matrix for the given graph.
      * <p>
      * Note that the loops in the graph are ignored.
      *
-     * @param index the node index
      * @return an adjacency matrix
      */
-    protected RealMatrix buildMatrix(Map<V, Integer> index) {
+    protected RealMatrix buildMatrix() {
         final var matrix = MatrixUtils.createRealIdentityMatrix(graph.vertexSet().size());
 
         for (final var edge : graph.edgeSet()) {
-            final int i = index.get(graph.getEdgeSource(edge)), j = index.get(graph.getEdgeTarget(edge));
+            final int i = mapping.getVertexMap().get(graph.getEdgeSource(edge));
+            final int j = mapping.getVertexMap().get(graph.getEdgeTarget(edge));
 
             if (i != j) {
                 final var weight = graph.getEdgeWeight(edge);

@@ -18,7 +18,7 @@
 package org.nlpub.watset.graph;
 
 import org.jgrapht.Graph;
-import org.nlpub.watset.util.Neighbors;
+import org.jgrapht.Graphs;
 
 import java.util.*;
 import java.util.function.Function;
@@ -264,14 +264,15 @@ public class ChineseWhispers<V, E> implements Clustering<V> {
      * @return a mapping of labels to sums of their weights
      */
     protected Map<Integer, Double> score(Graph<V, E> graph, Map<V, Integer> labels, NodeWeighting<V, E> weighting, V node) {
-        final var weights = new HashMap<Integer, Double>();
+        final var edges = graph.edgesOf(node);
 
-        final var neighbors = Neighbors.neighborIterator(graph, node);
+        final var weights = new HashMap<Integer, Double>(edges.size());
 
-        neighbors.forEachRemaining(neighbor -> {
+        for (final var edge : edges) {
+            final var neighbor = Graphs.getOppositeVertex(graph, edge, node);
             final int label = labels.get(neighbor);
             weights.merge(label, weighting.apply(graph, labels, node, neighbor), Double::sum);
-        });
+        }
 
         return weights;
     }

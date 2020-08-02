@@ -33,7 +33,7 @@ class ProvidedClusteringCommand extends ClusteringCommand {
      * Create an instance of command.
      *
      * @param parameters the parameters
-     * @param algorithm the algorithm
+     * @param algorithm  the algorithm
      */
     public ProvidedClusteringCommand(MainParameters parameters, String algorithm) {
         super(parameters);

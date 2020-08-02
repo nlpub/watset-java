@@ -63,7 +63,7 @@ public class SenseInduction<V, E> {
      * @return a map of senses to their contexts
      */
     public Collection<Collection<V>> clusters(V target) {
-        final var ego = Neighbors.neighborhoodGraph(graph, requireNonNull(target));
+        final var ego = Neighbors.graph(graph, requireNonNull(target));
 
         final var clustering = local.apply(ego);
         clustering.fit();

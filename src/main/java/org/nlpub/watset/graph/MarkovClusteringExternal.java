@@ -18,18 +18,21 @@
 package org.nlpub.watset.graph;
 
 import org.jgrapht.Graph;
+import org.jgrapht.Graphs;
+import org.jgrapht.util.VertexToIntegerMapping;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Locale;
 import java.util.function.Function;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
-import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
 
 /**
@@ -137,7 +140,7 @@ public class MarkovClusteringExternal<V, E> implements Clustering<V> {
     /**
      * The mapping of nodes to indices.
      */
-    protected Map<V, Integer> mapping;
+    protected VertexToIntegerMapping<V> mapping;
 
     /**
      * The output file.
@@ -207,11 +210,9 @@ public class MarkovClusteringExternal<V, E> implements Clustering<V> {
         requireNonNull(mapping, "call fit() first");
         requireNonNull(output, "call fit() first");
 
-        final var inverse = mapping.entrySet().stream().collect(toMap(Map.Entry::getValue, Map.Entry::getKey));
-
         try (var stream = Files.lines(output.toPath())) {
             return stream.map(line -> Arrays.stream(line.split("\t")).
-                    map(id -> inverse.get(Integer.valueOf(id))).
+                    map(id -> mapping.getIndexList().get(Integer.valueOf(id))).
                     collect(toSet())).
                     collect(toSet());
         } catch (IOException ex) {
@@ -223,7 +224,7 @@ public class MarkovClusteringExternal<V, E> implements Clustering<V> {
     public void fit() {
         logger.info("Preparing for Markov Clustering.");
 
-        mapping = translate(graph);
+        mapping = Graphs.getVertexToIntegerMapping(graph);
 
         try {
             process();
@@ -275,26 +276,14 @@ public class MarkovClusteringExternal<V, E> implements Clustering<V> {
         }
     }
 
-    private Map<V, Integer> translate(Graph<V, E> graph) {
-        final var mapping = new HashMap<V, Integer>(graph.vertexSet().size());
-
-        var i = 0;
-
-        for (final var node : graph.vertexSet()) {
-            mapping.put(node, i++);
-        }
-
-        return mapping;
-    }
-
     private File writeInputFile() throws IOException {
         final var input = File.createTempFile("mcl", "input");
         input.deleteOnExit();
 
         try (final var writer = Files.newBufferedWriter(input.toPath())) {
             for (final var edge : graph.edgeSet()) {
-                final int source = mapping.get(graph.getEdgeSource(edge));
-                final int target = mapping.get(graph.getEdgeTarget(edge));
+                final int source = mapping.getVertexMap().get(graph.getEdgeSource(edge));
+                final int target = mapping.getVertexMap().get(graph.getEdgeTarget(edge));
                 final var weight = graph.getEdgeWeight(edge);
 
                 writer.write(String.format(Locale.ROOT, "%d\t%d\t%f%n", source, target, weight));

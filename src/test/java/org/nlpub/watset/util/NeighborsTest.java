@@ -18,6 +18,7 @@
 package org.nlpub.watset.util;
 
 import org.jgrapht.Graph;
+import org.jgrapht.Graphs;
 import org.jgrapht.graph.AsSubgraph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.junit.Test;
@@ -30,12 +31,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 public class NeighborsTest {
-    private final static Set<String> NEIGHBORHOOD = Neighbors.neighborSetOf(SenseInductionTest.WORDS, "a");
+    private final static Set<String> NEIGHBORHOOD = Graphs.neighborSetOf(SenseInductionTest.WORDS, "a");
     private final static Graph<String, DefaultWeightedEdge> EGO_SUBGRAPH = new AsSubgraph<>(SenseInductionTest.WORDS, new HashSet<>(NEIGHBORHOOD));
 
     @Test
-    public void testNeighborhoodGraph() {
-        final var ego = Neighbors.neighborhoodGraph(SenseInductionTest.WORDS, "a");
+    public void testGraph() {
+        final var ego = Neighbors.graph(SenseInductionTest.WORDS, "a");
         assertEquals(EGO_SUBGRAPH.vertexSet(), ego.vertexSet());
         assertEquals(EGO_SUBGRAPH.edgeSet(), ego.edgeSet());
         assertFalse(ego.containsVertex("a"));
