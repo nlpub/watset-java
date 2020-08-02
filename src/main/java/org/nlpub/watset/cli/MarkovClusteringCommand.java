@@ -37,6 +37,11 @@ class MarkovClusteringCommand extends ClusteringCommand {
     @Parameter(description = "Inflation parameter", names = "-r")
     private Double r;
 
+    /**
+     * Create an instance of command.
+     *
+     * @param parameters the parameters
+     */
     public MarkovClusteringCommand(MainParameters parameters) {
         super(parameters);
     }

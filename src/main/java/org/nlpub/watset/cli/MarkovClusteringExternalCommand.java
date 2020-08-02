@@ -39,6 +39,11 @@ class MarkovClusteringExternalCommand extends ClusteringCommand {
     @Parameter(description = "Path to binary mcl", names = "--bin", converter = PathConverter.class)
     private Path binary;
 
+    /**
+     * Create an instance of command.
+     *
+     * @param parameters the parameters
+     */
     public MarkovClusteringExternalCommand(MainParameters parameters) {
         super(parameters);
     }
