@@ -24,6 +24,7 @@ import org.jgrapht.graph.DefaultWeightedEdge;
 import org.nlpub.watset.util.ABCFormat;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -126,7 +127,7 @@ public abstract class Command implements Runnable {
 
         if (isNull(parameters.input)) {
             logger.info("Reading from standard input.");
-            return new BufferedReader(new InputStreamReader(System.in)).lines();
+            return new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8)).lines();
         }
 
         logger.log(Level.INFO, "Reading from {0}.", parameters.input);
@@ -144,7 +145,7 @@ public abstract class Command implements Runnable {
 
         if (isNull(parameters.output)) {
             logger.info("Writing to standard output.");
-            return new BufferedWriter(new OutputStreamWriter(System.out));
+            return new BufferedWriter(new OutputStreamWriter(System.out, StandardCharsets.UTF_8));
         }
 
         logger.log(Level.INFO, "Writing to {0}.", parameters.output);
