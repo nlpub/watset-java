@@ -19,15 +19,10 @@ package org.nlpub.watset.graph;
 
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 public class SingletonClusteringTest {
     private final SingletonClustering<String, DefaultWeightedEdge> singleton = new SingletonClustering.Builder<String, DefaultWeightedEdge>().build(ChineseWhispersTest.DISJOINT);
-
-    @Before
-    public void setup() {
-    }
 
     @Test
     public void testClustering() {

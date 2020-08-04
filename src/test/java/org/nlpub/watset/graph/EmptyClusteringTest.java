@@ -18,17 +18,12 @@
 package org.nlpub.watset.graph;
 
 import org.jgrapht.graph.DefaultWeightedEdge;
-import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
 public class EmptyClusteringTest {
     private final EmptyClustering<String> empty = new EmptyClustering.Builder<String, DefaultWeightedEdge>().build(ChineseWhispersTest.DISJOINT);
-
-    @Before
-    public void setup() {
-    }
 
     @Test
     public void testClustering() {

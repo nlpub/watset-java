@@ -18,7 +18,6 @@
 package org.nlpub.watset.graph;
 
 import org.jgrapht.graph.DefaultWeightedEdge;
-import org.junit.Before;
 import org.junit.Test;
 import org.nlpub.watset.util.Sense;
 
@@ -34,10 +33,6 @@ public class SimplifiedWatsetTest {
     private final static ChineseWhispers.Builder<Sense<String>, DefaultWeightedEdge> globalBuilder = new ChineseWhispers.Builder<Sense<String>, DefaultWeightedEdge>().setRandom(random);
 
     private final static SimplifiedWatset<String, DefaultWeightedEdge> watset = new SimplifiedWatset.Builder<String, DefaultWeightedEdge>().setLocalBuilder(localBuilder).setGlobalBuilder(globalBuilder).build(SenseInductionTest.WORDS);
-
-    @Before
-    public void setup() {
-    }
 
     @Test
     public void testClustering() {

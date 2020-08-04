@@ -21,7 +21,6 @@ import org.jgrapht.Graph;
 import org.jgrapht.alg.connectivity.ConnectivityInspector;
 import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
 
-import java.util.Collection;
 import java.util.function.Function;
 
 import static java.util.Objects.requireNonNull;
@@ -65,7 +64,6 @@ public class ComponentsClustering<V, E> implements ClusteringAlgorithm<V> {
     }
 
     private final ConnectivityInspector<V, E> inspector;
-    private Collection<Collection<V>> clusters;
 
     /**
      * Set up the trivial clustering algorithm that treats every connected component as a cluster.

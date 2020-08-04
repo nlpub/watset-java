@@ -18,7 +18,6 @@
 package org.nlpub.watset.graph;
 
 import org.jgrapht.graph.DefaultWeightedEdge;
-import org.junit.Before;
 import org.junit.Test;
 import org.nlpub.watset.util.Sense;
 
@@ -36,9 +35,6 @@ public class WatsetTest {
     @SuppressWarnings("deprecation")
     private final static Watset<String, DefaultWeightedEdge> watset = new Watset.Builder<String, DefaultWeightedEdge>().setLocalBuilder(localBuilder).setGlobalBuilder(globalBuilder).build(SenseInductionTest.WORDS);
 
-    @Before
-    public void setup() {
-    }
 
     @Test
     public void testClustering() {

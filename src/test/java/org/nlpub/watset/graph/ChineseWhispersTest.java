@@ -20,7 +20,6 @@ package org.nlpub.watset.graph;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Random;
@@ -41,10 +40,6 @@ public class ChineseWhispersTest {
     public final static ChineseWhispers.Builder<String, DefaultWeightedEdge> BUILDER = new ChineseWhispers.Builder<String, DefaultWeightedEdge>().setRandom(random);
 
     private final ChineseWhispers<String, DefaultWeightedEdge> cw = BUILDER.build(DISJOINT);
-
-    @Before
-    public void setup() {
-    }
 
     @Test
     public void testClustering() {
