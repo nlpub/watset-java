@@ -24,7 +24,7 @@ import java.util.Collections;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static java.util.Objects.requireNonNull;
+import static org.jgrapht.GraphTests.requireUndirected;
 
 /**
  * A trivial clustering algorithm that puts every node in a separate cluster.
@@ -71,7 +71,7 @@ public class SingletonClustering<V, E> implements ClusteringAlgorithm<V> {
      * @param graph the graph
      */
     public SingletonClustering(Graph<V, E> graph) {
-        this.graph = requireNonNull(graph);
+        this.graph = requireUndirected(graph);
     }
 
     @Override

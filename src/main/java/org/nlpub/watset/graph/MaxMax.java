@@ -29,6 +29,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
+import static org.jgrapht.GraphTests.requireUndirected;
 
 /**
  * Implementation of the MaxMax soft clustering algorithm.
@@ -79,7 +80,7 @@ public class MaxMax<V, E> implements ClusteringAlgorithm<V> {
      * @param graph the graph
      */
     public MaxMax(Graph<V, E> graph) {
-        this.graph = requireNonNull(graph);
+        this.graph = requireUndirected(graph);
     }
 
     @Override

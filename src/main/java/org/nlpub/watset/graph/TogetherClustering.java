@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 
-import static java.util.Objects.requireNonNull;
+import static org.jgrapht.GraphTests.requireUndirected;
 
 /**
  * A trivial clustering algorithm that puts every node together in a single large cluster.
@@ -73,7 +73,7 @@ public class TogetherClustering<V, E> implements ClusteringAlgorithm<V> {
      * @param graph the graph
      */
     public TogetherClustering(Graph<V, E> graph) {
-        this.graph = requireNonNull(graph);
+        this.graph = requireUndirected(graph);
     }
 
     @Override

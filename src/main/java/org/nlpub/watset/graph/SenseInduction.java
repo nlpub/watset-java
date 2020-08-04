@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 import static java.util.Objects.requireNonNull;
+import static org.jgrapht.GraphTests.requireUndirected;
 
 /**
  * A simple graph-based word sense induction approach that clusters node neighborhoods.
@@ -56,7 +57,7 @@ public class SenseInduction<V, E> {
      * @param local the neighborhood clustering algorithm supplier
      */
     public SenseInduction(Graph<V, E> graph, Function<Graph<V, E>, ClusteringAlgorithm<V>> local) {
-        this.graph = requireNonNull(graph);
+        this.graph = requireUndirected(graph);
         this.local = requireNonNull(local);
     }
 

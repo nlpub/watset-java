@@ -37,6 +37,7 @@ import java.util.stream.Collectors;
 
 import static java.util.Objects.nonNull;
 import static java.util.Objects.requireNonNull;
+import static org.jgrapht.GraphTests.requireUndirected;
 
 /**
  * A faster and simplified version of Watset that does not need a context similarity measure.
@@ -172,7 +173,7 @@ public class SimplifiedWatset<V, E> implements ClusteringAlgorithm<V> {
      * @param global the global clustering algorithm supplier
      */
     public SimplifiedWatset(Graph<V, E> graph, Function<Graph<V, E>, ClusteringAlgorithm<V>> local, Function<Graph<Sense<V>, DefaultWeightedEdge>, ClusteringAlgorithm<Sense<V>>> global) {
-        this.graph = requireNonNull(graph);
+        this.graph = requireUndirected(graph);
         this.inducer = new SenseInduction<>(graph, requireNonNull(local));
         this.global = requireNonNull(global);
     }

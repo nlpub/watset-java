@@ -26,6 +26,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
+import static org.jgrapht.GraphTests.requireUndirected;
 import static org.nlpub.watset.util.Maximizer.argmaxRandom;
 
 /**
@@ -160,7 +161,7 @@ public class ChineseWhispers<V, E> implements ClusteringAlgorithm<V> {
      * @param random     the random number generator
      */
     public ChineseWhispers(Graph<V, E> graph, NodeWeighting<V, E> weighting, int iterations, Random random) {
-        this.graph = requireNonNull(graph);
+        this.graph = requireUndirected(graph);
         this.weighting = requireNonNull(weighting);
         this.iterations = iterations;
         this.random = requireNonNull(random);

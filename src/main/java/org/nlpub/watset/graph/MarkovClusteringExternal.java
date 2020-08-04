@@ -33,6 +33,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
+import static org.jgrapht.GraphTests.requireUndirected;
 
 /**
  * A wrapper for the official implementation of the Markov Clustering (MCL) algorithm in C.
@@ -169,7 +170,7 @@ public class MarkovClusteringExternal<V, E> implements ClusteringAlgorithm<V> {
      * @param threads the number of threads
      */
     public MarkovClusteringExternal(Graph<V, E> graph, Path path, double r, int threads) {
-        this.graph = requireNonNull(graph);
+        this.graph = requireUndirected(graph);
         this.path = requireNonNull(path);
         this.r = r;
         this.threads = threads;

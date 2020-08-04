@@ -28,7 +28,7 @@ import org.jgrapht.util.VertexToIntegerMapping;
 import java.util.*;
 import java.util.function.Function;
 
-import static java.util.Objects.requireNonNull;
+import static org.jgrapht.GraphTests.requireUndirected;
 
 /**
  * Na&iuml;ve implementation of the Markov Clustering (MCL) algorithm.
@@ -225,7 +225,7 @@ public class MarkovClustering<V, E> implements ClusteringAlgorithm<V> {
      * @param iterations the maximal number of iterations
      */
     public MarkovClustering(Graph<V, E> graph, int e, double r, int iterations) {
-        this.graph = requireNonNull(graph);
+        this.graph = requireUndirected(graph);
         this.e = e;
         this.r = r;
         this.iterations = iterations;

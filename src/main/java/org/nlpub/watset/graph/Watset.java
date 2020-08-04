@@ -38,6 +38,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
+import static org.jgrapht.GraphTests.requireUndirected;
 
 /**
  * Watset is a local-global meta-algorithm for fuzzy graph clustering.
@@ -203,7 +204,7 @@ public class Watset<V, E> implements ClusteringAlgorithm<V> {
      * @param similarity the context similarity measure
      */
     public Watset(Graph<V, E> graph, Function<Graph<V, E>, ClusteringAlgorithm<V>> local, Function<Graph<Sense<V>, DefaultWeightedEdge>, ClusteringAlgorithm<Sense<V>>> global, ContextSimilarity<V> similarity) {
-        this.graph = requireNonNull(graph);
+        this.graph = requireUndirected(graph);
         this.global = requireNonNull(global);
         this.similarity = requireNonNull(similarity);
         this.inducer = new SenseInduction<>(graph, requireNonNull(local));
