@@ -54,7 +54,7 @@ jobs:
     - name: Symlink watset.jar
       run: ln -sf $PWD/target/watset.jar examples/watset.jar
     - name: Run Examples
-      run: make -C examples CommandLine
+      run: make -C examples HardClustering FuzzyClustering CommandLine
   shellcheck:
     runs-on: ubuntu-latest
     steps:
