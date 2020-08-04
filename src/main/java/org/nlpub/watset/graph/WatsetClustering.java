@@ -55,17 +55,36 @@ public interface WatsetClustering<V> extends ClusteringAlgorithm.Clustering<V> {
      * @param <V> the type of nodes in the graph
      */
     class SimplifiedWatsetClusteringImpl<V> extends ClusteringAlgorithm.ClusteringImpl<V> implements WatsetClustering<V> {
-        protected final Graph<Sense<V>, DefaultWeightedEdge> senseGraph;
+        /**
+         * The sense inventory.
+         */
+        private final Map<V, Map<V, Integer>> inventory;
+
+        /**
+         * The sense graph.
+         */
+        private final Graph<Sense<V>, DefaultWeightedEdge> senseGraph;
 
         /**
          * Construct a new Watset clustering.
          *
          * @param clusters   the clusters
-         * @param senseGraph intermediate node sense graph
+         * @param inventory  the sense inventory
+         * @param senseGraph the sense graph
          */
-        public SimplifiedWatsetClusteringImpl(List<Set<V>> clusters, Graph<Sense<V>, DefaultWeightedEdge> senseGraph) {
+        public SimplifiedWatsetClusteringImpl(List<Set<V>> clusters, Map<V, Map<V, Integer>> inventory, Graph<Sense<V>, DefaultWeightedEdge> senseGraph) {
             super(clusters);
+            this.inventory = inventory;
             this.senseGraph = senseGraph;
+        }
+
+        /**
+         * Get the sense inventory built during {@link SimplifiedWatset#getClustering()}.
+         *
+         * @return the sense inventory
+         */
+        public Map<V, Map<V, Integer>> getInventory() {
+            return inventory;
         }
 
         @Override
@@ -104,20 +123,35 @@ public interface WatsetClustering<V> extends ClusteringAlgorithm.Clustering<V> {
      *
      * @param <V> the type of nodes in the graph
      */
-    class WatsetClusteringImpl<V> extends SimplifiedWatsetClusteringImpl<V> {
+    @SuppressWarnings("deprecation")
+    class WatsetClusteringImpl<V> extends ClusteringAlgorithm.ClusteringImpl<V> implements WatsetClustering<V> {
+        /**
+         * The sense inventory.
+         */
         private final Map<V, Map<Sense<V>, Map<V, Number>>> inventory;
+
+        /**
+         * The sense graph.
+         */
+        private final Graph<Sense<V>, DefaultWeightedEdge> senseGraph;
+
+        /**
+         * The disambiguated contexts.
+         */
         private final Map<Sense<V>, Map<Sense<V>, Number>> contexts;
 
         /**
          * Construct a new Watset clustering.
          *
          * @param clusters   the clusters
-         * @param senseGraph intermediate node sense graph
+         * @param inventory  the sense inventory
+         * @param senseGraph the sense graph
          * @param contexts   the disambiguated contexts
          */
         public WatsetClusteringImpl(List<Set<V>> clusters, Map<V, Map<Sense<V>, Map<V, Number>>> inventory, Graph<Sense<V>, DefaultWeightedEdge> senseGraph, Map<Sense<V>, Map<Sense<V>, Number>> contexts) {
-            super(clusters, senseGraph);
+            super(clusters);
             this.inventory = inventory;
+            this.senseGraph = senseGraph;
             this.contexts = contexts;
         }
 
@@ -126,9 +160,14 @@ public interface WatsetClustering<V> extends ClusteringAlgorithm.Clustering<V> {
          *
          * @return the sense inventory
          */
-        @SuppressWarnings({"unused", "deprecation"})
+        @SuppressWarnings("unused")
         public Map<V, Map<Sense<V>, Map<V, Number>>> getInventory() {
             return inventory;
+        }
+
+        @Override
+        public Graph<Sense<V>, DefaultWeightedEdge> getSenseGraph() {
+            return senseGraph;
         }
 
         @Override

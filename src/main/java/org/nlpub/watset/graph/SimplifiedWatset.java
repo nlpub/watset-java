@@ -25,10 +25,7 @@ import org.jgrapht.graph.SimpleWeightedGraph;
 import org.nlpub.watset.util.IndexedSense;
 import org.nlpub.watset.util.Sense;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.logging.Level;
@@ -258,6 +255,8 @@ public class SimplifiedWatset<V, E> implements ClusteringAlgorithm<V> {
                 map(cluster -> cluster.stream().map(Sense::get).collect(Collectors.toSet())).
                 collect(Collectors.toList());
 
-        return new WatsetClustering.SimplifiedWatsetClusteringImpl<>(clusters, new AsUnmodifiableGraph<>(senseGraph));
+        return new WatsetClustering.SimplifiedWatsetClusteringImpl<>(clusters,
+                Collections.unmodifiableMap(inventory),
+                new AsUnmodifiableGraph<>(senseGraph));
     }
 }
