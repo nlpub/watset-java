@@ -21,12 +21,10 @@ import org.jgrapht.Graph;
 import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
 
 import java.util.Collections;
-import java.util.List;
-import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
-import static java.util.stream.Collectors.toList;
 
 /**
  * A trivial clustering algorithm that puts every node in a separate cluster.
@@ -66,7 +64,6 @@ public class SingletonClustering<V, E> implements ClusteringAlgorithm<V> {
     }
 
     private final Graph<V, E> graph;
-    private List<Set<V>> clusters;
 
     /**
      * Set up the trivial clustering algorithm that puts every node in a separate cluster.
@@ -79,8 +76,6 @@ public class SingletonClustering<V, E> implements ClusteringAlgorithm<V> {
 
     @Override
     public Clustering<V> getClustering() {
-        clusters = graph.vertexSet().stream().map(Collections::singleton).collect(toList());
-
-        return new ClusteringImpl<>(clusters);
+        return new ClusteringImpl<>(graph.vertexSet().stream().map(Collections::singleton).collect(Collectors.toList()));
     }
 }

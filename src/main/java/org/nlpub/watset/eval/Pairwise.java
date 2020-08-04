@@ -22,10 +22,10 @@ import org.jgrapht.alg.util.Pair;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
-import static java.util.stream.Collectors.toSet;
 
 /**
  * Pairwise precision, recall, and F-score for cluster evaluation.
@@ -45,7 +45,7 @@ public class Pairwise<V> {
      * @return a collection of pairs
      */
     public static <V> Set<Pair<V, V>> transform(Collection<Collection<V>> clusters) {
-        return clusters.parallelStream().flatMap(Pairwise::combination).collect(toSet());
+        return clusters.parallelStream().flatMap(Pairwise::combination).collect(Collectors.toSet());
     }
 
     /**

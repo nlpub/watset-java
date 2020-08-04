@@ -20,10 +20,10 @@ package org.nlpub.watset.eval;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Function.identity;
-import static java.util.stream.Collectors.*;
 
 /**
  * Normalized modified purity evaluation measure for overlapping clustering.
@@ -45,8 +45,8 @@ public class NormalizedModifiedPurity<V> {
      */
     public static <V> Collection<Map<V, Double>> transform(Collection<Collection<V>> clusters) {
         return clusters.stream().
-                map(cluster -> cluster.stream().collect(groupingBy(identity(), reducing(0d, e -> 1d, Double::sum)))).
-                collect(toList());
+                map(cluster -> cluster.stream().collect(Collectors.groupingBy(identity(), Collectors.reducing(0d, e -> 1d, Double::sum)))).
+                collect(Collectors.toList());
     }
 
     /**
@@ -65,12 +65,12 @@ public class NormalizedModifiedPurity<V> {
 
         final Collection<Map<V, Double>> normalized = clusters.stream().map(cluster -> {
             final var normalizedCluster = cluster.entrySet().stream().
-                    collect(toMap(Map.Entry::getKey, entry -> entry.getValue() / counter.get(entry.getKey())));
+                    collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue() / counter.get(entry.getKey())));
 
             if (cluster.size() != normalizedCluster.size()) throw new IllegalArgumentException("Cluster size changed");
 
             return normalizedCluster;
-        }).collect(toList());
+        }).collect(Collectors.toList());
 
         if (clusters.size() != normalized.size()) throw new IllegalArgumentException("Collection size changed");
 

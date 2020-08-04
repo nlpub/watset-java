@@ -29,8 +29,7 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.Locale;
 import java.util.Map;
-
-import static java.util.stream.Collectors.joining;
+import java.util.stream.Collectors;
 
 /**
  * A command that induces node senses with Watset.
@@ -79,7 +78,7 @@ class SensesCommand extends LocalWatsetCommand {
                                 e.getKey().get(),
                                 ((IndexedSense<String>) e.getKey()).getSense(),
                                 e.getValue().doubleValue())).
-                        collect(joining(","));
+                        collect(Collectors.joining(","));
 
                 writer.write(String.format(Locale.ROOT, "%s\t%d\t%s%n", sense.get(), sense.getSense(), contextRecord));
             }

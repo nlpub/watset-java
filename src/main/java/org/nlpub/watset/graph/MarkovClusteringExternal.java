@@ -33,8 +33,6 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toSet;
 
 /**
  * A wrapper for the official implementation of the Markov Clustering (MCL) algorithm in C.
@@ -194,8 +192,8 @@ public class MarkovClusteringExternal<V, E> implements ClusteringAlgorithm<V> {
         try (var stream = Files.lines(output.toPath())) {
             final var clusters = stream.map(line -> Arrays.stream(line.split("\t")).
                     map(id -> mapping.getIndexList().get(Integer.valueOf(id))).
-                    collect(toSet())).
-                    collect(toList());
+                    collect(Collectors.toSet())).
+                    collect(Collectors.toList());
 
             return new ClusteringImpl<>(clusters);
         } catch (IOException ex) {
