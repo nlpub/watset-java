@@ -59,8 +59,19 @@ public interface MaxMaxClustering<V> extends ClusteringAlgorithm.Clustering<V> {
      * @param <V> the type of nodes in the graph
      */
     class MaxMaxClusteringImpl<V> extends ClusteringAlgorithm.ClusteringImpl<V> implements MaxMaxClustering<V> {
+        /**
+         * The directed graph.
+         */
         private final Graph<V, DefaultEdge> digraph;
+
+        /**
+         * The map of nodes to their maximal affinity nodes.
+         */
         private final Map<V, Set<V>> maximals;
+
+        /**
+         * The map of root and non-root nodes.
+         */
         private final Map<V, Boolean> roots;
 
         /**

@@ -68,9 +68,24 @@ public class MaxMax<V, E> implements ClusteringAlgorithm<V> {
         return MaxMax::new;
     }
 
+    /**
+     * The graph.
+     */
     private final Graph<V, E> graph;
+
+    /**
+     * The directed graph.
+     */
     private Graph<V, DefaultEdge> digraph;
+
+    /**
+     * The map of nodes to their maximal affinity nodes.
+     */
     private Map<V, Set<V>> maximals;
+
+    /**
+     * The map of root and non-root nodes.
+     */
     private Map<V, Boolean> roots;
 
     /**
