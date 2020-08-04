@@ -211,7 +211,7 @@ public class Watset<V, E> implements ClusteringAlgorithm<V> {
     }
 
     @Override
-    public Clustering<V> getClustering() {
+    public WatsetClustering<V> getClustering() {
         senseClusters = null;
         senseGraph = null;
         inventory = null;
@@ -269,35 +269,10 @@ public class Watset<V, E> implements ClusteringAlgorithm<V> {
                 map(cluster -> cluster.stream().map(Sense::get).collect(Collectors.toSet())).
                 collect(Collectors.toList());
 
-        return new ClusteringImpl<>(clusters);
-    }
-
-    /**
-     * Get the sense inventory built during {@link #getClustering()}.
-     *
-     * @return the sense inventory
-     */
-    @SuppressWarnings("unused")
-    public Map<V, Map<Sense<V>, Map<V, Number>>> getInventory() {
-        return Collections.unmodifiableMap(requireNonNull(inventory, "call getClustering() first"));
-    }
-
-    /**
-     * Get the disambiguated contexts built during {@link #getClustering()}.
-     *
-     * @return the disambiguated contexts
-     */
-    public Map<Sense<V>, Map<Sense<V>, Number>> getContexts() {
-        return Collections.unmodifiableMap(requireNonNull(contexts, "call getClustering() first"));
-    }
-
-    /**
-     * Get the intermediate node sense graph built during {@link #getClustering()}.
-     *
-     * @return the sense graph
-     */
-    public Graph<Sense<V>, DefaultWeightedEdge> getSenseGraph() {
-        return new AsUnmodifiableGraph<>(requireNonNull(senseGraph, "call getClustering() first"));
+        return new WatsetClustering.WatsetClusteringImpl<>(clusters,
+                Collections.unmodifiableMap(inventory),
+                new AsUnmodifiableGraph<>(senseGraph),
+                Collections.unmodifiableMap(contexts));
     }
 
     /**

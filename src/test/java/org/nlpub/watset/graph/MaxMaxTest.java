@@ -66,32 +66,32 @@ public class MaxMaxTest {
     private final static List<Set<String>> CLUSTERS2 = List.of(Set.of("a", "b", "c"), Set.of("c", "d", "e"));
 
     private final static MaxMax.Builder<String, DefaultWeightedEdge> BUILDER = new MaxMax.Builder<>();
+    private final static MaxMax<String, DefaultWeightedEdge> maxmax1 = BUILDER.build(GRAPH1);
+    private final static MaxMax<String, DefaultWeightedEdge> maxmax2 = BUILDER.build(GRAPH2);
 
-    private final MaxMax<String, DefaultWeightedEdge> maxmax1 = BUILDER.build(GRAPH1);
-
-    private final MaxMax<String, DefaultWeightedEdge> maxmax2 = BUILDER.build(GRAPH2);
+    private MaxMaxClustering<String> clustering1, clustering2;
 
     @Before
     public void setup() {
-        maxmax1.getClustering();
-        maxmax2.getClustering();
+        clustering1 = maxmax1.getClustering();
+        clustering2 = maxmax2.getClustering();
     }
 
     @Test
     public void testDigraphVerticesConsistency() {
-        assertEquals(GRAPH1.vertexSet(), maxmax1.getDigraph().vertexSet());
-        assertEquals(GRAPH2.vertexSet(), maxmax2.getDigraph().vertexSet());
+        assertEquals(GRAPH1.vertexSet(), clustering1.getDigraph().vertexSet());
+        assertEquals(GRAPH2.vertexSet(), clustering2.getDigraph().vertexSet());
     }
 
     @Test
     public void testRoots() {
-        assertEquals(CLUSTERS1.size(), maxmax1.getRoots().values().stream().filter(v -> v).count());
-        assertEquals(CLUSTERS2.size(), maxmax2.getRoots().values().stream().filter(v -> v).count());
+        assertEquals(CLUSTERS1.size(), clustering1.getRoots().values().stream().filter(v -> v).count());
+        assertEquals(CLUSTERS2.size(), clustering2.getRoots().values().stream().filter(v -> v).count());
     }
 
     @Test
     public void testClusters() {
-        assertEquals(CLUSTERS1, maxmax1.getClustering().getClusters());
-        assertEquals(CLUSTERS2, maxmax2.getClustering().getClusters());
+        assertEquals(CLUSTERS1, clustering1.getClusters());
+        assertEquals(CLUSTERS2, clustering2.getClusters());
     }
 }

@@ -28,7 +28,6 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static java.util.Objects.requireNonNull;
 import static org.jgrapht.GraphTests.requireUndirected;
 
 /**
@@ -84,7 +83,7 @@ public class MaxMax<V, E> implements ClusteringAlgorithm<V> {
     }
 
     @Override
-    public Clustering<V> getClustering() {
+    public MaxMaxClustering<V> getClustering() {
         digraph = new DefaultDirectedGraph<>(DefaultEdge.class);
         maximals = null;
         roots = null;
@@ -160,36 +159,9 @@ public class MaxMax<V, E> implements ClusteringAlgorithm<V> {
             return (Set<V>) cluster;
         }).collect(Collectors.toList());
 
-        return new ClusteringImpl<>(clusters);
-    }
-
-    /**
-     * Return the directed graph representation of the input graph.
-     *
-     * @return a directed graph
-     */
-    @SuppressWarnings("WeakerAccess")
-    public Graph<V, DefaultEdge> getDigraph() {
-        return new AsUnmodifiableGraph<>(requireNonNull(digraph, "call getClustering() first"));
-    }
-
-    /**
-     * Return the map of nodes to their maximal affinity nodes.
-     *
-     * @return a map of maximal affinities
-     */
-    @SuppressWarnings("unused")
-    public Map<V, Set<V>> getMaximals() {
-        return Collections.unmodifiableMap(requireNonNull(maximals, "call getClustering() first"));
-    }
-
-    /**
-     * Return the map of root and non-root nodes.
-     *
-     * @return a map of root and non-root nodes
-     */
-    @SuppressWarnings("WeakerAccess")
-    public Map<V, Boolean> getRoots() {
-        return Collections.unmodifiableMap(requireNonNull(roots, "call getClustering() first"));
+        return new MaxMaxClustering.MaxMaxClusteringImpl<>(clusters,
+                new AsUnmodifiableGraph<>(digraph),
+                Collections.unmodifiableMap(maximals),
+                Collections.unmodifiableMap(roots));
     }
 }

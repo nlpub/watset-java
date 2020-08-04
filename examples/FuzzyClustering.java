@@ -40,7 +40,7 @@ public class FuzzyClustering {
         var maxmaxClustering = maxmax.getClustering();
 
         System.out.print("MaxMax Digraph: ");
-        System.out.println(maxmax.getDigraph());
+        System.out.println(maxmaxClustering.getDigraph());
 
         System.out.print("MaxMax Clusters: ");
         System.out.println(maxmaxClustering.getClusters());
@@ -57,7 +57,7 @@ public class FuzzyClustering {
         var watsetClustering = watset.getClustering();
 
         System.out.print("Watset Sense Graph: ");
-        System.out.println(watset.getSenseGraph());
+        System.out.println(watsetClustering.getSenseGraph());
 
         System.out.print("Watset Clusters: ");
         System.out.println(watsetClustering.getClusters());

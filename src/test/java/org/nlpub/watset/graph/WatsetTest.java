@@ -35,7 +35,6 @@ public class WatsetTest {
     @SuppressWarnings("deprecation")
     private final static Watset<String, DefaultWeightedEdge> watset = new Watset.Builder<String, DefaultWeightedEdge>().setLocalBuilder(localBuilder).setGlobalBuilder(globalBuilder).build(SenseInductionTest.WORDS);
 
-
     @Test
     public void testClustering() {
         final var clustering = watset.getClustering();

@@ -57,12 +57,12 @@ class GraphCommand extends LocalWatsetCommand {
     private Graph<Sense<String>, DefaultWeightedEdge> getSenseGraph(AlgorithmProvider<String, DefaultWeightedEdge> algorithm, Graph<String, DefaultWeightedEdge> graph) {
         if (local.simplified) {
             final var watset = getSimplifiedWatset(algorithm, EmptyClustering.provider(), graph);
-            watset.getClustering();
-            return watset.getSenseGraph();
+            final var clustering = watset.getClustering();
+            return clustering.getSenseGraph();
         } else {
             final var watset = getWatset(algorithm, EmptyClustering.provider(), graph);
-            watset.getClustering();
-            return watset.getSenseGraph();
+            final var clustering = watset.getClustering();
+            return clustering.getSenseGraph();
         }
     }
 

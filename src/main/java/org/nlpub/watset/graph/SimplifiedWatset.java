@@ -179,7 +179,7 @@ public class SimplifiedWatset<V, E> implements ClusteringAlgorithm<V> {
     }
 
     @Override
-    public Clustering<V> getClustering() {
+    public WatsetClustering<V> getClustering() {
         senseClusters = null;
 
         inventory = new ConcurrentHashMap<>(graph.vertexSet().size());
@@ -258,44 +258,6 @@ public class SimplifiedWatset<V, E> implements ClusteringAlgorithm<V> {
                 map(cluster -> cluster.stream().map(Sense::get).collect(Collectors.toSet())).
                 collect(Collectors.toList());
 
-        return new ClusteringImpl<>(clusters);
-    }
-
-    /**
-     * Get the intermediate node sense graph built during {@link #getClustering()}.
-     *
-     * @return the sense graph
-     */
-    public Graph<Sense<V>, DefaultWeightedEdge> getSenseGraph() {
-        return new AsUnmodifiableGraph<>(requireNonNull(senseGraph, "call getClustering() first"));
-    }
-
-    /**
-     * Get the disambiguated contexts built during {@link #getClustering()}.
-     *
-     * @return the disambiguated contexts
-     */
-    public Map<Sense<V>, Map<Sense<V>, Number>> getContexts() {
-        final var contexts = new HashMap<Sense<V>, Map<Sense<V>, Number>>();
-
-        for (final var edge : requireNonNull(senseGraph, "call getClustering() first").edgeSet()) {
-            final Sense<V> source = senseGraph.getEdgeSource(edge), target = senseGraph.getEdgeTarget(edge);
-            final var weight = senseGraph.getEdgeWeight(edge);
-
-            if (!contexts.containsKey(source)) contexts.put(source, new HashMap<>());
-            if (!contexts.containsKey(target)) contexts.put(target, new HashMap<>());
-
-            contexts.get(source).put(target, weight);
-            contexts.get(target).put(source, weight);
-        }
-
-        if (contexts.size() != senseGraph.vertexSet().size()) {
-            throw new IllegalStateException("Mismatch in number of senses: expected " +
-                    senseGraph.vertexSet().size() +
-                    ", but got " +
-                    contexts.size());
-        }
-
-        return contexts;
+        return new WatsetClustering.SimplifiedWatsetClusteringImpl<>(clusters, new AsUnmodifiableGraph<>(senseGraph));
     }
 }
