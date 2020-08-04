@@ -19,8 +19,8 @@ package org.nlpub.watset.cli;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
 import org.jgrapht.graph.DefaultWeightedEdge;
-import org.nlpub.watset.graph.Clustering;
 import org.nlpub.watset.graph.MarkovClustering;
 
 import static java.util.Objects.nonNull;
@@ -47,7 +47,7 @@ class MarkovClusteringCommand extends ClusteringCommand {
     }
 
     @Override
-    public Clustering<String> getClustering() {
+    public ClusteringAlgorithm<String> getAlgorithm() {
         final var builder = new MarkovClustering.Builder<String, DefaultWeightedEdge>();
 
         if (nonNull(e)) builder.setE(e);

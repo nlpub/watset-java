@@ -19,6 +19,7 @@ package org.nlpub.watset.graph;
 
 import org.jgrapht.Graph;
 import org.jgrapht.alg.connectivity.ConnectivityInspector;
+import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
 
 import java.util.Collection;
 import java.util.function.Function;
@@ -31,7 +32,7 @@ import static java.util.Objects.requireNonNull;
  * @param <V> the type of nodes in the graph
  * @param <E> the type of edges in the graph
  */
-public class ComponentsClustering<V, E> implements Clustering<V> {
+public class ComponentsClustering<V, E> implements ClusteringAlgorithm<V> {
     /**
      * Builder for {@link ComponentsClustering}.
      *
@@ -46,7 +47,7 @@ public class ComponentsClustering<V, E> implements Clustering<V> {
         }
 
         @Override
-        public Function<Graph<V, E>, Clustering<V>> provider() {
+        public Function<Graph<V, E>, ClusteringAlgorithm<V>> provider() {
             return ComponentsClustering.provider();
         }
     }
@@ -59,7 +60,7 @@ public class ComponentsClustering<V, E> implements Clustering<V> {
      * @return a factory function that sets up the algorithm for the given graph
      */
     @SuppressWarnings("unused")
-    public static <V, E> Function<Graph<V, E>, Clustering<V>> provider() {
+    public static <V, E> Function<Graph<V, E>, ClusteringAlgorithm<V>> provider() {
         return ComponentsClustering::new;
     }
 
@@ -76,13 +77,8 @@ public class ComponentsClustering<V, E> implements Clustering<V> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public void fit() {
-        clusters = (Collection<Collection<V>>) (Collection<? extends Collection<V>>) inspector.connectedSets();
-    }
-
-    @Override
-    public Collection<Collection<V>> getClusters() {
-        return requireNonNull(clusters, "call fit() first");
+    public Clustering<V> getClustering() {
+        final var clusters = inspector.connectedSets();
+        return new ClusteringImpl<>(clusters);
     }
 }

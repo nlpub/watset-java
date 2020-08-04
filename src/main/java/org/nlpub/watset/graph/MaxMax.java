@@ -19,6 +19,7 @@ package org.nlpub.watset.graph;
 
 import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
+import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
 import org.jgrapht.graph.AsUnmodifiableGraph;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
@@ -36,7 +37,7 @@ import static java.util.Objects.requireNonNull;
  * @param <E> the type of edges in the graph
  * @see <a href="https://doi.org/10.1007/978-3-642-37247-6_30">Hope &amp; Keller (CICLing 2013)</a>
  */
-public class MaxMax<V, E> implements Clustering<V> {
+public class MaxMax<V, E> implements ClusteringAlgorithm<V> {
     /**
      * Builder for {@link MaxMax}.
      *
@@ -51,7 +52,7 @@ public class MaxMax<V, E> implements Clustering<V> {
         }
 
         @Override
-        public Function<Graph<V, E>, Clustering<V>> provider() {
+        public Function<Graph<V, E>, ClusteringAlgorithm<V>> provider() {
             return MaxMax.provider();
         }
     }
@@ -63,7 +64,7 @@ public class MaxMax<V, E> implements Clustering<V> {
      * @param <E> the type of edges in the graph
      * @return a factory function that sets up the algorithm for the given graph
      */
-    public static <V, E> Function<Graph<V, E>, Clustering<V>> provider() {
+    public static <V, E> Function<Graph<V, E>, ClusteringAlgorithm<V>> provider() {
         return MaxMax::new;
     }
 
@@ -82,7 +83,7 @@ public class MaxMax<V, E> implements Clustering<V> {
     }
 
     @Override
-    public void fit() {
+    public Clustering<V> getClustering() {
         digraph = new DefaultDirectedGraph<>(DefaultEdge.class);
         maximals = null;
         roots = null;
@@ -132,19 +133,15 @@ public class MaxMax<V, E> implements Clustering<V> {
                 }
             }
         });
-    }
 
-    @Override
-    public Collection<Collection<V>> getClusters() {
-        requireNonNull(roots, "call fit() first");
-
-        final var roots = this.roots.entrySet().stream().
+        // Final: Retrieving Clusters
+        final var rootNodes = this.roots.entrySet().stream().
                 filter(Map.Entry::getValue).
                 map(Map.Entry::getKey).
                 collect(Collectors.toSet());
 
-        return roots.stream().map(root -> {
-            final var visited = new HashSet<V>();
+        final var clusters = rootNodes.stream().map(root -> {
+            final var cluster = new HashSet<V>();
 
             final var queue = new LinkedList<V>();
             queue.add(root);
@@ -152,15 +149,17 @@ public class MaxMax<V, E> implements Clustering<V> {
             while (!queue.isEmpty()) {
                 final var v = queue.remove();
 
-                if (visited.contains(v)) continue;
+                if (cluster.contains(v)) continue;
 
-                visited.add(v);
+                cluster.add(v);
 
                 queue.addAll(Graphs.successorListOf(digraph, v));
             }
 
-            return visited;
-        }).collect(Collectors.toSet());
+            return (Set<V>) cluster;
+        }).collect(Collectors.toList());
+
+        return new ClusteringImpl<>(clusters);
     }
 
     /**
@@ -170,7 +169,7 @@ public class MaxMax<V, E> implements Clustering<V> {
      */
     @SuppressWarnings("WeakerAccess")
     public Graph<V, DefaultEdge> getDigraph() {
-        return new AsUnmodifiableGraph<>(requireNonNull(digraph, "call fit() first"));
+        return new AsUnmodifiableGraph<>(requireNonNull(digraph, "call getClustering() first"));
     }
 
     /**
@@ -180,7 +179,7 @@ public class MaxMax<V, E> implements Clustering<V> {
      */
     @SuppressWarnings("unused")
     public Map<V, Set<V>> getMaximals() {
-        return Collections.unmodifiableMap(requireNonNull(maximals, "call fit() first"));
+        return Collections.unmodifiableMap(requireNonNull(maximals, "call getClustering() first"));
     }
 
     /**
@@ -190,6 +189,6 @@ public class MaxMax<V, E> implements Clustering<V> {
      */
     @SuppressWarnings("WeakerAccess")
     public Map<V, Boolean> getRoots() {
-        return Collections.unmodifiableMap(requireNonNull(roots, "call fit() first"));
+        return Collections.unmodifiableMap(requireNonNull(roots, "call getClustering() first"));
     }
 }

@@ -22,12 +22,10 @@ import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
+import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
 import org.jgrapht.util.VertexToIntegerMapping;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
+import java.util.*;
 import java.util.function.Function;
 
 import static java.util.Objects.requireNonNull;
@@ -42,7 +40,7 @@ import static java.util.Objects.requireNonNull;
  * @see <a href="https://hdl.handle.net/1874/848">van Dongen (2000)</a>
  * @see <a href="https://doi.org/10.1137/040608635">van Dongen (2008)</a>
  */
-public class MarkovClustering<V, E> implements Clustering<V> {
+public class MarkovClustering<V, E> implements ClusteringAlgorithm<V> {
     /**
      * Builder for {@link MarkovClustering}.
      *
@@ -76,7 +74,7 @@ public class MarkovClustering<V, E> implements Clustering<V> {
         }
 
         @Override
-        public Function<Graph<V, E>, Clustering<V>> provider() {
+        public Function<Graph<V, E>, ClusteringAlgorithm<V>> provider() {
             return MarkovClustering.provider(e, r, iterations);
         }
 
@@ -124,24 +122,8 @@ public class MarkovClustering<V, E> implements Clustering<V> {
      * @param <E>        the type of edges in the graph
      * @return a factory function that sets up the algorithm for the given graph
      */
-    public static <V, E> Function<Graph<V, E>, Clustering<V>> provider(int e, double r, int iterations) {
+    public static <V, E> Function<Graph<V, E>, ClusteringAlgorithm<V>> provider(int e, double r, int iterations) {
         return graph -> new MarkovClustering<>(graph, e, r, iterations);
-    }
-
-    /**
-     * A factory function that sets up the algorithm for the given graph.
-     *
-     * @param e   the expansion parameter
-     * @param r   the inflation parameter
-     * @param <V> the type of nodes in the graph
-     * @param <E> the type of edges in the graph
-     * @return a factory function that sets up the algorithm for the given graph
-     * @deprecated Replaced with {@link #provider(int, double, int)}
-     */
-    @SuppressWarnings("unused")
-    @Deprecated
-    public static <V, E> Function<Graph<V, E>, Clustering<V>> provider(int e, double r) {
-        return provider(e, r, Builder.ITERATIONS);
     }
 
     /**
@@ -250,26 +232,15 @@ public class MarkovClustering<V, E> implements Clustering<V> {
         this.inflateVisitor = new InflateVisitor();
     }
 
-    /**
-     * Create an instance of the Markov Clustering algorithm.
-     *
-     * @param graph the graph
-     * @param e     the expansion parameter
-     * @param r     the inflation parameter
-     * @deprecated Replaced with {@link #MarkovClustering(Graph, int, double, int)}
-     */
-    @Deprecated
-    public MarkovClustering(Graph<V, E> graph, int e, double r) {
-        this(graph, e, r, Builder.ITERATIONS);
-    }
-
     @Override
-    public void fit() {
+    public Clustering<V> getClustering() {
         mapping = null;
         matrix = null;
         ones = null;
 
-        if (graph.vertexSet().isEmpty()) return;
+        if (graph.vertexSet().isEmpty()) {
+            return new ClusteringImpl<>(Collections.emptyList());
+        }
 
         mapping = Graphs.getVertexToIntegerMapping(graph);
 
@@ -289,16 +260,8 @@ public class MarkovClustering<V, E> implements Clustering<V> {
 
             if (matrix.equals(previous)) break;
         }
-    }
 
-    @Override
-    public Collection<Collection<V>> getClusters() {
-        requireNonNull(mapping, "call fit() first");
-        requireNonNull(matrix, "call fit() first");
-
-        if (graph.vertexSet().isEmpty()) return Collections.emptySet();
-
-        final var clusters = new HashSet<Collection<V>>();
+        final var clusters = new ArrayList<Set<V>>();
 
         for (var i = 0; i < matrix.getRowDimension(); i++) {
             final var cluster = new HashSet<V>();
@@ -310,7 +273,7 @@ public class MarkovClustering<V, E> implements Clustering<V> {
             if (!cluster.isEmpty()) clusters.add(cluster);
         }
 
-        return clusters;
+        return new ClusteringImpl<>(clusters);
     }
 
     /**

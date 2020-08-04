@@ -18,6 +18,7 @@
 package org.nlpub.watset.graph;
 
 import org.jgrapht.Graph;
+import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
 import org.jgrapht.graph.AsUnmodifiableGraph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
@@ -52,7 +53,7 @@ import static java.util.Objects.requireNonNull;
  * @deprecated Replaced with {@link SimplifiedWatset}
  */
 @Deprecated
-public class Watset<V, E> implements Clustering<V> {
+public class Watset<V, E> implements ClusteringAlgorithm<V> {
     /**
      * Builder for {@link Watset}.
      *
@@ -61,8 +62,8 @@ public class Watset<V, E> implements Clustering<V> {
      */
     @SuppressWarnings({"unused", "UnusedReturnValue"})
     public static class Builder<V, E> implements ClusteringBuilder<V, E, Watset<V, E>> {
-        private Function<Graph<V, E>, Clustering<V>> local;
-        private Function<Graph<Sense<V>, DefaultWeightedEdge>, Clustering<Sense<V>>> global;
+        private Function<Graph<V, E>, ClusteringAlgorithm<V>> local;
+        private Function<Graph<Sense<V>, DefaultWeightedEdge>, ClusteringAlgorithm<Sense<V>>> global;
         private ContextSimilarity<V> similarity = ContextSimilarities.cosine();
 
         @Override
@@ -71,7 +72,7 @@ public class Watset<V, E> implements Clustering<V> {
         }
 
         @Override
-        public Function<Graph<V, E>, Clustering<V>> provider() {
+        public Function<Graph<V, E>, ClusteringAlgorithm<V>> provider() {
             return Watset.provider(local, global, similarity);
         }
 
@@ -81,7 +82,7 @@ public class Watset<V, E> implements Clustering<V> {
          * @param local the local clustering algorithm supplier
          * @return the builder
          */
-        public Builder<V, E> setLocal(Function<Graph<V, E>, Clustering<V>> local) {
+        public Builder<V, E> setLocal(Function<Graph<V, E>, ClusteringAlgorithm<V>> local) {
             this.local = requireNonNull(local);
             return this;
         }
@@ -103,7 +104,7 @@ public class Watset<V, E> implements Clustering<V> {
          * @param global the global clustering algorithm supplier
          * @return the builder
          */
-        public Builder<V, E> setGlobal(Function<Graph<Sense<V>, DefaultWeightedEdge>, Clustering<Sense<V>>> global) {
+        public Builder<V, E> setGlobal(Function<Graph<Sense<V>, DefaultWeightedEdge>, ClusteringAlgorithm<Sense<V>>> global) {
             this.global = requireNonNull(global);
             return this;
         }
@@ -147,23 +148,8 @@ public class Watset<V, E> implements Clustering<V> {
      * @param <E>        the type of edges in the graph
      * @return a factory function that sets up the algorithm for the given graph
      */
-    public static <V, E> Function<Graph<V, E>, Clustering<V>> provider(Function<Graph<V, E>, Clustering<V>> local, Function<Graph<Sense<V>, DefaultWeightedEdge>, Clustering<Sense<V>>> global, ContextSimilarity<V> similarity) {
+    public static <V, E> Function<Graph<V, E>, ClusteringAlgorithm<V>> provider(Function<Graph<V, E>, ClusteringAlgorithm<V>> local, Function<Graph<Sense<V>, DefaultWeightedEdge>, ClusteringAlgorithm<Sense<V>>> global, ContextSimilarity<V> similarity) {
         return graph -> new Watset<>(graph, local, global, similarity);
-    }
-
-    /**
-     * A factory function that sets up the algorithm for the given graph.
-     *
-     * @param local  the local clustering algorithm supplier
-     * @param global the global clustering algorithm supplier
-     * @param <V>    the type of nodes in the graph
-     * @param <E>    the type of edges in the graph
-     * @return a factory function that sets up the algorithm for the given graph
-     * @deprecated Replaced with {@link #provider(Function, Function, ContextSimilarity)}
-     */
-    @Deprecated
-    public static <V, E> Function<Graph<V, E>, Clustering<V>> provider(Function<Graph<V, E>, Clustering<V>> local, Function<Graph<Sense<V>, DefaultWeightedEdge>, Clustering<Sense<V>>> global) {
-        return provider(local, global, ContextSimilarities.cosine());
     }
 
     private static final Logger logger = Logger.getLogger(Watset.class.getSimpleName());
@@ -176,7 +162,7 @@ public class Watset<V, E> implements Clustering<V> {
     /**
      * The global clustering algorithm supplier.
      */
-    protected final Function<Graph<Sense<V>, DefaultWeightedEdge>, Clustering<Sense<V>>> global;
+    protected final Function<Graph<Sense<V>, DefaultWeightedEdge>, ClusteringAlgorithm<Sense<V>>> global;
 
     /**
      * The context similarity measure.
@@ -201,7 +187,7 @@ public class Watset<V, E> implements Clustering<V> {
     /**
      * The sense clusters.
      */
-    protected Collection<Collection<Sense<V>>> senseClusters;
+    protected Clustering<Sense<V>> senseClusters;
 
     /**
      * The sense graph.
@@ -216,7 +202,7 @@ public class Watset<V, E> implements Clustering<V> {
      * @param global     the global clustering algorithm supplier
      * @param similarity the context similarity measure
      */
-    public Watset(Graph<V, E> graph, Function<Graph<V, E>, Clustering<V>> local, Function<Graph<Sense<V>, DefaultWeightedEdge>, Clustering<Sense<V>>> global, ContextSimilarity<V> similarity) {
+    public Watset(Graph<V, E> graph, Function<Graph<V, E>, ClusteringAlgorithm<V>> local, Function<Graph<Sense<V>, DefaultWeightedEdge>, ClusteringAlgorithm<Sense<V>>> global, ContextSimilarity<V> similarity) {
         this.graph = requireNonNull(graph);
         this.global = requireNonNull(global);
         this.similarity = requireNonNull(similarity);
@@ -224,7 +210,7 @@ public class Watset<V, E> implements Clustering<V> {
     }
 
     @Override
-    public void fit() {
+    public Clustering<V> getClustering() {
         senseClusters = null;
         senseGraph = null;
         inventory = null;
@@ -274,48 +260,43 @@ public class Watset<V, E> implements Clustering<V> {
         logger.info("Watset: sense graph constructed.");
 
         final var globalClustering = global.apply(senseGraph);
-        globalClustering.fit();
-
-        logger.info("Watset: extracting sense clusters.");
-
-        senseClusters = globalClustering.getClusters();
+        senseClusters = globalClustering.getClustering();
 
         logger.info("Watset finished.");
-    }
 
-    @Override
-    public Collection<Collection<V>> getClusters() {
-        return requireNonNull(senseClusters, "call fit() first").stream().
+        final var clusters = senseClusters.getClusters().stream().
                 map(cluster -> cluster.stream().map(Sense::get).collect(Collectors.toSet())).
-                collect(Collectors.toSet());
+                collect(Collectors.toList());
+
+        return new ClusteringImpl<>(clusters);
     }
 
     /**
-     * Get the sense inventory built during {@link #fit()}.
+     * Get the sense inventory built during {@link #getClustering()}.
      *
      * @return the sense inventory
      */
     @SuppressWarnings("unused")
     public Map<V, Map<Sense<V>, Map<V, Number>>> getInventory() {
-        return Collections.unmodifiableMap(requireNonNull(inventory, "call fit() first"));
+        return Collections.unmodifiableMap(requireNonNull(inventory, "call getClustering() first"));
     }
 
     /**
-     * Get the disambiguated contexts built during {@link #fit()}.
+     * Get the disambiguated contexts built during {@link #getClustering()}.
      *
      * @return the disambiguated contexts
      */
     public Map<Sense<V>, Map<Sense<V>, Number>> getContexts() {
-        return Collections.unmodifiableMap(requireNonNull(contexts, "call fit() first"));
+        return Collections.unmodifiableMap(requireNonNull(contexts, "call getClustering() first"));
     }
 
     /**
-     * Get the intermediate node sense graph built during {@link #fit()}.
+     * Get the intermediate node sense graph built during {@link #getClustering()}.
      *
      * @return the sense graph
      */
     public Graph<Sense<V>, DefaultWeightedEdge> getSenseGraph() {
-        return new AsUnmodifiableGraph<>(requireNonNull(senseGraph, "call fit() first"));
+        return new AsUnmodifiableGraph<>(requireNonNull(senseGraph, "call getClustering() first"));
     }
 
     /**

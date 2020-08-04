@@ -18,9 +18,11 @@
 package org.nlpub.watset.graph;
 
 import org.jgrapht.Graph;
+import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
 
-import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
 
 import static java.util.Objects.requireNonNull;
@@ -32,7 +34,7 @@ import static java.util.stream.Collectors.toList;
  * @param <V> the type of nodes in the graph
  * @param <E> the type of edges in the graph
  */
-public class SingletonClustering<V, E> implements Clustering<V> {
+public class SingletonClustering<V, E> implements ClusteringAlgorithm<V> {
     /**
      * Builder for {@link SingletonClustering}.
      *
@@ -47,7 +49,7 @@ public class SingletonClustering<V, E> implements Clustering<V> {
         }
 
         @Override
-        public Function<Graph<V, E>, Clustering<V>> provider() {
+        public Function<Graph<V, E>, ClusteringAlgorithm<V>> provider() {
             return SingletonClustering.provider();
         }
     }
@@ -59,12 +61,12 @@ public class SingletonClustering<V, E> implements Clustering<V> {
      * @param <E> the type of edges in the graph
      * @return a factory function that sets up the algorithm for the given graph
      */
-    public static <V, E> Function<Graph<V, E>, Clustering<V>> provider() {
+    public static <V, E> Function<Graph<V, E>, ClusteringAlgorithm<V>> provider() {
         return SingletonClustering::new;
     }
 
     private final Graph<V, E> graph;
-    private Collection<Collection<V>> clusters;
+    private List<Set<V>> clusters;
 
     /**
      * Set up the trivial clustering algorithm that puts every node in a separate cluster.
@@ -76,12 +78,9 @@ public class SingletonClustering<V, E> implements Clustering<V> {
     }
 
     @Override
-    public void fit() {
+    public Clustering<V> getClustering() {
         clusters = graph.vertexSet().stream().map(Collections::singleton).collect(toList());
-    }
 
-    @Override
-    public Collection<Collection<V>> getClusters() {
-        return requireNonNull(clusters, "call fit() first");
+        return new ClusteringImpl<>(clusters);
     }
 }

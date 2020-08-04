@@ -23,6 +23,7 @@ import org.jgrapht.graph.SimpleWeightedGraph;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
@@ -48,7 +49,7 @@ public class MaxMaxTest {
             addEdge("u", "v", 1).
             build();
 
-    private final static Set<Set<String>> CLUSTERS1 = Set.of(Set.of("r", "s", "t", "u", "v"), Set.of("w", "t", "x"));
+    private final static List<Set<String>> CLUSTERS1 = List.of(Set.of("r", "s", "t", "u", "v"), Set.of("w", "t", "x"));
 
     private final static Graph<String, DefaultWeightedEdge> GRAPH2 = SimpleWeightedGraph.<String, DefaultWeightedEdge>createBuilder(DefaultWeightedEdge.class).
             addVertices("a", "b", "c", "d", "e").
@@ -62,7 +63,7 @@ public class MaxMaxTest {
             addEdge("d", "e", 3).
             build();
 
-    private final static Set<Set<String>> CLUSTERS2 = Set.of(Set.of("a", "b", "c"), Set.of("c", "d", "e"));
+    private final static List<Set<String>> CLUSTERS2 = List.of(Set.of("a", "b", "c"), Set.of("c", "d", "e"));
 
     private final static MaxMax.Builder<String, DefaultWeightedEdge> BUILDER = new MaxMax.Builder<>();
 
@@ -72,8 +73,8 @@ public class MaxMaxTest {
 
     @Before
     public void setup() {
-        maxmax1.fit();
-        maxmax2.fit();
+        maxmax1.getClustering();
+        maxmax2.getClustering();
     }
 
     @Test
@@ -90,7 +91,7 @@ public class MaxMaxTest {
 
     @Test
     public void testClusters() {
-        assertEquals(CLUSTERS1, maxmax1.getClusters());
-        assertEquals(CLUSTERS2, maxmax2.getClusters());
+        assertEquals(CLUSTERS1, maxmax1.getClustering().getClusters());
+        assertEquals(CLUSTERS2, maxmax2.getClustering().getClusters());
     }
 }

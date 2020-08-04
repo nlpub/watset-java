@@ -19,6 +19,7 @@ package org.nlpub.watset.graph;
 
 import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
+import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
 
 import java.util.*;
 import java.util.function.Function;
@@ -34,7 +35,7 @@ import static org.nlpub.watset.util.Maximizer.argmaxRandom;
  * @param <E> the type of edges in the graph
  * @see <a href="https://doi.org/10.3115/1654758.1654774">Biemann (TextGraphs-1)</a>
  */
-public class ChineseWhispers<V, E> implements Clustering<V> {
+public class ChineseWhispers<V, E> implements ClusteringAlgorithm<V> {
     /**
      * Builder for {@link ChineseWhispers}.
      *
@@ -67,7 +68,7 @@ public class ChineseWhispers<V, E> implements Clustering<V> {
         }
 
         @Override
-        public Function<Graph<V, E>, Clustering<V>> provider() {
+        public Function<Graph<V, E>, ClusteringAlgorithm<V>> provider() {
             return ChineseWhispers.provider(weighting, iterations, random);
         }
 
@@ -116,23 +117,8 @@ public class ChineseWhispers<V, E> implements Clustering<V> {
      * @return a factory function that sets up the algorithm for the given graph
      */
     @SuppressWarnings("unused")
-    public static <V, E> Function<Graph<V, E>, Clustering<V>> provider(NodeWeighting<V, E> weighting, int iterations, Random random) {
+    public static <V, E> Function<Graph<V, E>, ClusteringAlgorithm<V>> provider(NodeWeighting<V, E> weighting, int iterations, Random random) {
         return graph -> new ChineseWhispers<>(graph, weighting, iterations, random);
-    }
-
-    /**
-     * A factory function that sets up the algorithm for the given graph.
-     *
-     * @param weighting the node weighting approach
-     * @param <V>       the type of nodes in the graph
-     * @param <E>       the type of edges in the graph
-     * @return a factory function that sets up the algorithm for the given graph
-     * @deprecated Replaced with {@link #provider(NodeWeighting, int, Random)}
-     */
-    @SuppressWarnings("unused")
-    @Deprecated
-    public static <V, E> Function<Graph<V, E>, Clustering<V>> provider(NodeWeighting<V, E> weighting) {
-        return graph -> new ChineseWhispers<>(graph, weighting);
     }
 
     /**
@@ -180,20 +166,8 @@ public class ChineseWhispers<V, E> implements Clustering<V> {
         this.random = requireNonNull(random);
     }
 
-    /**
-     * Create an instance of the Chinese Whispers algorithm.
-     *
-     * @param graph     the graph
-     * @param weighting the node weighting approach
-     * @deprecated Replaced with {{@link #ChineseWhispers(Graph, NodeWeighting, int, Random)}}
-     */
-    @Deprecated
-    public ChineseWhispers(Graph<V, E> graph, NodeWeighting<V, E> weighting) {
-        this(graph, weighting, Builder.ITERATIONS, new Random());
-    }
-
     @Override
-    public void fit() {
+    public Clustering<V> getClustering() {
         final var nodes = new ArrayList<>(graph.vertexSet());
 
         labels = new HashMap<>(nodes.size());
@@ -209,6 +183,16 @@ public class ChineseWhispers<V, E> implements Clustering<V> {
 
             if (step(nodes) == 0) break;
         }
+
+        final var groups = labels.entrySet().stream().collect(Collectors.groupingBy(Map.Entry::getValue));
+
+        final List<Set<V>> clusters = new ArrayList<>(groups.size());
+
+        for (final var cluster : groups.values()) {
+            clusters.add(cluster.stream().map(Map.Entry::getKey).collect(Collectors.toSet()));
+        }
+
+        return new ClusteringImpl<>(clusters);
     }
 
     /**
@@ -236,21 +220,6 @@ public class ChineseWhispers<V, E> implements Clustering<V> {
         }
 
         return changed;
-    }
-
-    @Override
-    public Collection<Collection<V>> getClusters() {
-        requireNonNull(labels, "call fit() first");
-
-        final var groups = labels.entrySet().stream().collect(Collectors.groupingBy(Map.Entry::getValue));
-
-        final List<Collection<V>> clusters = new ArrayList<>(groups.size());
-
-        for (final var cluster : groups.values()) {
-            clusters.add(cluster.stream().map(Map.Entry::getKey).collect(Collectors.toSet()));
-        }
-
-        return clusters;
     }
 
     /**
@@ -289,7 +258,7 @@ public class ChineseWhispers<V, E> implements Clustering<V> {
     }
 
     /**
-     * Return the number of iterations actually performed during {@link #fit()}.
+     * Return the number of iterations actually performed during {@link #getClustering()}.
      * Should be no larger than the value of {@link #getIterations()}.
      *
      * @return the number of iterations

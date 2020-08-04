@@ -59,17 +59,13 @@ public class MarkovClusteringTest {
 
     @Test
     public void testBipartiteClustering() {
-        mcl1.fit();
-
-        final var clusters = mcl1.getClusters();
-        assertEquals(2, clusters.size());
+        final var clustering = mcl1.getClustering();
+        assertEquals(2, clustering.getNumberClusters());
     }
 
     @Test
     public void testClustering() {
-        mcl2.fit();
-
-        final var clusters = mcl2.getClusters();
-        assertEquals(1, clusters.size());
+        final var clustering = mcl2.getClustering();
+        assertEquals(1, clustering.getNumberClusters());
     }
 }

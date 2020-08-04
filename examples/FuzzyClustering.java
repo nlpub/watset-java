@@ -37,13 +37,13 @@ public class FuzzyClustering {
 
         // MaxMax
         var maxmax = new MaxMax.Builder<String, DefaultWeightedEdge>().build(graph);
-        maxmax.fit();
+        var maxmaxClustering = maxmax.getClustering();
 
         System.out.print("MaxMax Digraph: ");
         System.out.println(maxmax.getDigraph());
 
         System.out.print("MaxMax Clusters: ");
-        System.out.println(maxmax.getClusters());
+        System.out.println(maxmaxClustering.getClusters());
 
         // Watset[MCL, CW]
         var local = new MarkovClustering.Builder<String, DefaultWeightedEdge>().provider();
@@ -54,12 +54,12 @@ public class FuzzyClustering {
                 setGlobal(global).
                 build(graph);
 
-        watset.fit();
+        var watsetClustering = watset.getClustering();
 
         System.out.print("Watset Sense Graph: ");
         System.out.println(watset.getSenseGraph());
 
         System.out.print("Watset Clusters: ");
-        System.out.println(watset.getClusters());
+        System.out.println(watsetClustering.getClusters());
     }
 }

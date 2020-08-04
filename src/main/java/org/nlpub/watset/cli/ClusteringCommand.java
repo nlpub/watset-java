@@ -17,7 +17,7 @@
 
 package org.nlpub.watset.cli;
 
-import org.nlpub.watset.graph.Clustering;
+import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
 import org.nlpub.watset.util.ILEFormat;
 
 import java.io.IOException;
@@ -38,8 +38,8 @@ abstract class ClusteringCommand extends Command {
 
     @Override
     public void run() {
-        final var clustering = getClustering();
-        clustering.fit();
+        final var algorithm = getAlgorithm();
+        final var clustering = algorithm.getClustering();
 
         try (final var writer = newOutputWriter()) {
             ILEFormat.write(writer, clustering);
@@ -53,5 +53,5 @@ abstract class ClusteringCommand extends Command {
      *
      * @return a fully-configured clustering algorithm
      */
-    public abstract Clustering<String> getClustering();
+    public abstract ClusteringAlgorithm<String> getAlgorithm();
 }

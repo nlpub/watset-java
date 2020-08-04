@@ -36,44 +36,44 @@ public class HardClustering {
 
         // Empty Clustering
         var empty = new EmptyClustering.Builder<String, DefaultWeightedEdge>().build(graph);
-        empty.fit();
+        var emptyClustering = empty.getClustering();
 
         System.out.print("Empty Clusters: ");
-        System.out.println(empty.getClusters());
+        System.out.println(emptyClustering.getClusters());
 
         // Singleton Clustering
         var singleton = new SingletonClustering.Builder<String, DefaultWeightedEdge>().build(graph);
-        singleton.fit();
+        var singletonClustering = singleton.getClustering();
 
         System.out.print("Singleton Clusters: ");
-        System.out.println(singleton.getClusters());
+        System.out.println(singletonClustering.getClusters());
 
         // Together Clustering
         var together = new TogetherClustering.Builder<String, DefaultWeightedEdge>().build(graph);
-        together.fit();
+        var togetherClustering = together.getClustering();
 
         System.out.print("Together Clusters: ");
-        System.out.println(together.getClusters());
+        System.out.println(togetherClustering.getClusters());
 
         // Connected Components
         var components = new ComponentsClustering.Builder<String, DefaultWeightedEdge>().build(graph);
-        components.fit();
+        var componentsClustering = components.getClustering();
 
         System.out.print("Components Clusters: ");
-        System.out.println(components.getClusters());
+        System.out.println(componentsClustering.getClusters());
 
         // Chinese Whispers
         var cw = new ChineseWhispers.Builder<String, DefaultWeightedEdge>().build(graph);
-        cw.fit();
+        var cwClustering = cw.getClustering();
 
         System.out.print("Chinese Whispers Clusters: ");
-        System.out.println(cw.getClusters());
+        System.out.println(cwClustering.getClusters());
 
         // Markov Clustering
         var mcl = new MarkovClustering.Builder<String, DefaultWeightedEdge>().build(graph);
-        mcl.fit();
+        var mclClustering = mcl.getClustering();
 
         System.out.print("Markov Clustering Clusters: ");
-        System.out.println(mcl.getClusters());
+        System.out.println(mclClustering.getClusters());
     }
 }

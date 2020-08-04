@@ -27,12 +27,11 @@ public class SingletonClusteringTest {
 
     @Before
     public void setup() {
-        singleton.fit();
     }
 
     @Test
     public void testClustering() {
-        final var clusters = singleton.getClusters();
-        Assert.assertEquals(ChineseWhispersTest.DISJOINT.vertexSet().size(), clusters.size());
+        final var clustering = singleton.getClustering();
+        Assert.assertEquals(ChineseWhispersTest.DISJOINT.vertexSet().size(), clustering.getNumberClusters());
     }
 }

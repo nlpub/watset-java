@@ -18,9 +18,13 @@
 package org.nlpub.watset.graph;
 
 import org.jgrapht.Graph;
+import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
 import org.nlpub.watset.util.Neighbors;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 import static java.util.Objects.requireNonNull;
@@ -43,7 +47,7 @@ public class SenseInduction<V, E> {
     /**
      * The local clustering algorithm supplier.
      */
-    protected final Function<Graph<V, E>, Clustering<V>> local;
+    protected final Function<Graph<V, E>, ClusteringAlgorithm<V>> local;
 
     /**
      * Create an instance of {@code SenseInduction}.
@@ -51,7 +55,7 @@ public class SenseInduction<V, E> {
      * @param graph the graph
      * @param local the neighborhood clustering algorithm supplier
      */
-    public SenseInduction(Graph<V, E> graph, Function<Graph<V, E>, Clustering<V>> local) {
+    public SenseInduction(Graph<V, E> graph, Function<Graph<V, E>, ClusteringAlgorithm<V>> local) {
         this.graph = requireNonNull(graph);
         this.local = requireNonNull(local);
     }
@@ -62,13 +66,10 @@ public class SenseInduction<V, E> {
      * @param target the target node
      * @return a map of senses to their contexts
      */
-    public Collection<Collection<V>> clusters(V target) {
+    public ClusteringAlgorithm.Clustering<V> clustering(V target) {
         final var ego = Neighbors.graph(graph, requireNonNull(target));
-
         final var clustering = local.apply(ego);
-        clustering.fit();
-
-        return clustering.getClusters();
+        return clustering.getClustering();
     }
 
     /**
@@ -78,11 +79,11 @@ public class SenseInduction<V, E> {
      * @return maps of senses to their contexts
      */
     public List<Map<V, Number>> contexts(V target) {
-        final var clusters = clusters(target);
+        final var clustering = clustering(target);
 
-        final var senses = new ArrayList<Map<V, Number>>(clusters.size());
+        final var senses = new ArrayList<Map<V, Number>>(clustering.getNumberClusters());
 
-        for (final var cluster : clusters) {
+        for (final var cluster : clustering.getClusters()) {
             final var context = new HashMap<V, Number>(cluster.size());
 
             for (final var neighbor : cluster) {

@@ -28,12 +28,11 @@ public class ComponentsClusteringTest {
 
     @Before
     public void setup() {
-        components.fit();
     }
 
     @Test
     public void testClustering() {
-        final var clusters = components.getClusters();
-        assertEquals(2, clusters.size());
+        final var clustering = components.getClustering();
+        assertEquals(2, clustering.getNumberClusters());
     }
 }

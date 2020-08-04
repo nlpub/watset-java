@@ -18,7 +18,8 @@
 package org.nlpub.watset.eval;
 
 import org.jgrapht.Graph;
-import org.nlpub.watset.graph.Clustering;
+import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
+import org.jgrapht.alg.util.Pair;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -40,9 +41,26 @@ import java.util.stream.Collectors;
  *
  * @param <V> the type of nodes in the graph
  * @param <E> the type of edges in the graph
- * @see Clustering
+ * @see ClusteringAlgorithm
  */
 public class Measurer<V, E> {
+    /**
+     * A performance measurement result.
+     *
+     * @param <V> the type of nodes in the graph
+     */
+    public static class Measurement<V> extends Pair<Duration, ClusteringAlgorithm.Clustering<V>> {
+        /**
+         * Create a performance measurement result.
+         *
+         * @param duration   the duration
+         * @param clustering the clustering
+         */
+        public Measurement(Duration duration, ClusteringAlgorithm.Clustering<V> clustering) {
+            super(duration, clustering);
+        }
+    }
+
     private static final Logger logger = Logger.getLogger(Measurer.class.getSimpleName());
 
     /**
@@ -55,7 +73,7 @@ public class Measurer<V, E> {
      */
     final static public int WARMUP = 5;
 
-    private final Function<Graph<V, E>, Clustering<V>> provider;
+    private final Function<Graph<V, E>, ClusteringAlgorithm<V>> provider;
     private final int repetitions, warmup;
     private final Graph<V, E> graph;
     private long[] durations;
@@ -69,7 +87,7 @@ public class Measurer<V, E> {
      * @param repetitions the number of repetitions
      * @param warmup      the number of off-record repetitions
      */
-    public Measurer(Function<Graph<V, E>, Clustering<V>> provider, Graph<V, E> graph, int repetitions, int warmup) {
+    public Measurer(Function<Graph<V, E>, ClusteringAlgorithm<V>> provider, Graph<V, E> graph, int repetitions, int warmup) {
         this.provider = provider;
         this.repetitions = repetitions;
         this.warmup = warmup;
@@ -82,7 +100,7 @@ public class Measurer<V, E> {
      * @param provider the clustering algorithm provider
      * @param graph    the graph
      */
-    public Measurer(Function<Graph<V, E>, Clustering<V>> provider, Graph<V, E> graph) {
+    public Measurer(Function<Graph<V, E>, ClusteringAlgorithm<V>> provider, Graph<V, E> graph) {
         this(provider, graph, REPETITIONS, WARMUP);
     }
 
@@ -126,23 +144,22 @@ public class Measurer<V, E> {
         clusters = new int[repetitions];
 
         for (var i = -warmup; i < repetitions; i++) {
-            final var clustering = provider.apply(graph);
-
-            final var duration = measure(clustering);
+            final var algorithm = provider.apply(graph);
+            final var result = measure(algorithm);
 
             if (i >= 0) {
-                durations[i] = duration.toMillis();
-                clusters[i] = clustering.getClusters().size();
+                durations[i] = result.getFirst().toMillis();
+                clusters[i] = result.getSecond().getNumberClusters();
             }
         }
 
         logger.info("Evaluation complete.");
     }
 
-    private Duration measure(Clustering<V> clustering) {
+    private Measurement<V> measure(ClusteringAlgorithm<V> algorithm) {
         final var start = Instant.now();
-        clustering.fit();
+        final var clustering = algorithm.getClustering();
         final var end = Instant.now();
-        return Duration.between(start, end);
+        return new Measurement<>(Duration.between(start, end), clustering);
     }
 }

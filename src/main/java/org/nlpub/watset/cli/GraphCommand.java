@@ -45,7 +45,7 @@ class GraphCommand extends LocalWatsetCommand {
 
     @Override
     public void run() {
-        final var senseGraph = fitSenseGraph(getAlgorithm(), getGraph());
+        final var senseGraph = getSenseGraph(getAlgorithm(), getGraph());
 
         try {
             write(senseGraph);
@@ -54,14 +54,14 @@ class GraphCommand extends LocalWatsetCommand {
         }
     }
 
-    private Graph<Sense<String>, DefaultWeightedEdge> fitSenseGraph(AlgorithmProvider<String, DefaultWeightedEdge> algorithm, Graph<String, DefaultWeightedEdge> graph) {
+    private Graph<Sense<String>, DefaultWeightedEdge> getSenseGraph(AlgorithmProvider<String, DefaultWeightedEdge> algorithm, Graph<String, DefaultWeightedEdge> graph) {
         if (local.simplified) {
             final var watset = getSimplifiedWatset(algorithm, EmptyClustering.provider(), graph);
-            watset.fit();
+            watset.getClustering();
             return watset.getSenseGraph();
         } else {
             final var watset = getWatset(algorithm, EmptyClustering.provider(), graph);
-            watset.fit();
+            watset.getClustering();
             return watset.getSenseGraph();
         }
     }

@@ -21,19 +21,18 @@ import org.jgrapht.graph.DefaultWeightedEdge;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 public class EmptyClusteringTest {
     private final EmptyClustering<String> empty = new EmptyClustering.Builder<String, DefaultWeightedEdge>().build(ChineseWhispersTest.DISJOINT);
 
     @Before
     public void setup() {
-        empty.fit();
     }
 
     @Test
     public void testClustering() {
-        final var clusters = empty.getClusters();
-        assertTrue(clusters.isEmpty());
+        final var clustering = empty.getClustering();
+        assertEquals(0, clustering.getNumberClusters());
     }
 }

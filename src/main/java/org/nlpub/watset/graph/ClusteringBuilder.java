@@ -18,17 +18,18 @@
 package org.nlpub.watset.graph;
 
 import org.jgrapht.Graph;
+import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
 
 import java.util.function.Function;
 
 /**
- * A builder for constructing the {@link Clustering} instances.
+ * A builder for constructing the {@link ClusteringAlgorithm} instances.
  *
  * @param <V> the type of nodes in the graph
  * @param <E> the type of edges in the graph
  * @param <C> the type of clustering algorithm
  */
-public interface ClusteringBuilder<V, E, C extends Clustering<V>> {
+public interface ClusteringBuilder<V, E, C extends ClusteringAlgorithm<V>> {
     /**
      * Construct an instance of the clustering algorithm with the parameters specified in the builder.
      *
@@ -43,5 +44,5 @@ public interface ClusteringBuilder<V, E, C extends Clustering<V>> {
      *
      * @return a factory function that sets up the algorithm for the given graph
      */
-    Function<Graph<V, E>, Clustering<V>> provider();
+    Function<Graph<V, E>, ClusteringAlgorithm<V>> provider();
 }

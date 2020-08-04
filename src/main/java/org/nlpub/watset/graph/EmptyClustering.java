@@ -18,8 +18,8 @@
 package org.nlpub.watset.graph;
 
 import org.jgrapht.Graph;
+import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.function.Function;
 
@@ -30,7 +30,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @param <V> the type of nodes in the graph
  */
-public class EmptyClustering<V> implements Clustering<V> {
+public class EmptyClustering<V> implements ClusteringAlgorithm<V> {
     /**
      * Builder for {@link EmptyClustering}.
      *
@@ -46,7 +46,7 @@ public class EmptyClustering<V> implements Clustering<V> {
         }
 
         @Override
-        public Function<Graph<V, E>, Clustering<V>> provider() {
+        public Function<Graph<V, E>, ClusteringAlgorithm<V>> provider() {
             return EmptyClustering.provider();
         }
     }
@@ -58,17 +58,12 @@ public class EmptyClustering<V> implements Clustering<V> {
      * @param <E> the type of edges in the graph
      * @return a factory function that sets up the algorithm for the given graph
      */
-    public static <V, E> Function<Graph<V, E>, Clustering<V>> provider() {
+    public static <V, E> Function<Graph<V, E>, ClusteringAlgorithm<V>> provider() {
         return graph -> new EmptyClustering<>();
     }
 
     @Override
-    public void fit() {
-        // This method should not do anything.
-    }
-
-    @Override
-    public Collection<Collection<V>> getClusters() {
-        return Collections.emptySet();
+    public Clustering<V> getClustering() {
+        return new ClusteringImpl<>(Collections.emptyList());
     }
 }

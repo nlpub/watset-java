@@ -28,13 +28,12 @@ public class TogetherClusteringTest {
 
     @Before
     public void setup() {
-        together.fit();
     }
 
     @Test
     public void testClustering() {
-        final var clusters = together.getClusters();
-        assertEquals(1, clusters.size());
-        assertEquals(ChineseWhispersTest.DISJOINT.vertexSet(), clusters.toArray()[0]);
+        final var clustering = together.getClustering();
+        assertEquals(1, clustering.getNumberClusters());
+        assertEquals(ChineseWhispersTest.DISJOINT.vertexSet(), clustering.getClusters().toArray()[0]);
     }
 }

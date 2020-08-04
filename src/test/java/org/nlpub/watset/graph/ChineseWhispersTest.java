@@ -44,12 +44,11 @@ public class ChineseWhispersTest {
 
     @Before
     public void setup() {
-        cw.fit();
     }
 
     @Test
     public void testClustering() {
-        final var clusters = cw.getClusters();
-        assertEquals(2, clusters.size());
+        final var clustering = cw.getClustering();
+        assertEquals(2, clustering.getNumberClusters());
     }
 }

@@ -48,7 +48,7 @@ class SensesCommand extends LocalWatsetCommand {
 
     @Override
     public void run() {
-        final var contexts = fitContexts(getAlgorithm(), getGraph());
+        final var contexts = getContexts(getAlgorithm(), getGraph());
 
         try {
             write(contexts);
@@ -57,14 +57,14 @@ class SensesCommand extends LocalWatsetCommand {
         }
     }
 
-    private Map<Sense<String>, Map<Sense<String>, Number>> fitContexts(AlgorithmProvider<String, DefaultWeightedEdge> algorithm, Graph<String, DefaultWeightedEdge> graph) {
+    private Map<Sense<String>, Map<Sense<String>, Number>> getContexts(AlgorithmProvider<String, DefaultWeightedEdge> algorithm, Graph<String, DefaultWeightedEdge> graph) {
         if (local.simplified) {
             final var watset = getSimplifiedWatset(algorithm, EmptyClustering.provider(), graph);
-            watset.fit();
+            watset.getClustering();
             return watset.getContexts();
         } else {
             final var watset = getWatset(algorithm, EmptyClustering.provider(), graph);
-            watset.fit();
+            watset.getClustering();
             return watset.getContexts();
         }
     }

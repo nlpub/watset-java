@@ -38,12 +38,11 @@ public class WatsetTest {
 
     @Before
     public void setup() {
-        watset.fit();
     }
 
     @Test
     public void testClustering() {
-        final var clusters = watset.getClusters();
-        assertEquals(4, clusters.size());
+        final var clustering = watset.getClustering();
+        assertEquals(4, clustering.getNumberClusters());
     }
 }

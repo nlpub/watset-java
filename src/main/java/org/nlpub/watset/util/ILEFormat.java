@@ -17,7 +17,7 @@
 
 package org.nlpub.watset.util;
 
-import org.nlpub.watset.graph.Clustering;
+import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -48,7 +48,7 @@ public final class ILEFormat {
      * @param writer     the writer
      * @param clustering the clusters
      */
-    public static void write(BufferedWriter writer, Clustering<String> clustering) {
+    public static void write(BufferedWriter writer, ClusteringAlgorithm.Clustering<String> clustering) {
         final var counter = new AtomicInteger(0);
 
         clustering.getClusters().stream().

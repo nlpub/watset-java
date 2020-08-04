@@ -19,6 +19,7 @@ package org.nlpub.watset.graph;
 
 import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
+import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
 import org.jgrapht.util.VertexToIntegerMapping;
 
 import java.io.*;
@@ -26,13 +27,13 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Locale;
 import java.util.function.Function;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
 /**
@@ -48,7 +49,7 @@ import static java.util.stream.Collectors.toSet;
  * @see <a href="https://micans.org/mcl/">MCL - a cluster algorithm for graphs</a>
  */
 @SuppressWarnings("ALL")
-public class MarkovClusteringExternal<V, E> implements Clustering<V> {
+public class MarkovClusteringExternal<V, E> implements ClusteringAlgorithm<V> {
     /**
      * Builder for {@link MarkovClusteringExternal}.
      *
@@ -77,7 +78,7 @@ public class MarkovClusteringExternal<V, E> implements Clustering<V> {
         }
 
         @Override
-        public Function<Graph<V, E>, Clustering<V>> provider() {
+        public Function<Graph<V, E>, ClusteringAlgorithm<V>> provider() {
             return MarkovClusteringExternal.provider(path, r, threads);
         }
 
@@ -157,24 +158,8 @@ public class MarkovClusteringExternal<V, E> implements Clustering<V> {
      * @param <E>     the type of edges in the graph
      * @return a factory function that sets up the algorithm for the given graph
      */
-    public static <V, E> Function<Graph<V, E>, Clustering<V>> provider(Path mcl, double r, int threads) {
+    public static <V, E> Function<Graph<V, E>, ClusteringAlgorithm<V>> provider(Path mcl, double r, int threads) {
         return graph -> new MarkovClusteringExternal<>(graph, mcl, r, threads);
-    }
-
-    /**
-     * A factory function that sets up the algorithm for the given graph.
-     *
-     * @param mcl the path to the MCL binary
-     * @param r   the inflation parameter
-     * @param <V> the type of nodes in the graph
-     * @param <E> the type of edges in the graph
-     * @return a factory function that sets up the algorithm for the given graph
-     * @deprecated Replaced with {@link #provider(Path, double, int)}
-     */
-    @SuppressWarnings("unused")
-    @Deprecated
-    public static <V, E> Function<Graph<V, E>, Clustering<V>> provider(Path mcl, double r) {
-        return graph -> new MarkovClusteringExternal<>(graph, mcl, r);
     }
 
     /**
@@ -192,36 +177,8 @@ public class MarkovClusteringExternal<V, E> implements Clustering<V> {
         this.threads = threads;
     }
 
-    /**
-     * Create an instance of the Markov Clustering algorithm wrapper.
-     *
-     * @param graph the graph
-     * @param path  the path to the MCL binary
-     * @param r     the inflation parameter
-     * @deprecated {@link #MarkovClusteringExternal(Graph, Path, double, int)}
-     */
-    @Deprecated
-    public MarkovClusteringExternal(Graph<V, E> graph, Path path, double r) {
-        this(graph, path, r, Builder.THREADS);
-    }
-
     @Override
-    public Collection<Collection<V>> getClusters() {
-        requireNonNull(mapping, "call fit() first");
-        requireNonNull(output, "call fit() first");
-
-        try (var stream = Files.lines(output.toPath())) {
-            return stream.map(line -> Arrays.stream(line.split("\t")).
-                    map(id -> mapping.getIndexList().get(Integer.valueOf(id))).
-                    collect(toSet())).
-                    collect(toSet());
-        } catch (IOException ex) {
-            throw new IllegalStateException("Clusters cannot be read.", ex);
-        }
-    }
-
-    @Override
-    public void fit() {
+    public Clustering<V> getClustering() {
         logger.info("Preparing for Markov Clustering.");
 
         mapping = Graphs.getVertexToIntegerMapping(graph);
@@ -233,6 +190,17 @@ public class MarkovClusteringExternal<V, E> implements Clustering<V> {
         }
 
         logger.info("Markov Clustering finished.");
+
+        try (var stream = Files.lines(output.toPath())) {
+            final var clusters = stream.map(line -> Arrays.stream(line.split("\t")).
+                    map(id -> mapping.getIndexList().get(Integer.valueOf(id))).
+                    collect(toSet())).
+                    collect(toList());
+
+            return new ClusteringImpl<>(clusters);
+        } catch (IOException ex) {
+            throw new IllegalStateException("Clusters cannot be read.", ex);
+        }
     }
 
     private void process() throws IOException {

@@ -18,13 +18,17 @@
 package org.nlpub.watset.graph;
 
 import org.jgrapht.Graph;
+import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
 import org.jgrapht.graph.AsUnmodifiableGraph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
 import org.nlpub.watset.util.IndexedSense;
 import org.nlpub.watset.util.Sense;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.logging.Level;
@@ -43,7 +47,7 @@ import static java.util.Objects.requireNonNull;
  * @param <E> the type of edges in the graph
  * @see <a href="https://doi.org/10.1162/COLI_a_00354">Ustalov et al. (COLI 45:3)</a>
  */
-public class SimplifiedWatset<V, E> implements Clustering<V> {
+public class SimplifiedWatset<V, E> implements ClusteringAlgorithm<V> {
     /**
      * Builder for {@link SimplifiedWatset}.
      *
@@ -52,8 +56,8 @@ public class SimplifiedWatset<V, E> implements Clustering<V> {
      */
     @SuppressWarnings({"unused", "UnusedReturnValue"})
     public static class Builder<V, E> implements ClusteringBuilder<V, E, SimplifiedWatset<V, E>> {
-        private Function<Graph<V, E>, Clustering<V>> local;
-        private Function<Graph<Sense<V>, DefaultWeightedEdge>, Clustering<Sense<V>>> global;
+        private Function<Graph<V, E>, ClusteringAlgorithm<V>> local;
+        private Function<Graph<Sense<V>, DefaultWeightedEdge>, ClusteringAlgorithm<Sense<V>>> global;
 
         @Override
         public SimplifiedWatset<V, E> build(Graph<V, E> graph) {
@@ -61,7 +65,7 @@ public class SimplifiedWatset<V, E> implements Clustering<V> {
         }
 
         @Override
-        public Function<Graph<V, E>, Clustering<V>> provider() {
+        public Function<Graph<V, E>, ClusteringAlgorithm<V>> provider() {
             return SimplifiedWatset.provider(local, global);
         }
 
@@ -71,7 +75,7 @@ public class SimplifiedWatset<V, E> implements Clustering<V> {
          * @param local the local clustering algorithm supplier
          * @return the builder
          */
-        public Builder<V, E> setLocal(Function<Graph<V, E>, Clustering<V>> local) {
+        public Builder<V, E> setLocal(Function<Graph<V, E>, ClusteringAlgorithm<V>> local) {
             this.local = requireNonNull(local);
             return this;
         }
@@ -93,7 +97,7 @@ public class SimplifiedWatset<V, E> implements Clustering<V> {
          * @param global the global clustering algorithm supplier
          * @return the builder
          */
-        public Builder<V, E> setGlobal(Function<Graph<Sense<V>, DefaultWeightedEdge>, Clustering<Sense<V>>> global) {
+        public Builder<V, E> setGlobal(Function<Graph<Sense<V>, DefaultWeightedEdge>, ClusteringAlgorithm<Sense<V>>> global) {
             this.global = requireNonNull(global);
             return this;
         }
@@ -119,7 +123,7 @@ public class SimplifiedWatset<V, E> implements Clustering<V> {
      * @param <E>    the type of edges in the graph
      * @return a factory function that sets up the algorithm for the given graph
      */
-    public static <V, E> Function<Graph<V, E>, Clustering<V>> provider(Function<Graph<V, E>, Clustering<V>> local, Function<Graph<Sense<V>, DefaultWeightedEdge>, Clustering<Sense<V>>> global) {
+    public static <V, E> Function<Graph<V, E>, ClusteringAlgorithm<V>> provider(Function<Graph<V, E>, ClusteringAlgorithm<V>> local, Function<Graph<Sense<V>, DefaultWeightedEdge>, ClusteringAlgorithm<Sense<V>>> global) {
         return graph -> new SimplifiedWatset<>(graph, local, global);
     }
 
@@ -138,7 +142,7 @@ public class SimplifiedWatset<V, E> implements Clustering<V> {
     /**
      * The global clustering algorithm supplier.
      */
-    protected final Function<Graph<Sense<V>, DefaultWeightedEdge>, Clustering<Sense<V>>> global;
+    protected final Function<Graph<Sense<V>, DefaultWeightedEdge>, ClusteringAlgorithm<Sense<V>>> global;
 
     /**
      * The sense graph.
@@ -148,7 +152,7 @@ public class SimplifiedWatset<V, E> implements Clustering<V> {
     /**
      * The node sense clusters.
      */
-    protected Collection<Collection<Sense<V>>> senseClusters;
+    protected Clustering<Sense<V>> senseClusters;
 
     /**
      * The sense inventory.
@@ -167,14 +171,14 @@ public class SimplifiedWatset<V, E> implements Clustering<V> {
      * @param local  the local clustering algorithm supplier
      * @param global the global clustering algorithm supplier
      */
-    public SimplifiedWatset(Graph<V, E> graph, Function<Graph<V, E>, Clustering<V>> local, Function<Graph<Sense<V>, DefaultWeightedEdge>, Clustering<Sense<V>>> global) {
+    public SimplifiedWatset(Graph<V, E> graph, Function<Graph<V, E>, ClusteringAlgorithm<V>> local, Function<Graph<Sense<V>, DefaultWeightedEdge>, ClusteringAlgorithm<Sense<V>>> global) {
         this.graph = requireNonNull(graph);
         this.inducer = new SenseInduction<>(graph, requireNonNull(local));
         this.global = requireNonNull(global);
     }
 
     @Override
-    public void fit() {
+    public Clustering<V> getClustering() {
         senseClusters = null;
 
         inventory = new ConcurrentHashMap<>(graph.vertexSet().size());
@@ -183,23 +187,23 @@ public class SimplifiedWatset<V, E> implements Clustering<V> {
         logger.info("Simplified Watset started.");
 
         graph.vertexSet().parallelStream().forEach(node -> {
-            final var clusters = inducer.clusters(node);
+            final var clustering = inducer.clustering(node);
 
             if (nonNull(inventory.put(node, new HashMap<>()))) {
                 throw new IllegalStateException("The target node is already in the inventory");
             }
 
-            if (nonNull(senses.put(node, new ArrayList<>(clusters.size())))) {
+            if (nonNull(senses.put(node, new ArrayList<>(clustering.getNumberClusters())))) {
                 throw new IllegalStateException("The target node is already in the sense index");
             }
 
-            if (clusters.isEmpty()) {
+            if (clustering.getNumberClusters() == 0) {
                 senses.get(node).add(new IndexedSense<>(node, 0));
             }
 
             var i = 0;
 
-            for (final var cluster : clusters) {
+            for (final var cluster : clustering) {
                 senses.get(node).add(i, new IndexedSense<>(node, i));
 
                 for (final var neighbor : cluster) {
@@ -245,40 +249,35 @@ public class SimplifiedWatset<V, E> implements Clustering<V> {
         logger.info("Simplified Watset: sense graph constructed.");
 
         final var globalClustering = global.apply(senseGraph);
-        globalClustering.fit();
-
-        logger.info("Simplified Watset: extracting sense clusters.");
-
-        senseClusters = globalClustering.getClusters();
+        senseClusters = globalClustering.getClustering();
 
         logger.info("Simplified Watset finished.");
-    }
 
-    @Override
-    public Collection<Collection<V>> getClusters() {
-        return requireNonNull(senseClusters, "call fit() first").stream().
+        final var clusters = senseClusters.getClusters().stream().
                 map(cluster -> cluster.stream().map(Sense::get).collect(Collectors.toSet())).
-                collect(Collectors.toSet());
+                collect(Collectors.toList());
+
+        return new ClusteringImpl<>(clusters);
     }
 
     /**
-     * Get the intermediate node sense graph built during {@link #fit()}.
+     * Get the intermediate node sense graph built during {@link #getClustering()}.
      *
      * @return the sense graph
      */
     public Graph<Sense<V>, DefaultWeightedEdge> getSenseGraph() {
-        return new AsUnmodifiableGraph<>(requireNonNull(senseGraph, "call fit() first"));
+        return new AsUnmodifiableGraph<>(requireNonNull(senseGraph, "call getClustering() first"));
     }
 
     /**
-     * Get the disambiguated contexts built during {@link #fit()}.
+     * Get the disambiguated contexts built during {@link #getClustering()}.
      *
      * @return the disambiguated contexts
      */
     public Map<Sense<V>, Map<Sense<V>, Number>> getContexts() {
         final var contexts = new HashMap<Sense<V>, Map<Sense<V>, Number>>();
 
-        for (final var edge : requireNonNull(senseGraph, "call fit() first").edgeSet()) {
+        for (final var edge : requireNonNull(senseGraph, "call getClustering() first").edgeSet()) {
             final Sense<V> source = senseGraph.getEdgeSource(edge), target = senseGraph.getEdgeTarget(edge);
             final var weight = senseGraph.getEdgeWeight(edge);
 

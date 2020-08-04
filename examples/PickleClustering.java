@@ -33,10 +33,10 @@ public class PickleClustering {
             var graph = NetworkXFormat.<Integer>load(NetworkXFormat.parse(stream));
 
             var cw = new ChineseWhispers.Builder<Integer, DefaultWeightedEdge>().build(graph);
-            cw.fit();
+            var clustering = cw.getClustering();
 
             System.out.print("Chinese Whispers Clusters: ");
-            System.out.println(cw.getClusters());
+            System.out.println(clustering.getClusters());
         }
     }
 }

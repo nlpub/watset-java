@@ -18,6 +18,7 @@
 package org.nlpub.watset.util;
 
 import org.jgrapht.Graph;
+import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
 import org.nlpub.watset.graph.*;
 
 import java.nio.file.Path;
@@ -36,7 +37,7 @@ import static java.util.Objects.requireNonNullElse;
  * @param <V> the type of nodes in the graph
  * @param <E> the type of edges in the graph
  */
-public class AlgorithmProvider<V, E> implements Function<Graph<V, E>, Clustering<V>> {
+public class AlgorithmProvider<V, E> implements Function<Graph<V, E>, ClusteringAlgorithm<V>> {
     private static final Logger logger = Logger.getLogger(AlgorithmProvider.class.getSimpleName());
 
     private final String algorithm;
@@ -65,7 +66,7 @@ public class AlgorithmProvider<V, E> implements Function<Graph<V, E>, Clustering
     }
 
     @Override
-    public Clustering<V> apply(Graph<V, E> graph) {
+    public ClusteringAlgorithm<V> apply(Graph<V, E> graph) {
         switch (algorithm.toLowerCase(Locale.ROOT)) {
             case "empty":
                 return new EmptyClustering.Builder<V, E>().build(graph);
