@@ -308,7 +308,6 @@ public class ChineseWhispers<V, E> implements ClusteringAlgorithm<V> {
          * Return the number of iterations specified in the constructor
          *
          * @return the number of iterations
-         * @see #ChineseWhispers(Graph, NodeWeighting, int, Random)
          */
         @SuppressWarnings("unused")
         public int getIterations() {
