@@ -333,6 +333,11 @@ public class SimplifiedWatset<V, E> implements ClusteringAlgorithm<V> {
         private final Graph<Sense<V>, DefaultWeightedEdge> senseGraph;
 
         /**
+         * The cached disambiguated contexts.
+         */
+        private Map<Sense<V>, Map<Sense<V>, Number>> contexts;
+
+        /**
          * Construct a new Watset clustering.
          *
          * @param clusters   the clusters
@@ -361,27 +366,29 @@ public class SimplifiedWatset<V, E> implements ClusteringAlgorithm<V> {
 
         @Override
         public Map<Sense<V>, Map<Sense<V>, Number>> getContexts() {
-            final var contexts = new HashMap<Sense<V>, Map<Sense<V>, Number>>();
+            if (isNull(contexts)) {
+                contexts = new HashMap<>();
 
-            for (final var edge : senseGraph.edgeSet()) {
-                final Sense<V> source = senseGraph.getEdgeSource(edge), target = senseGraph.getEdgeTarget(edge);
-                final var weight = senseGraph.getEdgeWeight(edge);
+                for (final var edge : senseGraph.edgeSet()) {
+                    final Sense<V> source = senseGraph.getEdgeSource(edge), target = senseGraph.getEdgeTarget(edge);
+                    final var weight = senseGraph.getEdgeWeight(edge);
 
-                if (!contexts.containsKey(source)) contexts.put(source, new HashMap<>());
-                if (!contexts.containsKey(target)) contexts.put(target, new HashMap<>());
+                    if (!contexts.containsKey(source)) contexts.put(source, new HashMap<>());
+                    if (!contexts.containsKey(target)) contexts.put(target, new HashMap<>());
 
-                contexts.get(source).put(target, weight);
-                contexts.get(target).put(source, weight);
+                    contexts.get(source).put(target, weight);
+                    contexts.get(target).put(source, weight);
+                }
+
+                if (contexts.size() != senseGraph.vertexSet().size()) {
+                    throw new IllegalStateException("Mismatch in number of senses: expected " +
+                            senseGraph.vertexSet().size() +
+                            ", but got " +
+                            contexts.size());
+                }
             }
 
-            if (contexts.size() != senseGraph.vertexSet().size()) {
-                throw new IllegalStateException("Mismatch in number of senses: expected " +
-                        senseGraph.vertexSet().size() +
-                        ", but got " +
-                        contexts.size());
-            }
-
-            return contexts;
+            return Collections.unmodifiableMap(contexts);
         }
     }
 }
