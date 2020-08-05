@@ -355,6 +355,7 @@ public class SimplifiedWatset<V, E> implements ClusteringAlgorithm<V> {
          *
          * @return the sense inventory
          */
+        @SuppressWarnings("unused")
         public Map<V, Map<V, Integer>> getInventory() {
             return inventory;
         }
