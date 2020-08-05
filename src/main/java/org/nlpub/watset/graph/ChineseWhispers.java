@@ -25,6 +25,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.requireNonNull;
 import static org.jgrapht.GraphTests.requireUndirected;
 import static org.nlpub.watset.util.Maximizer.argmaxRandom;
@@ -143,14 +144,9 @@ public class ChineseWhispers<V, E> implements ClusteringAlgorithm<V> {
     protected final Random random;
 
     /**
-     * The mapping of nodes to labels.
+     * The cached clustering result.
      */
-    protected Map<V, Integer> labels;
-
-    /**
-     * The number of actual algorithm iterations.
-     */
-    protected int steps;
+    private Clustering<V> clustering;
 
     /**
      * Create an instance of the Chinese Whispers algorithm.
@@ -169,103 +165,165 @@ public class ChineseWhispers<V, E> implements ClusteringAlgorithm<V> {
 
     @Override
     public Clustering<V> getClustering() {
-        final var nodes = new ArrayList<>(graph.vertexSet());
-
-        labels = new HashMap<>(nodes.size());
-
-        var i = 0;
-
-        for (final var node : graph.vertexSet()) {
-            labels.put(node, i++);
+        if (isNull(clustering)) {
+            clustering = new Implementation<>(graph, weighting, iterations, random).compute();
         }
 
-        for (steps = 0; steps < iterations; steps++) {
-            Collections.shuffle(nodes, random);
-
-            if (step(nodes) == 0) break;
-        }
-
-        final var groups = labels.entrySet().stream().collect(Collectors.groupingBy(Map.Entry::getValue));
-
-        final List<Set<V>> clusters = new ArrayList<>(groups.size());
-
-        for (final var cluster : groups.values()) {
-            clusters.add(cluster.stream().map(Map.Entry::getKey).collect(Collectors.toSet()));
-        }
-
-        return new ClusteringImpl<>(clusters);
+        return clustering;
     }
 
     /**
-     * Perform one iteration of the algorithm.
+     * Actual implementation of Chinese Whispers.
      *
-     * @param nodes the list of nodes
-     * @return whether any label changed or not
+     * @param <V> the type of nodes in the graph
+     * @param <E> the type of edges in the graph
      */
-    protected int step(List<V> nodes) {
-        var changed = 0;
+    protected static class Implementation<V, E> {
+        /**
+         * The graph.
+         */
+        protected final Graph<V, E> graph;
 
-        for (final var node : nodes) {
-            final var scores = score(graph, labels, weighting, node);
+        /**
+         * The node weighting approach.
+         */
+        protected final NodeWeighting<V, E> weighting;
 
-            final var label = argmaxRandom(scores.entrySet().iterator(), Map.Entry::getValue, random);
+        /**
+         * The number of iterations.
+         */
+        protected final int iterations;
 
-            final int updated = label.isPresent() ? label.get().getKey() : labels.get(node);
+        /**
+         * The random number generator.
+         */
+        protected final Random random;
 
-            // labels.put() never returns null for a known node
-            @SuppressWarnings("ConstantConditions") final int previous = labels.put(node, updated);
+        /**
+         * The mapping of nodes to labels.
+         */
+        protected final Map<V, Integer> labels;
 
-            if (previous != updated) {
-                changed++;
+        /**
+         * The number of actual algorithm iterations.
+         */
+        protected int steps;
+
+        /**
+         * Create an instance of the Chinese Whispers clustering algorithm implementation.
+         *
+         * @param graph      the graph
+         * @param weighting  the node weighting approach
+         * @param iterations the number of iterations
+         * @param random     the random number generator
+         */
+        private Implementation(Graph<V, E> graph, NodeWeighting<V, E> weighting, int iterations, Random random) {
+            this.graph = graph;
+            this.weighting = weighting;
+            this.iterations = iterations;
+            this.random = random;
+            this.labels = new HashMap<>(graph.vertexSet().size());
+        }
+
+        /**
+         * Perform clustering with Chinese Whispers.
+         *
+         * @return the clustering
+         */
+        public Clustering<V> compute() {
+            final var nodes = new ArrayList<>(graph.vertexSet());
+
+            var i = 0;
+
+            for (final var node : graph.vertexSet()) {
+                labels.put(node, i++);
             }
+
+            for (steps = 0; steps < iterations; steps++) {
+                Collections.shuffle(nodes, random);
+
+                if (step(nodes) == 0) break;
+            }
+
+            final var groups = labels.entrySet().stream().collect(Collectors.groupingBy(Map.Entry::getValue));
+
+            final List<Set<V>> clusters = new ArrayList<>(groups.size());
+
+            for (final var cluster : groups.values()) {
+                clusters.add(cluster.stream().map(Map.Entry::getKey).collect(Collectors.toSet()));
+            }
+
+            return new ClusteringImpl<>(clusters);
         }
 
-        return changed;
-    }
+        /**
+         * Perform one iteration of the algorithm.
+         *
+         * @param nodes the list of nodes
+         * @return whether any label changed or not
+         */
+        protected int step(List<V> nodes) {
+            var changed = 0;
 
-    /**
-     * Score the label weights in the given neighborhood graph, which is a subgraph of {@link #graph}.
-     * This method sums the node weights corresponding to each label.
-     *
-     * @param graph     the neighborhood graph
-     * @param labels    the map of graph nodes to their labels
-     * @param weighting the node weighting approach
-     * @param node      the target node
-     * @return a mapping of labels to sums of their weights
-     */
-    protected Map<Integer, Double> score(Graph<V, E> graph, Map<V, Integer> labels, NodeWeighting<V, E> weighting, V node) {
-        final var edges = graph.edgesOf(node);
+            for (final var node : nodes) {
+                final var scores = score(node);
 
-        final var weights = new HashMap<Integer, Double>(edges.size());
+                final var label = argmaxRandom(scores.entrySet().iterator(), Map.Entry::getValue, random);
 
-        for (final var edge : edges) {
-            final var neighbor = Graphs.getOppositeVertex(graph, edge, node);
-            final int label = labels.get(neighbor);
-            weights.merge(label, weighting.apply(graph, labels, node, neighbor), Double::sum);
+                final int updated = label.isPresent() ? label.get().getKey() : labels.get(node);
+
+                // labels.put() never returns null for a known node
+                @SuppressWarnings("ConstantConditions") final int previous = labels.put(node, updated);
+
+                if (previous != updated) {
+                    changed++;
+                }
+            }
+
+            return changed;
         }
 
-        return weights;
-    }
+        /**
+         * Score the label weights in the given neighborhood graph, which is a subgraph of {@link #graph}.
+         * This method sums the node weights corresponding to each label.
+         *
+         * @param node the target node
+         * @return a mapping of labels to sums of their weights
+         */
+        protected Map<Integer, Double> score(V node) {
+            final var edges = graph.edgesOf(node);
 
-    /**
-     * Return the number of iterations specified in the constructor
-     *
-     * @return the number of iterations
-     * @see #ChineseWhispers(Graph, NodeWeighting, int, Random)
-     */
-    @SuppressWarnings("unused")
-    public int getIterations() {
-        return iterations;
-    }
+            final var weights = new HashMap<Integer, Double>(edges.size());
 
-    /**
-     * Return the number of iterations actually performed during {@link #getClustering()}.
-     * Should be no larger than the value of {@link #getIterations()}.
-     *
-     * @return the number of iterations
-     */
-    @SuppressWarnings("unused")
-    public int getSteps() {
-        return steps;
+            for (final var edge : edges) {
+                final var neighbor = Graphs.getOppositeVertex(graph, edge, node);
+                final int label = labels.get(neighbor);
+                weights.merge(label, weighting.apply(graph, labels, node, neighbor), Double::sum);
+            }
+
+            return weights;
+        }
+
+        /**
+         * Return the number of iterations specified in the constructor
+         *
+         * @return the number of iterations
+         * @see #ChineseWhispers(Graph, NodeWeighting, int, Random)
+         */
+        @SuppressWarnings("unused")
+        public int getIterations() {
+            return iterations;
+        }
+
+        /**
+         * Return the number of iterations actually performed during {@link #getClustering()}.
+         * Should be no larger than the value of {@link #getIterations()}.
+         *
+         * @return the number of iterations
+         */
+        @SuppressWarnings("unused")
+        public int getSteps() {
+            return steps;
+        }
     }
 }

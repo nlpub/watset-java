@@ -32,6 +32,7 @@ import java.util.function.Function;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.requireNonNull;
 import static org.jgrapht.GraphTests.requireUndirected;
 
@@ -138,27 +139,22 @@ public class MarkovClusteringExternal<V, E> implements ClusteringAlgorithm<V> {
     protected final int threads;
 
     /**
-     * The mapping of nodes to indices.
+     * The cached clustering result.
      */
-    protected VertexToIntegerMapping<V> mapping;
-
-    /**
-     * The output file.
-     */
-    protected File output;
+    private Clustering<V> clustering;
 
     /**
      * A factory function that sets up the algorithm for the given graph.
      *
-     * @param mcl     the path to the MCL binary
+     * @param path    the path to the MCL binary
      * @param r       the inflation parameter
      * @param threads the number of threads
      * @param <V>     the type of nodes in the graph
      * @param <E>     the type of edges in the graph
      * @return a factory function that sets up the algorithm for the given graph
      */
-    public static <V, E> Function<Graph<V, E>, ClusteringAlgorithm<V>> provider(Path mcl, double r, int threads) {
-        return graph -> new MarkovClusteringExternal<>(graph, mcl, r, threads);
+    public static <V, E> Function<Graph<V, E>, ClusteringAlgorithm<V>> provider(Path path, double r, int threads) {
+        return graph -> new MarkovClusteringExternal<>(graph, path, r, threads);
     }
 
     /**
@@ -178,85 +174,161 @@ public class MarkovClusteringExternal<V, E> implements ClusteringAlgorithm<V> {
 
     @Override
     public Clustering<V> getClustering() {
-        logger.info("Preparing for Markov Clustering.");
-
-        mapping = Graphs.getVertexToIntegerMapping(graph);
-
-        try {
-            process();
-        } catch (IOException ex) {
-            throw new UncheckedIOException(ex);
+        if (isNull(clustering)) {
+            clustering = new Implementation<>(graph, path, r, threads).compute();
         }
 
-        logger.info("Markov Clustering finished.");
-
-        try (var stream = Files.lines(output.toPath())) {
-            final var clusters = stream.map(line -> Arrays.stream(line.split("\t")).
-                    map(id -> mapping.getIndexList().get(Integer.valueOf(id))).
-                    collect(Collectors.toSet())).
-                    collect(Collectors.toList());
-
-            return new ClusteringImpl<>(clusters);
-        } catch (IOException ex) {
-            throw new IllegalStateException("Clusters cannot be read.", ex);
-        }
+        return clustering;
     }
 
-    private void process() throws IOException {
-        output = File.createTempFile("mcl", "output");
-        output.deleteOnExit();
+    /**
+     * Actual implementation of the Markov Clustering wrapper.
+     *
+     * @param <V> the type of nodes in the graph
+     * @param <E> the type of edges in the graph
+     */
+    private static class Implementation<V, E> {
+        /**
+         * The graph.
+         */
+        protected final Graph<V, E> graph;
 
-        final var input = writeInputFile();
+        /**
+         * The path to the MCL binary.
+         */
+        protected final Path path;
 
-        final var builder = new ProcessBuilder(
-                path.toAbsolutePath().toString(),
-                input.toString(),
-                "-I", Double.toString(r),
-                "-te", Integer.toString(threads),
-                "--abc",
-                "-o", output.toString());
+        /**
+         * The inflation parameter.
+         */
+        protected final double r;
 
-        logger.info(() -> "Command: " + String.join(" ", builder.command()));
+        /**
+         * The number of threads.
+         */
+        protected final int threads;
 
-        final var process = builder.start();
+        /**
+         * The mapping of nodes to indices.
+         */
+        protected VertexToIntegerMapping<V> mapping;
 
-        int status = 0;
+        /**
+         * The output file.
+         */
+        protected File output;
 
-        try {
-            status = process.waitFor();
-        } catch (InterruptedException e) {
-            throw new IllegalStateException(path.toAbsolutePath() + " has been interrupted", e);
+        /**
+         * Create an instance of the Markov Clustering algorithm wrapper implementation.
+         *
+         * @param graph   the graph
+         * @param path    the path to the MCL binary
+         * @param r       the inflation parameter
+         * @param threads the number of threads
+         */
+        public Implementation(Graph<V, E> graph, Path path, double r, int threads) {
+            this.mapping = Graphs.getVertexToIntegerMapping(graph);
+            this.graph = graph;
+            this.path = path;
+            this.r = r;
+            this.threads = threads;
         }
 
-        if (status != 0) {
-            try (final Reader isr = new InputStreamReader(process.getErrorStream(), StandardCharsets.UTF_8)) {
-                try (final var reader = new BufferedReader(isr)) {
-                    final var stderr = reader.lines().collect(Collectors.joining(System.lineSeparator()));
+        /**
+         * Perform clustering with Markov Clustering.
+         *
+         * @return the clustering
+         */
+        public Clustering<V> compute() {
+            logger.info("Preparing for Markov Clustering.");
 
-                    if (stderr.isEmpty()) {
-                        throw new IllegalStateException(path.toAbsolutePath() + " returned " + status);
-                    } else {
-                        throw new IllegalStateException(path.toAbsolutePath() + " returned " + status + ": " + stderr);
+            try {
+                process();
+            } catch (IOException ex) {
+                throw new UncheckedIOException(ex);
+            }
+
+            logger.info("Markov Clustering finished.");
+
+            try (var stream = Files.lines(output.toPath())) {
+                final var clusters = stream.map(line -> Arrays.stream(line.split("\t")).
+                        map(id -> mapping.getIndexList().get(Integer.valueOf(id))).
+                        collect(Collectors.toSet())).
+                        collect(Collectors.toList());
+
+                return new ClusteringImpl<>(clusters);
+            } catch (IOException ex) {
+                throw new IllegalStateException("Clusters cannot be read.", ex);
+            }
+        }
+
+        /**
+         * Run the Markov Clustering binary and read its output.
+         *
+         * @throws IOException if an I/O error occurs
+         */
+        private void process() throws IOException {
+            output = File.createTempFile("mcl", "output");
+            output.deleteOnExit();
+
+            final var input = writeInputFile();
+
+            final var builder = new ProcessBuilder(
+                    path.toAbsolutePath().toString(),
+                    input.toString(),
+                    "-I", Double.toString(r),
+                    "-te", Integer.toString(threads),
+                    "--abc",
+                    "-o", output.toString());
+
+            logger.info(() -> "Command: " + String.join(" ", builder.command()));
+
+            final var process = builder.start();
+
+            int status = 0;
+
+            try {
+                status = process.waitFor();
+            } catch (InterruptedException e) {
+                throw new IllegalStateException(path.toAbsolutePath() + " has been interrupted", e);
+            }
+
+            if (status != 0) {
+                try (final var isr = new InputStreamReader(process.getErrorStream(), StandardCharsets.UTF_8)) {
+                    try (final var reader = new BufferedReader(isr)) {
+                        final var stderr = reader.lines().collect(Collectors.joining(System.lineSeparator()));
+
+                        if (stderr.isEmpty()) {
+                            throw new IllegalStateException(path.toAbsolutePath() + " returned " + status);
+                        } else {
+                            throw new IllegalStateException(path.toAbsolutePath() + " returned " + status + ": " + stderr);
+                        }
                     }
                 }
             }
         }
-    }
 
-    private File writeInputFile() throws IOException {
-        final var input = File.createTempFile("mcl", "input");
-        input.deleteOnExit();
+        /**
+         * Write the input file for the Markov Clustering binary.
+         *
+         * @return the written input file for the Markov Clustering binary
+         * @throws IOException if an I/O error occurs
+         */
+        private File writeInputFile() throws IOException {
+            final var input = File.createTempFile("mcl", "input");
+            input.deleteOnExit();
 
-        try (final var writer = Files.newBufferedWriter(input.toPath())) {
-            for (final var edge : graph.edgeSet()) {
-                final int source = mapping.getVertexMap().get(graph.getEdgeSource(edge));
-                final int target = mapping.getVertexMap().get(graph.getEdgeTarget(edge));
-                final var weight = graph.getEdgeWeight(edge);
+            try (final var writer = Files.newBufferedWriter(input.toPath())) {
+                for (final var edge : graph.edgeSet()) {
+                    final int source = mapping.getVertexMap().get(graph.getEdgeSource(edge));
+                    final int target = mapping.getVertexMap().get(graph.getEdgeTarget(edge));
+                    final var weight = graph.getEdgeWeight(edge);
 
-                writer.write(String.format(Locale.ROOT, "%d\t%d\t%f%n", source, target, weight));
+                    writer.write(String.format(Locale.ROOT, "%d\t%d\t%f%n", source, target, weight));
+                }
             }
-        }
 
-        return input;
+            return input;
+        }
     }
 }

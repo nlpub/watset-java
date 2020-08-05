@@ -21,7 +21,7 @@ import com.beust.jcommander.Parameters;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.nlpub.watset.graph.EmptyClustering;
-import org.nlpub.watset.util.AlgorithmProvider;
+import org.nlpub.watset.util.ClusteringAlgorithmProvider;
 import org.nlpub.watset.util.IndexedSense;
 import org.nlpub.watset.util.Sense;
 
@@ -56,7 +56,7 @@ class SensesCommand extends LocalWatsetCommand {
         }
     }
 
-    private Map<Sense<String>, Map<Sense<String>, Number>> getContexts(AlgorithmProvider<String, DefaultWeightedEdge> algorithm, Graph<String, DefaultWeightedEdge> graph) {
+    private Map<Sense<String>, Map<Sense<String>, Number>> getContexts(ClusteringAlgorithmProvider<String, DefaultWeightedEdge> algorithm, Graph<String, DefaultWeightedEdge> graph) {
         if (local.simplified) {
             final var watset = getSimplifiedWatset(algorithm, EmptyClustering.provider(), graph);
             final var clustering = watset.getClustering();

@@ -63,6 +63,9 @@ public class SingletonClustering<V, E> implements ClusteringAlgorithm<V> {
         return SingletonClustering::new;
     }
 
+    /**
+     * The graph.
+     */
     private final Graph<V, E> graph;
 
     /**
@@ -76,6 +79,10 @@ public class SingletonClustering<V, E> implements ClusteringAlgorithm<V> {
 
     @Override
     public Clustering<V> getClustering() {
-        return new ClusteringImpl<>(graph.vertexSet().stream().map(Collections::singleton).collect(Collectors.toList()));
+        final var clusters = graph.vertexSet().stream().
+                map(Collections::singleton).
+                collect(Collectors.toList());
+
+        return new ClusteringImpl<>(Collections.unmodifiableList(clusters));
     }
 }

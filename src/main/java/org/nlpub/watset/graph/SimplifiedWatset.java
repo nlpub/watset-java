@@ -32,8 +32,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import static java.util.Objects.nonNull;
-import static java.util.Objects.requireNonNull;
+import static java.util.Objects.*;
 import static org.jgrapht.GraphTests.requireUndirected;
 
 /**
@@ -130,37 +129,22 @@ public class SimplifiedWatset<V, E> implements ClusteringAlgorithm<V> {
     /**
      * The graph.
      */
-    protected final Graph<V, E> graph;
+    private final Graph<V, E> graph;
 
     /**
      * The node sense induction approach.
      */
-    protected final SenseInduction<V, E> inducer;
+    private final SenseInduction<V, E> inducer;
 
     /**
      * The global clustering algorithm supplier.
      */
-    protected final Function<Graph<Sense<V>, DefaultWeightedEdge>, ClusteringAlgorithm<Sense<V>>> global;
+    private final Function<Graph<Sense<V>, DefaultWeightedEdge>, ClusteringAlgorithm<Sense<V>>> global;
 
     /**
-     * The sense graph.
+     * The cached clustering result.
      */
-    protected Graph<Sense<V>, DefaultWeightedEdge> senseGraph;
-
-    /**
-     * The node sense clusters.
-     */
-    protected Clustering<Sense<V>> senseClusters;
-
-    /**
-     * The sense inventory.
-     */
-    protected Map<V, Map<V, Integer>> inventory;
-
-    /**
-     * The sense mapping.
-     */
-    protected Map<V, List<Sense<V>>> senses;
+    private WatsetClustering<V> clustering;
 
     /**
      * Create an instance of the Simplified Watset clustering algorithm.
@@ -177,86 +161,227 @@ public class SimplifiedWatset<V, E> implements ClusteringAlgorithm<V> {
 
     @Override
     public WatsetClustering<V> getClustering() {
-        senseClusters = null;
+        if (isNull(clustering)) {
+            clustering = new Implementation<>(graph, inducer, global).compute();
+        }
 
-        inventory = new ConcurrentHashMap<>(graph.vertexSet().size());
-        senses = new ConcurrentHashMap<>(graph.vertexSet().size());
+        return clustering;
+    }
 
-        logger.info("Simplified Watset started.");
+    /**
+     * Actual implementation of Simplified Watset.
+     *
+     * @param <V> the type of nodes in the graph
+     * @param <E> the type of edges in the graph
+     */
+    private static class Implementation<V, E> {
+        /**
+         * The graph.
+         */
+        private final Graph<V, E> graph;
 
-        graph.vertexSet().parallelStream().forEach(node -> {
-            final var clustering = inducer.clustering(node);
+        /**
+         * The node sense induction approach.
+         */
+        private final SenseInduction<V, E> inducer;
 
-            if (nonNull(inventory.put(node, new HashMap<>()))) {
-                throw new IllegalStateException("The target node is already in the inventory");
+        /**
+         * The global clustering algorithm supplier.
+         */
+        private final Function<Graph<Sense<V>, DefaultWeightedEdge>, ClusteringAlgorithm<Sense<V>>> global;
+
+        /**
+         * The sense inventory.
+         */
+        private final Map<V, Map<V, Integer>> inventory;
+
+        /**
+         * The sense mapping.
+         */
+        private final Map<V, List<Sense<V>>> senses;
+
+        /**
+         * Create an instance of the Simplified Watset clustering algorithm implementation.
+         *
+         * @param graph   the graph
+         * @param inducer the node sense induction approach
+         * @param global  the global clustering algorithm supplier
+         */
+        public Implementation(Graph<V, E> graph, SenseInduction<V, E> inducer, Function<Graph<Sense<V>, DefaultWeightedEdge>, ClusteringAlgorithm<Sense<V>>> global) {
+            this.graph = graph;
+            this.inducer = inducer;
+            this.global = global;
+            this.inventory = new ConcurrentHashMap<>(graph.vertexSet().size());
+            this.senses = new ConcurrentHashMap<>(graph.vertexSet().size());
+        }
+
+        /**
+         * Perform clustering with Simplified Watset.
+         *
+         * @return the clustering
+         */
+        public WatsetClustering<V> compute() {
+            logger.info("Simplified Watset started.");
+
+            buildInventory();
+
+            final var count = senses.values().stream().mapToInt(List::size).sum();
+            logger.log(Level.INFO, "Simplified Watset: sense inventory constructed including {0} senses.", count);
+
+            final var senseGraph = buildSenseGraph();
+
+            if (graph.edgeSet().size() != senseGraph.edgeSet().size()) {
+                throw new IllegalStateException("Mismatch in number of edges: expected " +
+                        graph.edgeSet().size() +
+                        ", but got " +
+                        senseGraph.edgeSet().size());
             }
 
-            if (nonNull(senses.put(node, new ArrayList<>(clustering.getNumberClusters())))) {
-                throw new IllegalStateException("The target node is already in the sense index");
-            }
+            logger.info("Simplified Watset: sense graph constructed.");
 
-            if (clustering.getNumberClusters() == 0) {
-                senses.get(node).add(new IndexedSense<>(node, 0));
-            }
+            final var globalAlgorithm = global.apply(senseGraph);
+            final var senseClusters = globalAlgorithm.getClustering();
 
-            var i = 0;
+            logger.info("Simplified Watset finished.");
 
-            for (final var cluster : clustering) {
-                senses.get(node).add(i, new IndexedSense<>(node, i));
+            final var clusters = senseClusters.getClusters().stream().
+                    map(cluster -> cluster.stream().map(Sense::get).collect(Collectors.toSet())).
+                    collect(Collectors.toList());
 
-                for (final var neighbor : cluster) {
-                    inventory.get(node).put(neighbor, i);
+            return new SimplifiedWatsetClusteringImpl<>(clusters,
+                    Collections.unmodifiableMap(inventory),
+                    new AsUnmodifiableGraph<>(senseGraph));
+        }
+
+        /**
+         * Build a node sense inventory; fill in variables {@code senses} and {@code inventory}.
+         */
+        private void buildInventory() {
+            graph.vertexSet().parallelStream().forEach(node -> {
+                final var clustering = inducer.clustering(node);
+
+                if (nonNull(inventory.put(node, new HashMap<>()))) {
+                    throw new IllegalStateException("The target node is already in the inventory");
                 }
 
-                i++;
-            }
-        });
+                if (nonNull(senses.put(node, new ArrayList<>(clustering.getNumberClusters())))) {
+                    throw new IllegalStateException("The target node is already in the sense index");
+                }
 
-        final var count = senses.values().stream().mapToInt(List::size).sum();
-        logger.log(Level.INFO, "Simplified Watset: sense inventory constructed including {0} senses.", count);
+                if (clustering.getNumberClusters() == 0) {
+                    senses.get(node).add(new IndexedSense<>(node, 0));
+                }
 
-        final var builder = SimpleWeightedGraph.<Sense<V>, DefaultWeightedEdge>createBuilder(DefaultWeightedEdge.class);
+                var i = 0;
 
-        for (final var sourceEntry : inventory.entrySet()) {
-            if (sourceEntry.getValue().isEmpty()) {
-                builder.addVertex(new IndexedSense<>(sourceEntry.getKey(), 0));
-            }
+                for (final var cluster : clustering) {
+                    senses.get(node).add(i, new IndexedSense<>(node, i));
 
-            final var source = sourceEntry.getKey();
+                    for (final var neighbor : cluster) {
+                        inventory.get(node).put(neighbor, i);
+                    }
 
-            for (final var target : sourceEntry.getValue().keySet()) {
-                final var sourceSense = requireNonNull(senses.get(source).get(inventory.get(source).get(target)));
-                final var targetSense = requireNonNull(senses.get(target).get(inventory.get(target).get(source)));
-
-                final var edge = requireNonNull(graph.getEdge(source, target));
-                final var weight = graph.getEdgeWeight(edge);
-
-                builder.addEdge(sourceSense, targetSense, weight);
-            }
+                    i++;
+                }
+            });
         }
 
-        senseGraph = builder.build();
+        /**
+         * Build an intermediate sense-aware representation of the input graph called the <em>node sense graph</em>.
+         *
+         * @return the sense graph
+         */
+        private Graph<Sense<V>, DefaultWeightedEdge> buildSenseGraph() {
+            final var builder = SimpleWeightedGraph.<Sense<V>, DefaultWeightedEdge>createBuilder(DefaultWeightedEdge.class);
 
-        if (graph.edgeSet().size() != senseGraph.edgeSet().size()) {
-            throw new IllegalStateException("Mismatch in number of edges: expected " +
-                    graph.edgeSet().size() +
-                    ", but got " +
-                    senseGraph.edgeSet().size());
+            for (final var sourceEntry : inventory.entrySet()) {
+                if (sourceEntry.getValue().isEmpty()) {
+                    builder.addVertex(new IndexedSense<>(sourceEntry.getKey(), 0));
+                }
+
+                final var source = sourceEntry.getKey();
+
+                for (final var target : sourceEntry.getValue().keySet()) {
+                    final var sourceSense = requireNonNull(senses.get(source).get(inventory.get(source).get(target)));
+                    final var targetSense = requireNonNull(senses.get(target).get(inventory.get(target).get(source)));
+
+                    final var edge = requireNonNull(graph.getEdge(source, target));
+                    final var weight = graph.getEdgeWeight(edge);
+
+                    builder.addEdge(sourceSense, targetSense, weight);
+                }
+            }
+
+            return builder.build();
+        }
+    }
+
+    /**
+     * A Simplified Watset clustering that computes disambiguated contexts on demand.
+     *
+     * @param <V> the type of nodes in the graph
+     */
+    static class SimplifiedWatsetClusteringImpl<V> extends ClusteringAlgorithm.ClusteringImpl<V> implements WatsetClustering<V> {
+        /**
+         * The sense inventory.
+         */
+        private final Map<V, Map<V, Integer>> inventory;
+
+        /**
+         * The sense graph.
+         */
+        private final Graph<Sense<V>, DefaultWeightedEdge> senseGraph;
+
+        /**
+         * Construct a new Watset clustering.
+         *
+         * @param clusters   the clusters
+         * @param inventory  the sense inventory
+         * @param senseGraph the sense graph
+         */
+        public SimplifiedWatsetClusteringImpl(List<Set<V>> clusters, Map<V, Map<V, Integer>> inventory, Graph<Sense<V>, DefaultWeightedEdge> senseGraph) {
+            super(clusters);
+            this.inventory = inventory;
+            this.senseGraph = senseGraph;
         }
 
-        logger.info("Simplified Watset: sense graph constructed.");
+        /**
+         * Get the sense inventory built during {@link SimplifiedWatset#getClustering()}.
+         *
+         * @return the sense inventory
+         */
+        public Map<V, Map<V, Integer>> getInventory() {
+            return inventory;
+        }
 
-        final var globalClustering = global.apply(senseGraph);
-        senseClusters = globalClustering.getClustering();
+        @Override
+        public Graph<Sense<V>, DefaultWeightedEdge> getSenseGraph() {
+            return senseGraph;
+        }
 
-        logger.info("Simplified Watset finished.");
+        @Override
+        public Map<Sense<V>, Map<Sense<V>, Number>> getContexts() {
+            final var contexts = new HashMap<Sense<V>, Map<Sense<V>, Number>>();
 
-        final var clusters = senseClusters.getClusters().stream().
-                map(cluster -> cluster.stream().map(Sense::get).collect(Collectors.toSet())).
-                collect(Collectors.toList());
+            for (final var edge : senseGraph.edgeSet()) {
+                final Sense<V> source = senseGraph.getEdgeSource(edge), target = senseGraph.getEdgeTarget(edge);
+                final var weight = senseGraph.getEdgeWeight(edge);
 
-        return new WatsetClustering.SimplifiedWatsetClusteringImpl<>(clusters,
-                Collections.unmodifiableMap(inventory),
-                new AsUnmodifiableGraph<>(senseGraph));
+                if (!contexts.containsKey(source)) contexts.put(source, new HashMap<>());
+                if (!contexts.containsKey(target)) contexts.put(target, new HashMap<>());
+
+                contexts.get(source).put(target, weight);
+                contexts.get(target).put(source, weight);
+            }
+
+            if (contexts.size() != senseGraph.vertexSet().size()) {
+                throw new IllegalStateException("Mismatch in number of senses: expected " +
+                        senseGraph.vertexSet().size() +
+                        ", but got " +
+                        contexts.size());
+            }
+
+            return contexts;
+        }
     }
 }

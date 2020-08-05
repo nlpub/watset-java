@@ -21,9 +21,10 @@ import org.jgrapht.Graph;
 import org.jgrapht.alg.connectivity.ConnectivityInspector;
 import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
 
+import java.util.Collections;
 import java.util.function.Function;
 
-import static java.util.Objects.requireNonNull;
+import static org.jgrapht.GraphTests.requireUndirected;
 
 /**
  * A trivial clustering algorithm that treats every connected component as a cluster.
@@ -71,12 +72,11 @@ public class ComponentsClustering<V, E> implements ClusteringAlgorithm<V> {
      * @param graph the graph
      */
     public ComponentsClustering(Graph<V, E> graph) {
-        this.inspector = new ConnectivityInspector<>(requireNonNull(graph));
+        this.inspector = new ConnectivityInspector<>(requireUndirected(graph));
     }
 
     @Override
     public Clustering<V> getClustering() {
-        final var clusters = inspector.connectedSets();
-        return new ClusteringImpl<>(clusters);
+        return new ClusteringImpl<>(Collections.unmodifiableList(inspector.connectedSets()));
     }
 }

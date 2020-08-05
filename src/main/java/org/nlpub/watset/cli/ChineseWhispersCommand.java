@@ -21,7 +21,7 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
 import org.jgrapht.graph.DefaultWeightedEdge;
-import org.nlpub.watset.util.AlgorithmProvider;
+import org.nlpub.watset.util.ClusteringAlgorithmProvider;
 
 import java.util.Collections;
 import java.util.Map;
@@ -50,7 +50,7 @@ class ChineseWhispersCommand extends ClusteringCommand {
     public ClusteringAlgorithm<String> getAlgorithm() {
         final Map<String, String> params = nonNull(mode) ? Map.of("mode", mode) : Collections.emptyMap();
 
-        final var algorithm = new AlgorithmProvider<String, DefaultWeightedEdge>("cw", params);
+        final var algorithm = new ClusteringAlgorithmProvider<String, DefaultWeightedEdge>("cw", params);
 
         return algorithm.apply(getGraph());
     }

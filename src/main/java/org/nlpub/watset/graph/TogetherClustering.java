@@ -62,6 +62,9 @@ public class TogetherClustering<V, E> implements ClusteringAlgorithm<V> {
         return TogetherClustering::new;
     }
 
+    /**
+     * The graph.
+     */
     private final Graph<V, E> graph;
 
     /**

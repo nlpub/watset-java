@@ -20,10 +20,10 @@ package org.nlpub.watset.cli;
 import com.beust.jcommander.Parameters;
 import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
 import org.jgrapht.graph.DefaultWeightedEdge;
-import org.nlpub.watset.util.AlgorithmProvider;
+import org.nlpub.watset.util.ClusteringAlgorithmProvider;
 
 /**
- * A command that uses {@link AlgorithmProvider} to resolve the clustering algorithm.
+ * A command that uses {@link ClusteringAlgorithmProvider} to resolve the clustering algorithm.
  */
 @Parameters(commandDescription = "Clustering")
 class ProvidedClusteringCommand extends ClusteringCommand {
@@ -42,6 +42,6 @@ class ProvidedClusteringCommand extends ClusteringCommand {
 
     @Override
     public ClusteringAlgorithm<String> getAlgorithm() {
-        return new AlgorithmProvider<String, DefaultWeightedEdge>(algorithm).apply(getGraph());
+        return new ClusteringAlgorithmProvider<String, DefaultWeightedEdge>(algorithm).apply(getGraph());
     }
 }

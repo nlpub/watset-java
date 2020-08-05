@@ -21,13 +21,14 @@ import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
 import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
 import org.jgrapht.graph.AsUnmodifiableGraph;
-import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.SimpleDirectedGraph;
 
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.isNull;
 import static org.jgrapht.GraphTests.requireUndirected;
 
 /**
@@ -74,19 +75,9 @@ public class MaxMax<V, E> implements ClusteringAlgorithm<V> {
     private final Graph<V, E> graph;
 
     /**
-     * The directed graph.
+     * The cached clustering result.
      */
-    private Graph<V, DefaultEdge> digraph;
-
-    /**
-     * The map of nodes to their maximal affinity nodes.
-     */
-    private Map<V, Set<V>> maximals;
-
-    /**
-     * The map of root and non-root nodes.
-     */
-    private Map<V, Boolean> roots;
+    private MaxMaxClustering<V> clustering;
 
     /**
      * Create an instance of the MaxMax algorithm.
@@ -99,84 +90,143 @@ public class MaxMax<V, E> implements ClusteringAlgorithm<V> {
 
     @Override
     public MaxMaxClustering<V> getClustering() {
-        digraph = new DefaultDirectedGraph<>(DefaultEdge.class);
-        maximals = null;
-        roots = null;
+        if (isNull(clustering)) {
+            clustering = new Implementation<>(graph).compute();
+        }
 
-        Graphs.addAllVertices(digraph, graph.vertexSet());
+        return clustering;
+    }
 
-        // Preparation: Compute Maximal Vertices
-        maximals = digraph.vertexSet().stream().collect(Collectors.toMap(Function.identity(), v -> new HashSet<>()));
+    /**
+     * Actual implementation of MaxMax.
+     *
+     * @param <V> the type of nodes in the graph
+     * @param <E> the type of edges in the graph
+     */
+    private static class Implementation<V, E> {
+        /**
+         * The graph.
+         */
+        private final Graph<V, E> graph;
 
-        digraph.vertexSet().forEach(u -> {
-            final var max = graph.edgesOf(u).stream().mapToDouble(graph::getEdgeWeight).max().orElse(-1);
+        /**
+         * The map of nodes to their maximal affinity nodes.
+         */
+        private final Map<V, Set<V>> maximals;
 
-            graph.edgesOf(u).stream().
-                    filter(e -> graph.getEdgeWeight(e) == max).
-                    map(e -> Graphs.getOppositeVertex(graph, e, u)).
-                    forEach(v -> maximals.get(u).add(v));
-        });
+        /**
+         * The directed graph.
+         */
+        private final Graph<V, DefaultEdge> digraph;
 
-        // Stage 1: Graph Transformation
-        graph.edgeSet().forEach(e -> {
-            final V u = graph.getEdgeSource(e), v = graph.getEdgeTarget(e);
-            if (maximals.get(u).contains(v)) digraph.addEdge(v, u);
-            if (maximals.get(v).contains(u)) digraph.addEdge(u, v);
-        });
+        /**
+         * The map of root and non-root nodes.
+         */
+        private final Map<V, Boolean> roots;
 
-        // Stage 2: Identifying Clusters
-        roots = this.digraph.vertexSet().stream().collect(Collectors.toMap(Function.identity(), v -> true));
+        /**
+         * Create an instance of the MaxMax clustering algorithm implementation.
+         *
+         * @param graph the graph
+         */
+        private Implementation(Graph<V, E> graph) {
+            this.graph = graph;
+            this.maximals = new HashMap<>(graph.vertexSet().size());
+            this.roots = new HashMap<>(graph.vertexSet().size());
 
-        final var visited = new HashSet<V>();
+            final var builder = SimpleDirectedGraph.<V, DefaultEdge>createBuilder(DefaultEdge.class);
 
-        digraph.vertexSet().forEach(v -> {
-            if (roots.get(v)) {
-                final var queue = new LinkedList<>(Graphs.successorListOf(digraph, v));
+            for (final var node : graph.vertexSet()) {
+                maximals.put(node, new HashSet<>());
+                roots.put(node, true);
+                builder.addVertex(node);
+            }
 
-                visited.add(v);
+            this.digraph = builder.build();
+        }
 
-                while (!queue.isEmpty()) {
-                    final var u = queue.remove();
+        /**
+         * Perform clustering with MaxMax.
+         *
+         * @return the clustering
+         */
+        public MaxMaxClustering<V> compute() {
+            // Preparation: Compute Maximal Vertices
+            for (final var u : digraph.vertexSet()) {
+                final var max = graph.edgesOf(u).stream().mapToDouble(graph::getEdgeWeight).max().orElse(-1);
 
-                    if (visited.contains(u)) continue;
+                graph.edgesOf(u).stream().
+                        filter(e -> graph.getEdgeWeight(e) == max).
+                        map(e -> Graphs.getOppositeVertex(graph, e, u)).
+                        forEach(v -> maximals.get(u).add(v));
+            }
 
-                    roots.put(u, false);
+            // Stage 1: Graph Transformation
+            for (final var e : graph.edgeSet()) {
+                final var u = graph.getEdgeSource(e);
+                final var v = graph.getEdgeTarget(e);
 
-                    visited.add(u);
+                if (maximals.get(u).contains(v)) digraph.addEdge(v, u);
+                if (maximals.get(v).contains(u)) digraph.addEdge(u, v);
+            }
 
-                    queue.addAll(Graphs.successorListOf(digraph, u));
+            // Stage 2: Identifying Clusters
+            final var visited = new HashSet<V>();
+
+            for (final var v : digraph.vertexSet()) {
+                if (roots.get(v)) {
+                    final var queue = new LinkedList<>(Graphs.successorListOf(digraph, v));
+
+                    visited.add(v);
+
+                    while (!queue.isEmpty()) {
+                        final var u = queue.remove();
+
+                        if (!visited.contains(u)) {
+                            roots.put(u, false);
+                            visited.add(u);
+                            queue.addAll(Graphs.successorListOf(digraph, u));
+                        }
+                    }
                 }
             }
-        });
 
-        // Final: Retrieving Clusters
-        final var rootNodes = this.roots.entrySet().stream().
-                filter(Map.Entry::getValue).
-                map(Map.Entry::getKey).
-                collect(Collectors.toSet());
+            final var clusters = extractClusters();
 
-        final var clusters = rootNodes.stream().map(root -> {
-            final var cluster = new HashSet<V>();
+            return new MaxMaxClustering.MaxMaxClusteringImpl<>(clusters,
+                    new AsUnmodifiableGraph<>(digraph),
+                    Collections.unmodifiableMap(maximals),
+                    Collections.unmodifiableMap(roots));
+        }
 
-            final var queue = new LinkedList<V>();
-            queue.add(root);
+        /**
+         * Extract clusters by traversing from the root nodes.
+         *
+         * @return the clusters
+         */
+        private List<Set<V>> extractClusters() {
+            final var rootNodes = roots.entrySet().stream().
+                    filter(Map.Entry::getValue).
+                    map(Map.Entry::getKey).
+                    collect(Collectors.toSet());
 
-            while (!queue.isEmpty()) {
-                final var v = queue.remove();
+            return rootNodes.stream().map(root -> {
+                final Set<V> cluster = new HashSet<>();
 
-                if (cluster.contains(v)) continue;
+                final var queue = new LinkedList<V>();
+                queue.add(root);
 
-                cluster.add(v);
+                while (!queue.isEmpty()) {
+                    final var v = queue.remove();
 
-                queue.addAll(Graphs.successorListOf(digraph, v));
-            }
+                    if (!cluster.contains(v)) {
+                        cluster.add(v);
+                        queue.addAll(Graphs.successorListOf(digraph, v));
+                    }
+                }
 
-            return (Set<V>) cluster;
-        }).collect(Collectors.toList());
-
-        return new MaxMaxClustering.MaxMaxClusteringImpl<>(clusters,
-                new AsUnmodifiableGraph<>(digraph),
-                Collections.unmodifiableMap(maximals),
-                Collections.unmodifiableMap(roots));
+                return cluster;
+            }).collect(Collectors.toList());
+        }
     }
 }

@@ -21,7 +21,7 @@ import com.beust.jcommander.Parameters;
 import com.beust.jcommander.ParametersDelegate;
 import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
 import org.jgrapht.graph.DefaultWeightedEdge;
-import org.nlpub.watset.util.AlgorithmProvider;
+import org.nlpub.watset.util.ClusteringAlgorithmProvider;
 import org.nlpub.watset.util.Sense;
 
 /**
@@ -54,8 +54,8 @@ class WatsetCommand extends ClusteringCommand implements WatsetGetter<String, De
 
     @Override
     public ClusteringAlgorithm<String> getAlgorithm() {
-        final var localAlgorithm = new AlgorithmProvider<String, DefaultWeightedEdge>(local.algorithm, local.params);
-        final var globalAlgorithm = new AlgorithmProvider<Sense<String>, DefaultWeightedEdge>(global.algorithm, global.params);
+        final var localAlgorithm = new ClusteringAlgorithmProvider<String, DefaultWeightedEdge>(local.algorithm, local.params);
+        final var globalAlgorithm = new ClusteringAlgorithmProvider<Sense<String>, DefaultWeightedEdge>(global.algorithm, global.params);
         final var graph = getGraph();
 
         return local.simplified ?

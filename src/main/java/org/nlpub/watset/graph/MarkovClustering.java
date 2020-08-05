@@ -27,7 +27,9 @@ import org.jgrapht.util.VertexToIntegerMapping;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.logging.Logger;
 
+import static java.util.Objects.isNull;
 import static org.jgrapht.GraphTests.requireUndirected;
 
 /**
@@ -129,8 +131,19 @@ public class MarkovClustering<V, E> implements ClusteringAlgorithm<V> {
     /**
      * Visitor that raises each element to the power of {@link MarkovClustering#r}.
      */
-    public class InflateVisitor extends DefaultRealMatrixChangingVisitor {
-        private InflateVisitor() {
+    public static class InflateVisitor extends DefaultRealMatrixChangingVisitor {
+        /**
+         * The inflation parameter.
+         */
+        private final double r;
+
+        /**
+         * Create an instance of the inflator.
+         *
+         * @param r the inflation parameter
+         */
+        public InflateVisitor(double r) {
+            this.r = r;
         }
 
         /**
@@ -151,6 +164,9 @@ public class MarkovClustering<V, E> implements ClusteringAlgorithm<V> {
      * Visitor that normalizes columns.
      */
     public static class NormalizeVisitor extends DefaultRealMatrixChangingVisitor {
+        /**
+         * The row sums.
+         */
         private final RealMatrix sums;
 
         /**
@@ -176,45 +192,32 @@ public class MarkovClustering<V, E> implements ClusteringAlgorithm<V> {
         }
     }
 
+    private static final Logger logger = Logger.getLogger(MarkovClustering.class.getSimpleName());
+
     /**
      * The graph.
      */
-    protected final Graph<V, E> graph;
+    private final Graph<V, E> graph;
 
     /**
      * The expansion parameter.
      */
-    protected final int e;
+    private final int e;
 
     /**
      * The inflation parameter.
      */
-    protected final double r;
+    private final double r;
 
     /**
      * The maximal number of iterations.
      */
-    protected final int iterations;
+    private final int iterations;
 
     /**
-     * The inflation visitor that raises each element of {@code matrix} to the power of {@code r}.
+     * The cached clustering result.
      */
-    protected final InflateVisitor inflateVisitor;
-
-    /**
-     * The stochastic matrix.
-     */
-    protected RealMatrix matrix;
-
-    /**
-     * The row matrix filled by ones.
-     */
-    protected RealMatrix ones;
-
-    /**
-     * The mapping of graph nodes to the columns of {@code matrix}.
-     */
-    protected VertexToIntegerMapping<V> mapping;
+    private Clustering<V> clustering;
 
     /**
      * Create an instance of the Markov Clustering algorithm.
@@ -229,97 +232,166 @@ public class MarkovClustering<V, E> implements ClusteringAlgorithm<V> {
         this.e = e;
         this.r = r;
         this.iterations = iterations;
-        this.inflateVisitor = new InflateVisitor();
     }
 
     @Override
     public Clustering<V> getClustering() {
-        mapping = null;
-        matrix = null;
-        ones = null;
-
-        if (graph.vertexSet().isEmpty()) {
-            return new ClusteringImpl<>(Collections.emptyList());
+        if (isNull(clustering)) {
+            clustering = new Implementation<>(graph, e, r, iterations).compute();
         }
 
-        mapping = Graphs.getVertexToIntegerMapping(graph);
-
-        matrix = buildMatrix();
-
-        final var onesData = new double[matrix.getRowDimension()];
-        Arrays.fill(onesData, 1);
-        ones = MatrixUtils.createRowRealMatrix(onesData);
-
-        normalize();
-
-        for (var i = 0; i < iterations; i++) {
-            final var previous = matrix.copy();
-
-            expand();
-            inflate();
-
-            if (matrix.equals(previous)) break;
-        }
-
-        final var clusters = new ArrayList<Set<V>>();
-
-        for (var i = 0; i < matrix.getRowDimension(); i++) {
-            final var cluster = new HashSet<V>();
-
-            for (var j = 0; j < matrix.getColumnDimension(); j++) {
-                if (matrix.getEntry(i, j) > 0) cluster.add(mapping.getIndexList().get(j));
-            }
-
-            if (!cluster.isEmpty()) clusters.add(cluster);
-        }
-
-        return new ClusteringImpl<>(clusters);
+        return clustering;
     }
 
     /**
-     * Construct an adjacency matrix for the given graph.
-     * <p>
-     * Note that the loops in the graph are ignored.
+     * Actual implementation of Markov Clustering.
      *
-     * @return an adjacency matrix
+     * @param <V> the type of nodes in the graph
+     * @param <E> the type of edges in the graph
      */
-    protected RealMatrix buildMatrix() {
-        final var matrix = MatrixUtils.createRealIdentityMatrix(graph.vertexSet().size());
+    private static class Implementation<V, E> {
+        /**
+         * The graph.
+         */
+        private final Graph<V, E> graph;
 
-        for (final var edge : graph.edgeSet()) {
-            final int i = mapping.getVertexMap().get(graph.getEdgeSource(edge));
-            final int j = mapping.getVertexMap().get(graph.getEdgeTarget(edge));
+        /**
+         * The expansion parameter.
+         */
+        private final int e;
 
-            if (i != j) {
-                final var weight = graph.getEdgeWeight(edge);
-                matrix.setEntry(i, j, weight);
-                matrix.setEntry(j, i, weight);
-            }
+        /**
+         * The maximal number of iterations.
+         */
+        private final int iterations;
+
+        /**
+         * The inflation visitor that raises each element of {@code matrix} to the power of {@code r}.
+         */
+        private final InflateVisitor inflateVisitor;
+
+        /**
+         * The mapping of graph nodes to the columns of {@code matrix}.
+         */
+        private final VertexToIntegerMapping<V> mapping;
+
+        /**
+         * The row matrix filled by ones.
+         */
+        private final RealMatrix ones;
+
+        /**
+         * The stochastic matrix.
+         */
+        private RealMatrix matrix;
+
+        /**
+         * Create an instance of the Markov Clustering algorithm implementation.
+         *
+         * @param graph      the graph
+         * @param e          the expansion parameter
+         * @param r          the inflation parameter
+         * @param iterations the maximal number of iterations
+         */
+        public Implementation(Graph<V, E> graph, int e, double r, int iterations) {
+            this.graph = graph;
+            this.e = e;
+            this.iterations = iterations;
+            this.inflateVisitor = new InflateVisitor(r);
+            this.mapping = Graphs.getVertexToIntegerMapping(graph);
+
+            final var onesData = new double[graph.vertexSet().size()];
+            Arrays.fill(onesData, 1);
+            this.ones = MatrixUtils.createRowRealMatrix(onesData);
         }
 
-        return matrix;
-    }
+        /**
+         * Perform clustering with Markov Clustering.
+         *
+         * @return the clustering
+         */
+        public Clustering<V> compute() {
+            if (graph.vertexSet().isEmpty()) {
+                return new ClusteringImpl<>(Collections.emptyList());
+            }
 
-    /**
-     * Normalize the matrix.
-     */
-    protected void normalize() {
-        final var sums = ones.multiply(matrix);
-        matrix.walkInOptimizedOrder(new NormalizeVisitor(sums));
-    }
+            matrix = buildMatrix();
 
-    /**
-     * Perform the expansion step.
-     */
-    protected void expand() {
-        matrix = matrix.power(e);
-    }
+            normalize();
 
-    /**
-     * Perform the inflation step.
-     */
-    protected void inflate() {
-        normalize();
-        matrix.walkInOptimizedOrder(inflateVisitor);
+            for (var i = 0; i < iterations; i++) {
+                final var previous = matrix.copy();
+
+                expand();
+                inflate();
+
+                if (matrix.equals(previous)) break;
+            }
+
+            final var clusters = new ArrayList<Set<V>>();
+
+            for (var i = 0; i < matrix.getRowDimension(); i++) {
+                final var cluster = new HashSet<V>();
+
+                for (var j = 0; j < matrix.getColumnDimension(); j++) {
+                    if (matrix.getEntry(i, j) > 0) cluster.add(mapping.getIndexList().get(j));
+                }
+
+                if (!cluster.isEmpty()) clusters.add(cluster);
+            }
+
+            return new ClusteringImpl<>(clusters);
+        }
+
+        /**
+         * Construct an adjacency matrix for the given graph.
+         * <p>
+         * Note that the loops in the graph are ignored.
+         *
+         * @return an adjacency matrix
+         */
+        private RealMatrix buildMatrix() {
+            if (graph.vertexSet().size() > 2048) {
+                logger.warning(() -> String.format(Locale.ROOT, "Graph is large: %d nodes.", graph.vertexSet().size()));
+            }
+
+            final var matrix = MatrixUtils.createRealIdentityMatrix(graph.vertexSet().size());
+
+            for (final var edge : graph.edgeSet()) {
+                final int i = mapping.getVertexMap().get(graph.getEdgeSource(edge));
+                final int j = mapping.getVertexMap().get(graph.getEdgeTarget(edge));
+
+                if (i != j) {
+                    final var weight = graph.getEdgeWeight(edge);
+                    matrix.setEntry(i, j, weight);
+                    matrix.setEntry(j, i, weight);
+                }
+            }
+
+            return matrix;
+        }
+
+        /**
+         * Normalize the matrix.
+         */
+        private void normalize() {
+            final var sums = ones.multiply(matrix);
+            matrix.walkInOptimizedOrder(new NormalizeVisitor(sums));
+        }
+
+        /**
+         * Perform the expansion step.
+         */
+        private void expand() {
+            matrix = matrix.power(e);
+        }
+
+        /**
+         * Perform the inflation step.
+         */
+        private void inflate() {
+            normalize();
+            matrix.walkInOptimizedOrder(inflateVisitor);
+        }
     }
 }

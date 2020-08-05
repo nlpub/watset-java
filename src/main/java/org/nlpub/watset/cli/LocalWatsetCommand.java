@@ -20,7 +20,7 @@ package org.nlpub.watset.cli;
 import com.beust.jcommander.ParametersDelegate;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.nlpub.watset.graph.SimplifiedWatset;
-import org.nlpub.watset.util.AlgorithmProvider;
+import org.nlpub.watset.util.ClusteringAlgorithmProvider;
 
 /**
  * A command that uses such local Watset internals as the sense graph and disambiguated contexts.
@@ -45,11 +45,11 @@ abstract class LocalWatsetCommand extends Command implements WatsetGetter<String
     }
 
     /**
-     * Get the configured instance of {@link AlgorithmProvider}.
+     * Get the configured instance of {@link ClusteringAlgorithmProvider}.
      *
      * @return an algorithm provider
      */
-    public AlgorithmProvider<String, DefaultWeightedEdge> getAlgorithm() {
-        return new AlgorithmProvider<>(local.algorithm, local.params);
+    public ClusteringAlgorithmProvider<String, DefaultWeightedEdge> getAlgorithm() {
+        return new ClusteringAlgorithmProvider<>(local.algorithm, local.params);
     }
 }
