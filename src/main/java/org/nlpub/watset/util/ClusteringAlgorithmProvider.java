@@ -37,8 +37,8 @@ import static java.util.Objects.requireNonNullElse;
  * @param <V> the type of nodes in the graph
  * @param <E> the type of edges in the graph
  */
-public class AlgorithmProvider<V, E> implements Function<Graph<V, E>, ClusteringAlgorithm<V>> {
-    private static final Logger logger = Logger.getLogger(AlgorithmProvider.class.getSimpleName());
+public class ClusteringAlgorithmProvider<V, E> implements Function<Graph<V, E>, ClusteringAlgorithm<V>> {
+    private static final Logger logger = Logger.getLogger(ClusteringAlgorithmProvider.class.getSimpleName());
 
     private final String algorithm;
     private final Map<String, String> params;
@@ -49,7 +49,7 @@ public class AlgorithmProvider<V, E> implements Function<Graph<V, E>, Clustering
      *
      * @param algorithm the algorithm identifier
      */
-    public AlgorithmProvider(String algorithm) {
+    public ClusteringAlgorithmProvider(String algorithm) {
         this(algorithm, null);
     }
 
@@ -59,7 +59,7 @@ public class AlgorithmProvider<V, E> implements Function<Graph<V, E>, Clustering
      * @param algorithm the algorithm identifier
      * @param params    the parameter map for the algorithm
      */
-    public AlgorithmProvider(String algorithm, Map<String, String> params) {
+    public ClusteringAlgorithmProvider(String algorithm, Map<String, String> params) {
         this.algorithm = requireNonNull(algorithm, "algorithm is not specified");
         this.params = requireNonNullElse(params, Collections.emptyMap());
         this.weighting = parseChineseWhispersNodeWeighting();
