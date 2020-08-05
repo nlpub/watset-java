@@ -21,6 +21,7 @@ import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -63,7 +64,7 @@ public final class ILEFormat {
                                 String.join(DELIMITER, cluster))
                         );
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        throw new UncheckedIOException(e);
                     }
                 });
     }
