@@ -129,22 +129,22 @@ public class SimplifiedWatset<V, E> implements ClusteringAlgorithm<V> {
     /**
      * The graph.
      */
-    private final Graph<V, E> graph;
+    protected final Graph<V, E> graph;
 
     /**
      * The node sense induction approach.
      */
-    private final SenseInduction<V, E> inducer;
+    protected final SenseInduction<V, E> inducer;
 
     /**
      * The global clustering algorithm supplier.
      */
-    private final Function<Graph<Sense<V>, DefaultWeightedEdge>, ClusteringAlgorithm<Sense<V>>> global;
+    protected final Function<Graph<Sense<V>, DefaultWeightedEdge>, ClusteringAlgorithm<Sense<V>>> global;
 
     /**
      * The cached clustering result.
      */
-    private WatsetClustering<V> clustering;
+    protected WatsetClustering<V> clustering;
 
     /**
      * Create an instance of the Simplified Watset clustering algorithm.
@@ -174,31 +174,31 @@ public class SimplifiedWatset<V, E> implements ClusteringAlgorithm<V> {
      * @param <V> the type of nodes in the graph
      * @param <E> the type of edges in the graph
      */
-    private static class Implementation<V, E> {
+    public static class Implementation<V, E> {
         /**
          * The graph.
          */
-        private final Graph<V, E> graph;
+        protected final Graph<V, E> graph;
 
         /**
          * The node sense induction approach.
          */
-        private final SenseInduction<V, E> inducer;
+        protected final SenseInduction<V, E> inducer;
 
         /**
          * The global clustering algorithm supplier.
          */
-        private final Function<Graph<Sense<V>, DefaultWeightedEdge>, ClusteringAlgorithm<Sense<V>>> global;
+        protected final Function<Graph<Sense<V>, DefaultWeightedEdge>, ClusteringAlgorithm<Sense<V>>> global;
 
         /**
          * The sense inventory.
          */
-        private final Map<V, Map<V, Integer>> inventory;
+        protected final Map<V, Map<V, Integer>> inventory;
 
         /**
          * The sense mapping.
          */
-        private final Map<V, List<Sense<V>>> senses;
+        protected final Map<V, List<Sense<V>>> senses;
 
         /**
          * Create an instance of the Simplified Watset clustering algorithm implementation.
@@ -256,7 +256,7 @@ public class SimplifiedWatset<V, E> implements ClusteringAlgorithm<V> {
         /**
          * Build a node sense inventory; fill in variables {@code senses} and {@code inventory}.
          */
-        private void buildInventory() {
+        protected void buildInventory() {
             graph.vertexSet().parallelStream().forEach(node -> {
                 final var clustering = inducer.clustering(node);
 
@@ -291,7 +291,7 @@ public class SimplifiedWatset<V, E> implements ClusteringAlgorithm<V> {
          *
          * @return the sense graph
          */
-        private Graph<Sense<V>, DefaultWeightedEdge> buildSenseGraph() {
+        protected Graph<Sense<V>, DefaultWeightedEdge> buildSenseGraph() {
             final var builder = SimpleWeightedGraph.<Sense<V>, DefaultWeightedEdge>createBuilder(DefaultWeightedEdge.class);
 
             for (final var sourceEntry : inventory.entrySet()) {

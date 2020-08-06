@@ -103,33 +103,33 @@ public class MaxMax<V, E> implements ClusteringAlgorithm<V> {
      * @param <V> the type of nodes in the graph
      * @param <E> the type of edges in the graph
      */
-    private static class Implementation<V, E> {
+    protected static class Implementation<V, E> {
         /**
          * The graph.
          */
-        private final Graph<V, E> graph;
+        protected final Graph<V, E> graph;
 
         /**
          * The map of nodes to their maximal affinity nodes.
          */
-        private final Map<V, Set<V>> maximals;
+        protected final Map<V, Set<V>> maximals;
 
         /**
          * The directed graph.
          */
-        private final Graph<V, DefaultEdge> digraph;
+        protected final Graph<V, DefaultEdge> digraph;
 
         /**
          * The map of root and non-root nodes.
          */
-        private final Map<V, Boolean> roots;
+        protected final Map<V, Boolean> roots;
 
         /**
          * Create an instance of the MaxMax clustering algorithm implementation.
          *
          * @param graph the graph
          */
-        private Implementation(Graph<V, E> graph) {
+        public Implementation(Graph<V, E> graph) {
             this.graph = graph;
             this.maximals = new HashMap<>(graph.vertexSet().size());
             this.roots = new HashMap<>(graph.vertexSet().size());
@@ -204,7 +204,7 @@ public class MaxMax<V, E> implements ClusteringAlgorithm<V> {
          *
          * @return the clusters
          */
-        private List<Set<V>> extractClusters() {
+        protected List<Set<V>> extractClusters() {
             final var rootNodes = roots.entrySet().stream().
                     filter(Map.Entry::getValue).
                     map(Map.Entry::getKey).

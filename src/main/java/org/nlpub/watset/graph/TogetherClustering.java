@@ -65,7 +65,7 @@ public class TogetherClustering<V, E> implements ClusteringAlgorithm<V> {
     /**
      * The graph.
      */
-    private final Graph<V, E> graph;
+    protected final Graph<V, E> graph;
 
     /**
      * Set up the trivial clustering algorithm that puts every node together in a single large cluster.

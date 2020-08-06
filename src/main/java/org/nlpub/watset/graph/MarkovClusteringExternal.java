@@ -141,7 +141,7 @@ public class MarkovClusteringExternal<V, E> implements ClusteringAlgorithm<V> {
     /**
      * The cached clustering result.
      */
-    private Clustering<V> clustering;
+    protected Clustering<V> clustering;
 
     /**
      * A factory function that sets up the algorithm for the given graph.
@@ -187,7 +187,7 @@ public class MarkovClusteringExternal<V, E> implements ClusteringAlgorithm<V> {
      * @param <V> the type of nodes in the graph
      * @param <E> the type of edges in the graph
      */
-    private static class Implementation<V, E> {
+    public static class Implementation<V, E> {
         /**
          * The graph.
          */
@@ -267,7 +267,7 @@ public class MarkovClusteringExternal<V, E> implements ClusteringAlgorithm<V> {
          *
          * @throws IOException if an I/O error occurs
          */
-        private void process() throws IOException {
+        protected void process() throws IOException {
             output = File.createTempFile("mcl", "output");
             output.deleteOnExit();
 
@@ -314,7 +314,7 @@ public class MarkovClusteringExternal<V, E> implements ClusteringAlgorithm<V> {
          * @return the written input file for the Markov Clustering binary
          * @throws IOException if an I/O error occurs
          */
-        private File writeInputFile() throws IOException {
+        protected File writeInputFile() throws IOException {
             final var input = File.createTempFile("mcl", "input");
             input.deleteOnExit();
 

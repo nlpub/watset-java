@@ -64,7 +64,7 @@ public class ComponentsClustering<V, E> implements ClusteringAlgorithm<V> {
         return ComponentsClustering::new;
     }
 
-    private final ConnectivityInspector<V, E> inspector;
+    protected final ConnectivityInspector<V, E> inspector;
 
     /**
      * Set up the trivial clustering algorithm that treats every connected component as a cluster.

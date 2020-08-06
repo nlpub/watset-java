@@ -146,7 +146,7 @@ public class ChineseWhispers<V, E> implements ClusteringAlgorithm<V> {
     /**
      * The cached clustering result.
      */
-    private Clustering<V> clustering;
+    protected Clustering<V> clustering;
 
     /**
      * Create an instance of the Chinese Whispers algorithm.
@@ -217,7 +217,7 @@ public class ChineseWhispers<V, E> implements ClusteringAlgorithm<V> {
          * @param iterations the number of iterations
          * @param random     the random number generator
          */
-        private Implementation(Graph<V, E> graph, NodeWeighting<V, E> weighting, int iterations, Random random) {
+        public Implementation(Graph<V, E> graph, NodeWeighting<V, E> weighting, int iterations, Random random) {
             this.graph = graph;
             this.weighting = weighting;
             this.iterations = iterations;
