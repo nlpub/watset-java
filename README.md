@@ -81,6 +81,10 @@ $ java -jar watset.jar -i graph.txt -o output.tsv mcl -e 2 -r 2
 
 This implementation is not optimized, so the processing of large graphs will likely be quite slow. So, for large graphs it is recommended to use the original implementation of the [MCL](https://micans.org/mcl/) algorithm, which is written in C and thus is really fast.
 
+```bash
+$ java -jar watset.jar -i graph.txt -o output.tsv mcl-bin -r 2 --bin /path/to/mcl
+```
+
 ### Watset
 
 [Watset] is a *local-global meta-algorithm* for fuzzy graph clustering. It builds an intermediate undirected graph that addresses the element ambiguity by considering different senses of each element in the input graph. We recommend using Simplified Watset that is enabled with the flag `-s`.
