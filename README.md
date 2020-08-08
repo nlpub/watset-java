@@ -56,6 +56,14 @@ As the baseline, it is possible to use the following four dummy clustering “al
 $ java -jar watset.jar -i graph.txt -o output.tsv singleton
 ```
 
+### k Spanning Tree Clustering
+
+The [*k* spanning tree clustering algorithm](https://doi.org/10.2307/2346439) performs graph single-linkage clustering using minimal spanning trees.
+
+```bash
+$ java -jar watset.jar -i graph.txt -o output.tsv kst -k 2
+```
+
 ### Chinese Whispers
 
 [Chinese Whispers] (CW) is a hard clustering algorithm that resembles a popular children's game. This tool offers three different variations of this algorithm that can be set using the `-m` (`--mode`) option:
