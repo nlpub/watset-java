@@ -57,7 +57,7 @@ public class MarkovClusteringExternal<V, E> implements ClusteringAlgorithm<V> {
      * @param <E> the type of edges in the graph
      */
     @SuppressWarnings({"unused", "UnusedReturnValue"})
-    public static class Builder<V, E> implements ClusteringBuilder<V, E, MarkovClusteringExternal<V, E>> {
+    public static class Builder<V, E> implements ClusteringAlgorithmBuilder<V, E, MarkovClusteringExternal<V, E>> {
         /**
          * The default value of the inflation parameter.
          */

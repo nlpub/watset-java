@@ -40,7 +40,7 @@ public class ComponentsClustering<V, E> implements ClusteringAlgorithm<V> {
      * @param <E> the type of edges in the graph
      */
     @SuppressWarnings({"unused", "UnusedReturnValue"})
-    public static class Builder<V, E> implements ClusteringBuilder<V, E, ComponentsClustering<V, E>> {
+    public static class Builder<V, E> implements ClusteringAlgorithmBuilder<V, E, ComponentsClustering<V, E>> {
         @Override
         public ComponentsClustering<V, E> build(Graph<V, E> graph) {
             return new ComponentsClustering<>(graph);

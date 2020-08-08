@@ -45,7 +45,7 @@ public class ChineseWhispers<V, E> implements ClusteringAlgorithm<V> {
      * @param <E> the type of edges in the graph
      */
     @SuppressWarnings("unused")
-    public static class Builder<V, E> implements ClusteringBuilder<V, E, ChineseWhispers<V, E>> {
+    public static class Builder<V, E> implements ClusteringAlgorithmBuilder<V, E, ChineseWhispers<V, E>> {
         /**
          * The default number of Chinese Whispers iterations.
          */

@@ -38,7 +38,7 @@ public class EmptyClustering<V> implements ClusteringAlgorithm<V> {
      * @param <E> the type of edges in the graph
      */
     @SuppressWarnings({"unused", "UnusedReturnValue"})
-    public static class Builder<V, E> implements ClusteringBuilder<V, E, EmptyClustering<V>> {
+    public static class Builder<V, E> implements ClusteringAlgorithmBuilder<V, E, EmptyClustering<V>> {
         @Override
         public EmptyClustering<V> build(Graph<V, E> graph) {
             requireNonNull(graph);

@@ -46,7 +46,7 @@ public class MaxMax<V, E> implements ClusteringAlgorithm<V> {
      * @param <E> the type of edges in the graph
      */
     @SuppressWarnings({"unused", "UnusedReturnValue"})
-    public static class Builder<V, E> implements ClusteringBuilder<V, E, MaxMax<V, E>> {
+    public static class Builder<V, E> implements ClusteringAlgorithmBuilder<V, E, MaxMax<V, E>> {
         @Override
         public MaxMax<V, E> build(Graph<V, E> graph) {
             return new MaxMax<>(graph);

@@ -39,7 +39,7 @@ public class TogetherClustering<V, E> implements ClusteringAlgorithm<V> {
      * @param <E> the type of edges in the graph
      */
     @SuppressWarnings({"unused", "UnusedReturnValue"})
-    public static class Builder<V, E> implements ClusteringBuilder<V, E, TogetherClustering<V, E>> {
+    public static class Builder<V, E> implements ClusteringAlgorithmBuilder<V, E, TogetherClustering<V, E>> {
         @Override
         public TogetherClustering<V, E> build(Graph<V, E> graph) {
             return new TogetherClustering<>(graph);

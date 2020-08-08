@@ -50,7 +50,7 @@ public class MarkovClustering<V, E> implements ClusteringAlgorithm<V> {
      * @param <E> the type of edges in the graph
      */
     @SuppressWarnings({"unused", "UnusedReturnValue"})
-    public static class Builder<V, E> implements ClusteringBuilder<V, E, MarkovClustering<V, E>> {
+    public static class Builder<V, E> implements ClusteringAlgorithmBuilder<V, E, MarkovClustering<V, E>> {
         /**
          * The default value of the expansion parameter.
          */

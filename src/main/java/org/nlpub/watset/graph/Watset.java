@@ -60,7 +60,7 @@ public class Watset<V, E> implements ClusteringAlgorithm<V> {
      * @param <E> the type of edges in the graph
      */
     @SuppressWarnings({"unused", "UnusedReturnValue"})
-    public static class Builder<V, E> implements ClusteringBuilder<V, E, Watset<V, E>> {
+    public static class Builder<V, E> implements ClusteringAlgorithmBuilder<V, E, Watset<V, E>> {
         private Function<Graph<V, E>, ClusteringAlgorithm<V>> local;
         private Function<Graph<Sense<V>, DefaultWeightedEdge>, ClusteringAlgorithm<Sense<V>>> global;
         private ContextSimilarity<V> similarity = ContextSimilarities.cosine();
@@ -92,7 +92,7 @@ public class Watset<V, E> implements ClusteringAlgorithm<V> {
          * @param localBuilder the local clustering algorithm builder
          * @return the builder
          */
-        public Builder<V, E> setLocalBuilder(ClusteringBuilder<V, E, ?> localBuilder) {
+        public Builder<V, E> setLocalBuilder(ClusteringAlgorithmBuilder<V, E, ?> localBuilder) {
             this.local = requireNonNull(localBuilder).provider();
             return this;
         }
@@ -114,7 +114,7 @@ public class Watset<V, E> implements ClusteringAlgorithm<V> {
          * @param globalBuilder the global clustering algorithm builder
          * @return the builder
          */
-        public Builder<V, E> setGlobalBuilder(ClusteringBuilder<Sense<V>, DefaultWeightedEdge, ?> globalBuilder) {
+        public Builder<V, E> setGlobalBuilder(ClusteringAlgorithmBuilder<Sense<V>, DefaultWeightedEdge, ?> globalBuilder) {
             this.global = requireNonNull(globalBuilder).provider();
             return this;
         }

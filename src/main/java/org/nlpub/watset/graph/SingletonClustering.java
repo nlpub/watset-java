@@ -40,7 +40,7 @@ public class SingletonClustering<V, E> implements ClusteringAlgorithm<V> {
      * @param <E> the type of edges in the graph
      */
     @SuppressWarnings({"unused", "UnusedReturnValue"})
-    public static class Builder<V, E> implements ClusteringBuilder<V, E, SingletonClustering<V, E>> {
+    public static class Builder<V, E> implements ClusteringAlgorithmBuilder<V, E, SingletonClustering<V, E>> {
         @Override
         public SingletonClustering<V, E> build(Graph<V, E> graph) {
             return new SingletonClustering<>(graph);

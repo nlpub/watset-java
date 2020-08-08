@@ -29,7 +29,7 @@ import java.util.function.Function;
  * @param <E> the type of edges in the graph
  * @param <C> the type of clustering algorithm
  */
-public interface ClusteringBuilder<V, E, C extends ClusteringAlgorithm<V>> {
+public interface ClusteringAlgorithmBuilder<V, E, C extends ClusteringAlgorithm<V>> {
     /**
      * Construct an instance of the clustering algorithm with the parameters specified in the builder.
      *
