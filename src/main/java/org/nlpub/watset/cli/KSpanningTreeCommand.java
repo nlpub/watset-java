@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * A command that runs the <em>k</em> spanning tree clustering algorithm.
  */
-public class KSpanningTreeCommand extends ClusteringCommand {
+class KSpanningTreeCommand extends ClusteringCommand {
     @SuppressWarnings("unused")
     @Parameter(description = "Desired number of clusters", names = "-k")
     private Integer k;
