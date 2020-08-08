@@ -89,6 +89,7 @@ public final class Application implements Runnable {
                 .addCommand("singleton", new ProvidedClusteringCommand(parameters, "singleton"))
                 .addCommand("together", new ProvidedClusteringCommand(parameters, "together"))
                 .addCommand("components", new ProvidedClusteringCommand(parameters, "components"))
+                .addCommand("kst", new KSpanningTreeCommand(parameters))
                 .addCommand("cw", new ChineseWhispersCommand(parameters))
                 .addCommand("mcl", new MarkovClusteringCommand(parameters))
                 .addCommand("mcl-bin", new MarkovClusteringExternalCommand(parameters))

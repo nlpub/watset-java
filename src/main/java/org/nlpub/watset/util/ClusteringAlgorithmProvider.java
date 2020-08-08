@@ -18,6 +18,7 @@
 package org.nlpub.watset.util;
 
 import org.jgrapht.Graph;
+import org.jgrapht.alg.clustering.KSpanningTreeClustering;
 import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
 import org.nlpub.watset.graph.*;
 
@@ -76,6 +77,9 @@ public class ClusteringAlgorithmProvider<V, E> implements Function<Graph<V, E>, 
                 return new SingletonClustering.Builder<V, E>().build(graph);
             case "components":
                 return new ComponentsClustering.Builder<V, E>().build(graph);
+            case "kst":
+                final int k = Integer.parseInt(requireNonNull(params.get("k"), "k must be specified"));
+                return new KSpanningTreeClustering<>(graph, k);
             case "cw":
                 return new ChineseWhispers.Builder<V, E>().setWeighting(weighting).build(graph);
             case "mcl":
