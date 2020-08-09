@@ -57,6 +57,9 @@ public class ComponentsClustering<V, E> implements ClusteringAlgorithm<V> {
         return new Builder<>();
     }
 
+    /**
+     * The connectivity inspector.
+     */
     protected final ConnectivityInspector<V, E> inspector;
 
     /**
