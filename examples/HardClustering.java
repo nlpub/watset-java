@@ -17,6 +17,7 @@
  *
  */
 
+import org.jgrapht.alg.clustering.KSpanningTreeClustering;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
 import org.nlpub.watset.graph.*;
@@ -61,6 +62,13 @@ public class HardClustering {
 
         System.out.print("Components Clusters: ");
         System.out.println(componentsClustering.getClusters());
+
+        // k Spanning Tree Clustering
+        var kst = new KSpanningTreeClustering<>(graph, 2);
+        var kstClustering = kst.getClustering();
+
+        System.out.print("k Spanning Tree Clusters (k=2): ");
+        System.out.println(kstClustering.getClusters());
 
         // Chinese Whispers
         var cw = new ChineseWhispers.Builder<String, DefaultWeightedEdge>().build(graph);
