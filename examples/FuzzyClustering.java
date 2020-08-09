@@ -37,13 +37,12 @@ public class FuzzyClustering {
 
         // MaxMax
         var maxmax = MaxMax.<String, DefaultWeightedEdge>builder().apply(graph);
-        var maxmaxClustering = maxmax.getClustering();
+
+        System.out.print("MaxMax: ");
+        System.out.println(maxmax.getClustering());
 
         System.out.print("MaxMax Digraph: ");
-        System.out.println(maxmaxClustering.getDigraph());
-
-        System.out.print("MaxMax Clusters: ");
-        System.out.println(maxmaxClustering.getClusters());
+        System.out.println(maxmax.getClustering().getDigraph());
 
         // Watset[MCL, CW]
         var local = MarkovClustering.<String, DefaultWeightedEdge>builder();
@@ -54,12 +53,12 @@ public class FuzzyClustering {
                 setGlobal(global).
                 apply(graph);
 
-        var watsetClustering = watset.getClustering();
+        watset.getClustering(); // getClustering() is memoized and we do not want to mix STDOUT with STDERR
+
+        System.out.print("Watset: ");
+        System.out.println(watset.getClustering());
 
         System.out.print("Watset Sense Graph: ");
-        System.out.println(watsetClustering.getSenseGraph());
-
-        System.out.print("Watset Clusters: ");
-        System.out.println(watsetClustering.getClusters());
+        System.out.println(watset.getClustering().getSenseGraph());
     }
 }

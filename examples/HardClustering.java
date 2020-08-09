@@ -37,51 +37,37 @@ public class HardClustering {
 
         // Empty Clustering
         var empty = EmptyClustering.<String, DefaultWeightedEdge>builder().apply(graph);
-        var emptyClustering = empty.getClustering();
-
-        System.out.print("Empty Clusters: ");
-        System.out.println(emptyClustering.getClusters());
+        System.out.print("Empty: ");
+        System.out.println(empty.getClustering());
 
         // Singleton Clustering
         var singleton = SingletonClustering.<String, DefaultWeightedEdge>builder().apply(graph);
-        var singletonClustering = singleton.getClustering();
-
-        System.out.print("Singleton Clusters: ");
-        System.out.println(singletonClustering.getClusters());
+        System.out.print("Singleton: ");
+        System.out.println(singleton.getClustering());
 
         // Together Clustering
         var together = TogetherClustering.<String, DefaultWeightedEdge>builder().apply(graph);
-        var togetherClustering = together.getClustering();
-
-        System.out.print("Together Clusters: ");
-        System.out.println(togetherClustering.getClusters());
+        System.out.print("Together: ");
+        System.out.println(together.getClustering());
 
         // Connected Components
         var components = ComponentsClustering.<String, DefaultWeightedEdge>builder().apply(graph);
-        var componentsClustering = components.getClustering();
-
-        System.out.print("Components Clusters: ");
-        System.out.println(componentsClustering.getClusters());
+        System.out.print("Components: ");
+        System.out.println(components.getClustering());
 
         // k Spanning Tree Clustering
         var kst = new KSpanningTreeClustering<>(graph, 2);
-        var kstClustering = kst.getClustering();
-
-        System.out.print("k Spanning Tree Clusters (k=2): ");
-        System.out.println(kstClustering.getClusters());
+        System.out.print("k Spanning Tree (k=2): ");
+        System.out.println(kst.getClustering());
 
         // Chinese Whispers
         var cw = ChineseWhispers.<String, DefaultWeightedEdge>builder().apply(graph);
-        var cwClustering = cw.getClustering();
-
-        System.out.print("Chinese Whispers Clusters: ");
-        System.out.println(cwClustering.getClusters());
+        System.out.print("Chinese Whispers: ");
+        System.out.println(cw.getClustering());
 
         // Markov Clustering
         var mcl = MarkovClustering.<String, DefaultWeightedEdge>builder().apply(graph);
-        var mclClustering = mcl.getClustering();
-
-        System.out.print("Markov Clustering Clusters: ");
-        System.out.println(mclClustering.getClusters());
+        System.out.print("Markov Clustering: ");
+        System.out.println(mcl.getClustering());
     }
 }
