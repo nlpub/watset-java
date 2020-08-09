@@ -39,7 +39,7 @@ public class ChineseWhispersTest {
 
     public final static ChineseWhispers.Builder<String, DefaultWeightedEdge> BUILDER = ChineseWhispers.<String, DefaultWeightedEdge>builder().setRandom(random);
 
-    private final ChineseWhispers<String, DefaultWeightedEdge> cw = BUILDER.build(DISJOINT);
+    private final ChineseWhispers<String, DefaultWeightedEdge> cw = BUILDER.apply(DISJOINT);
 
     @Test
     public void testClustering() {

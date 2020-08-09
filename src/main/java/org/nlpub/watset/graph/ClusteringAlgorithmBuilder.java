@@ -29,20 +29,5 @@ import java.util.function.Function;
  * @param <E> the type of edges in the graph
  * @param <C> the type of clustering algorithm
  */
-public interface ClusteringAlgorithmBuilder<V, E, C extends ClusteringAlgorithm<V>> {
-    /**
-     * Construct an instance of the clustering algorithm with the parameters specified in the builder.
-     *
-     * @param graph the graph
-     * @return a fully-configured clustering algorithm
-     */
-    @SuppressWarnings("unused")
-    C build(Graph<V, E> graph);
-
-    /**
-     * Construct a factory function that sets up the algorithm for the given graph.
-     *
-     * @return a factory function that sets up the algorithm for the given graph
-     */
-    Function<Graph<V, E>, ClusteringAlgorithm<V>> provider();
+public interface ClusteringAlgorithmBuilder<V, E, C extends ClusteringAlgorithm<V>> extends Function<Graph<V, E>, C> {
 }

@@ -18,13 +18,11 @@
 package org.nlpub.watset.cli;
 
 import org.jgrapht.Graph;
-import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
 import org.jgrapht.graph.DefaultWeightedEdge;
+import org.nlpub.watset.graph.ClusteringAlgorithmBuilder;
 import org.nlpub.watset.graph.SimplifiedWatset;
 import org.nlpub.watset.graph.Watset;
 import org.nlpub.watset.util.Sense;
-
-import java.util.function.Function;
 
 /**
  * Routines for constructing instances of two Watset variations.
@@ -41,11 +39,11 @@ interface WatsetGetter<V, E> {
      * @param graph  the graph
      * @return an instance of Simplified Watset
      */
-    default SimplifiedWatset<V, E> getSimplifiedWatset(Function<Graph<V, E>, ClusteringAlgorithm<V>> local, Function<Graph<Sense<V>, DefaultWeightedEdge>, ClusteringAlgorithm<Sense<V>>> global, Graph<V, E> graph) {
+    default SimplifiedWatset<V, E> getSimplifiedWatset(ClusteringAlgorithmBuilder<V, E, ?> local, ClusteringAlgorithmBuilder<Sense<V>, DefaultWeightedEdge, ?> global, Graph<V, E> graph) {
         return SimplifiedWatset.<V, E>builder().
                 setLocal(local).
                 setGlobal(global).
-                build(graph);
+                apply(graph);
     }
 
     /**
@@ -57,10 +55,10 @@ interface WatsetGetter<V, E> {
      * @return an instance of Watset
      */
     @SuppressWarnings("deprecation")
-    default Watset<V, E> getWatset(Function<Graph<V, E>, ClusteringAlgorithm<V>> local, Function<Graph<Sense<V>, DefaultWeightedEdge>, ClusteringAlgorithm<Sense<V>>> global, Graph<V, E> graph) {
+    default Watset<V, E> getWatset(ClusteringAlgorithmBuilder<V, E, ?> local, ClusteringAlgorithmBuilder<Sense<V>, DefaultWeightedEdge, ?> global, Graph<V, E> graph) {
         return Watset.<V, E>builder().
                 setLocal(local).
                 setGlobal(global).
-                build(graph);
+                apply(graph);
     }
 }

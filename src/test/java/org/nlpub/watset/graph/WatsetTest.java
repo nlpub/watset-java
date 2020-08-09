@@ -33,7 +33,7 @@ public class WatsetTest {
     private final static ChineseWhispers.Builder<Sense<String>, DefaultWeightedEdge> global = ChineseWhispers.<Sense<String>, DefaultWeightedEdge>builder().setRandom(random);
 
     @SuppressWarnings("deprecation")
-    private final static Watset<String, DefaultWeightedEdge> watset = Watset.<String, DefaultWeightedEdge>builder().setLocal(local).setGlobal(global).build(SenseInductionTest.WORDS);
+    private final static Watset<String, DefaultWeightedEdge> watset = Watset.<String, DefaultWeightedEdge>builder().setLocal(local).setGlobal(global).apply(SenseInductionTest.WORDS);
 
     @Test
     public void testClustering() {

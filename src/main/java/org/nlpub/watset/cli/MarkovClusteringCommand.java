@@ -56,6 +56,6 @@ class MarkovClusteringCommand extends ClusteringCommand {
                 setE(e).
                 setR(r).
                 setIterations(iterations).
-                build(getGraph());
+                apply(getGraph());
     }
 }

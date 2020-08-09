@@ -21,7 +21,6 @@ import org.jgrapht.Graph;
 import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
 
 import java.util.Collections;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static org.jgrapht.GraphTests.requireUndirected;
@@ -42,13 +41,8 @@ public class SingletonClustering<V, E> implements ClusteringAlgorithm<V> {
     @SuppressWarnings({"unused", "UnusedReturnValue"})
     public static class Builder<V, E> implements ClusteringAlgorithmBuilder<V, E, SingletonClustering<V, E>> {
         @Override
-        public SingletonClustering<V, E> build(Graph<V, E> graph) {
+        public SingletonClustering<V, E> apply(Graph<V, E> graph) {
             return new SingletonClustering<>(graph);
-        }
-
-        @Override
-        public Function<Graph<V, E>, ClusteringAlgorithm<V>> provider() {
-            return SingletonClustering.provider();
         }
     }
 
@@ -61,17 +55,6 @@ public class SingletonClustering<V, E> implements ClusteringAlgorithm<V> {
      */
     public static <V, E> Builder<V, E> builder() {
         return new Builder<>();
-    }
-
-    /**
-     * A factory function that sets up the algorithm for the given graph.
-     *
-     * @param <V> the type of nodes in the graph
-     * @param <E> the type of edges in the graph
-     * @return a factory function that sets up the algorithm for the given graph
-     */
-    public static <V, E> Function<Graph<V, E>, ClusteringAlgorithm<V>> provider() {
-        return SingletonClustering::new;
     }
 
     /**

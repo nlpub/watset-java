@@ -23,7 +23,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 public class ComponentsClusteringTest {
-    private final ComponentsClustering<String, DefaultWeightedEdge> components = ComponentsClustering.<String, DefaultWeightedEdge>builder().build(ChineseWhispersTest.DISJOINT);
+    private final ComponentsClustering<String, DefaultWeightedEdge> components = ComponentsClustering.<String, DefaultWeightedEdge>builder().apply(ChineseWhispersTest.DISJOINT);
 
     @Test
     public void testClustering() {

@@ -20,12 +20,12 @@ package org.nlpub.watset.eval;
 import org.jgrapht.Graph;
 import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
 import org.jgrapht.alg.util.Pair;
+import org.nlpub.watset.graph.ClusteringAlgorithmBuilder;
 
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -73,7 +73,7 @@ public class Measurer<V, E> {
      */
     final static public int WARMUP = 5;
 
-    private final Function<Graph<V, E>, ClusteringAlgorithm<V>> provider;
+    private final ClusteringAlgorithmBuilder<V, E, ?> provider;
     private final int repetitions, warmup;
     private final Graph<V, E> graph;
     private long[] durations;
@@ -87,7 +87,7 @@ public class Measurer<V, E> {
      * @param repetitions the number of repetitions
      * @param warmup      the number of off-record repetitions
      */
-    public Measurer(Function<Graph<V, E>, ClusteringAlgorithm<V>> provider, Graph<V, E> graph, int repetitions, int warmup) {
+    public Measurer(ClusteringAlgorithmBuilder<V, E, ?> provider, Graph<V, E> graph, int repetitions, int warmup) {
         this.provider = provider;
         this.repetitions = repetitions;
         this.warmup = warmup;
@@ -100,7 +100,7 @@ public class Measurer<V, E> {
      * @param provider the clustering algorithm provider
      * @param graph    the graph
      */
-    public Measurer(Function<Graph<V, E>, ClusteringAlgorithm<V>> provider, Graph<V, E> graph) {
+    public Measurer(ClusteringAlgorithmBuilder<V, E, ?> provider, Graph<V, E> graph) {
         this(provider, graph, REPETITIONS, WARMUP);
     }
 

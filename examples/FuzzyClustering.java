@@ -36,7 +36,7 @@ public class FuzzyClustering {
         System.out.println(graph);
 
         // MaxMax
-        var maxmax = MaxMax.<String, DefaultWeightedEdge>builder().build(graph);
+        var maxmax = MaxMax.<String, DefaultWeightedEdge>builder().apply(graph);
         var maxmaxClustering = maxmax.getClustering();
 
         System.out.print("MaxMax Digraph: ");
@@ -52,7 +52,7 @@ public class FuzzyClustering {
         var watset = SimplifiedWatset.<String, DefaultWeightedEdge>builder().
                 setLocal(local).
                 setGlobal(global).
-                build(graph);
+                apply(graph);
 
         var watsetClustering = watset.getClustering();
 

@@ -26,7 +26,6 @@ import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
 import org.jgrapht.util.VertexToIntegerMapping;
 
 import java.util.*;
-import java.util.function.Function;
 import java.util.logging.Logger;
 
 import static java.util.Objects.isNull;
@@ -71,13 +70,8 @@ public class MarkovClustering<V, E> implements ClusteringAlgorithm<V> {
         private int iterations = ITERATIONS;
 
         @Override
-        public MarkovClustering<V, E> build(Graph<V, E> graph) {
+        public MarkovClustering<V, E> apply(Graph<V, E> graph) {
             return new MarkovClustering<>(graph, e, r, iterations);
-        }
-
-        @Override
-        public Function<Graph<V, E>, ClusteringAlgorithm<V>> provider() {
-            return MarkovClustering.provider(e, r, iterations);
         }
 
         /**
@@ -123,20 +117,6 @@ public class MarkovClustering<V, E> implements ClusteringAlgorithm<V> {
      */
     public static <V, E> Builder<V, E> builder() {
         return new Builder<>();
-    }
-
-    /**
-     * A factory function that sets up the algorithm for the given graph.
-     *
-     * @param e          the expansion parameter
-     * @param r          the inflation parameter
-     * @param iterations the maximal number of iterations
-     * @param <V>        the type of nodes in the graph
-     * @param <E>        the type of edges in the graph
-     * @return a factory function that sets up the algorithm for the given graph
-     */
-    public static <V, E> Function<Graph<V, E>, ClusteringAlgorithm<V>> provider(int e, double r, int iterations) {
-        return graph -> new MarkovClustering<>(graph, e, r, iterations);
     }
 
     private static final Logger logger = Logger.getLogger(MarkovClustering.class.getSimpleName());

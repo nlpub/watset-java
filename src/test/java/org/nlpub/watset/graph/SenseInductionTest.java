@@ -18,13 +18,11 @@
 package org.nlpub.watset.graph;
 
 import org.jgrapht.Graph;
-import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
 import org.junit.Test;
 
 import java.util.Random;
-import java.util.function.Function;
 
 import static org.junit.Assert.assertEquals;
 
@@ -45,7 +43,7 @@ public class SenseInductionTest {
 
     private final static Random random = new Random(1337);
 
-    private final static Function<Graph<String, DefaultWeightedEdge>, ClusteringAlgorithm<String>> local = ChineseWhispers.<String, DefaultWeightedEdge>builder().setRandom(random).provider();
+    private final static ChineseWhispers.Builder<String, DefaultWeightedEdge> local = ChineseWhispers.<String, DefaultWeightedEdge>builder().setRandom(random);
 
     private final static SenseInduction<String, DefaultWeightedEdge> senseInduction = new SenseInduction<>(WORDS, local);
 

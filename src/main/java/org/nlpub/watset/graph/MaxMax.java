@@ -25,7 +25,6 @@ import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleDirectedGraph;
 
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
@@ -48,13 +47,8 @@ public class MaxMax<V, E> implements ClusteringAlgorithm<V> {
     @SuppressWarnings({"unused", "UnusedReturnValue"})
     public static class Builder<V, E> implements ClusteringAlgorithmBuilder<V, E, MaxMax<V, E>> {
         @Override
-        public MaxMax<V, E> build(Graph<V, E> graph) {
+        public MaxMax<V, E> apply(Graph<V, E> graph) {
             return new MaxMax<>(graph);
-        }
-
-        @Override
-        public Function<Graph<V, E>, ClusteringAlgorithm<V>> provider() {
-            return MaxMax.provider();
         }
     }
 
@@ -67,17 +61,6 @@ public class MaxMax<V, E> implements ClusteringAlgorithm<V> {
      */
     public static <V, E> Builder<V, E> builder() {
         return new Builder<>();
-    }
-
-    /**
-     * A factory function that sets up the algorithm for the given graph.
-     *
-     * @param <V> the type of nodes in the graph
-     * @param <E> the type of edges in the graph
-     * @return a factory function that sets up the algorithm for the given graph
-     */
-    public static <V, E> Function<Graph<V, E>, ClusteringAlgorithm<V>> provider() {
-        return MaxMax::new;
     }
 
     /**

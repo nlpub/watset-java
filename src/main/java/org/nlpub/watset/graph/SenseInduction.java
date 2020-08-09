@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 
 import static java.util.Objects.requireNonNull;
 import static org.jgrapht.GraphTests.requireUndirected;
@@ -48,7 +47,7 @@ public class SenseInduction<V, E> {
     /**
      * The local clustering algorithm supplier.
      */
-    protected final Function<Graph<V, E>, ClusteringAlgorithm<V>> local;
+    protected final ClusteringAlgorithmBuilder<V, E, ?> local;
 
     /**
      * Create an instance of {@code SenseInduction}.
@@ -56,7 +55,7 @@ public class SenseInduction<V, E> {
      * @param graph the graph
      * @param local the neighborhood clustering algorithm supplier
      */
-    public SenseInduction(Graph<V, E> graph, Function<Graph<V, E>, ClusteringAlgorithm<V>> local) {
+    public SenseInduction(Graph<V, E> graph, ClusteringAlgorithmBuilder<V, E, ?> local) {
         this.graph = requireUndirected(graph);
         this.local = requireNonNull(local);
     }

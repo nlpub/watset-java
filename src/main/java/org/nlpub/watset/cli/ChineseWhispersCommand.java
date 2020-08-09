@@ -52,6 +52,6 @@ class ChineseWhispersCommand extends ClusteringCommand {
                 setWeighting(NodeWeightings.parse(mode)).
                 setIterations(iterations).
                 setRandom(parameters.random).
-                build(getGraph());
+                apply(getGraph());
     }
 }

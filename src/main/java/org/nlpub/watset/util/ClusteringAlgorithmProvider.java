@@ -27,7 +27,6 @@ import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
-import java.util.function.Function;
 
 import static java.util.Objects.requireNonNull;
 import static java.util.Objects.requireNonNullElse;
@@ -38,7 +37,7 @@ import static java.util.Objects.requireNonNullElse;
  * @param <V> the type of nodes in the graph
  * @param <E> the type of edges in the graph
  */
-public class ClusteringAlgorithmProvider<V, E> implements Function<Graph<V, E>, ClusteringAlgorithm<V>> {
+public class ClusteringAlgorithmProvider<V, E> implements ClusteringAlgorithmBuilder<V, E, ClusteringAlgorithm<V>> {
     private final String algorithm;
     private final Map<String, String> params;
     private final NodeWeighting<V, E> weighting;
@@ -62,25 +61,25 @@ public class ClusteringAlgorithmProvider<V, E> implements Function<Graph<V, E>, 
     public ClusteringAlgorithm<V> apply(Graph<V, E> graph) {
         switch (algorithm.toLowerCase(Locale.ROOT)) {
             case "empty":
-                return EmptyClustering.<V, E>builder().build(graph);
+                return EmptyClustering.<V, E>builder().apply(graph);
             case "together":
-                return TogetherClustering.<V, E>builder().build(graph);
+                return TogetherClustering.<V, E>builder().apply(graph);
             case "singleton":
-                return SingletonClustering.<V, E>builder().build(graph);
+                return SingletonClustering.<V, E>builder().apply(graph);
             case "components":
-                return ComponentsClustering.<V, E>builder().build(graph);
+                return ComponentsClustering.<V, E>builder().apply(graph);
             case "kst":
                 final int k = Integer.parseInt(requireNonNull(params.get("k"), "k must be specified"));
                 return new KSpanningTreeClustering<>(graph, k);
             case "cw":
-                return ChineseWhispers.<V, E>builder().setWeighting(weighting).setRandom(random).build(graph);
+                return ChineseWhispers.<V, E>builder().setWeighting(weighting).setRandom(random).apply(graph);
             case "mcl":
                 final var mcl = MarkovClustering.<V, E>builder();
 
                 if (params.containsKey("e")) mcl.setE(Integer.parseInt(params.get("e")));
                 if (params.containsKey("r")) mcl.setR(Double.parseDouble(params.get("r")));
 
-                return mcl.build(graph);
+                return mcl.apply(graph);
             case "mcl-bin":
                 final var mclOfficial = MarkovClusteringExternal.<V, E>builder().
                         setPath(Path.of(params.get("bin"))).
@@ -88,9 +87,9 @@ public class ClusteringAlgorithmProvider<V, E> implements Function<Graph<V, E>, 
 
                 if (params.containsKey("r")) mclOfficial.setR(Double.parseDouble(params.get("r")));
 
-                return mclOfficial.build(graph);
+                return mclOfficial.apply(graph);
             case "maxmax":
-                return MaxMax.<V, E>builder().build(graph);
+                return MaxMax.<V, E>builder().apply(graph);
             default:
                 throw new IllegalArgumentException("Unknown algorithm: " + algorithm);
         }

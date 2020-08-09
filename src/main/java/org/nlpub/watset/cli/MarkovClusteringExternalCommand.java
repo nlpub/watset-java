@@ -56,6 +56,6 @@ class MarkovClusteringExternalCommand extends ClusteringCommand {
 
         if (nonNull(binary)) builder.setPath(binary);
 
-        return builder.build(getGraph());
+        return builder.apply(getGraph());
     }
 }

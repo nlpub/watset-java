@@ -21,7 +21,6 @@ import org.jgrapht.Graph;
 import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
 
 import java.util.Collections;
-import java.util.function.Function;
 
 import static java.util.Objects.requireNonNull;
 
@@ -40,14 +39,9 @@ public class EmptyClustering<V> implements ClusteringAlgorithm<V> {
     @SuppressWarnings({"unused", "UnusedReturnValue"})
     public static class Builder<V, E> implements ClusteringAlgorithmBuilder<V, E, EmptyClustering<V>> {
         @Override
-        public EmptyClustering<V> build(Graph<V, E> graph) {
+        public EmptyClustering<V> apply(Graph<V, E> graph) {
             requireNonNull(graph);
             return new EmptyClustering<>();
-        }
-
-        @Override
-        public Function<Graph<V, E>, ClusteringAlgorithm<V>> provider() {
-            return EmptyClustering.provider();
         }
     }
 
@@ -60,17 +54,6 @@ public class EmptyClustering<V> implements ClusteringAlgorithm<V> {
      */
     public static <V, E> Builder<V, E> builder() {
         return new Builder<>();
-    }
-
-    /**
-     * A factory function that sets up the algorithm for the given graph.
-     *
-     * @param <V> the type of nodes in the graph
-     * @param <E> the type of edges in the graph
-     * @return a factory function that sets up the algorithm for the given graph
-     */
-    public static <V, E> Function<Graph<V, E>, ClusteringAlgorithm<V>> provider() {
-        return graph -> new EmptyClustering<>();
     }
 
     @Override

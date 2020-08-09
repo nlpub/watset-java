@@ -22,7 +22,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class SingletonClusteringTest {
-    private final SingletonClustering<String, DefaultWeightedEdge> singleton = SingletonClustering.<String, DefaultWeightedEdge>builder().build(ChineseWhispersTest.DISJOINT);
+    private final SingletonClustering<String, DefaultWeightedEdge> singleton = SingletonClustering.<String, DefaultWeightedEdge>builder().apply(ChineseWhispersTest.DISJOINT);
 
     @Test
     public void testClustering() {

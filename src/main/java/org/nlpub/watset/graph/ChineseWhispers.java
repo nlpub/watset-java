@@ -22,7 +22,6 @@ import org.jgrapht.Graphs;
 import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
 
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
@@ -65,13 +64,8 @@ public class ChineseWhispers<V, E> implements ClusteringAlgorithm<V> {
         }
 
         @Override
-        public ChineseWhispers<V, E> build(Graph<V, E> graph) {
+        public ChineseWhispers<V, E> apply(Graph<V, E> graph) {
             return new ChineseWhispers<>(graph, weighting, iterations, random);
-        }
-
-        @Override
-        public Function<Graph<V, E>, ClusteringAlgorithm<V>> provider() {
-            return ChineseWhispers.provider(weighting, iterations, random);
         }
 
         /**
@@ -117,21 +111,6 @@ public class ChineseWhispers<V, E> implements ClusteringAlgorithm<V> {
      */
     public static <V, E> Builder<V, E> builder() {
         return new Builder<>();
-    }
-
-    /**
-     * A factory function that sets up the algorithm for the given graph.
-     *
-     * @param weighting  the node weighting approach
-     * @param iterations the number of iterations
-     * @param random     the random number generator
-     * @param <V>        the type of nodes in the graph
-     * @param <E>        the type of edges in the graph
-     * @return a factory function that sets up the algorithm for the given graph
-     */
-    @SuppressWarnings("unused")
-    public static <V, E> Function<Graph<V, E>, ClusteringAlgorithm<V>> provider(NodeWeighting<V, E> weighting, int iterations, Random random) {
-        return graph -> new ChineseWhispers<>(graph, weighting, iterations, random);
     }
 
     /**

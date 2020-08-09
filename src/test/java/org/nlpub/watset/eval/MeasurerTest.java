@@ -25,7 +25,7 @@ import org.nlpub.watset.graph.ChineseWhispersTest;
 import static org.junit.Assert.assertEquals;
 
 public class MeasurerTest {
-    static final Measurer<String, DefaultWeightedEdge> MEASURER = new Measurer<>(ChineseWhispersTest.BUILDER.provider(), ChineseWhispersTest.DISJOINT);
+    static final Measurer<String, DefaultWeightedEdge> MEASURER = new Measurer<>(ChineseWhispersTest.BUILDER, ChineseWhispersTest.DISJOINT);
 
     @Before
     public void setUp() {

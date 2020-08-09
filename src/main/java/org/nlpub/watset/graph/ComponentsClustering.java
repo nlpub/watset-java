@@ -22,7 +22,6 @@ import org.jgrapht.alg.connectivity.ConnectivityInspector;
 import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
 
 import java.util.Collections;
-import java.util.function.Function;
 
 import static org.jgrapht.GraphTests.requireUndirected;
 
@@ -42,13 +41,8 @@ public class ComponentsClustering<V, E> implements ClusteringAlgorithm<V> {
     @SuppressWarnings({"unused", "UnusedReturnValue"})
     public static class Builder<V, E> implements ClusteringAlgorithmBuilder<V, E, ComponentsClustering<V, E>> {
         @Override
-        public ComponentsClustering<V, E> build(Graph<V, E> graph) {
+        public ComponentsClustering<V, E> apply(Graph<V, E> graph) {
             return new ComponentsClustering<>(graph);
-        }
-
-        @Override
-        public Function<Graph<V, E>, ClusteringAlgorithm<V>> provider() {
-            return ComponentsClustering.provider();
         }
     }
 
@@ -61,18 +55,6 @@ public class ComponentsClustering<V, E> implements ClusteringAlgorithm<V> {
      */
     public static <V, E> Builder<V, E> builder() {
         return new Builder<>();
-    }
-
-    /**
-     * A factory function that sets up the algorithm for the given graph.
-     *
-     * @param <V> the type of nodes in the graph
-     * @param <E> the type of edges in the graph
-     * @return a factory function that sets up the algorithm for the given graph
-     */
-    @SuppressWarnings("unused")
-    public static <V, E> Function<Graph<V, E>, ClusteringAlgorithm<V>> provider() {
-        return ComponentsClustering::new;
     }
 
     protected final ConnectivityInspector<V, E> inspector;

@@ -43,8 +43,8 @@ public class MarkovClusteringExternalTest {
         path = Path.of(env);
         assumeTrue(path.toFile().canExecute());
 
-        mcl1 = MarkovClusteringExternal.<String, DefaultWeightedEdge>builder().setPath(path).build(BIPARTITE);
-        mcl2 = MarkovClusteringExternal.<Integer, DefaultWeightedEdge>builder().setPath(path).build(TWOCLUSTERS);
+        mcl1 = MarkovClusteringExternal.<String, DefaultWeightedEdge>builder().setPath(path).apply(BIPARTITE);
+        mcl2 = MarkovClusteringExternal.<Integer, DefaultWeightedEdge>builder().setPath(path).apply(TWOCLUSTERS);
     }
 
     @Test

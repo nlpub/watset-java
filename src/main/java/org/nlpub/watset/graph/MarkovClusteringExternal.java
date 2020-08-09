@@ -28,7 +28,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Locale;
-import java.util.function.Function;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -73,13 +72,8 @@ public class MarkovClusteringExternal<V, E> implements ClusteringAlgorithm<V> {
         private int threads = THREADS;
 
         @Override
-        public MarkovClusteringExternal<V, E> build(Graph<V, E> graph) {
+        public MarkovClusteringExternal<V, E> apply(Graph<V, E> graph) {
             return new MarkovClusteringExternal<>(graph, path, r, threads);
-        }
-
-        @Override
-        public Function<Graph<V, E>, ClusteringAlgorithm<V>> provider() {
-            return MarkovClusteringExternal.provider(path, r, threads);
         }
 
         /**
@@ -153,20 +147,6 @@ public class MarkovClusteringExternal<V, E> implements ClusteringAlgorithm<V> {
      * The cached clustering result.
      */
     protected Clustering<V> clustering;
-
-    /**
-     * A factory function that sets up the algorithm for the given graph.
-     *
-     * @param path    the path to the MCL binary
-     * @param r       the inflation parameter
-     * @param threads the number of threads
-     * @param <V>     the type of nodes in the graph
-     * @param <E>     the type of edges in the graph
-     * @return a factory function that sets up the algorithm for the given graph
-     */
-    public static <V, E> Function<Graph<V, E>, ClusteringAlgorithm<V>> provider(Path path, double r, int threads) {
-        return graph -> new MarkovClusteringExternal<>(graph, path, r, threads);
-    }
 
     /**
      * Create an instance of the Markov Clustering algorithm wrapper.

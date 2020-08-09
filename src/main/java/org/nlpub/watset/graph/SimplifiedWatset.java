@@ -27,7 +27,6 @@ import org.nlpub.watset.util.Sense;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -53,17 +52,12 @@ public class SimplifiedWatset<V, E> implements ClusteringAlgorithm<V> {
      */
     @SuppressWarnings({"unused", "UnusedReturnValue"})
     public static class Builder<V, E> implements ClusteringAlgorithmBuilder<V, E, SimplifiedWatset<V, E>> {
-        private Function<Graph<V, E>, ClusteringAlgorithm<V>> local;
-        private Function<Graph<Sense<V>, DefaultWeightedEdge>, ClusteringAlgorithm<Sense<V>>> global;
+        private ClusteringAlgorithmBuilder<V, E, ?> local;
+        private ClusteringAlgorithmBuilder<Sense<V>, DefaultWeightedEdge, ?> global;
 
         @Override
-        public SimplifiedWatset<V, E> build(Graph<V, E> graph) {
+        public SimplifiedWatset<V, E> apply(Graph<V, E> graph) {
             return new SimplifiedWatset<>(graph, local, global);
-        }
-
-        @Override
-        public Function<Graph<V, E>, ClusteringAlgorithm<V>> provider() {
-            return SimplifiedWatset.provider(local, global);
         }
 
         /**
@@ -72,19 +66,8 @@ public class SimplifiedWatset<V, E> implements ClusteringAlgorithm<V> {
          * @param local the local clustering algorithm supplier
          * @return the builder
          */
-        public Builder<V, E> setLocal(Function<Graph<V, E>, ClusteringAlgorithm<V>> local) {
-            this.local = requireNonNull(local);
-            return this;
-        }
-
-        /**
-         * Set the local clustering algorithm builder.
-         *
-         * @param local the local clustering algorithm builder
-         * @return the builder
-         */
         public Builder<V, E> setLocal(ClusteringAlgorithmBuilder<V, E, ?> local) {
-            this.local = requireNonNull(local).provider();
+            this.local = requireNonNull(local);
             return this;
         }
 
@@ -94,19 +77,8 @@ public class SimplifiedWatset<V, E> implements ClusteringAlgorithm<V> {
          * @param global the global clustering algorithm supplier
          * @return the builder
          */
-        public Builder<V, E> setGlobal(Function<Graph<Sense<V>, DefaultWeightedEdge>, ClusteringAlgorithm<Sense<V>>> global) {
-            this.global = requireNonNull(global);
-            return this;
-        }
-
-        /**
-         * Set the global clustering algorithm builder.
-         *
-         * @param global the global clustering algorithm builder
-         * @return the builder
-         */
         public Builder<V, E> setGlobal(ClusteringAlgorithmBuilder<Sense<V>, DefaultWeightedEdge, ?> global) {
-            this.global = requireNonNull(global).provider();
+            this.global = requireNonNull(global);
             return this;
         }
     }
@@ -120,19 +92,6 @@ public class SimplifiedWatset<V, E> implements ClusteringAlgorithm<V> {
      */
     public static <V, E> Builder<V, E> builder() {
         return new Builder<>();
-    }
-
-    /**
-     * A factory function that sets up the algorithm for the given graph.
-     *
-     * @param local  the local clustering algorithm supplier
-     * @param global the global clustering algorithm supplier
-     * @param <V>    the type of nodes in the graph
-     * @param <E>    the type of edges in the graph
-     * @return a factory function that sets up the algorithm for the given graph
-     */
-    public static <V, E> Function<Graph<V, E>, ClusteringAlgorithm<V>> provider(Function<Graph<V, E>, ClusteringAlgorithm<V>> local, Function<Graph<Sense<V>, DefaultWeightedEdge>, ClusteringAlgorithm<Sense<V>>> global) {
-        return graph -> new SimplifiedWatset<>(graph, local, global);
     }
 
     private static final Logger logger = Logger.getLogger(SimplifiedWatset.class.getSimpleName());
@@ -150,7 +109,7 @@ public class SimplifiedWatset<V, E> implements ClusteringAlgorithm<V> {
     /**
      * The global clustering algorithm supplier.
      */
-    protected final Function<Graph<Sense<V>, DefaultWeightedEdge>, ClusteringAlgorithm<Sense<V>>> global;
+    protected final ClusteringAlgorithmBuilder<Sense<V>, DefaultWeightedEdge, ?> global;
 
     /**
      * The cached clustering result.
@@ -164,7 +123,7 @@ public class SimplifiedWatset<V, E> implements ClusteringAlgorithm<V> {
      * @param local  the local clustering algorithm supplier
      * @param global the global clustering algorithm supplier
      */
-    public SimplifiedWatset(Graph<V, E> graph, Function<Graph<V, E>, ClusteringAlgorithm<V>> local, Function<Graph<Sense<V>, DefaultWeightedEdge>, ClusteringAlgorithm<Sense<V>>> global) {
+    public SimplifiedWatset(Graph<V, E> graph, ClusteringAlgorithmBuilder<V, E, ?> local, ClusteringAlgorithmBuilder<Sense<V>, DefaultWeightedEdge, ?> global) {
         this.graph = requireUndirected(graph);
         this.inducer = new SenseInduction<>(graph, requireNonNull(local));
         this.global = requireNonNull(global);
@@ -199,7 +158,7 @@ public class SimplifiedWatset<V, E> implements ClusteringAlgorithm<V> {
         /**
          * The global clustering algorithm supplier.
          */
-        protected final Function<Graph<Sense<V>, DefaultWeightedEdge>, ClusteringAlgorithm<Sense<V>>> global;
+        protected final ClusteringAlgorithmBuilder<Sense<V>, DefaultWeightedEdge, ?> global;
 
         /**
          * The sense inventory.
@@ -218,7 +177,7 @@ public class SimplifiedWatset<V, E> implements ClusteringAlgorithm<V> {
          * @param inducer the node sense induction approach
          * @param global  the global clustering algorithm supplier
          */
-        public Implementation(Graph<V, E> graph, SenseInduction<V, E> inducer, Function<Graph<Sense<V>, DefaultWeightedEdge>, ClusteringAlgorithm<Sense<V>>> global) {
+        public Implementation(Graph<V, E> graph, SenseInduction<V, E> inducer, ClusteringAlgorithmBuilder<Sense<V>, DefaultWeightedEdge, ?> global) {
             this.graph = graph;
             this.inducer = inducer;
             this.global = global;

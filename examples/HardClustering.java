@@ -36,28 +36,28 @@ public class HardClustering {
         System.out.println(graph);
 
         // Empty Clustering
-        var empty = EmptyClustering.<String, DefaultWeightedEdge>builder().build(graph);
+        var empty = EmptyClustering.<String, DefaultWeightedEdge>builder().apply(graph);
         var emptyClustering = empty.getClustering();
 
         System.out.print("Empty Clusters: ");
         System.out.println(emptyClustering.getClusters());
 
         // Singleton Clustering
-        var singleton = SingletonClustering.<String, DefaultWeightedEdge>builder().build(graph);
+        var singleton = SingletonClustering.<String, DefaultWeightedEdge>builder().apply(graph);
         var singletonClustering = singleton.getClustering();
 
         System.out.print("Singleton Clusters: ");
         System.out.println(singletonClustering.getClusters());
 
         // Together Clustering
-        var together = TogetherClustering.<String, DefaultWeightedEdge>builder().build(graph);
+        var together = TogetherClustering.<String, DefaultWeightedEdge>builder().apply(graph);
         var togetherClustering = together.getClustering();
 
         System.out.print("Together Clusters: ");
         System.out.println(togetherClustering.getClusters());
 
         // Connected Components
-        var components = ComponentsClustering.<String, DefaultWeightedEdge>builder().build(graph);
+        var components = ComponentsClustering.<String, DefaultWeightedEdge>builder().apply(graph);
         var componentsClustering = components.getClustering();
 
         System.out.print("Components Clusters: ");
@@ -71,14 +71,14 @@ public class HardClustering {
         System.out.println(kstClustering.getClusters());
 
         // Chinese Whispers
-        var cw = ChineseWhispers.<String, DefaultWeightedEdge>builder().build(graph);
+        var cw = ChineseWhispers.<String, DefaultWeightedEdge>builder().apply(graph);
         var cwClustering = cw.getClustering();
 
         System.out.print("Chinese Whispers Clusters: ");
         System.out.println(cwClustering.getClusters());
 
         // Markov Clustering
-        var mcl = MarkovClustering.<String, DefaultWeightedEdge>builder().build(graph);
+        var mcl = MarkovClustering.<String, DefaultWeightedEdge>builder().apply(graph);
         var mclClustering = mcl.getClustering();
 
         System.out.print("Markov Clustering Clusters: ");

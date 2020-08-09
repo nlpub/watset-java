@@ -32,7 +32,7 @@ public class PickleClustering {
         try (var stream = Files.newInputStream(Paths.get("karate_club_graph.pkl"))) {
             var graph = NetworkXFormat.<Integer>load(NetworkXFormat.parse(stream));
 
-            var cw = ChineseWhispers.<Integer, DefaultWeightedEdge>builder().build(graph);
+            var cw = ChineseWhispers.<Integer, DefaultWeightedEdge>builder().apply(graph);
             var clustering = cw.getClustering();
 
             System.out.print("Chinese Whispers Clusters: ");

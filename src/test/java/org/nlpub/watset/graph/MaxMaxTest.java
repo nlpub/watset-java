@@ -66,8 +66,8 @@ public class MaxMaxTest {
     private final static List<Set<String>> CLUSTERS2 = List.of(Set.of("a", "b", "c"), Set.of("c", "d", "e"));
 
     private final static MaxMax.Builder<String, DefaultWeightedEdge> BUILDER = MaxMax.builder();
-    private final static MaxMax<String, DefaultWeightedEdge> maxmax1 = BUILDER.build(GRAPH1);
-    private final static MaxMax<String, DefaultWeightedEdge> maxmax2 = BUILDER.build(GRAPH2);
+    private final static MaxMax<String, DefaultWeightedEdge> maxmax1 = BUILDER.apply(GRAPH1);
+    private final static MaxMax<String, DefaultWeightedEdge> maxmax2 = BUILDER.apply(GRAPH2);
 
     private MaxMaxClustering<String> clustering1, clustering2;
 
