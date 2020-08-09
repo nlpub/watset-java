@@ -36,7 +36,7 @@ public class FuzzyClustering {
         System.out.println(graph);
 
         // MaxMax
-        var maxmax = new MaxMax.Builder<String, DefaultWeightedEdge>().build(graph);
+        var maxmax = MaxMax.<String, DefaultWeightedEdge>builder().build(graph);
         var maxmaxClustering = maxmax.getClustering();
 
         System.out.print("MaxMax Digraph: ");
@@ -46,10 +46,10 @@ public class FuzzyClustering {
         System.out.println(maxmaxClustering.getClusters());
 
         // Watset[MCL, CW]
-        var local = new MarkovClustering.Builder<String, DefaultWeightedEdge>().provider();
-        var global = new ChineseWhispers.Builder<Sense<String>, DefaultWeightedEdge>().provider();
+        var local = MarkovClustering.<String, DefaultWeightedEdge>builder();
+        var global = ChineseWhispers.<Sense<String>, DefaultWeightedEdge>builder();
 
-        var watset = new SimplifiedWatset.Builder<String, DefaultWeightedEdge>().
+        var watset = SimplifiedWatset.<String, DefaultWeightedEdge>builder().
                 setLocal(local).
                 setGlobal(global).
                 build(graph);

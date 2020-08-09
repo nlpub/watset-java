@@ -80,11 +80,11 @@ public class SimplifiedWatset<V, E> implements ClusteringAlgorithm<V> {
         /**
          * Set the local clustering algorithm builder.
          *
-         * @param localBuilder the local clustering algorithm builder
+         * @param local the local clustering algorithm builder
          * @return the builder
          */
-        public Builder<V, E> setLocalBuilder(ClusteringAlgorithmBuilder<V, E, ?> localBuilder) {
-            this.local = requireNonNull(localBuilder).provider();
+        public Builder<V, E> setLocal(ClusteringAlgorithmBuilder<V, E, ?> local) {
+            this.local = requireNonNull(local).provider();
             return this;
         }
 
@@ -102,11 +102,11 @@ public class SimplifiedWatset<V, E> implements ClusteringAlgorithm<V> {
         /**
          * Set the global clustering algorithm builder.
          *
-         * @param globalBuilder the global clustering algorithm builder
+         * @param global the global clustering algorithm builder
          * @return the builder
          */
-        public Builder<V, E> setGlobalBuilder(ClusteringAlgorithmBuilder<Sense<V>, DefaultWeightedEdge, ?> globalBuilder) {
-            this.global = requireNonNull(globalBuilder).provider();
+        public Builder<V, E> setGlobal(ClusteringAlgorithmBuilder<Sense<V>, DefaultWeightedEdge, ?> global) {
+            this.global = requireNonNull(global).provider();
             return this;
         }
     }
