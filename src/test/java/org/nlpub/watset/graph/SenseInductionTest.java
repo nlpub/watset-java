@@ -45,7 +45,7 @@ public class SenseInductionTest {
 
     private final static Random random = new Random(1337);
 
-    private final static Function<Graph<String, DefaultWeightedEdge>, ClusteringAlgorithm<String>> local = new ChineseWhispers.Builder<String, DefaultWeightedEdge>().setRandom(random).provider();
+    private final static Function<Graph<String, DefaultWeightedEdge>, ClusteringAlgorithm<String>> local = ChineseWhispers.<String, DefaultWeightedEdge>builder().setRandom(random).provider();
 
     private final static SenseInduction<String, DefaultWeightedEdge> senseInduction = new SenseInduction<>(WORDS, local);
 

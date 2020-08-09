@@ -48,7 +48,7 @@ class MarkovClusteringCommand extends ClusteringCommand {
 
     @Override
     public ClusteringAlgorithm<String> getAlgorithm() {
-        final var builder = new MarkovClustering.Builder<String, DefaultWeightedEdge>();
+        final var builder = MarkovClustering.<String, DefaultWeightedEdge>builder();
 
         if (nonNull(e)) builder.setE(e);
         if (nonNull(r)) builder.setR(r);

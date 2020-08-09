@@ -42,7 +42,7 @@ interface WatsetGetter<V, E> {
      * @return an instance of Simplified Watset
      */
     default SimplifiedWatset<V, E> getSimplifiedWatset(Function<Graph<V, E>, ClusteringAlgorithm<V>> local, Function<Graph<Sense<V>, DefaultWeightedEdge>, ClusteringAlgorithm<Sense<V>>> global, Graph<V, E> graph) {
-        return new SimplifiedWatset.Builder<V, E>().
+        return SimplifiedWatset.<V, E>builder().
                 setLocal(local).
                 setGlobal(global).
                 build(graph);
@@ -58,7 +58,7 @@ interface WatsetGetter<V, E> {
      */
     @SuppressWarnings("deprecation")
     default Watset<V, E> getWatset(Function<Graph<V, E>, ClusteringAlgorithm<V>> local, Function<Graph<Sense<V>, DefaultWeightedEdge>, ClusteringAlgorithm<Sense<V>>> global, Graph<V, E> graph) {
-        return new Watset.Builder<V, E>().
+        return Watset.<V, E>builder().
                 setLocal(local).
                 setGlobal(global).
                 build(graph);

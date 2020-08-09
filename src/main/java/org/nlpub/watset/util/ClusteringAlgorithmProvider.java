@@ -70,27 +70,27 @@ public class ClusteringAlgorithmProvider<V, E> implements Function<Graph<V, E>, 
     public ClusteringAlgorithm<V> apply(Graph<V, E> graph) {
         switch (algorithm.toLowerCase(Locale.ROOT)) {
             case "empty":
-                return new EmptyClustering.Builder<V, E>().build(graph);
+                return EmptyClustering.<V, E>builder().build(graph);
             case "together":
-                return new TogetherClustering.Builder<V, E>().build(graph);
+                return TogetherClustering.<V, E>builder().build(graph);
             case "singleton":
-                return new SingletonClustering.Builder<V, E>().build(graph);
+                return SingletonClustering.<V, E>builder().build(graph);
             case "components":
-                return new ComponentsClustering.Builder<V, E>().build(graph);
+                return ComponentsClustering.<V, E>builder().build(graph);
             case "kst":
                 final int k = Integer.parseInt(requireNonNull(params.get("k"), "k must be specified"));
                 return new KSpanningTreeClustering<>(graph, k);
             case "cw":
-                return new ChineseWhispers.Builder<V, E>().setWeighting(weighting).build(graph);
+                return ChineseWhispers.<V, E>builder().setWeighting(weighting).build(graph);
             case "mcl":
-                final var mcl = new MarkovClustering.Builder<V, E>();
+                final var mcl = MarkovClustering.<V, E>builder();
 
                 if (params.containsKey("e")) mcl.setE(Integer.parseInt(params.get("e")));
                 if (params.containsKey("r")) mcl.setR(Double.parseDouble(params.get("r")));
 
                 return mcl.build(graph);
             case "mcl-bin":
-                final var mclOfficial = new MarkovClusteringExternal.Builder<V, E>().
+                final var mclOfficial = MarkovClusteringExternal.<V, E>builder().
                         setPath(Path.of(params.get("bin"))).
                         setThreads(Runtime.getRuntime().availableProcessors());
 
@@ -98,7 +98,7 @@ public class ClusteringAlgorithmProvider<V, E> implements Function<Graph<V, E>, 
 
                 return mclOfficial.build(graph);
             case "maxmax":
-                return new MaxMax.Builder<V, E>().build(graph);
+                return MaxMax.<V, E>builder().build(graph);
             default:
                 throw new IllegalArgumentException("Unknown algorithm: " + algorithm);
         }

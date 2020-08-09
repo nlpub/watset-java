@@ -112,6 +112,17 @@ public class SimplifiedWatset<V, E> implements ClusteringAlgorithm<V> {
     }
 
     /**
+     * Create a builder.
+     *
+     * @param <V> the type of nodes in the graph
+     * @param <E> the type of edges in the graph
+     * @return a builder
+     */
+    public static <V, E> Builder<V, E> builder() {
+        return new Builder<>();
+    }
+
+    /**
      * A factory function that sets up the algorithm for the given graph.
      *
      * @param local  the local clustering algorithm supplier

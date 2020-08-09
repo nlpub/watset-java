@@ -116,6 +116,17 @@ public class MarkovClusteringExternal<V, E> implements ClusteringAlgorithm<V> {
         }
     }
 
+    /**
+     * Create a builder.
+     *
+     * @param <V> the type of nodes in the graph
+     * @param <E> the type of edges in the graph
+     * @return a builder
+     */
+    public static <V, E> Builder<V, E> builder() {
+        return new Builder<>();
+    }
+
     private static final Logger logger = Logger.getLogger(MarkovClusteringExternal.class.getSimpleName());
 
     /**

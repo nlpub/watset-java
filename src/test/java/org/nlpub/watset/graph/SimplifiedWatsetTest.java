@@ -28,11 +28,11 @@ import static org.junit.Assert.assertEquals;
 public class SimplifiedWatsetTest {
     private final static Random random = new Random(1337);
 
-    private final static ChineseWhispers.Builder<String, DefaultWeightedEdge> localBuilder = new ChineseWhispers.Builder<String, DefaultWeightedEdge>().setRandom(random);
+    private final static ChineseWhispers.Builder<String, DefaultWeightedEdge> localBuilder = ChineseWhispers.<String, DefaultWeightedEdge>builder().setRandom(random);
 
-    private final static ChineseWhispers.Builder<Sense<String>, DefaultWeightedEdge> globalBuilder = new ChineseWhispers.Builder<Sense<String>, DefaultWeightedEdge>().setRandom(random);
+    private final static ChineseWhispers.Builder<Sense<String>, DefaultWeightedEdge> globalBuilder = ChineseWhispers.<Sense<String>, DefaultWeightedEdge>builder().setRandom(random);
 
-    private final static SimplifiedWatset<String, DefaultWeightedEdge> watset = new SimplifiedWatset.Builder<String, DefaultWeightedEdge>().setLocalBuilder(localBuilder).setGlobalBuilder(globalBuilder).build(SenseInductionTest.WORDS);
+    private final static SimplifiedWatset<String, DefaultWeightedEdge> watset = SimplifiedWatset.<String, DefaultWeightedEdge>builder().setLocalBuilder(localBuilder).setGlobalBuilder(globalBuilder).build(SenseInductionTest.WORDS);
 
     @Test
     public void testClustering() {

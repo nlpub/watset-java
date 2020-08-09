@@ -50,7 +50,7 @@ class MarkovClusteringExternalCommand extends ClusteringCommand {
 
     @Override
     public ClusteringAlgorithm<String> getAlgorithm() {
-        final var builder = new MarkovClusteringExternal.Builder<String, DefaultWeightedEdge>();
+        final var builder = MarkovClusteringExternal.<String, DefaultWeightedEdge>builder();
 
         if (nonNull(binary)) builder.setPath(binary);
         if (nonNull(r)) builder.setR(r);

@@ -37,7 +37,7 @@ public class ChineseWhispersTest {
             addEdge("d", "e").
             build();
 
-    public final static ChineseWhispers.Builder<String, DefaultWeightedEdge> BUILDER = new ChineseWhispers.Builder<String, DefaultWeightedEdge>().setRandom(random);
+    public final static ChineseWhispers.Builder<String, DefaultWeightedEdge> BUILDER = ChineseWhispers.<String, DefaultWeightedEdge>builder().setRandom(random);
 
     private final ChineseWhispers<String, DefaultWeightedEdge> cw = BUILDER.build(DISJOINT);
 
