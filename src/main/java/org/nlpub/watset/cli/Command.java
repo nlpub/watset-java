@@ -62,7 +62,7 @@ abstract class Command implements Runnable {
          * The random seed.
          */
         @Parameter(names = {"-s", "--seed"}, description = "Random seed", converter = RandomConverter.class)
-        public Random random;
+        public Random random = new Random();
 
         /**
          * The version information flag.

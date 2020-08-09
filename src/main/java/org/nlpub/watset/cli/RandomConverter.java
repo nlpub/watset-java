@@ -37,10 +37,6 @@ class RandomConverter extends BaseConverter<Random> {
 
     @Override
     public Random convert(String value) {
-        try {
-            return new Random(Long.parseLong(value));
-        } catch (NumberFormatException ex) {
-            return new Random();
-        }
+        return new Random(Long.parseLong(value));
     }
 }
