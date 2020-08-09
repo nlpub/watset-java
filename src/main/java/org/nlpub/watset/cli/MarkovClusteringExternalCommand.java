@@ -33,10 +33,11 @@ import static java.util.Objects.nonNull;
 @SuppressWarnings("unused")
 @Parameters(commandDescription = "Markov Clustering Official Binary")
 class MarkovClusteringExternalCommand extends ClusteringCommand {
+    @SuppressWarnings({"FieldCanBeLocal", "FieldMayBeFinal"})
     @Parameter(description = "Inflation parameter", names = "-r")
-    private Double r;
+    private double r = MarkovClusteringExternal.Builder.R;
 
-    @Parameter(description = "Path to binary mcl", names = "--bin", converter = PathConverter.class)
+    @Parameter(description = "Path to binary mcl", names = "--bin")
     private Path binary;
 
     /**
@@ -50,10 +51,10 @@ class MarkovClusteringExternalCommand extends ClusteringCommand {
 
     @Override
     public ClusteringAlgorithm<String> getAlgorithm() {
-        final var builder = MarkovClusteringExternal.<String, DefaultWeightedEdge>builder();
+        final var builder = MarkovClusteringExternal.<String, DefaultWeightedEdge>builder().
+                setR(r);
 
         if (nonNull(binary)) builder.setPath(binary);
-        if (nonNull(r)) builder.setR(r);
 
         return builder.build(getGraph());
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Dmitry Ustalov
+ * Copyright 2020 Dmitry Ustalov
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,17 +17,30 @@
 
 package org.nlpub.watset.cli;
 
-import com.beust.jcommander.IStringConverter;
+import com.beust.jcommander.converters.BaseConverter;
 
-import java.nio.file.Path;
+import java.util.Random;
 
 /**
- * Converter of string options to {@link Path}.
+ * Converter of string options to pre-initialized {@link Random}.
  */
 @SuppressWarnings("unused")
-class PathConverter implements IStringConverter<Path> {
+class RandomConverter extends BaseConverter<Random> {
+    /**
+     * Create a new instance of {@code RandomConverter}.
+     *
+     * @param optionName the option name
+     */
+    RandomConverter(String optionName) {
+        super(optionName);
+    }
+
     @Override
-    public Path convert(String value) {
-        return Path.of(value);
+    public Random convert(String value) {
+        try {
+            return new Random(Long.parseLong(value));
+        } catch (NumberFormatException ex) {
+            return new Random();
+        }
     }
 }

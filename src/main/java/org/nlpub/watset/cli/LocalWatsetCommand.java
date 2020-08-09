@@ -50,6 +50,6 @@ abstract class LocalWatsetCommand extends Command implements WatsetGetter<String
      * @return an algorithm provider
      */
     public ClusteringAlgorithmProvider<String, DefaultWeightedEdge> getAlgorithm() {
-        return new ClusteringAlgorithmProvider<>(local.algorithm, local.params);
+        return new ClusteringAlgorithmProvider<>(local.algorithm, local.params, parameters.random);
     }
 }

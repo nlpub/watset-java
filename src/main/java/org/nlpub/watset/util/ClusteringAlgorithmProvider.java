@@ -26,8 +26,8 @@ import java.nio.file.Path;
 import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Random;
 import java.util.function.Function;
-import java.util.logging.Logger;
 
 import static java.util.Objects.requireNonNull;
 import static java.util.Objects.requireNonNullElse;
@@ -39,31 +39,23 @@ import static java.util.Objects.requireNonNullElse;
  * @param <E> the type of edges in the graph
  */
 public class ClusteringAlgorithmProvider<V, E> implements Function<Graph<V, E>, ClusteringAlgorithm<V>> {
-    private static final Logger logger = Logger.getLogger(ClusteringAlgorithmProvider.class.getSimpleName());
-
     private final String algorithm;
     private final Map<String, String> params;
     private final NodeWeighting<V, E> weighting;
-
-    /**
-     * Create an instance of this utility class with empty parameter map.
-     *
-     * @param algorithm the algorithm identifier
-     */
-    public ClusteringAlgorithmProvider(String algorithm) {
-        this(algorithm, null);
-    }
+    private final Random random;
 
     /**
      * Create an instance of this utility class.
      *
      * @param algorithm the algorithm identifier
      * @param params    the parameter map for the algorithm
+     * @param random    the random number generator
      */
-    public ClusteringAlgorithmProvider(String algorithm, Map<String, String> params) {
+    public ClusteringAlgorithmProvider(String algorithm, Map<String, String> params, Random random) {
         this.algorithm = requireNonNull(algorithm, "algorithm is not specified");
         this.params = requireNonNullElse(params, Collections.emptyMap());
-        this.weighting = parseChineseWhispersNodeWeighting();
+        this.weighting = NodeWeightings.parse(params.get("mode"));
+        this.random = requireNonNullElse(random, new Random());
     }
 
     @Override
@@ -81,7 +73,7 @@ public class ClusteringAlgorithmProvider<V, E> implements Function<Graph<V, E>, 
                 final int k = Integer.parseInt(requireNonNull(params.get("k"), "k must be specified"));
                 return new KSpanningTreeClustering<>(graph, k);
             case "cw":
-                return ChineseWhispers.<V, E>builder().setWeighting(weighting).build(graph);
+                return ChineseWhispers.<V, E>builder().setWeighting(weighting).setRandom(random).build(graph);
             case "mcl":
                 final var mcl = MarkovClustering.<V, E>builder();
 
@@ -101,24 +93,6 @@ public class ClusteringAlgorithmProvider<V, E> implements Function<Graph<V, E>, 
                 return MaxMax.<V, E>builder().build(graph);
             default:
                 throw new IllegalArgumentException("Unknown algorithm: " + algorithm);
-        }
-    }
-
-    private NodeWeighting<V, E> parseChineseWhispersNodeWeighting() {
-        switch (params.getOrDefault("mode", "top").toLowerCase(Locale.ROOT)) {
-            case "label":
-                return NodeWeightings.label();
-            case "top":
-                return NodeWeightings.top();
-            case "log":
-                return NodeWeightings.log();
-            case "nolog": // We used this notation in many papers; kept for compatibility
-                logger.warning("Please update your code: 'nolog' weighting is renamed to 'lin'.");
-                return NodeWeightings.linear();
-            case "lin":
-                return NodeWeightings.linear();
-            default:
-                throw new IllegalArgumentException("Unknown mode: " + params.get("mode"));
         }
     }
 }

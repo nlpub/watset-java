@@ -21,21 +21,21 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
 import org.jgrapht.graph.DefaultWeightedEdge;
-import org.nlpub.watset.util.ClusteringAlgorithmProvider;
-
-import java.util.Collections;
-import java.util.Map;
-
-import static java.util.Objects.nonNull;
+import org.nlpub.watset.graph.ChineseWhispers;
+import org.nlpub.watset.graph.NodeWeightings;
 
 /**
  * A command that runs Chinese Whispers.
  */
 @Parameters(commandDescription = "Chinese Whispers")
 class ChineseWhispersCommand extends ClusteringCommand {
-    @SuppressWarnings("unused")
+    @SuppressWarnings({"unused", "FieldMayBeFinal"})
     @Parameter(description = "Node weighting mode (top, log, lin)", names = {"-m", "--mode"})
-    private String mode;
+    private String mode = NodeWeightings.WeightingMode.TOP.name();
+
+    @SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal"})
+    @Parameter(description = "Number of iterations", names = {"-i", "--iterations"})
+    private int iterations = ChineseWhispers.Builder.ITERATIONS;
 
     /**
      * Create an instance of command.
@@ -48,10 +48,10 @@ class ChineseWhispersCommand extends ClusteringCommand {
 
     @Override
     public ClusteringAlgorithm<String> getAlgorithm() {
-        final Map<String, String> params = nonNull(mode) ? Map.of("mode", mode) : Collections.emptyMap();
-
-        final var algorithm = new ClusteringAlgorithmProvider<String, DefaultWeightedEdge>("cw", params);
-
-        return algorithm.apply(getGraph());
+        return ChineseWhispers.<String, DefaultWeightedEdge>builder().
+                setWeighting(NodeWeightings.parse(mode)).
+                setIterations(iterations).
+                setRandom(parameters.random).
+                build(getGraph());
     }
 }

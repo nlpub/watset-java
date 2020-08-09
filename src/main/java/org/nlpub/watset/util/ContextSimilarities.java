@@ -25,7 +25,7 @@ import java.util.Map;
  */
 public final class ContextSimilarities {
     private ContextSimilarities() {
-        throw new AssertionError();
+        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }
 
     /**

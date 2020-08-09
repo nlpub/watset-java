@@ -28,7 +28,7 @@ import java.util.stream.Stream;
  */
 public final class ABCFormat {
     private ABCFormat() {
-        throw new AssertionError();
+        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }
 
     /**

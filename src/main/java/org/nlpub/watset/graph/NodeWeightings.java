@@ -19,14 +19,61 @@ package org.nlpub.watset.graph;
 
 import org.jgrapht.Graph;
 
+import java.util.Locale;
 import java.util.Map;
+import java.util.logging.Logger;
+
+import static java.util.Objects.requireNonNullElse;
 
 /**
  * Useful implementations of {@link NodeWeighting}.
  */
 public final class NodeWeightings {
+    /**
+     * Weighting modes.
+     */
+    public enum WeightingMode {
+        /**
+         * Weighting mode {@code label}.
+         *
+         * @see LabelNodeWeighting
+         */
+        LABEL,
+
+        /**
+         * Weighting mode {@code top}.
+         *
+         * @see TopNodeWeighting
+         */
+        TOP,
+
+        /**
+         * Weighting mode {@code log}.
+         *
+         * @see LogNodeWeighting
+         */
+        LOG,
+
+        /**
+         * Weighting mode {@code lin}.
+         *
+         * @see LinearNodeWeighting
+         * @deprecated Replaced with {@code LIN}
+         */
+        @SuppressWarnings("DeprecatedIsStillUsed") @Deprecated NOLOG,
+
+        /**
+         * Weighting mode {@code lin}.
+         *
+         * @see LinearNodeWeighting
+         */
+        LIN
+    }
+
+    private static final Logger logger = Logger.getLogger(NodeWeightings.class.getSimpleName());
+
     private NodeWeightings() {
-        throw new AssertionError();
+        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }
 
     /**
@@ -125,6 +172,35 @@ public final class NodeWeightings {
         @Override
         public double apply(Graph<V, E> graph, Map<V, Integer> labels, V node, V neighbor) {
             return graph.getEdgeWeight(graph.getEdge(node, neighbor)) / graph.degreeOf(neighbor);
+        }
+    }
+
+    /**
+     * Construct a node weighting instance corresponding to the given {@code mode}.
+     *
+     * @param mode the mode identifier
+     * @param <V>  the type of nodes in the graph
+     * @param <E>  the type of edges in the graph
+     * @return an instance of {@link NodeWeighting}
+     * @see WeightingMode
+     */
+    public static <V, E> NodeWeighting<V, E> parse(String mode) {
+        final var parsed = WeightingMode.valueOf(requireNonNullElse(mode, WeightingMode.TOP.name()).toUpperCase(Locale.ROOT));
+
+        switch (parsed) {
+            case LABEL:
+                return NodeWeightings.label();
+            case TOP:
+                return NodeWeightings.top();
+            case LOG:
+                return NodeWeightings.log();
+            case NOLOG: // We used this notation in many papers; kept for compatibility
+                logger.warning("Please update your code: 'nolog' weighting is renamed to 'lin'.");
+                return NodeWeightings.linear();
+            case LIN:
+                return NodeWeightings.linear();
+            default:
+                throw new IllegalArgumentException("Unknown mode: " + mode);
         }
     }
 }

@@ -30,7 +30,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public final class ILEFormat {
     private ILEFormat() {
-        throw new AssertionError();
+        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }
 
     /**

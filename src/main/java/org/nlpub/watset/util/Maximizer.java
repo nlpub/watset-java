@@ -31,7 +31,7 @@ import static java.util.Objects.isNull;
  */
 public final class Maximizer {
     private Maximizer() {
-        throw new AssertionError();
+        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }
 
     /**

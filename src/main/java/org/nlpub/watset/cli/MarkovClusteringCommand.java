@@ -23,19 +23,23 @@ import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.nlpub.watset.graph.MarkovClustering;
 
-import static java.util.Objects.nonNull;
-
 /**
  * A command that runs Markov Clustering.
  */
 @SuppressWarnings("unused")
 @Parameters(commandDescription = "Markov Clustering")
 class MarkovClusteringCommand extends ClusteringCommand {
+    @SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal"})
     @Parameter(description = "Expansion parameter", names = "-e")
-    private Integer e;
+    private int e = MarkovClustering.Builder.E;
 
+    @SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal"})
     @Parameter(description = "Inflation parameter", names = "-r")
-    private Double r;
+    private double r = MarkovClustering.Builder.R;
+
+    @SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal"})
+    @Parameter(description = "Number of iterations", names = {"-i", "--iterations"})
+    private int iterations = MarkovClustering.Builder.ITERATIONS;
 
     /**
      * Create an instance of command.
@@ -48,11 +52,10 @@ class MarkovClusteringCommand extends ClusteringCommand {
 
     @Override
     public ClusteringAlgorithm<String> getAlgorithm() {
-        final var builder = MarkovClustering.<String, DefaultWeightedEdge>builder();
-
-        if (nonNull(e)) builder.setE(e);
-        if (nonNull(r)) builder.setR(r);
-
-        return builder.build(getGraph());
+        return MarkovClustering.<String, DefaultWeightedEdge>builder().
+                setE(e).
+                setR(r).
+                setIterations(iterations).
+                build(getGraph());
     }
 }

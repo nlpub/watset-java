@@ -29,6 +29,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
@@ -48,14 +49,20 @@ abstract class Command implements Runnable {
         /**
          * The input file.
          */
-        @Parameter(names = {"-i", "--input"}, description = "Input file", converter = PathConverter.class)
+        @Parameter(names = {"-i", "--input"}, description = "Input file")
         public Path input;
 
         /**
          * The output file.
          */
-        @Parameter(names = {"-o", "--output"}, description = "Output file", converter = PathConverter.class)
+        @Parameter(names = {"-o", "--output"}, description = "Output file")
         public Path output;
+
+        /**
+         * The random seed.
+         */
+        @Parameter(names = {"-s", "--seed"}, description = "Random seed", converter = RandomConverter.class)
+        public Random random;
 
         /**
          * The version information flag.

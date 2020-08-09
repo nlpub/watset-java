@@ -39,7 +39,7 @@ import static java.util.Objects.requireNonNull;
 @SuppressWarnings("unused")
 public final class NetworkXFormat {
     private NetworkXFormat() {
-        throw new AssertionError();
+        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }
 
     /**

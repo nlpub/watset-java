@@ -27,7 +27,7 @@ import org.jgrapht.graph.SimpleWeightedGraph;
  */
 public final class Neighbors {
     private Neighbors() {
-        throw new AssertionError();
+        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }
 
     /**

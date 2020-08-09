@@ -22,6 +22,8 @@ import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.nlpub.watset.util.ClusteringAlgorithmProvider;
 
+import java.util.Collections;
+
 /**
  * A command that uses {@link ClusteringAlgorithmProvider} to resolve the clustering algorithm.
  */
@@ -42,6 +44,6 @@ class ProvidedClusteringCommand extends ClusteringCommand {
 
     @Override
     public ClusteringAlgorithm<String> getAlgorithm() {
-        return new ClusteringAlgorithmProvider<String, DefaultWeightedEdge>(algorithm).apply(getGraph());
+        return new ClusteringAlgorithmProvider<String, DefaultWeightedEdge>(algorithm, Collections.emptyMap(), parameters.random).apply(getGraph());
     }
 }
