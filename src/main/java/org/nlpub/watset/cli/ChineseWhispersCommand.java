@@ -34,7 +34,7 @@ class ChineseWhispersCommand extends ClusteringCommand {
     private String mode = NodeWeightings.WeightingMode.TOP.name();
 
     @SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal"})
-    @Parameter(description = "Number of iterations", names = {"-i", "--iterations"})
+    @Parameter(description = "Number of iterations", names = {"-n", "--iterations"})
     private int iterations = ChineseWhispers.Builder.ITERATIONS;
 
     /**

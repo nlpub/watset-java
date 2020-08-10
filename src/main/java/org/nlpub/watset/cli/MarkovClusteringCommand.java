@@ -38,7 +38,7 @@ class MarkovClusteringCommand extends ClusteringCommand {
     private double r = MarkovClustering.Builder.R;
 
     @SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal"})
-    @Parameter(description = "Number of iterations", names = {"-i", "--iterations"})
+    @Parameter(description = "Number of iterations", names = {"-n", "--iterations"})
     private int iterations = MarkovClustering.Builder.ITERATIONS;
 
     /**
