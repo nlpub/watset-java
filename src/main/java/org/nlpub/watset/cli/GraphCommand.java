@@ -28,12 +28,15 @@ import org.nlpub.watset.util.Sense;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.Locale;
+import java.util.logging.Logger;
 
 /**
  * A command that builds a sense graph with Watset.
  */
 @Parameters(commandDescription = "Sense Graph")
 class GraphCommand extends LocalWatsetCommand {
+    private static final Logger logger = Logger.getLogger(GraphCommand.class.getSimpleName());
+
     /**
      * Create an instance of command.
      *
@@ -45,6 +48,8 @@ class GraphCommand extends LocalWatsetCommand {
 
     @Override
     public void run() {
+        notifySimplifiedWatset(logger, local.simplified);
+
         final var senseGraph = getSenseGraph(getAlgorithm(), getGraph());
 
         try {
