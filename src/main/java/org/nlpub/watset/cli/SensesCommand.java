@@ -62,15 +62,9 @@ class SensesCommand extends LocalWatsetCommand {
     }
 
     private Map<Sense<String>, Map<Sense<String>, Number>> getContexts(ClusteringAlgorithmProvider<String, DefaultWeightedEdge> algorithm, Graph<String, DefaultWeightedEdge> graph) {
-        if (local.simplified) {
-            final var watset = getSimplifiedWatset(algorithm, EmptyClustering.builder(), graph);
-            final var clustering = watset.getClustering();
-            return clustering.getContexts();
-        } else {
-            final var watset = getWatset(algorithm, EmptyClustering.builder(), graph);
-            final var clustering = watset.getClustering();
-            return clustering.getContexts();
-        }
+        final var watset = getWatset(algorithm, EmptyClustering.builder(), graph);
+        final var clustering = watset.getClustering();
+        return clustering.getContexts();
     }
 
     private void write(Map<Sense<String>, Map<Sense<String>, Number>> contexts) throws IOException {

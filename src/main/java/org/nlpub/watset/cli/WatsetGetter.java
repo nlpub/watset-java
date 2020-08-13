@@ -21,7 +21,6 @@ import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.nlpub.watset.graph.ClusteringAlgorithmBuilder;
 import org.nlpub.watset.graph.SimplifiedWatset;
-import org.nlpub.watset.graph.Watset;
 import org.nlpub.watset.util.Sense;
 
 import java.util.logging.Logger;
@@ -34,16 +33,16 @@ import java.util.logging.Logger;
  */
 interface WatsetGetter<V, E> {
     /**
-     * Warn about upcoming deprecation of {@link org.nlpub.watset.graph.Watset}.
+     * Remind about deprecation of {@link org.nlpub.watset.graph.Watset}.
      *
      * @param logger     the logger
      * @param simplified Watset is simplified
      */
     default void notifySimplifiedWatset(Logger logger, boolean simplified) {
         if (simplified) {
-            logger.info("In the next version, Watset will always be simplified; get ready to remove the -s flag soon.");
+            logger.warning("Watset is always simplified; the -s flag makes no effect.");
         } else {
-            logger.warning("In the next version, Simplified Watset will completely replace the regular Watset.");
+            logger.info("Simplified Watset is used instead of the regular Watset.");
         }
     }
 
@@ -55,24 +54,8 @@ interface WatsetGetter<V, E> {
      * @param graph  the graph
      * @return an instance of Simplified Watset
      */
-    default SimplifiedWatset<V, E> getSimplifiedWatset(ClusteringAlgorithmBuilder<V, E, ?> local, ClusteringAlgorithmBuilder<Sense<V>, DefaultWeightedEdge, ?> global, Graph<V, E> graph) {
+    default SimplifiedWatset<V, E> getWatset(ClusteringAlgorithmBuilder<V, E, ?> local, ClusteringAlgorithmBuilder<Sense<V>, DefaultWeightedEdge, ?> global, Graph<V, E> graph) {
         return SimplifiedWatset.<V, E>builder().
-                setLocal(local).
-                setGlobal(global).
-                apply(graph);
-    }
-
-    /**
-     * Construct an instance of {@link Watset}.
-     *
-     * @param local  the local clustering algorithm supplier
-     * @param global the global clustering algorithm supplier
-     * @param graph  the graph
-     * @return an instance of Watset
-     */
-    @SuppressWarnings("deprecation")
-    default Watset<V, E> getWatset(ClusteringAlgorithmBuilder<V, E, ?> local, ClusteringAlgorithmBuilder<Sense<V>, DefaultWeightedEdge, ?> global, Graph<V, E> graph) {
-        return Watset.<V, E>builder().
                 setLocal(local).
                 setGlobal(global).
                 apply(graph);
