@@ -95,12 +95,12 @@ $ java -jar watset.jar -i graph.txt -o output.tsv mcl-bin -r 2 --bin /path/to/mc
 
 ### Watset
 
-[Watset] is a *local-global meta-algorithm* for fuzzy graph clustering. It builds an intermediate undirected graph that addresses the element ambiguity by considering different senses of each element in the input graph. We recommend using Simplified Watset that is enabled with the flag `-s`.
+[Watset] is a *local-global meta-algorithm* for fuzzy graph clustering. It builds an intermediate undirected graph that addresses the element ambiguity by considering different senses of each element in the input graph. This package offers the best-performing variation of Watset known as Simplified Watset.
 
 Watset requires two different clustering algorithms to be selected: the *local* clustering algorithm for sense induction that is specified using `-l` (`--local`) and the *global* algorithm for the final clustering that is specified using `-g` (`--global`). It is possible to configure the algorithms using the similar options as shown above using the `-lp` (`--local-params`) and `-gp` (`--global-params`) options. Multiple parameters should be separated with ampersand.
 
 ```bash
-$ java -jar watset.jar -i graph.txt -o output.tsv watset -s -l mcl -lp e=1 -lp r=3 -g cw -gp mode=lin
+$ java -jar watset.jar -i graph.txt -o output.tsv watset -l mcl -lp e=1 -lp r=3 -g cw -gp mode=lin
 ```
 
 In practice, the default parameters for MCL and CW work well enough, so the `-lp` and `-gp` arguments can be omitted in this example.
@@ -110,7 +110,7 @@ In practice, the default parameters for MCL and CW work well enough, so the `-lp
 Since [Watset] performs curvature-based word sense induction, it is possible to extract the built sense inventory using the special command of this tool.
 
 ```bash
-$ java -jar watset.jar -i graph.txt -o inventory.tsv senses -s -l mcl
+$ java -jar watset.jar -i graph.txt -o inventory.tsv senses -l mcl
 ```
 
 The output of this operation is a tab-separated file containing three columns: the target word, the word sense identifier, and the set of related disambiguated senses in the given word sense (the *context*). Each sense is represented as `word#id`.
@@ -120,7 +120,7 @@ The output of this operation is a tab-separated file containing three columns: t
 It is also possible to print the intermediate word sense graph built by [Watset].
 
 ```bash
-$ java -jar watset.jar -i graph.txt -o sense-graph.txt graph -s -l mcl
+$ java -jar watset.jar -i graph.txt -o sense-graph.txt graph -l mcl
 ```
 
 The output file will be written virtually in the same ABC format as the input graph, but each node will be provided with a numerical sense identifier preceded by the suffix `#`. This feature simplifies the integration into other graph processing pipelines.

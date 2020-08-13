@@ -32,34 +32,34 @@ java -jar "$WATSET" -i "$INPUT" mcl
 java -jar "$WATSET" -i "$INPUT" maxmax
 
 # Watset Sense Induction
-java -jar "$WATSET" -i "$INPUT" senses -s -l mcl
+java -jar "$WATSET" -i "$INPUT" senses -l mcl
 
 for lmode in top lin log ; do
-  java -jar "$WATSET" -i "$INPUT" senses -s -l cw -lp mode=$lmode
+  java -jar "$WATSET" -i "$INPUT" senses -l cw -lp mode=$lmode
 done
 
 # Watset Sense Graph
-java -jar "$WATSET" -i "$INPUT" graph -s -l mcl
+java -jar "$WATSET" -i "$INPUT" graph -l mcl
 
 for lmode in top lin log ; do
-  java -jar "$WATSET" -i "$INPUT" graph -s -l cw -lp mode=$lmode
+  java -jar "$WATSET" -i "$INPUT" graph -l cw -lp mode=$lmode
 done
 
 # Watset Clustering
-java -jar "$WATSET" -i "$INPUT" watset -s -l mcl -g mcl # Watset[MCL, MCL]
+java -jar "$WATSET" -i "$INPUT" watset -l mcl -g mcl # Watset[MCL, MCL]
 
-[ -x "$PWD/mcl" ] && java -jar "$WATSET" -i "$INPUT" watset -s -l mcl -g mcl-bin -gp bin="$PWD/mcl" # Watset[MCL, MCL]
+[ -x "$PWD/mcl" ] && java -jar "$WATSET" -i "$INPUT" watset -l mcl -g mcl-bin -gp bin="$PWD/mcl" # Watset[MCL, MCL]
 
 for gmode in top lin log ; do
-  java -jar "$WATSET" -i "$INPUT" watset -s -l mcl -g cw -gp mode=$gmode # Watset[MCL, CW]
+  java -jar "$WATSET" -i "$INPUT" watset -l mcl -g cw -gp mode=$gmode # Watset[MCL, CW]
 done
 
 for lmode in top lin log ; do
-  java -jar "$WATSET" -i "$INPUT" watset -s -l cw -lp mode=$lmode -g mcl # Watset[CW, MCL]
+  java -jar "$WATSET" -i "$INPUT" watset -l cw -lp mode=$lmode -g mcl # Watset[CW, MCL]
 
-  [ -x "$PWD/mcl" ] && java -jar "$WATSET" -i "$INPUT" watset -s -l cw -lp mode=$lmode -g mcl-bin -gp bin="$PWD/mcl" # Watset[CW, MCL]
+  [ -x "$PWD/mcl" ] && java -jar "$WATSET" -i "$INPUT" watset -l cw -lp mode=$lmode -g mcl-bin -gp bin="$PWD/mcl" # Watset[CW, MCL]
 
   for gmode in top lin log ; do
-    java -jar "$WATSET" -i "$INPUT" watset -s -l cw -lp mode=$lmode -g cw -gp mode=$gmode # Watset[CW, CW]
+    java -jar "$WATSET" -i "$INPUT" watset -l cw -lp mode=$lmode -g cw -gp mode=$gmode # Watset[CW, CW]
   done
 done

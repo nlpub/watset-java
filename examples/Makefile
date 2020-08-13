@@ -1,7 +1,7 @@
 export LANG := en_US.UTF-8
 export CLASSPATH := $(CURDIR)/watset.jar
 
-RELEASE := 2.2.8
+RELEASE := 2.4.0
 
 MCL := 14-137
 
