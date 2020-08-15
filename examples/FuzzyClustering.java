@@ -48,7 +48,7 @@ public class FuzzyClustering {
         var local = MarkovClustering.<String, DefaultWeightedEdge>builder();
         var global = ChineseWhispers.<Sense<String>, DefaultWeightedEdge>builder();
 
-        var watset = SimplifiedWatset.<String, DefaultWeightedEdge>builder().
+        var watset = Watset.<String, DefaultWeightedEdge>builder().
                 setLocal(local).
                 setGlobal(global).
                 apply(graph);
