@@ -17,7 +17,6 @@
 
 package org.nlpub.watset.util;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Optional;
 import java.util.Random;
@@ -57,20 +56,18 @@ public final class Maximizer {
     /**
      * Find the first argument of the maximum (argmax) of the function.
      *
-     * @param it      the finite iterator
-     * @param checker the predicate that evaluates the suitability of the argument
-     * @param scorer  the scoring function
-     * @param <V>     the argument type
-     * @param <S>     the score type
+     * @param iterable the finite iterator
+     * @param checker  the predicate that evaluates the suitability of the argument
+     * @param scorer   the scoring function
+     * @param <V>      the argument type
+     * @param <S>      the score type
      * @return a non-empty optional that contains the first found argmax, otherwise the empty one
      */
-    public static <V, S extends Comparable<S>> Optional<V> argmax(Iterator<V> it, Predicate<V> checker, Function<V, S> scorer) {
+    public static <V, S extends Comparable<S>> Optional<V> argmax(Iterable<V> iterable, Predicate<V> checker, Function<V, S> scorer) {
         V result = null;
         S score = null;
 
-        while (it.hasNext()) {
-            final var current = it.next();
-
+        for (final var current : iterable) {
             if (!checker.test(current)) continue;
 
             final var currentScore = scorer.apply(current);
@@ -87,34 +84,32 @@ public final class Maximizer {
     /**
      * Find the first argument of the maximum (argmax) of the function.
      *
-     * @param it     the finite iterator
-     * @param scorer the scoring function
-     * @param <V>    the argument type
-     * @param <S>    the score type
+     * @param iterable the finite iterator
+     * @param scorer   the scoring function
+     * @param <V>      the argument type
+     * @param <S>      the score type
      * @return a non-empty optional that contains the first found argmax, otherwise the empty one
-     * @see #argmax(Iterator, Predicate, Function)
+     * @see #argmax(Iterable, Predicate, Function)
      */
-    public static <V, S extends Comparable<S>> Optional<V> argmax(Iterator<V> it, Function<V, S> scorer) {
-        return argmax(it, alwaysTrue(), scorer);
+    public static <V, S extends Comparable<S>> Optional<V> argmax(Iterable<V> iterable, Function<V, S> scorer) {
+        return argmax(iterable, alwaysTrue(), scorer);
     }
 
     /**
      * Find the arguments of the maxima (argmax) of the function and randomly choose any of them.
      *
-     * @param it     the finite iterator
-     * @param scorer the scoring function
-     * @param random the random number generator
-     * @param <V>    the argument type
-     * @param <S>    the score type
+     * @param iterable the finite iterator
+     * @param scorer   the scoring function
+     * @param random   the random number generator
+     * @param <V>      the argument type
+     * @param <S>      the score type
      * @return a non-empty optional that contains the randomly chosen argmax, otherwise the empty one
      */
-    public static <V, S extends Comparable<S>> Optional<V> argmaxRandom(Iterator<V> it, Function<V, S> scorer, Random random) {
+    public static <V, S extends Comparable<S>> Optional<V> argrandmax(Iterable<V> iterable, Function<V, S> scorer, Random random) {
         final var results = new LinkedList<V>();
         S score = null;
 
-        while (it.hasNext()) {
-            final var current = it.next();
-
+        for (final var current : iterable) {
             final var currentScore = scorer.apply(current);
 
             final var compare = isNull(score) ? 1 : currentScore.compareTo(score);
