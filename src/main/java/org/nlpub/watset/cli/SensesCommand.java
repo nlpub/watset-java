@@ -50,8 +50,6 @@ class SensesCommand extends LocalWatsetCommand {
 
     @Override
     public void run() {
-        notifySimplifiedWatset(logger, local.simplified);
-
         final var contexts = getContexts(getAlgorithm(), getGraph());
 
         try {

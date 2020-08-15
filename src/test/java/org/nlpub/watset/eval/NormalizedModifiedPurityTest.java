@@ -19,7 +19,7 @@ package org.nlpub.watset.eval;
 
 import org.junit.Test;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -27,17 +27,17 @@ import static org.nlpub.watset.eval.NormalizedModifiedPurity.normalize;
 import static org.nlpub.watset.eval.NormalizedModifiedPurity.transform;
 
 public class NormalizedModifiedPurityTest {
-    static final Collection<Map<String, Double>> GOLD = transform(PairwiseTest.GOLD);
-    static final Collection<Map<String, Double>> GOLD_NORMALIZED = normalize(GOLD);
+    static final List<Map<String, Double>> GOLD = transform(PairwiseTest.GOLD);
+    static final List<Map<String, Double>> GOLD_NORMALIZED = normalize(GOLD);
 
-    static final Collection<Map<String, Double>> EXAMPLE_1 = transform(PairwiseTest.EXAMPLE_1);
-    static final Collection<Map<String, Double>> EXAMPLE_1_NORMALIZED = normalize(EXAMPLE_1);
+    static final List<Map<String, Double>> EXAMPLE_1 = transform(PairwiseTest.EXAMPLE_1);
+    static final List<Map<String, Double>> EXAMPLE_1_NORMALIZED = normalize(EXAMPLE_1);
 
-    static final Collection<Map<String, Double>> EXAMPLE_2 = transform(PairwiseTest.EXAMPLE_2);
-    static final Collection<Map<String, Double>> EXAMPLE_2_NORMALIZED = normalize(EXAMPLE_2);
+    static final List<Map<String, Double>> EXAMPLE_2 = transform(PairwiseTest.EXAMPLE_2);
+    static final List<Map<String, Double>> EXAMPLE_2_NORMALIZED = normalize(EXAMPLE_2);
 
-    static final Collection<Map<String, Double>> EXAMPLE_3 = transform(PairwiseTest.EXAMPLE_3);
-    static final Collection<Map<String, Double>> EXAMPLE_3_NORMALIZED = normalize(EXAMPLE_3);
+    static final List<Map<String, Double>> EXAMPLE_3 = transform(PairwiseTest.EXAMPLE_3);
+    static final List<Map<String, Double>> EXAMPLE_3_NORMALIZED = normalize(EXAMPLE_3);
 
     private static final NormalizedModifiedPurity<String> mpu = new NormalizedModifiedPurity<>(false, true);
     private static final NormalizedModifiedPurity<String> pu = new NormalizedModifiedPurity<>(false, false);

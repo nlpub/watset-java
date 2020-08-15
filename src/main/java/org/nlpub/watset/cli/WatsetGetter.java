@@ -23,8 +23,6 @@ import org.nlpub.watset.graph.ClusteringAlgorithmBuilder;
 import org.nlpub.watset.graph.SimplifiedWatset;
 import org.nlpub.watset.util.Sense;
 
-import java.util.logging.Logger;
-
 /**
  * Routines for constructing instances of two Watset variations.
  *
@@ -32,20 +30,6 @@ import java.util.logging.Logger;
  * @param <E> the type of edges in the graph
  */
 interface WatsetGetter<V, E> {
-    /**
-     * Remind about deprecation of {@link org.nlpub.watset.graph.Watset}.
-     *
-     * @param logger     the logger
-     * @param simplified Watset is simplified
-     */
-    default void notifySimplifiedWatset(Logger logger, boolean simplified) {
-        if (simplified) {
-            logger.warning("Watset is always simplified; the -s flag makes no effect.");
-        } else {
-            logger.info("Simplified Watset is used instead of the regular Watset.");
-        }
-    }
-
     /**
      * Construct an instance of {@link SimplifiedWatset}.
      *

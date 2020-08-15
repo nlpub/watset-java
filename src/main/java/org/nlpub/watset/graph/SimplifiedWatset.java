@@ -35,9 +35,11 @@ import static java.util.Objects.*;
 import static org.jgrapht.GraphTests.requireUndirected;
 
 /**
- * A faster and simplified version of Watset that does not need a context similarity measure.
+ * Watset is a local-global meta-algorithm for fuzzy graph clustering.
  * <p>
- * This is the recommended implementation of the Watset clustering algorithm.
+ * Watset builds an intermediate undirected graph by inducing different senses of each node in the input graph.
+ * <p>
+ * This implementation of Watset is known as Simplified Watset. It does not need a context similarity measure.
  *
  * @param <V> the type of nodes in the graph
  * @param <E> the type of edges in the graph

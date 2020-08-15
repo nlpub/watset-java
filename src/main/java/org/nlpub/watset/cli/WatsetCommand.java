@@ -58,8 +58,6 @@ class WatsetCommand extends ClusteringCommand implements WatsetGetter<String, De
 
     @Override
     public ClusteringAlgorithm<String> getAlgorithm() {
-        notifySimplifiedWatset(logger, local.simplified);
-
         final var localAlgorithm = new ClusteringAlgorithmProvider<String, DefaultWeightedEdge>(local.algorithm, local.params, parameters.random);
         final var globalAlgorithm = new ClusteringAlgorithmProvider<Sense<String>, DefaultWeightedEdge>(global.algorithm, global.params, parameters.random);
         final var graph = getGraph();

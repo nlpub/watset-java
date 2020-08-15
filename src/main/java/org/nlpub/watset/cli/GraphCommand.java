@@ -48,8 +48,6 @@ class GraphCommand extends LocalWatsetCommand {
 
     @Override
     public void run() {
-        notifySimplifiedWatset(logger, local.simplified);
-
         final var senseGraph = getSenseGraph(getAlgorithm(), getGraph());
 
         try {

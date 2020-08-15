@@ -29,23 +29,23 @@ import static org.junit.Assert.assertTrue;
 import static org.nlpub.watset.eval.Pairwise.transform;
 
 public class PairwiseTest {
-    static final Collection<Collection<String>> GOLD = List.of(
+    static final List<Collection<String>> GOLD = List.of(
             List.of("bank", "riverbank", "streambank", "streamside"),
             List.of("bank", "building", "bank building")
     );
 
-    static final Collection<Collection<String>> EXAMPLE_1 = List.of(
+    static final List<Collection<String>> EXAMPLE_1 = List.of(
             List.of("bank"),
             List.of("bank", "building"),
             List.of("riverbank", "streambank", "streamside"),
             List.of("bank building")
     );
 
-    static final Collection<Collection<String>> EXAMPLE_2 = List.of(
+    static final List<Collection<String>> EXAMPLE_2 = List.of(
             List.of("bank", "riverbank", "streambank", "streamside", "building", "bank building")
     );
 
-    static final Collection<Collection<String>> EXAMPLE_3 = List.of(
+    static final List<Collection<String>> EXAMPLE_3 = List.of(
             List.of("bank"),
             List.of("building"),
             List.of("riverbank"),

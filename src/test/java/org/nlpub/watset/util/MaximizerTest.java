@@ -27,23 +27,19 @@ import java.util.stream.IntStream;
 
 import static org.junit.Assert.*;
 import static org.nlpub.watset.util.Maximizer.*;
-import static org.nlpub.watset.util.VectorsTest.bag1;
 
+@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public class MaximizerTest {
     private final static Random random = new Random(1337);
 
     private final static int SAMPLES = 10000;
 
-    private static final Map<String, Number> bag4 = Map.of("a", 1, "b", 1, "c", 1);
+    private static final Map<String, Number> bag1 = Map.of("a", 1, "b", 3, "c", -5);
+    private static final Map<String, Number> bag2 = Map.of("a", 1, "b", 1, "c", 1);
 
-    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-    final Optional<Map.Entry<String, Number>> arg1 = argmax(bag1.entrySet().iterator(), e -> e.getValue().doubleValue());
-
-    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-    final Optional<Map.Entry<String, Number>> arg2 = argmax(bag1.entrySet().iterator(), alwaysFalse(), e -> e.getValue().doubleValue());
-
-    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-    final Optional<Map.Entry<String, Number>> arg3 = argmax(bag1.entrySet().iterator(), e -> e.getValue().doubleValue() < 0, e -> e.getValue().doubleValue());
+    final Optional<Map.Entry<String, Number>> arg1 = argmax(bag1.entrySet(), e -> e.getValue().doubleValue());
+    final Optional<Map.Entry<String, Number>> arg2 = argmax(bag1.entrySet(), alwaysFalse(), e -> e.getValue().doubleValue());
+    final Optional<Map.Entry<String, Number>> arg3 = argmax(bag1.entrySet(), e -> e.getValue().doubleValue() < 0, e -> e.getValue().doubleValue());
 
     @Test
     public void testAlwaysTrue() {
@@ -73,11 +69,12 @@ public class MaximizerTest {
     }
 
     @Test
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
     public void testArgmaxRandom() {
-        @SuppressWarnings("OptionalGetWithoutIsPresent") final var samples = IntStream.range(0, SAMPLES).
-                mapToObj(i -> argmaxRandom(bag4.entrySet().iterator(), e -> e.getValue().doubleValue(), random).get().getKey()).
+        final var samples = IntStream.range(0, SAMPLES).
+                mapToObj(i -> argrandmax(bag2.entrySet(), e -> e.getValue().doubleValue(), random).get().getKey()).
                 collect(Collectors.toSet());
 
-        assertEquals(bag4.keySet(), samples);
+        assertEquals(bag2.keySet(), samples);
     }
 }

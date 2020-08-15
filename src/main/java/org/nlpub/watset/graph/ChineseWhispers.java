@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 import static java.util.Objects.isNull;
 import static java.util.Objects.requireNonNull;
 import static org.jgrapht.GraphTests.requireUndirected;
-import static org.nlpub.watset.util.Maximizer.argmaxRandom;
+import static org.nlpub.watset.util.Maximizer.argrandmax;
 
 /**
  * Implementation of the Chinese Whispers algorithm.
@@ -258,7 +258,7 @@ public class ChineseWhispers<V, E> implements ClusteringAlgorithm<V> {
             for (final var node : nodes) {
                 final var scores = score(node);
 
-                final var label = argmaxRandom(scores.entrySet().iterator(), Map.Entry::getValue, random);
+                final var label = argrandmax(scores.entrySet(), Map.Entry::getValue, random);
 
                 final int updated = label.isPresent() ? label.get().getKey() : labels.get(node);
 

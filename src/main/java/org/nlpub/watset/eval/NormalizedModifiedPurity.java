@@ -19,6 +19,7 @@ package org.nlpub.watset.eval;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -43,7 +44,7 @@ public class NormalizedModifiedPurity<V> {
      * @param <V>      the type of cluster elements
      * @return a collection of weighted cluster elements
      */
-    public static <V> Collection<Map<V, Double>> transform(Collection<Collection<V>> clusters) {
+    public static <V> List<Map<V, Double>> transform(List<Collection<V>> clusters) {
         return clusters.stream().
                 map(cluster -> cluster.stream().collect(Collectors.groupingBy(identity(), Collectors.reducing(0d, e -> 1d, Double::sum)))).
                 collect(Collectors.toList());
@@ -56,14 +57,14 @@ public class NormalizedModifiedPurity<V> {
      * @param <V>      the type of cluster elements
      * @return a collection of weight-normalized clusters
      */
-    public static <V> Collection<Map<V, Double>> normalize(Collection<Map<V, Double>> clusters) {
+    public static <V> List<Map<V, Double>> normalize(Collection<Map<V, Double>> clusters) {
         final Map<V, Double> counter = new HashMap<>();
 
         clusters.stream().
                 flatMap(cluster -> cluster.entrySet().stream()).
                 forEach(entry -> counter.put(entry.getKey(), counter.getOrDefault(entry.getKey(), 0d) + entry.getValue()));
 
-        final Collection<Map<V, Double>> normalized = clusters.stream().map(cluster -> {
+        final var normalized = clusters.stream().map(cluster -> {
             final var normalizedCluster = cluster.entrySet().stream().
                     collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue() / counter.get(entry.getKey())));
 
