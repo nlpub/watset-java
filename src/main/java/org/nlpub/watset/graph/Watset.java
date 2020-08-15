@@ -45,21 +45,21 @@ import static org.jgrapht.GraphTests.requireUndirected;
  * @param <E> the type of edges in the graph
  * @see <a href="https://doi.org/10.1162/COLI_a_00354">Ustalov et al. (COLI 45:3)</a>
  */
-public class SimplifiedWatset<V, E> implements ClusteringAlgorithm<V> {
+public class Watset<V, E> implements ClusteringAlgorithm<V> {
     /**
-     * Builder for {@link SimplifiedWatset}.
+     * Builder for {@link Watset}.
      *
      * @param <V> the type of nodes in the graph
      * @param <E> the type of edges in the graph
      */
     @SuppressWarnings({"unused", "UnusedReturnValue"})
-    public static class Builder<V, E> implements ClusteringAlgorithmBuilder<V, E, SimplifiedWatset<V, E>> {
+    public static class Builder<V, E> implements ClusteringAlgorithmBuilder<V, E, Watset<V, E>> {
         private ClusteringAlgorithmBuilder<V, E, ?> local;
         private ClusteringAlgorithmBuilder<Sense<V>, DefaultWeightedEdge, ?> global;
 
         @Override
-        public SimplifiedWatset<V, E> apply(Graph<V, E> graph) {
-            return new SimplifiedWatset<>(graph, local, global);
+        public Watset<V, E> apply(Graph<V, E> graph) {
+            return new Watset<>(graph, local, global);
         }
 
         /**
@@ -96,7 +96,7 @@ public class SimplifiedWatset<V, E> implements ClusteringAlgorithm<V> {
         return new Builder<>();
     }
 
-    private static final Logger logger = Logger.getLogger(SimplifiedWatset.class.getSimpleName());
+    private static final Logger logger = Logger.getLogger(Watset.class.getSimpleName());
 
     /**
      * The graph.
@@ -119,13 +119,13 @@ public class SimplifiedWatset<V, E> implements ClusteringAlgorithm<V> {
     protected WatsetClustering<V> clustering;
 
     /**
-     * Create an instance of the Simplified Watset clustering algorithm.
+     * Create an instance of the Watset clustering algorithm.
      *
      * @param graph  the graph
      * @param local  the local clustering algorithm supplier
      * @param global the global clustering algorithm supplier
      */
-    public SimplifiedWatset(Graph<V, E> graph, ClusteringAlgorithmBuilder<V, E, ?> local, ClusteringAlgorithmBuilder<Sense<V>, DefaultWeightedEdge, ?> global) {
+    public Watset(Graph<V, E> graph, ClusteringAlgorithmBuilder<V, E, ?> local, ClusteringAlgorithmBuilder<Sense<V>, DefaultWeightedEdge, ?> global) {
         this.graph = requireUndirected(graph);
         this.inducer = new SenseInduction<>(graph, requireNonNull(local));
         this.global = requireNonNull(global);
@@ -173,7 +173,7 @@ public class SimplifiedWatset<V, E> implements ClusteringAlgorithm<V> {
         protected final Map<V, List<Sense<V>>> senses;
 
         /**
-         * Create an instance of the Simplified Watset clustering algorithm implementation.
+         * Create an instance of the Watset clustering algorithm implementation.
          *
          * @param graph   the graph
          * @param inducer the node sense induction approach
@@ -188,17 +188,17 @@ public class SimplifiedWatset<V, E> implements ClusteringAlgorithm<V> {
         }
 
         /**
-         * Perform clustering with Simplified Watset.
+         * Perform clustering with Watset.
          *
          * @return the clustering
          */
         public WatsetClustering<V> compute() {
-            logger.info("Simplified Watset started.");
+            logger.info("Watset started.");
 
             buildInventory();
 
             final var count = senses.values().stream().mapToInt(List::size).sum();
-            logger.log(Level.INFO, "Simplified Watset: sense inventory constructed including {0} senses.", count);
+            logger.log(Level.INFO, "Watset: sense inventory constructed including {0} senses.", count);
 
             final var senseGraph = buildSenseGraph();
 
@@ -209,18 +209,18 @@ public class SimplifiedWatset<V, E> implements ClusteringAlgorithm<V> {
                         senseGraph.edgeSet().size());
             }
 
-            logger.info("Simplified Watset: sense graph constructed.");
+            logger.info("Watset: sense graph constructed.");
 
             final var globalAlgorithm = global.apply(senseGraph);
             final var senseClusters = globalAlgorithm.getClustering();
 
-            logger.info("Simplified Watset finished.");
+            logger.info("Watset finished.");
 
             final var clusters = senseClusters.getClusters().stream().
                     map(cluster -> cluster.stream().map(Sense::get).collect(Collectors.toSet())).
                     collect(Collectors.toList());
 
-            return new SimplifiedWatsetClusteringImpl<>(clusters,
+            return new WatsetClusteringImpl<>(clusters,
                     Collections.unmodifiableMap(inventory),
                     new AsUnmodifiableGraph<>(senseGraph));
         }
@@ -289,11 +289,11 @@ public class SimplifiedWatset<V, E> implements ClusteringAlgorithm<V> {
     }
 
     /**
-     * A Simplified Watset clustering that computes disambiguated contexts on demand.
+     * A Watset clustering that computes disambiguated contexts on demand.
      *
      * @param <V> the type of nodes in the graph
      */
-    static class SimplifiedWatsetClusteringImpl<V> extends ClusteringAlgorithm.ClusteringImpl<V> implements WatsetClustering<V> {
+    static class WatsetClusteringImpl<V> extends ClusteringAlgorithm.ClusteringImpl<V> implements WatsetClustering<V> {
         /**
          * The sense inventory.
          */
@@ -316,14 +316,14 @@ public class SimplifiedWatset<V, E> implements ClusteringAlgorithm<V> {
          * @param inventory  the sense inventory
          * @param senseGraph the sense graph
          */
-        public SimplifiedWatsetClusteringImpl(List<Set<V>> clusters, Map<V, Map<V, Integer>> inventory, Graph<Sense<V>, DefaultWeightedEdge> senseGraph) {
+        public WatsetClusteringImpl(List<Set<V>> clusters, Map<V, Map<V, Integer>> inventory, Graph<Sense<V>, DefaultWeightedEdge> senseGraph) {
             super(clusters);
             this.inventory = inventory;
             this.senseGraph = senseGraph;
         }
 
         /**
-         * Get the sense inventory built during {@link SimplifiedWatset#getClustering()}.
+         * Get the sense inventory built during {@link Watset#getClustering()}.
          *
          * @return the sense inventory
          */

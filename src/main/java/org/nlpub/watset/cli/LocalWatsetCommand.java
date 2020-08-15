@@ -19,13 +19,13 @@ package org.nlpub.watset.cli;
 
 import com.beust.jcommander.ParametersDelegate;
 import org.jgrapht.graph.DefaultWeightedEdge;
-import org.nlpub.watset.graph.SimplifiedWatset;
+import org.nlpub.watset.graph.Watset;
 import org.nlpub.watset.util.ClusteringAlgorithmProvider;
 
 /**
  * A command that uses such local Watset internals as the sense graph and disambiguated contexts.
  *
- * @see SimplifiedWatset
+ * @see Watset
  */
 abstract class LocalWatsetCommand extends Command implements WatsetGetter<String, DefaultWeightedEdge> {
     /**

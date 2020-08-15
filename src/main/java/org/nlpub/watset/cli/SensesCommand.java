@@ -29,7 +29,6 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.Locale;
 import java.util.Map;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
@@ -37,7 +36,6 @@ import java.util.stream.Collectors;
  */
 @Parameters(commandDescription = "Sense Induction")
 class SensesCommand extends LocalWatsetCommand {
-    private static final Logger logger = Logger.getLogger(SensesCommand.class.getSimpleName());
 
     /**
      * Create an instance of command.

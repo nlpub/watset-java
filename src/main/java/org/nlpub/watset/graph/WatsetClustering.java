@@ -30,15 +30,16 @@ import java.util.Map;
  * @param <V> the type of nodes in the graph
  */
 public interface WatsetClustering<V> extends ClusteringAlgorithm.Clustering<V> {
+
     /**
-     * Get the intermediate node sense graph built during {@link SimplifiedWatset#getClustering()}.
+     * Get the intermediate node sense graph built during {@link Watset#getClustering()}.
      *
      * @return the sense graph
      */
     Graph<Sense<V>, DefaultWeightedEdge> getSenseGraph();
 
     /**
-     * Get the disambiguated contexts built during {@link SimplifiedWatset#getClustering()}.
+     * Get the disambiguated contexts built during {@link Watset#getClustering()}.
      *
      * @return the disambiguated contexts
      */

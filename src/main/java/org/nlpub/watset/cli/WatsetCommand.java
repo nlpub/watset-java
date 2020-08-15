@@ -24,14 +24,11 @@ import org.jgrapht.graph.DefaultWeightedEdge;
 import org.nlpub.watset.util.ClusteringAlgorithmProvider;
 import org.nlpub.watset.util.Sense;
 
-import java.util.logging.Logger;
-
 /**
  * A command that runs Watset.
  */
 @Parameters(commandDescription = "Watset")
 class WatsetCommand extends ClusteringCommand implements WatsetGetter<String, DefaultWeightedEdge> {
-    private static final Logger logger = Logger.getLogger(WatsetCommand.class.getSimpleName());
 
     /**
      * The local clustering command-line parameters.

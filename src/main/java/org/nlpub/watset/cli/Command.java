@@ -87,12 +87,6 @@ abstract class Command implements Runnable {
          */
         @DynamicParameter(description = "Local clustering algorithm parameters", names = {"-lp", "--local-params"})
         public Map<String, String> params = new HashMap<>();
-
-        /**
-         * The flag indicating the use of Simplified Watset.
-         */
-        @Parameter(description = "Use Simplified Watset", names = {"-s", "--simplified"})
-        public boolean simplified = false;
     }
 
     /**
