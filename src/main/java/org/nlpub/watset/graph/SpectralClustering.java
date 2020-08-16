@@ -74,18 +74,17 @@ public class SpectralClustering<V, E> implements ClusteringAlgorithm<V> {
         }
 
         public Clustering<V> compute() {
-            final var matrixU = new EigenDecomposition(laplacian).getV().
+            final var matrix = new EigenDecomposition(laplacian).getV().
                     getSubMatrix(0, graph.vertexSet().size() - 1, 0, k - 1);
 
-            final var objects = IntStream.range(0, graph.vertexSet().size()).
-                    mapToObj(i -> {
-                        final var row = matrixU.getRowVector(i);
-                        final var normalized = row.mapDivideToSelf(row.getNorm());
-                        return new NodeEmbedding<>(mapping.getIndexList().get(i), normalized.toArray());
-                    }).
+            final var norms = Matrices.computeRowNorms(matrix);
+            matrix.walkInOptimizedOrder(new Matrices.RowNormalizeVisitor(norms));
+
+            final var points = mapping.getVertexMap().entrySet().stream().
+                    map(e -> new NodeEmbedding<>(e.getKey(), matrix.getRow(e.getValue()))).
                     collect(Collectors.toList());
 
-            final var clusters = clusterer.cluster(objects);
+            final var clusters = clusterer.cluster(points);
 
             return new ClusteringImpl<>(clusters.stream().
                     map(cluster -> cluster.getPoints().stream().

@@ -17,9 +17,7 @@
 
 package org.nlpub.watset.util;
 
-import org.apache.commons.math3.linear.EigenDecomposition;
-import org.apache.commons.math3.linear.MatrixUtils;
-import org.apache.commons.math3.linear.RealMatrix;
+import org.apache.commons.math3.linear.*;
 import org.jgrapht.Graph;
 import org.jgrapht.util.VertexToIntegerMapping;
 
@@ -67,14 +65,13 @@ public final class Matrices {
     }
 
     public static <V, E> RealMatrix buildDegreeMatrix(Graph<V, E> graph, VertexToIntegerMapping<V> mapping) {
-        final var matrix = MatrixUtils.createRealIdentityMatrix(graph.vertexSet().size());
+        final var data = new double[graph.vertexSet().size()];
 
         for (final var entry : mapping.getVertexMap().entrySet()) {
-            final int i = entry.getValue();
-            matrix.setEntry(i, i, graph.degreeOf(entry.getKey()));
+            data[entry.getValue()] = graph.degreeOf(entry.getKey());
         }
 
-        return matrix;
+        return MatrixUtils.createRealDiagonalMatrix(data);
     }
 
     public static RealMatrix buildSymmetricLaplacian(RealMatrix degree, RealMatrix adjacency) {
@@ -82,5 +79,136 @@ public final class Matrices {
         final var sqrt = eigen.getSquareRoot();
         final var laplacian = degree.subtract(adjacency);
         return sqrt.multiply(laplacian).multiply(sqrt);
+    }
+
+    public static RealVector computeRowNorms(RealMatrix matrix) {
+        final var vector = new ArrayRealVector(matrix.getRowDimension());
+
+        for (int i = 0; i < matrix.getRowDimension(); i++) {
+            vector.setEntry(i, matrix.getRowVector(i).getNorm());
+        }
+
+        return vector;
+    }
+
+    /**
+     * Visitor that raises each element to the specified power.
+     */
+    public static class InflateVisitor extends DefaultRealMatrixChangingVisitor {
+        /**
+         * The inflation parameter.
+         */
+        private final double r;
+
+        /**
+         * Create an instance of the inflator.
+         *
+         * @param r the inflation parameter
+         */
+        public InflateVisitor(double r) {
+            this.r = r;
+        }
+
+        /**
+         * Raise the value of a single element to the power of {@code r}.
+         *
+         * @param row    row
+         * @param column column
+         * @param value  the value
+         * @return the value raised to the power of {@code r}
+         */
+        @Override
+        public double visit(int row, int column, double value) {
+            return StrictMath.pow(value, r);
+        }
+    }
+
+    public static class ColumnSumVisitor extends DefaultRealMatrixPreservingVisitor {
+        /**
+         * The row sums.
+         */
+        private final RealVector sums;
+
+        /**
+         * Create an instance of the normalizer.
+         *
+         * @param sums the column vector containing row sums
+         */
+        public ColumnSumVisitor(RealVector sums) {
+            this.sums = sums;
+        }
+
+        /**
+         * Divide the value of a single element by the corresponding column of {@code sums}.
+         *
+         * @param row    row
+         * @param column column
+         * @param value  the value
+         */
+        @Override
+        public void visit(int row, int column, double value) {
+            sums.addToEntry(column, value);
+        }
+    }
+
+    /**
+     * Visitor that normalizes columns.
+     */
+    public static class ColumnNormalizeVisitor extends DefaultRealMatrixChangingVisitor {
+        /**
+         * The row sums.
+         */
+        private final RealVector sums;
+
+        /**
+         * Create an instance of the normalizer.
+         *
+         * @param sums the column vector containing row sums
+         */
+        public ColumnNormalizeVisitor(RealVector sums) {
+            this.sums = sums;
+        }
+
+        /**
+         * Divide the value of a single element by the corresponding column of {@code sums}.
+         *
+         * @param row    row
+         * @param column column
+         * @param value  the value
+         * @return the normalized value
+         */
+        @Override
+        public double visit(int row, int column, double value) {
+            return value / sums.getEntry(column);
+        }
+    }
+
+    public static class RowNormalizeVisitor extends DefaultRealMatrixChangingVisitor {
+        /**
+         * The column sums.
+         */
+        private final RealVector norms;
+
+        /**
+         * Create an instance of the normalizer.
+         *
+         * @param norms the column vector containing row sums
+         */
+        public RowNormalizeVisitor(RealVector norms) {
+            this.norms = norms;
+        }
+
+        /**
+         * Divide the value of a single element by the corresponding column of {@code sums}.
+         *
+         * @param row    row
+         * @param column column
+         * @param value  the value
+         * @return the normalized value
+         */
+        @Override
+        public double visit(int row, int column, double value) {
+            return value / norms.getEntry(row);
+        }
     }
 }

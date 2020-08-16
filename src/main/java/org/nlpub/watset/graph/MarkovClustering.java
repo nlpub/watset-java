@@ -18,17 +18,17 @@
 package org.nlpub.watset.graph;
 
 import org.apache.commons.math3.linear.ArrayRealVector;
-import org.apache.commons.math3.linear.DefaultRealMatrixChangingVisitor;
 import org.apache.commons.math3.linear.RealMatrix;
-import org.apache.commons.math3.linear.RealVector;
 import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
 import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
 import org.jgrapht.util.VertexToIntegerMapping;
 import org.nlpub.watset.util.Matrices;
 
-import java.util.*;
-import java.util.logging.Logger;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import static java.util.Objects.isNull;
 import static org.jgrapht.GraphTests.requireUndirected;
@@ -121,8 +121,6 @@ public class MarkovClustering<V, E> implements ClusteringAlgorithm<V> {
         return new Builder<>();
     }
 
-    private static final Logger logger = Logger.getLogger(MarkovClustering.class.getSimpleName());
-
     /**
      * The graph.
      */
@@ -197,17 +195,12 @@ public class MarkovClustering<V, E> implements ClusteringAlgorithm<V> {
         /**
          * The inflation visitor that raises each element of {@code matrix} to the power of {@code r}.
          */
-        protected final InflateVisitor inflateVisitor;
+        protected final Matrices.InflateVisitor inflateVisitor;
 
         /**
          * The mapping of graph nodes to the columns of {@code matrix}.
          */
         protected final VertexToIntegerMapping<V> mapping;
-
-        /**
-         * The row matrix filled by ones.
-         */
-        protected final RealVector ones;
 
         /**
          * The stochastic matrix.
@@ -226,12 +219,8 @@ public class MarkovClustering<V, E> implements ClusteringAlgorithm<V> {
             this.graph = graph;
             this.e = e;
             this.iterations = iterations;
-            this.inflateVisitor = new InflateVisitor(r);
+            this.inflateVisitor = new Matrices.InflateVisitor(r);
             this.mapping = Graphs.getVertexToIntegerMapping(graph);
-
-            final var data = new double[graph.vertexSet().size()];
-            Arrays.fill(data, 1);
-            this.ones = new ArrayRealVector(data, false);
         }
 
         /**
@@ -272,13 +261,13 @@ public class MarkovClustering<V, E> implements ClusteringAlgorithm<V> {
             return new ClusteringImpl<>(clusters);
         }
 
-
         /**
          * Normalize the matrix.
          */
         protected void normalize() {
-            final var sums = matrix.preMultiply(ones);
-            matrix.walkInOptimizedOrder(new NormalizeVisitor(sums));
+            final var sums = new ArrayRealVector(matrix.getColumnDimension());
+            matrix.walkInOptimizedOrder(new Matrices.ColumnSumVisitor(sums));
+            matrix.walkInOptimizedOrder(new Matrices.ColumnNormalizeVisitor(sums));
         }
 
         /**
@@ -294,70 +283,6 @@ public class MarkovClustering<V, E> implements ClusteringAlgorithm<V> {
         protected void inflate() {
             normalize();
             matrix.walkInOptimizedOrder(inflateVisitor);
-        }
-    }
-
-    /**
-     * Visitor that raises each element to the power of {@link MarkovClustering#r}.
-     */
-    public static class InflateVisitor extends DefaultRealMatrixChangingVisitor {
-        /**
-         * The inflation parameter.
-         */
-        private final double r;
-
-        /**
-         * Create an instance of the inflator.
-         *
-         * @param r the inflation parameter
-         */
-        public InflateVisitor(double r) {
-            this.r = r;
-        }
-
-        /**
-         * Raise the value of a single element to the power of {@code r}.
-         *
-         * @param row    row
-         * @param column column
-         * @param value  the value
-         * @return the value raised to the power of {@code r}
-         */
-        @Override
-        public double visit(int row, int column, double value) {
-            return StrictMath.pow(value, r);
-        }
-    }
-
-    /**
-     * Visitor that normalizes columns.
-     */
-    public static class NormalizeVisitor extends DefaultRealMatrixChangingVisitor {
-        /**
-         * The row sums.
-         */
-        private final RealVector sums;
-
-        /**
-         * Create an instance of the normalizer.
-         *
-         * @param sums the column vector containing row sums
-         */
-        public NormalizeVisitor(RealVector sums) {
-            this.sums = sums;
-        }
-
-        /**
-         * Divide the value of a single element by the corresponding column of {@code sums}.
-         *
-         * @param row    row
-         * @param column column
-         * @param value  the value
-         * @return the normalized value
-         */
-        @Override
-        public double visit(int row, int column, double value) {
-            return value / sums.getEntry(column);
         }
     }
 }
