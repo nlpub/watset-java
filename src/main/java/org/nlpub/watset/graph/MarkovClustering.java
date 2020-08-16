@@ -17,9 +17,10 @@
 
 package org.nlpub.watset.graph;
 
+import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.linear.DefaultRealMatrixChangingVisitor;
-import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
+import org.apache.commons.math3.linear.RealVector;
 import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
 import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
@@ -206,7 +207,7 @@ public class MarkovClustering<V, E> implements ClusteringAlgorithm<V> {
         /**
          * The row matrix filled by ones.
          */
-        protected final RealMatrix ones;
+        protected final RealVector ones;
 
         /**
          * The stochastic matrix.
@@ -228,9 +229,9 @@ public class MarkovClustering<V, E> implements ClusteringAlgorithm<V> {
             this.inflateVisitor = new InflateVisitor(r);
             this.mapping = Graphs.getVertexToIntegerMapping(graph);
 
-            final var onesData = new double[graph.vertexSet().size()];
-            Arrays.fill(onesData, 1);
-            this.ones = MatrixUtils.createRowRealMatrix(onesData);
+            final var data = new double[graph.vertexSet().size()];
+            Arrays.fill(data, 1);
+            this.ones = new ArrayRealVector(data, false);
         }
 
         /**
@@ -276,7 +277,7 @@ public class MarkovClustering<V, E> implements ClusteringAlgorithm<V> {
          * Normalize the matrix.
          */
         protected void normalize() {
-            final var sums = ones.multiply(matrix);
+            final var sums = matrix.preMultiply(ones);
             matrix.walkInOptimizedOrder(new NormalizeVisitor(sums));
         }
 
@@ -335,14 +336,14 @@ public class MarkovClustering<V, E> implements ClusteringAlgorithm<V> {
         /**
          * The row sums.
          */
-        private final RealMatrix sums;
+        private final RealVector sums;
 
         /**
          * Create an instance of the normalizer.
          *
          * @param sums the column vector containing row sums
          */
-        public NormalizeVisitor(RealMatrix sums) {
+        public NormalizeVisitor(RealVector sums) {
             this.sums = sums;
         }
 
@@ -356,7 +357,7 @@ public class MarkovClustering<V, E> implements ClusteringAlgorithm<V> {
          */
         @Override
         public double visit(int row, int column, double value) {
-            return value / sums.getEntry(0, column);
+            return value / sums.getEntry(column);
         }
     }
 }
