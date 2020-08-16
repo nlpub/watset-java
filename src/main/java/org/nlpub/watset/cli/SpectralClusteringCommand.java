@@ -18,8 +18,11 @@
 package org.nlpub.watset.cli;
 
 import com.beust.jcommander.ParametersDelegate;
-import org.jgrapht.alg.clustering.KSpanningTreeClustering;
+import org.apache.commons.math3.ml.clustering.KMeansPlusPlusClusterer;
+import org.apache.commons.math3.ml.distance.EuclideanDistance;
 import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
+import org.jgrapht.graph.DefaultWeightedEdge;
+import org.nlpub.watset.graph.SpectralClustering;
 
 /**
  * A command that runs the spectral clustering algorithm.
@@ -43,6 +46,7 @@ class SpectralClusteringCommand extends ClusteringCommand {
 
     @Override
     public ClusteringAlgorithm<String> getAlgorithm() {
-        return new KSpanningTreeClustering<>(getGraph(), fixed.k);
+        final var clusterer = new KMeansPlusPlusClusterer<SpectralClustering.NodeEmbedding<String>>(fixed.k, -1, new EuclideanDistance(), parameters.random);
+        return SpectralClustering.<String, DefaultWeightedEdge>builder().setClusterer(clusterer).setK(fixed.k).apply(getGraph());
     }
 }
