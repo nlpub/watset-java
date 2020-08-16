@@ -24,6 +24,7 @@ import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
 import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
 import org.jgrapht.util.VertexToIntegerMapping;
+import org.nlpub.watset.util.Matrices;
 
 import java.util.*;
 import java.util.logging.Logger;
@@ -242,7 +243,7 @@ public class MarkovClustering<V, E> implements ClusteringAlgorithm<V> {
                 return new ClusteringImpl<>(Collections.emptyList());
             }
 
-            matrix = buildMatrix();
+            matrix = Matrices.buildAdjacencyMatrix(graph, mapping, true);
 
             normalize();
 
@@ -270,33 +271,6 @@ public class MarkovClustering<V, E> implements ClusteringAlgorithm<V> {
             return new ClusteringImpl<>(clusters);
         }
 
-        /**
-         * Construct an adjacency matrix for the given graph.
-         * <p>
-         * Note that the loops in the graph are ignored.
-         *
-         * @return an adjacency matrix
-         */
-        protected RealMatrix buildMatrix() {
-            if (graph.vertexSet().size() > 2048) {
-                logger.warning(() -> String.format(Locale.ROOT, "Graph is large: %d nodes.", graph.vertexSet().size()));
-            }
-
-            final var matrix = MatrixUtils.createRealIdentityMatrix(graph.vertexSet().size());
-
-            for (final var edge : graph.edgeSet()) {
-                final int i = mapping.getVertexMap().get(graph.getEdgeSource(edge));
-                final int j = mapping.getVertexMap().get(graph.getEdgeTarget(edge));
-
-                if (i != j) {
-                    final var weight = graph.getEdgeWeight(edge);
-                    matrix.setEntry(i, j, weight);
-                    matrix.setEntry(j, i, weight);
-                }
-            }
-
-            return matrix;
-        }
 
         /**
          * Normalize the matrix.

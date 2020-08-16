@@ -18,7 +18,6 @@
 package org.nlpub.watset.graph;
 
 import org.apache.commons.math3.linear.EigenDecomposition;
-import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.ml.clustering.Clusterer;
 import org.apache.commons.math3.ml.clustering.DoublePoint;
@@ -26,6 +25,7 @@ import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
 import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
 import org.jgrapht.util.VertexToIntegerMapping;
+import org.nlpub.watset.util.Matrices;
 
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -60,7 +60,7 @@ public class SpectralClustering<V, E> implements ClusteringAlgorithm<V> {
         protected final int k;
         protected final VertexToIntegerMapping<V> mapping;
         protected final RealMatrix degree;
-        protected final RealMatrix similarities;
+        protected final RealMatrix adjacency;
         protected final RealMatrix laplacian;
 
         public Implementation(Graph<V, E> graph, Clusterer<NodeEmbedding<V>> clusterer, int k) {
@@ -68,17 +68,21 @@ public class SpectralClustering<V, E> implements ClusteringAlgorithm<V> {
             this.clusterer = clusterer;
             this.k = k;
             this.mapping = Graphs.getVertexToIntegerMapping(graph);
-            this.similarities = buildAdjacencyMatrix();
-            this.degree = buildDegreeMatrix();
-            this.laplacian = similarities.subtract(degree);
+            this.degree = Matrices.buildDegreeMatrix(graph, mapping);
+            this.adjacency = Matrices.buildAdjacencyMatrix(graph, mapping, false);
+            this.laplacian = Matrices.buildSymmetricLaplacian(degree, adjacency);
         }
 
         public Clustering<V> compute() {
-            final var matrix = new EigenDecomposition(laplacian).getV().
+            final var matrixU = new EigenDecomposition(laplacian).getV().
                     getSubMatrix(0, graph.vertexSet().size() - 1, 0, k - 1);
 
             final var objects = IntStream.range(0, graph.vertexSet().size()).
-                    mapToObj(i -> new NodeEmbedding<>(mapping.getIndexList().get(i), matrix.getRow(i))).
+                    mapToObj(i -> {
+                        final var row = matrixU.getRowVector(i);
+                        final var normalized = row.mapDivideToSelf(row.getNorm());
+                        return new NodeEmbedding<>(mapping.getIndexList().get(i), normalized.toArray());
+                    }).
                     collect(Collectors.toList());
 
             final var clusters = clusterer.cluster(objects);
@@ -88,34 +92,6 @@ public class SpectralClustering<V, E> implements ClusteringAlgorithm<V> {
                             map(NodeEmbedding::getNode).
                             collect(Collectors.toSet())).
                     collect(Collectors.toList()));
-        }
-
-        protected RealMatrix buildAdjacencyMatrix() {
-            final var matrix = MatrixUtils.createRealMatrix(graph.vertexSet().size(), graph.vertexSet().size());
-
-            for (final var edge : graph.edgeSet()) {
-                final int i = mapping.getVertexMap().get(graph.getEdgeSource(edge));
-                final int j = mapping.getVertexMap().get(graph.getEdgeTarget(edge));
-
-                if (i != j) {
-                    final var weight = graph.getEdgeWeight(edge);
-                    matrix.setEntry(i, j, weight);
-                    matrix.setEntry(j, i, weight);
-                }
-            }
-
-            return matrix;
-        }
-
-        protected RealMatrix buildDegreeMatrix() {
-            final var matrix = MatrixUtils.createRealIdentityMatrix(graph.vertexSet().size());
-
-            for (final var entry : mapping.getVertexMap().entrySet()) {
-                final int i = entry.getValue();
-                matrix.setEntry(i, i, graph.degreeOf(entry.getKey()));
-            }
-
-            return matrix;
         }
     }
 
