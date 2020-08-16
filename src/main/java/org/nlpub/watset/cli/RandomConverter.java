@@ -18,6 +18,7 @@
 package org.nlpub.watset.cli;
 
 import com.beust.jcommander.converters.BaseConverter;
+import org.apache.commons.math3.random.JDKRandomGenerator;
 
 import java.util.Random;
 
@@ -37,6 +38,6 @@ class RandomConverter extends BaseConverter<Random> {
 
     @Override
     public Random convert(String value) {
-        return new Random(Long.parseLong(value));
+        return new JDKRandomGenerator(Integer.parseInt(value));
     }
 }

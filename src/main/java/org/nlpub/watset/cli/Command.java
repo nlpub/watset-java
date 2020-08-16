@@ -19,6 +19,7 @@ package org.nlpub.watset.cli;
 
 import com.beust.jcommander.DynamicParameter;
 import com.beust.jcommander.Parameter;
+import org.apache.commons.math3.random.JDKRandomGenerator;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.nlpub.watset.util.ABCFormat;
@@ -29,7 +30,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
@@ -62,9 +62,10 @@ abstract class Command implements Runnable {
          * The random seed.
          */
         @Parameter(names = {"-s", "--seed"}, description = "Random seed", converter = RandomConverter.class)
-        public Random random = new Random();
+        public JDKRandomGenerator random = new JDKRandomGenerator();
 
         /**
+         * m
          * The version information flag.
          */
         @Parameter(names = {"-v", "--version"}, description = "Print version information")

@@ -18,6 +18,8 @@
 package org.nlpub.watset.util;
 
 import org.apache.commons.math3.ml.clustering.KMeansPlusPlusClusterer;
+import org.apache.commons.math3.ml.distance.EuclideanDistance;
+import org.apache.commons.math3.random.JDKRandomGenerator;
 import org.jgrapht.Graph;
 import org.jgrapht.alg.clustering.KSpanningTreeClustering;
 import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
@@ -27,7 +29,6 @@ import java.nio.file.Path;
 import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Random;
 
 import static java.util.Objects.requireNonNull;
 import static java.util.Objects.requireNonNullElse;
@@ -42,7 +43,7 @@ public class ClusteringAlgorithmProvider<V, E> implements ClusteringAlgorithmBui
     private final String algorithm;
     private final Map<String, String> params;
     private final NodeWeighting<V, E> weighting;
-    private final Random random;
+    private final JDKRandomGenerator random;
 
     /**
      * Create an instance of this utility class.
@@ -51,11 +52,11 @@ public class ClusteringAlgorithmProvider<V, E> implements ClusteringAlgorithmBui
      * @param params    the parameter map for the algorithm
      * @param random    the random number generator
      */
-    public ClusteringAlgorithmProvider(String algorithm, Map<String, String> params, Random random) {
+    public ClusteringAlgorithmProvider(String algorithm, Map<String, String> params, JDKRandomGenerator random) {
         this.algorithm = requireNonNull(algorithm, "algorithm is not specified");
         this.params = requireNonNullElse(params, Collections.emptyMap());
         this.weighting = NodeWeightings.parse(params.get("mode"));
-        this.random = requireNonNullElse(random, new Random());
+        this.random = requireNonNullElse(random, new JDKRandomGenerator());
     }
 
     @Override
@@ -74,7 +75,7 @@ public class ClusteringAlgorithmProvider<V, E> implements ClusteringAlgorithmBui
                 return new KSpanningTreeClustering<>(graph, kst);
             case "spectral":
                 final int kSpectral = Integer.parseInt(requireNonNull(params.get("k"), "k must be specified"));
-                final var clusterer = new KMeansPlusPlusClusterer<SpectralClustering.NodeEmbedding<V>>(kSpectral);
+                final var clusterer = new KMeansPlusPlusClusterer<SpectralClustering.NodeEmbedding<V>>(kSpectral, -1, new EuclideanDistance(), random);
                 return SpectralClustering.<V, E>builder().setClusterer(clusterer).setK(kSpectral).apply(graph);
             case "cw":
                 return ChineseWhispers.<V, E>builder().setWeighting(weighting).setRandom(random).apply(graph);
