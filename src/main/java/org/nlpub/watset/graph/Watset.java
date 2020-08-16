@@ -340,7 +340,7 @@ public class Watset<V, E> implements ClusteringAlgorithm<V> {
         @Override
         public Map<Sense<V>, Map<Sense<V>, Number>> getContexts() {
             if (isNull(contexts)) {
-                contexts = new HashMap<>();
+                contexts = new HashMap<>(senseGraph.vertexSet().size());
 
                 for (final var edge : senseGraph.edgeSet()) {
                     final Sense<V> source = senseGraph.getEdgeSource(edge), target = senseGraph.getEdgeTarget(edge);
