@@ -1,0 +1,134 @@
+/*
+ * Copyright 2020 Dmitry Ustalov
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+package org.nlpub.watset.graph;
+
+import org.apache.commons.math3.linear.EigenDecomposition;
+import org.apache.commons.math3.linear.MatrixUtils;
+import org.apache.commons.math3.linear.RealMatrix;
+import org.apache.commons.math3.ml.clustering.Clusterer;
+import org.apache.commons.math3.ml.clustering.DoublePoint;
+import org.jgrapht.Graph;
+import org.jgrapht.Graphs;
+import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
+import org.jgrapht.util.VertexToIntegerMapping;
+
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import static java.util.Objects.isNull;
+import static org.jgrapht.GraphTests.requireUndirected;
+
+public class SpectralClustering<V, E> implements ClusteringAlgorithm<V> {
+    private final Graph<V, E> graph;
+    private final Clusterer<NodeEmbedding<V>> clusterer;
+    private final int k;
+    private Clustering<V> clustering;
+
+    public SpectralClustering(Graph<V, E> graph, Clusterer<NodeEmbedding<V>> clusterer, int k) {
+        this.graph = requireUndirected(graph);
+        this.clusterer = clusterer;
+        this.k = k;
+    }
+
+    @Override
+    public Clustering<V> getClustering() {
+        if (isNull(clustering)) {
+            clustering = new Implementation<>(graph, clusterer, k).compute();
+        }
+
+        return clustering;
+    }
+
+    public static class Implementation<V, E> {
+        protected final Graph<V, E> graph;
+        protected final Clusterer<NodeEmbedding<V>> clusterer;
+        protected final int k;
+        protected final VertexToIntegerMapping<V> mapping;
+        protected final RealMatrix degree;
+        protected final RealMatrix similarities;
+        protected final RealMatrix laplacian;
+
+        public Implementation(Graph<V, E> graph, Clusterer<NodeEmbedding<V>> clusterer, int k) {
+            this.graph = graph;
+            this.clusterer = clusterer;
+            this.k = k;
+            this.mapping = Graphs.getVertexToIntegerMapping(graph);
+            this.similarities = buildAdjacencyMatrix();
+            this.degree = buildDegreeMatrix();
+            this.laplacian = similarities.subtract(degree);
+        }
+
+        public Clustering<V> compute() {
+            final var matrix = new EigenDecomposition(laplacian).getV().
+                    getSubMatrix(0, graph.vertexSet().size() - 1, 0, k - 1);
+
+            final var objects = IntStream.range(0, graph.vertexSet().size()).
+                    mapToObj(i -> new NodeEmbedding<>(mapping.getIndexList().get(i), matrix.getRow(i))).
+                    collect(Collectors.toList());
+
+            final var clusters = clusterer.cluster(objects);
+
+            return new ClusteringImpl<>(clusters.stream().
+                    map(cluster -> cluster.getPoints().stream().
+                            map(NodeEmbedding::getNode).
+                            collect(Collectors.toSet())).
+                    collect(Collectors.toList()));
+        }
+
+        protected RealMatrix buildAdjacencyMatrix() {
+            final var matrix = MatrixUtils.createRealMatrix(graph.vertexSet().size(), graph.vertexSet().size());
+
+            for (final var edge : graph.edgeSet()) {
+                final int i = mapping.getVertexMap().get(graph.getEdgeSource(edge));
+                final int j = mapping.getVertexMap().get(graph.getEdgeTarget(edge));
+
+                if (i != j) {
+                    final var weight = graph.getEdgeWeight(edge);
+                    matrix.setEntry(i, j, weight);
+                    matrix.setEntry(j, i, weight);
+                }
+            }
+
+            return matrix;
+        }
+
+        protected RealMatrix buildDegreeMatrix() {
+            final var matrix = MatrixUtils.createRealIdentityMatrix(graph.vertexSet().size());
+
+            for (final var entry : mapping.getVertexMap().entrySet()) {
+                final int i = entry.getValue();
+                matrix.setEntry(i, i, graph.degreeOf(entry.getKey()));
+            }
+
+            return matrix;
+        }
+    }
+
+    public static class NodeEmbedding<V> extends DoublePoint {
+        protected final V node;
+
+        public NodeEmbedding(V node, double[] point) {
+            super(point);
+            this.node = node;
+        }
+
+        public V getNode() {
+            return node;
+        }
+    }
+}
