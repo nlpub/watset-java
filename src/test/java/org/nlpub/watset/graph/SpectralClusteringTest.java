@@ -21,24 +21,26 @@ import org.apache.commons.math3.ml.clustering.DBSCANClusterer;
 import org.apache.commons.math3.ml.clustering.KMeansPlusPlusClusterer;
 import org.apache.commons.math3.ml.distance.EuclideanDistance;
 import org.apache.commons.math3.random.JDKRandomGenerator;
+import org.jgrapht.graph.DefaultWeightedEdge;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
 public class SpectralClusteringTest {
-    final KMeansPlusPlusClusterer<SpectralClustering.NodeEmbedding<Integer>> kmeans = new KMeansPlusPlusClusterer<>(2, -1, new EuclideanDistance(), new JDKRandomGenerator(1337));
-    final DBSCANClusterer<SpectralClustering.NodeEmbedding<Integer>> dbscan = new DBSCANClusterer<>(1, 0);
+    final KMeansPlusPlusClusterer<SpectralClustering.NodeEmbedding<Integer>> KMEANS = new KMeansPlusPlusClusterer<>(2, -1, new EuclideanDistance(), new JDKRandomGenerator(1337));
+    final DBSCANClusterer<SpectralClustering.NodeEmbedding<Integer>> DBSCAN = new DBSCANClusterer<>(1, 0);
+    final SpectralClustering.Builder<Integer, DefaultWeightedEdge> BUILDER = SpectralClustering.<Integer, DefaultWeightedEdge>builder().setK(2);
 
     @Test
     public void testKMeans() {
-        final var spectral = new SpectralClustering<>(MarkovClusteringTest.TWOCLUSTERS, kmeans, 2);
+        final var spectral = BUILDER.setClusterer(KMEANS).apply(MarkovClusteringTest.TWOCLUSTERS);
         final var clustering = spectral.getClustering();
         assertEquals(2, clustering.getNumberClusters());
     }
 
     @Test
     public void testDBSCAN() {
-        final var spectral = new SpectralClustering<>(MarkovClusteringTest.TWOCLUSTERS, dbscan, 2);
+        final var spectral = BUILDER.setClusterer(DBSCAN).apply(MarkovClusteringTest.TWOCLUSTERS);
         final var clustering = spectral.getClustering();
         assertEquals(4, clustering.getNumberClusters());
     }

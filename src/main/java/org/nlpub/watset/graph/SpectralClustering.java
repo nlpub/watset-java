@@ -28,12 +28,50 @@ import org.jgrapht.util.VertexToIntegerMapping;
 import org.nlpub.watset.util.Matrices;
 
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import static java.util.Objects.isNull;
+import static java.util.Objects.requireNonNull;
 import static org.jgrapht.GraphTests.requireUndirected;
 
 public class SpectralClustering<V, E> implements ClusteringAlgorithm<V> {
+    /**
+     * Builder for {@link SpectralClustering}.
+     *
+     * @param <V> the type of nodes in the graph
+     * @param <E> the type of edges in the graph
+     */
+    @SuppressWarnings({"unused", "UnusedReturnValue"})
+    public static class Builder<V, E> implements ClusteringAlgorithmBuilder<V, E, SpectralClustering<V, E>> {
+        private Clusterer<NodeEmbedding<V>> clusterer;
+        private Integer k;
+
+        public Builder<V, E> setClusterer(Clusterer<NodeEmbedding<V>> clusterer) {
+            this.clusterer = clusterer;
+            return this;
+        }
+
+        public Builder<V, E> setK(int k) {
+            this.k = k;
+            return this;
+        }
+
+        @Override
+        public SpectralClustering<V, E> apply(Graph<V, E> graph) {
+            return new SpectralClustering<>(graph, clusterer, requireNonNull(k, "k must be specified"));
+        }
+    }
+
+    /**
+     * Create a builder.
+     *
+     * @param <V> the type of nodes in the graph
+     * @param <E> the type of edges in the graph
+     * @return a builder
+     */
+    public static <V, E> Builder<V, E> builder() {
+        return new Builder<>();
+    }
+
     private final Graph<V, E> graph;
     private final Clusterer<NodeEmbedding<V>> clusterer;
     private final int k;
