@@ -17,6 +17,7 @@
 
 package org.nlpub.watset.util;
 
+import org.apache.commons.math3.ml.clustering.KMeansPlusPlusClusterer;
 import org.jgrapht.Graph;
 import org.jgrapht.alg.clustering.KSpanningTreeClustering;
 import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
@@ -69,8 +70,12 @@ public class ClusteringAlgorithmProvider<V, E> implements ClusteringAlgorithmBui
             case "components":
                 return ComponentsClustering.<V, E>builder().apply(graph);
             case "kst":
-                final int k = Integer.parseInt(requireNonNull(params.get("k"), "k must be specified"));
-                return new KSpanningTreeClustering<>(graph, k);
+                final int kst = Integer.parseInt(requireNonNull(params.get("k"), "k must be specified"));
+                return new KSpanningTreeClustering<>(graph, kst);
+            case "spectral":
+                final int kSpectral = Integer.parseInt(requireNonNull(params.get("k"), "k must be specified"));
+                final var clusterer = new KMeansPlusPlusClusterer<SpectralClustering.NodeEmbedding<V>>(kSpectral);
+                return SpectralClustering.<V, E>builder().setClusterer(clusterer).setK(kSpectral).apply(graph);
             case "cw":
                 return ChineseWhispers.<V, E>builder().setWeighting(weighting).setRandom(random).apply(graph);
             case "mcl":

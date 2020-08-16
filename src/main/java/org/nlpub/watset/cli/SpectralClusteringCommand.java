@@ -22,22 +22,22 @@ import org.jgrapht.alg.clustering.KSpanningTreeClustering;
 import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
 
 /**
- * A command that runs the <em>k</em> spanning tree clustering algorithm.
+ * A command that runs the spectral clustering algorithm.
  */
-class KSpanningTreeCommand extends ClusteringCommand {
+public class SpectralClusteringCommand extends ClusteringCommand {
     /**
      * The number of clusters parameters.
      */
     @SuppressWarnings("CanBeFinal")
     @ParametersDelegate
-    public FixedClustersParameters fixed = new FixedClustersParameters();
+    public Command.FixedClustersParameters fixed = new Command.FixedClustersParameters();
 
     /**
      * Create an instance of command.
      *
      * @param parameters the parameters
      */
-    public KSpanningTreeCommand(MainParameters parameters) {
+    public SpectralClusteringCommand(Command.MainParameters parameters) {
         super(parameters);
     }
 

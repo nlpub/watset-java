@@ -17,6 +17,7 @@
  *
  */
 
+import org.apache.commons.math3.ml.clustering.KMeansPlusPlusClusterer;
 import org.jgrapht.alg.clustering.KSpanningTreeClustering;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
@@ -59,6 +60,12 @@ public class HardClustering {
         var kst = new KSpanningTreeClustering<>(graph, 2);
         System.out.print("k Spanning Tree (k=2): ");
         System.out.println(kst.getClustering());
+
+        // k Spanning Tree Clustering
+        var kmeans = new KMeansPlusPlusClusterer<SpectralClustering.NodeEmbedding<String>>(2);
+        var spectral = new SpectralClustering<>(graph, kmeans, 2);
+        System.out.print("Spectral Clustering (k=2): ");
+        System.out.println(spectral.getClustering());
 
         // Chinese Whispers
         var cw = ChineseWhispers.<String, DefaultWeightedEdge>builder().apply(graph);

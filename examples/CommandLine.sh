@@ -17,6 +17,9 @@ java -jar "$WATSET" -i "$INPUT" components
 # k Spanning Tree Clustering
 java -jar "$WATSET" -i "$INPUT" kst -k 2
 
+# Spectral Clustering
+java -jar "$WATSET" -i "$INPUT" spectral -k 2
+
 # Chinese Whispers
 for mode in top lin log ; do
   java -jar "$WATSET" -i "$INPUT" cw -m $mode

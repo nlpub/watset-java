@@ -72,6 +72,19 @@ abstract class Command implements Runnable {
     }
 
     /**
+     * Number of clusters parameters.
+     */
+    @SuppressWarnings("unused")
+    public static class FixedClustersParameters {
+        /**
+         * The desired number of clusters.
+         */
+        @SuppressWarnings("unused")
+        @Parameter(description = "Desired number of clusters", names = "-k")
+        public Integer k;
+    }
+
+    /**
      * Local clustering command-line interface parameters.
      */
     @SuppressWarnings("unused")
