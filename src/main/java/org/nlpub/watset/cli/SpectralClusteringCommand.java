@@ -24,7 +24,7 @@ import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
 /**
  * A command that runs the spectral clustering algorithm.
  */
-public class SpectralClusteringCommand extends ClusteringCommand {
+class SpectralClusteringCommand extends ClusteringCommand {
     /**
      * The number of clusters parameters.
      */
