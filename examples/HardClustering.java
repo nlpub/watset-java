@@ -62,7 +62,7 @@ public class HardClustering {
         System.out.println(kst.getClustering());
 
         // k Spanning Tree Clustering
-        var kmeans = new KMeansPlusPlusClusterer<SpectralClustering.NodeEmbedding<String>>(2);
+        var kmeans = new KMeansPlusPlusClusterer<NodeEmbedding<String>>(2);
         var spectral = new SpectralClustering<>(graph, kmeans, 2);
         System.out.print("Spectral Clustering (k=2): ");
         System.out.println(spectral.getClustering());
