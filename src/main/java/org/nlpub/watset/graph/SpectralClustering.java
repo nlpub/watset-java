@@ -31,6 +31,12 @@ import static java.util.Objects.isNull;
 import static java.util.Objects.requireNonNull;
 import static org.jgrapht.GraphTests.requireUndirected;
 
+/**
+ * @param <V> the type of nodes in the graph
+ * @param <E> the type of edges in the graph
+ * @see <a href="https://doi.org/10.1109/34.868688">Shi &amp; Malik (IEEE PAMI 22:8)</a>
+ * @see <a href="https://doi.org/10.1007/s11222-007-9033-z">von Luxburg (Statistics and Computing 17:4)</a>
+ */
 public class SpectralClustering<V, E> implements ClusteringAlgorithm<V> {
     /**
      * Builder for {@link SpectralClustering}.
@@ -92,13 +98,11 @@ public class SpectralClustering<V, E> implements ClusteringAlgorithm<V> {
 
     public static class Implementation<V, E> {
         protected final Clusterer<NodeEmbedding<V>> clusterer;
-        protected final int k;
         protected final VertexToIntegerMapping<V> mapping;
         protected final List<NodeEmbedding<V>> embeddings;
 
         public Implementation(Graph<V, E> graph, Clusterer<NodeEmbedding<V>> clusterer, int k) {
             this.clusterer = clusterer;
-            this.k = k;
             this.mapping = Graphs.getVertexToIntegerMapping(graph);
             this.embeddings = Matrices.computeSpectralEmbedding(graph, mapping, k);
         }

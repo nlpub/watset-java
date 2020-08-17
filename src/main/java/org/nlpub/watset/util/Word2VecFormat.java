@@ -10,11 +10,17 @@ import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
+/**
+ * @see <a href="https://papers.nips.cc/paper/5021-distributed-representations-of-words-and-phrases-and-their-compositionality.pdf">Mikolov (NIPS 2013)</a>
+ * @see <a href="https://radimrehurek.com/gensim/models/keyedvectors.html">gensim: models.keyedvectors &ndash; Store and query word vectors</a>
+ * @see <a href="https://code.google.com/archive/p/word2vec/">word2vec: Tool for computing continuous distributed representations of words</a>
+ * @see NodeEmbedding
+ */
 public final class Word2VecFormat {
     public final static Pattern SPACES = Pattern.compile(" ");
 
     public enum SpaceStrategy {
-        IGNORE,
+        @SuppressWarnings("unused") IGNORE,
         FAIL,
         REPLACE
     }

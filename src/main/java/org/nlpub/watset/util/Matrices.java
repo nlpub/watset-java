@@ -42,6 +42,8 @@ public final class Matrices {
      * @param graph    the graph
      * @param mapping  the mapping
      * @param addLoops should self-loops be added
+     * @param <V>      the type of nodes in the graph
+     * @param <E>      the type of edges in the graph
      * @return an adjacency matrix
      */
     public static <V, E> RealMatrix buildAdjacencyMatrix(Graph<V, E> graph, VertexToIntegerMapping<V> mapping, boolean addLoops) {
@@ -94,6 +96,18 @@ public final class Matrices {
         return vector;
     }
 
+    /**
+     * Compute spectral embedding of the graph nodes using the pre-computed Laplacian.
+     *
+     * @param laplacian the graph Laplacian
+     * @param mapping   the mapping
+     * @param k         the number of dimensions
+     * @param <V>       the type of nodes in the graph
+     * @return spectral embeddings of the graph nodes
+     * @see <a href="https://doi.org/10.1109/34.868688">Shi &amp; Malik (IEEE PAMI 22:8)</a>
+     * @see <a href="https://papers.nips.cc/paper/2092-on-spectral-clustering-analysis-and-an-algorithm.pdf">Ng et al. (NIPS 2002)</a>
+     * @see <a href="https://doi.org/10.1007/s11222-007-9033-z">von Luxburg (Statistics and Computing 17:4)</a>
+     */
     public static <V> List<NodeEmbedding<V>> computeSpectralEmbedding(RealMatrix laplacian, VertexToIntegerMapping<V> mapping, int k) {
         final var eigen = new EigenDecomposition(laplacian);
         final var matrix = eigen.getV().getSubMatrix(0, laplacian.getRowDimension() - 1, 0, k - 1);
@@ -106,6 +120,18 @@ public final class Matrices {
                 collect(Collectors.toList());
     }
 
+    /**
+     * Compute spectral embedding of the graph nodes.
+     *
+     * @param graph   the graph
+     * @param mapping the mapping
+     * @param k       the number of dimensions
+     * @param <V>     the type of nodes in the graph
+     * @return spectral embeddings of the graph nodes
+     * @see <a href="https://doi.org/10.1109/34.868688">Shi &amp; Malik (IEEE PAMI 22:8)</a>
+     * @see <a href="https://papers.nips.cc/paper/2092-on-spectral-clustering-analysis-and-an-algorithm.pdf">Ng et al. (NIPS 2002)</a>
+     * @see <a href="https://doi.org/10.1007/s11222-007-9033-z">von Luxburg (Statistics and Computing 17:4)</a>
+     */
     public static <V> List<NodeEmbedding<V>> computeSpectralEmbedding(Graph<V, ?> graph, VertexToIntegerMapping<V> mapping, int k) {
         final var degree = Matrices.buildDegreeMatrix(graph, mapping);
         final var adjacency = Matrices.buildAdjacencyMatrix(graph, mapping, false);
