@@ -21,9 +21,7 @@ import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.util.Locale;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.Set;
 
 /**
  * Utilities for handling the ILE {@code (identifier, length, elements)} file format.
@@ -49,23 +47,20 @@ public final class ILEFormat {
      * @param writer     the writer
      * @param clustering the clusters
      */
-    public static void write(BufferedWriter writer, ClusteringAlgorithm.Clustering<String> clustering) {
-        final var counter = new AtomicInteger(0);
-
-        clustering.getClusters().stream().
+    public static void write(BufferedWriter writer, ClusteringAlgorithm.Clustering<String> clustering) throws IOException {
+        final Iterable<Set<String>> clusters = () -> clustering.getClusters().stream().
                 sorted((smaller, larger) -> Integer.compare(larger.size(), smaller.size())).
-                forEach(cluster -> {
-                    try {
-                        writer.write(String.format(Locale.ROOT, "%d%s%d%s%s%n",
-                                counter.incrementAndGet(),
-                                SEPARATOR,
-                                cluster.size(),
-                                SEPARATOR,
-                                String.join(DELIMITER, cluster))
-                        );
-                    } catch (IOException e) {
-                        throw new UncheckedIOException(e);
-                    }
-                });
+                iterator();
+
+        int counter = 0;
+
+        for (final var cluster : clusters) {
+            writer.write(Integer.toString(++counter));
+            writer.write(SEPARATOR);
+            writer.write(Integer.toString(cluster.size()));
+            writer.write(SEPARATOR);
+            writer.write(String.join(DELIMITER, cluster));
+            writer.write(System.lineSeparator());
+        }
     }
 }
