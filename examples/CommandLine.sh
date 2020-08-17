@@ -52,10 +52,10 @@ for lmode in top lin log ; do
 done
 
 # Watset Sense Graph Embedding
-java -jar "$WATSET" -i "$INPUT" sensembed -l mcl -k 2
+java -jar "$WATSET" -i "$INPUT" embedsenses -l mcl -k 2
 
 for lmode in top lin log ; do
-  java -jar "$WATSET" -i "$INPUT" sensembed -l cw -lp mode=$lmode -k 2
+  java -jar "$WATSET" -i "$INPUT" embedsenses -l cw -lp mode=$lmode -k 2
 done
 
 # Watset Clustering

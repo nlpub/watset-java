@@ -97,7 +97,7 @@ public final class Application implements Runnable {
                 .addCommand("embed", new EmbeddingCommand(parameters))
                 .addCommand("senses", new SensesCommand(parameters))
                 .addCommand("graph", new GraphCommand(parameters))
-                .addCommand("sensembed", new SenseEmbeddingCommand(parameters))
+                .addCommand("embedsenses", new SenseEmbeddingCommand(parameters))
                 .addCommand("watset", new WatsetCommand(parameters))
                 .addCommand("maxmax", new ProvidedClusteringCommand(parameters, "maxmax"))
                 .addCommand("version", new VersionCommand(parameters))
