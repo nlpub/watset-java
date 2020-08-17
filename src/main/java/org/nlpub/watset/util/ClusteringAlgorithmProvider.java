@@ -75,7 +75,7 @@ public class ClusteringAlgorithmProvider<V, E> implements ClusteringAlgorithmBui
                 return new KSpanningTreeClustering<>(graph, kst);
             case "spectral":
                 final int kSpectral = Integer.parseInt(requireNonNull(params.get("k"), "k must be specified"));
-                final var clusterer = new KMeansPlusPlusClusterer<SpectralClustering.NodeEmbedding<V>>(kSpectral, -1, new EuclideanDistance(), random);
+                final var clusterer = new KMeansPlusPlusClusterer<NodeEmbedding<V>>(kSpectral, -1, new EuclideanDistance(), random);
                 return SpectralClustering.<V, E>builder().setClusterer(clusterer).setK(kSpectral).apply(graph);
             case "cw":
                 return ChineseWhispers.<V, E>builder().setWeighting(weighting).setRandom(random).apply(graph);

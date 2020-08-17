@@ -17,6 +17,9 @@ java -jar "$WATSET" -i "$INPUT" components
 # k Spanning Tree Clustering
 java -jar "$WATSET" -i "$INPUT" kst -k 2
 
+# Spectral Embedding
+java -jar "$WATSET" -i "$INPUT" embed -k 2
+
 # Spectral Clustering
 java -jar "$WATSET" -i "$INPUT" spectral -k 2
 
@@ -46,6 +49,13 @@ java -jar "$WATSET" -i "$INPUT" graph -l mcl
 
 for lmode in top lin log ; do
   java -jar "$WATSET" -i "$INPUT" graph -l cw -lp mode=$lmode
+done
+
+# Watset Sense Graph Embedding
+java -jar "$WATSET" -i "$INPUT" sensembed -l mcl -k 2
+
+for lmode in top lin log ; do
+  java -jar "$WATSET" -i "$INPUT" sensembed -l cw -lp mode=$lmode -k 2
 done
 
 # Watset Clustering

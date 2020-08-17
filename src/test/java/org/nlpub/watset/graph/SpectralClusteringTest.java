@@ -27,8 +27,8 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 public class SpectralClusteringTest {
-    final KMeansPlusPlusClusterer<SpectralClustering.NodeEmbedding<Integer>> KMEANS = new KMeansPlusPlusClusterer<>(2, -1, new EuclideanDistance(), new JDKRandomGenerator(1337));
-    final DBSCANClusterer<SpectralClustering.NodeEmbedding<Integer>> DBSCAN = new DBSCANClusterer<>(1, 0);
+    final KMeansPlusPlusClusterer<NodeEmbedding<Integer>> KMEANS = new KMeansPlusPlusClusterer<>(2, -1, new EuclideanDistance(), new JDKRandomGenerator(1337));
+    final DBSCANClusterer<NodeEmbedding<Integer>> DBSCAN = new DBSCANClusterer<>(1, 0);
     final SpectralClustering.Builder<Integer, DefaultWeightedEdge> BUILDER = SpectralClustering.<Integer, DefaultWeightedEdge>builder().setK(2);
 
     @Test

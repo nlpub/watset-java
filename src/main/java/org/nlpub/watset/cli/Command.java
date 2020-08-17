@@ -81,7 +81,7 @@ abstract class Command implements Runnable {
          * The desired number of clusters.
          */
         @SuppressWarnings("unused")
-        @Parameter(description = "Desired number of clusters", names = "-k")
+        @Parameter(required = true, description = "Desired number of clusters", names = "-k")
         public Integer k;
     }
 

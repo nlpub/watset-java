@@ -17,16 +17,14 @@
 
 package org.nlpub.watset.graph;
 
-import org.apache.commons.math3.linear.EigenDecomposition;
-import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.ml.clustering.Clusterer;
-import org.apache.commons.math3.ml.clustering.DoublePoint;
 import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
 import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
 import org.jgrapht.util.VertexToIntegerMapping;
 import org.nlpub.watset.util.Matrices;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
@@ -93,55 +91,26 @@ public class SpectralClustering<V, E> implements ClusteringAlgorithm<V> {
     }
 
     public static class Implementation<V, E> {
-        protected final Graph<V, E> graph;
         protected final Clusterer<NodeEmbedding<V>> clusterer;
         protected final int k;
         protected final VertexToIntegerMapping<V> mapping;
-        protected final RealMatrix degree;
-        protected final RealMatrix adjacency;
-        protected final RealMatrix laplacian;
+        protected final List<NodeEmbedding<V>> embeddings;
 
         public Implementation(Graph<V, E> graph, Clusterer<NodeEmbedding<V>> clusterer, int k) {
-            this.graph = graph;
             this.clusterer = clusterer;
             this.k = k;
             this.mapping = Graphs.getVertexToIntegerMapping(graph);
-            this.degree = Matrices.buildDegreeMatrix(graph, mapping);
-            this.adjacency = Matrices.buildAdjacencyMatrix(graph, mapping, false);
-            this.laplacian = Matrices.buildSymmetricLaplacian(degree, adjacency);
+            this.embeddings = Matrices.computeSpectralEmbedding(graph, mapping, k);
         }
 
         public Clustering<V> compute() {
-            final var matrix = new EigenDecomposition(laplacian).getV().
-                    getSubMatrix(0, graph.vertexSet().size() - 1, 0, k - 1);
-
-            final var norms = Matrices.computeRowNorms(matrix);
-            matrix.walkInOptimizedOrder(new Matrices.RowNormalizeVisitor(norms));
-
-            final var points = mapping.getVertexMap().entrySet().stream().
-                    map(e -> new NodeEmbedding<>(e.getKey(), matrix.getRow(e.getValue()))).
-                    collect(Collectors.toList());
-
-            final var clusters = clusterer.cluster(points);
+            final var clusters = clusterer.cluster(embeddings);
 
             return new ClusteringImpl<>(clusters.stream().
                     map(cluster -> cluster.getPoints().stream().
                             map(NodeEmbedding::getNode).
                             collect(Collectors.toSet())).
                     collect(Collectors.toList()));
-        }
-    }
-
-    public static class NodeEmbedding<V> extends DoublePoint {
-        protected final V node;
-
-        public NodeEmbedding(V node, double[] point) {
-            super(point);
-            this.node = node;
-        }
-
-        public V getNode() {
-            return node;
         }
     }
 }

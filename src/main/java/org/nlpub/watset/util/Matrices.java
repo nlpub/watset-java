@@ -20,9 +20,12 @@ package org.nlpub.watset.util;
 import org.apache.commons.math3.linear.*;
 import org.jgrapht.Graph;
 import org.jgrapht.util.VertexToIntegerMapping;
+import org.nlpub.watset.graph.NodeEmbedding;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public final class Matrices {
     private static final Logger logger = Logger.getLogger(Matrices.class.getSimpleName());
@@ -89,6 +92,25 @@ public final class Matrices {
         }
 
         return vector;
+    }
+
+    public static <V> List<NodeEmbedding<V>> computeSpectralEmbedding(RealMatrix laplacian, VertexToIntegerMapping<V> mapping, int k) {
+        final var eigen = new EigenDecomposition(laplacian);
+        final var matrix = eigen.getV().getSubMatrix(0, laplacian.getRowDimension() - 1, 0, k - 1);
+
+        final var norms = computeRowNorms(matrix);
+        matrix.walkInOptimizedOrder(new RowNormalizeVisitor(norms));
+
+        return mapping.getVertexMap().entrySet().stream().
+                map(e -> new NodeEmbedding<>(e.getKey(), matrix.getRow(e.getValue()))).
+                collect(Collectors.toList());
+    }
+
+    public static <V> List<NodeEmbedding<V>> computeSpectralEmbedding(Graph<V, ?> graph, VertexToIntegerMapping<V> mapping, int k) {
+        final var degree = Matrices.buildDegreeMatrix(graph, mapping);
+        final var adjacency = Matrices.buildAdjacencyMatrix(graph, mapping, false);
+        final var laplacian = Matrices.buildSymmetricLaplacian(degree, adjacency);
+        return computeSpectralEmbedding(laplacian, mapping, k);
     }
 
     /**

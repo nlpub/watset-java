@@ -22,6 +22,7 @@ import org.apache.commons.math3.ml.clustering.KMeansPlusPlusClusterer;
 import org.apache.commons.math3.ml.distance.EuclideanDistance;
 import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
 import org.jgrapht.graph.DefaultWeightedEdge;
+import org.nlpub.watset.graph.NodeEmbedding;
 import org.nlpub.watset.graph.SpectralClustering;
 
 /**
@@ -46,7 +47,7 @@ class SpectralClusteringCommand extends ClusteringCommand {
 
     @Override
     public ClusteringAlgorithm<String> getAlgorithm() {
-        final var clusterer = new KMeansPlusPlusClusterer<SpectralClustering.NodeEmbedding<String>>(fixed.k, -1, new EuclideanDistance(), parameters.random);
+        final var clusterer = new KMeansPlusPlusClusterer<NodeEmbedding<String>>(fixed.k, -1, new EuclideanDistance(), parameters.random);
         return SpectralClustering.<String, DefaultWeightedEdge>builder().setClusterer(clusterer).setK(fixed.k).apply(getGraph());
     }
 }
