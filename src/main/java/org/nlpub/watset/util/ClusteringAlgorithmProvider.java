@@ -18,6 +18,7 @@
 package org.nlpub.watset.util;
 
 import org.apache.commons.math3.ml.clustering.KMeansPlusPlusClusterer;
+import org.apache.commons.math3.ml.clustering.MultiKMeansPlusPlusClusterer;
 import org.apache.commons.math3.ml.distance.EuclideanDistance;
 import org.apache.commons.math3.random.JDKRandomGenerator;
 import org.jgrapht.Graph;
@@ -76,7 +77,8 @@ public class ClusteringAlgorithmProvider<V, E> implements ClusteringAlgorithmBui
             case "spectral":
                 final int kSpectral = Integer.parseInt(requireNonNull(params.get("k"), "k must be specified"));
                 final var clusterer = new KMeansPlusPlusClusterer<NodeEmbedding<V>>(kSpectral, -1, new EuclideanDistance(), random);
-                return SpectralClustering.<V, E>builder().setClusterer(clusterer).setK(kSpectral).apply(graph);
+                final var metaClusterer = new MultiKMeansPlusPlusClusterer<>(clusterer, 10);
+                return SpectralClustering.<V, E>builder().setClusterer(metaClusterer).setK(kSpectral).apply(graph);
             case "cw":
                 return ChineseWhispers.<V, E>builder().setWeighting(weighting).setRandom(random).apply(graph);
             case "mcl":

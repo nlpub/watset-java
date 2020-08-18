@@ -19,6 +19,7 @@ package org.nlpub.watset.cli;
 
 import com.beust.jcommander.ParametersDelegate;
 import org.apache.commons.math3.ml.clustering.KMeansPlusPlusClusterer;
+import org.apache.commons.math3.ml.clustering.MultiKMeansPlusPlusClusterer;
 import org.apache.commons.math3.ml.distance.EuclideanDistance;
 import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
 import org.jgrapht.graph.DefaultWeightedEdge;
@@ -48,6 +49,7 @@ class SpectralClusteringCommand extends ClusteringCommand {
     @Override
     public ClusteringAlgorithm<String> getAlgorithm() {
         final var clusterer = new KMeansPlusPlusClusterer<NodeEmbedding<String>>(fixed.k, -1, new EuclideanDistance(), parameters.random);
-        return SpectralClustering.<String, DefaultWeightedEdge>builder().setClusterer(clusterer).setK(fixed.k).apply(getGraph());
+        final var metaClusterer = new MultiKMeansPlusPlusClusterer<>(clusterer, 10);
+        return SpectralClustering.<String, DefaultWeightedEdge>builder().setClusterer(metaClusterer).setK(fixed.k).apply(getGraph());
     }
 }
