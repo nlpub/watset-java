@@ -17,6 +17,7 @@
 
 package org.nlpub.watset.cli;
 
+import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParametersDelegate;
 import org.apache.commons.math3.ml.clustering.KMeansPlusPlusClusterer;
 import org.apache.commons.math3.ml.clustering.MultiKMeansPlusPlusClusterer;
@@ -38,6 +39,13 @@ class SpectralClusteringCommand extends ClusteringCommand {
     public Command.FixedClustersParameters fixed = new Command.FixedClustersParameters();
 
     /**
+     * The desired number of k-means runs.
+     */
+    @SuppressWarnings("CanBeFinal")
+    @Parameter(description = "Number of k-means runs", names = "-n")
+    public int n = 10;
+
+    /**
      * Create an instance of command.
      *
      * @param parameters the parameters
@@ -49,7 +57,7 @@ class SpectralClusteringCommand extends ClusteringCommand {
     @Override
     public ClusteringAlgorithm<String> getAlgorithm() {
         final var clusterer = new KMeansPlusPlusClusterer<NodeEmbedding<String>>(fixed.k, -1, new EuclideanDistance(), parameters.random);
-        final var metaClusterer = new MultiKMeansPlusPlusClusterer<>(clusterer, 10);
+        final var metaClusterer = new MultiKMeansPlusPlusClusterer<>(clusterer, n);
         return SpectralClustering.<String, DefaultWeightedEdge>builder().setClusterer(metaClusterer).setK(fixed.k).apply(getGraph());
     }
 }
