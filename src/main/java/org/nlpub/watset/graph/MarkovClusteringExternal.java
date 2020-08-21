@@ -281,6 +281,8 @@ public class MarkovClusteringExternal<V, E> implements ClusteringAlgorithm<V> {
             try {
                 status = process.waitFor();
             } catch (InterruptedException e) {
+                // TODO: Is it correct to call interrupt() here?
+                Thread.currentThread().interrupt();
                 throw new IllegalStateException(path.toAbsolutePath() + " has been interrupted", e);
             }
 
