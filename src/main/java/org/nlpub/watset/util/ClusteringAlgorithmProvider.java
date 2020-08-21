@@ -41,6 +41,61 @@ import static java.util.Objects.requireNonNullElse;
  * @param <E> the type of edges in the graph
  */
 public class ClusteringAlgorithmProvider<V, E> implements ClusteringAlgorithmBuilder<V, E, ClusteringAlgorithm<V>> {
+    /**
+     * Clustering algorithms that {@link ClusteringAlgorithmProvider} knows how to provide.
+     */
+    public enum KnownAlgorithms {
+        /**
+         * {@link EmptyClustering}
+         */
+        EMPTY,
+
+        /**
+         * {@link TogetherClustering}
+         */
+        TOGETHER,
+
+        /**
+         * {@link SingletonClustering}
+         */
+        SINGLETON,
+
+        /**
+         * {@link ComponentsClustering}
+         */
+        COMPONENTS,
+
+        /**
+         * {@link KSpanningTreeClustering}
+         */
+        K_SPANNING_TREE,
+
+        /**
+         * {@link SpectralClustering}
+         */
+        SPECTRAL,
+
+        /**
+         * {@link ChineseWhispers}
+         */
+        CHINESE_WHISPERS,
+
+        /**
+         * {@link MarkovClustering}
+         */
+        MARKOV_CLUSTERING,
+
+        /**
+         * {@link MarkovClusteringExternal}
+         */
+        MARKOV_CLUSTERING_EXTERNAL,
+
+        /**
+         * {@link MaxMax}
+         */
+        MAXMAX,
+    }
+
     private final String algorithm;
     private final Map<String, String> params;
     private final NodeWeighting<V, E> weighting;
@@ -54,7 +109,7 @@ public class ClusteringAlgorithmProvider<V, E> implements ClusteringAlgorithmBui
      * @param random    the random number generator
      */
     public ClusteringAlgorithmProvider(String algorithm, Map<String, String> params, JDKRandomGenerator random) {
-        this.algorithm = requireNonNull(algorithm, "algorithm is not specified");
+        this.algorithm = normalize(algorithm);
         this.params = requireNonNullElse(params, Collections.emptyMap());
         this.weighting = NodeWeightings.parse(params.get("mode"));
         this.random = requireNonNullElse(random, new JDKRandomGenerator());
@@ -62,34 +117,34 @@ public class ClusteringAlgorithmProvider<V, E> implements ClusteringAlgorithmBui
 
     @Override
     public ClusteringAlgorithm<V> apply(Graph<V, E> graph) {
-        switch (algorithm.toLowerCase(Locale.ROOT)) {
-            case "empty":
+        switch (KnownAlgorithms.valueOf(algorithm)) {
+            case EMPTY:
                 return EmptyClustering.<V, E>builder().apply(graph);
-            case "together":
+            case TOGETHER:
                 return TogetherClustering.<V, E>builder().apply(graph);
-            case "singleton":
+            case SINGLETON:
                 return SingletonClustering.<V, E>builder().apply(graph);
-            case "components":
+            case COMPONENTS:
                 return ComponentsClustering.<V, E>builder().apply(graph);
-            case "kst":
+            case K_SPANNING_TREE:
                 final int kst = Integer.parseInt(requireNonNull(params.get("k"), "k must be specified"));
                 return new KSpanningTreeClustering<>(graph, kst);
-            case "spectral":
+            case SPECTRAL:
                 final int kSpectral = Integer.parseInt(requireNonNull(params.get("k"), "k must be specified"));
                 final var clusterer = new KMeansPlusPlusClusterer<NodeEmbedding<V>>(kSpectral, -1, new EuclideanDistance(), random);
                 final int numTrials = params.containsKey("n") ? Integer.parseInt(params.get("n")) : 10;
                 final var metaClusterer = new MultiKMeansPlusPlusClusterer<>(clusterer, numTrials);
                 return SpectralClustering.<V, E>builder().setClusterer(metaClusterer).setK(kSpectral).apply(graph);
-            case "cw":
+            case CHINESE_WHISPERS:
                 return ChineseWhispers.<V, E>builder().setWeighting(weighting).setRandom(random).apply(graph);
-            case "mcl":
+            case MARKOV_CLUSTERING:
                 final var mcl = MarkovClustering.<V, E>builder();
 
                 if (params.containsKey("e")) mcl.setE(Integer.parseInt(params.get("e")));
                 if (params.containsKey("r")) mcl.setR(Double.parseDouble(params.get("r")));
 
                 return mcl.apply(graph);
-            case "mcl-bin":
+            case MARKOV_CLUSTERING_EXTERNAL:
                 final var mclOfficial = MarkovClusteringExternal.<V, E>builder().
                         setPath(Path.of(params.get("bin"))).
                         setThreads(Runtime.getRuntime().availableProcessors());
@@ -97,10 +152,26 @@ public class ClusteringAlgorithmProvider<V, E> implements ClusteringAlgorithmBui
                 if (params.containsKey("r")) mclOfficial.setR(Double.parseDouble(params.get("r")));
 
                 return mclOfficial.apply(graph);
-            case "maxmax":
+            case MAXMAX:
                 return MaxMax.<V, E>builder().apply(graph);
             default:
                 throw new IllegalArgumentException("Unknown algorithm: " + algorithm);
         }
+    }
+
+    /**
+     * Normalize the name of the requested algorithm.
+     *
+     * @param algorithm the algorithm
+     * @return the normalized name
+     */
+    protected String normalize(String algorithm) {
+        return requireNonNull(algorithm, "algorithm is not specified").
+                toUpperCase(Locale.ROOT).
+                replaceAll("-", "_").
+                replaceAll("KST", KnownAlgorithms.K_SPANNING_TREE.name()).
+                replaceAll("CW", KnownAlgorithms.CHINESE_WHISPERS.name()).
+                replaceAll("MCL_BIN", KnownAlgorithms.MARKOV_CLUSTERING_EXTERNAL.name()).
+                replaceAll("MCL", KnownAlgorithms.CHINESE_WHISPERS.name());
     }
 }
