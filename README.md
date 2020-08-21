@@ -64,6 +64,20 @@ The [*k* spanning tree clustering algorithm](https://doi.org/10.2307/2346439) pe
 $ java -jar watset.jar -i graph.txt -o output.tsv kst -k 2
 ```
 
+### Spectral Clustering
+
+The [spectral clustering](https://en.wikipedia.org/wiki/Spectral_clustering) algorithm performs clustering of the graph's spectral embedding with the [*k*-means algorithm](https://en.wikipedia.org/wiki/K-means_clustering).
+
+```bash
+$ java -jar watset.jar -i graph.txt -o output.tsv spectral -k 2
+```
+
+Since this algorithm computes node embeddings, it is possible to output them in the well-known *textual* [Word2Vec format](https://code.google.com/archive/p/word2vec/).
+
+```
+$ java -jar watset.jar -i graph.txt -o output.w2v embed -k 2
+```
+
 ### Chinese Whispers
 
 [Chinese Whispers] (CW) is a hard clustering algorithm that resembles a popular children's game. This tool offers three different variations of this algorithm that can be set using the `-m` (`--mode`) option:
@@ -124,6 +138,14 @@ $ java -jar watset.jar -i graph.txt -o sense-graph.txt graph -l mcl
 ```
 
 The output file will be written virtually in the same ABC format as the input graph, but each node will be provided with a numerical sense identifier preceded by the suffix `#`. This feature simplifies the integration into other graph processing pipelines.
+
+#### Watset: Word Sense Graph Embeddings
+
+It might be useful to obtain spectral embeddings of the [Watset] sense graph nodes in the Word2Vec textual format.
+
+```
+$ java -jar watset.jar -i graph.txt -o sense-graph.w2v embedsenses -l mcl -k 2
+```
 
 ### MaxMax
 
