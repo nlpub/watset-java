@@ -18,6 +18,7 @@
  */
 
 import org.apache.commons.math3.ml.clustering.KMeansPlusPlusClusterer;
+import org.apache.commons.math3.ml.clustering.MultiKMeansPlusPlusClusterer;
 import org.jgrapht.alg.clustering.KSpanningTreeClustering;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
@@ -63,7 +64,8 @@ public class HardClustering {
 
         // Spectral Clustering with k-means++
         var kmeans = new KMeansPlusPlusClusterer<NodeEmbedding<String>>(2);
-        var spectral = new SpectralClustering<>(graph, kmeans, 2);
+        var clusterer = new MultiKMeansPlusPlusClusterer<>(kmeans, 10);
+        var spectral = new SpectralClustering<>(graph, clusterer, 2);
         System.out.print("Spectral Clustering (k=2): ");
         System.out.println(spectral.getClustering());
 
