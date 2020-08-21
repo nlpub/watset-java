@@ -27,6 +27,9 @@ import java.util.Locale;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+/**
+ * Utilities for working with matrices.
+ */
 public final class Matrices {
     private static final Logger logger = Logger.getLogger(Matrices.class.getSimpleName());
 
@@ -69,6 +72,15 @@ public final class Matrices {
         return matrix;
     }
 
+    /**
+     * Construct a degree matrix for the given graph.
+     *
+     * @param graph   the graph
+     * @param mapping the mapping
+     * @param <V>     the type of nodes in the graph
+     * @param <E>     the type of edges in the graph
+     * @return a degree matrix
+     */
     public static <V, E> RealMatrix buildDegreeMatrix(Graph<V, E> graph, VertexToIntegerMapping<V> mapping) {
         final var data = new double[graph.vertexSet().size()];
 
@@ -79,6 +91,13 @@ public final class Matrices {
         return MatrixUtils.createRealDiagonalMatrix(data);
     }
 
+    /**
+     * Construct a symmetric Laplacian for the given graph.
+     *
+     * @param degree    the degree matrix
+     * @param adjacency the adjacency matrix
+     * @return a symmetric Laplacian
+     */
     public static RealMatrix buildSymmetricLaplacian(RealMatrix degree, RealMatrix adjacency) {
         final var eigen = new EigenDecomposition(degree);
         final var sqrt = eigen.getSquareRoot();
@@ -86,6 +105,12 @@ public final class Matrices {
         return sqrt.multiply(laplacian).multiply(sqrt);
     }
 
+    /**
+     * Compute row norms of the given matrix.
+     *
+     * @param matrix the matrix
+     * @return a vector with row norms
+     */
     public static RealVector computeRowNorms(RealMatrix matrix) {
         final var vector = new ArrayRealVector(matrix.getRowDimension());
 
@@ -107,6 +132,7 @@ public final class Matrices {
      * @see <a href="https://doi.org/10.1109/34.868688">Shi &amp; Malik (IEEE PAMI 22:8)</a>
      * @see <a href="https://papers.nips.cc/paper/2092-on-spectral-clustering-analysis-and-an-algorithm.pdf">Ng et al. (NIPS 2002)</a>
      * @see <a href="https://doi.org/10.1007/s11222-007-9033-z">von Luxburg (Statistics and Computing 17:4)</a>
+     * @see <a href="https://scikit-learn.org/stable/modules/generated/sklearn.manifold.SpectralEmbedding.html">sklearn.manifold.SpectralEmbedding</a>
      */
     public static <V> List<NodeEmbedding<V>> computeSpectralEmbedding(RealMatrix laplacian, VertexToIntegerMapping<V> mapping, int k) {
         final var eigen = new EigenDecomposition(laplacian);
@@ -131,6 +157,7 @@ public final class Matrices {
      * @see <a href="https://doi.org/10.1109/34.868688">Shi &amp; Malik (IEEE PAMI 22:8)</a>
      * @see <a href="https://papers.nips.cc/paper/2092-on-spectral-clustering-analysis-and-an-algorithm.pdf">Ng et al. (NIPS 2002)</a>
      * @see <a href="https://doi.org/10.1007/s11222-007-9033-z">von Luxburg (Statistics and Computing 17:4)</a>
+     * @see <a href="https://scikit-learn.org/stable/modules/generated/sklearn.manifold.SpectralEmbedding.html">sklearn.manifold.SpectralEmbedding</a>
      */
     public static <V> List<NodeEmbedding<V>> computeSpectralEmbedding(Graph<V, ?> graph, VertexToIntegerMapping<V> mapping, int k) {
         final var degree = Matrices.buildDegreeMatrix(graph, mapping);
@@ -171,9 +198,12 @@ public final class Matrices {
         }
     }
 
+    /**
+     * Visitor that computes column sums.
+     */
     public static class ColumnSumVisitor extends DefaultRealMatrixPreservingVisitor {
         /**
-         * The row sums.
+         * The column sums.
          */
         private final RealVector sums;
 
@@ -231,16 +261,19 @@ public final class Matrices {
         }
     }
 
+    /**
+     * Visitor that normalizes rows.
+     */
     public static class RowNormalizeVisitor extends DefaultRealMatrixChangingVisitor {
         /**
-         * The column sums.
+         * The row norms.
          */
         private final RealVector norms;
 
         /**
          * Create an instance of the normalizer.
          *
-         * @param norms the column vector containing row sums
+         * @param norms the row norms
          */
         public RowNormalizeVisitor(RealVector norms) {
             this.norms = norms;

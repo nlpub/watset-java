@@ -46,6 +46,7 @@ public final class ILEFormat {
      *
      * @param writer     the writer
      * @param clustering the clusters
+     * @throws IOException if an I/O error occurs
      */
     public static void write(BufferedWriter writer, ClusteringAlgorithm.Clustering<String> clustering) throws IOException {
         final Iterable<Set<String>> clusters = () -> clustering.getClusters().stream().
