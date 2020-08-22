@@ -44,59 +44,59 @@ public class ClusteringAlgorithmProvider<V, E> implements ClusteringAlgorithmBui
     /**
      * Clustering algorithms that {@link ClusteringAlgorithmProvider} knows how to provide.
      */
-    public enum KnownAlgorithms {
+    public enum ProvidingAlgorithm {
         /**
-         * {@link EmptyClustering}
+         * Label for {@link EmptyClustering}.
          */
         EMPTY,
 
         /**
-         * {@link TogetherClustering}
+         * Label for {@link TogetherClustering}.
          */
         TOGETHER,
 
         /**
-         * {@link SingletonClustering}
+         * Label for {@link SingletonClustering}.
          */
         SINGLETON,
 
         /**
-         * {@link ComponentsClustering}
+         * Label for {@link ComponentsClustering}.
          */
         COMPONENTS,
 
         /**
-         * {@link KSpanningTreeClustering}
+         * Label for {@link KSpanningTreeClustering}.
          */
         K_SPANNING_TREE,
 
         /**
-         * {@link SpectralClustering}
+         * Label for {@link SpectralClustering}.
          */
         SPECTRAL,
 
         /**
-         * {@link ChineseWhispers}
+         * Label for {@link ChineseWhispers}.
          */
         CHINESE_WHISPERS,
 
         /**
-         * {@link MarkovClustering}
+         * Label for {@link MarkovClustering}.
          */
         MARKOV_CLUSTERING,
 
         /**
-         * {@link MarkovClusteringExternal}
+         * Label for {@link MarkovClusteringExternal}.
          */
         MARKOV_CLUSTERING_EXTERNAL,
 
         /**
-         * {@link MaxMax}
+         * Label for {@link MaxMax}.
          */
         MAXMAX,
     }
 
-    private final String algorithm;
+    private final ProvidingAlgorithm algorithm;
     private final Map<String, String> params;
     private final NodeWeighting<V, E> weighting;
     private final JDKRandomGenerator random;
@@ -109,7 +109,7 @@ public class ClusteringAlgorithmProvider<V, E> implements ClusteringAlgorithmBui
      * @param random    the random number generator
      */
     public ClusteringAlgorithmProvider(String algorithm, Map<String, String> params, JDKRandomGenerator random) {
-        this.algorithm = normalize(algorithm);
+        this.algorithm = ProvidingAlgorithm.valueOf(normalize(requireNonNull(algorithm, "algorithm is not specified")));
         this.params = requireNonNullElse(params, Collections.emptyMap());
         this.weighting = NodeWeightings.parse(params.get("mode"));
         this.random = requireNonNullElse(random, new JDKRandomGenerator());
@@ -117,7 +117,7 @@ public class ClusteringAlgorithmProvider<V, E> implements ClusteringAlgorithmBui
 
     @Override
     public ClusteringAlgorithm<V> apply(Graph<V, E> graph) {
-        switch (KnownAlgorithms.valueOf(algorithm)) {
+        switch (algorithm) {
             case EMPTY:
                 return EmptyClustering.<V, E>builder().apply(graph);
             case TOGETHER:
@@ -166,12 +166,11 @@ public class ClusteringAlgorithmProvider<V, E> implements ClusteringAlgorithmBui
      * @return the normalized name
      */
     protected String normalize(String algorithm) {
-        return requireNonNull(algorithm, "algorithm is not specified").
-                toUpperCase(Locale.ROOT).
+        return algorithm.toUpperCase(Locale.ROOT).
                 replaceAll("-", "_").
-                replaceAll("KST", KnownAlgorithms.K_SPANNING_TREE.name()).
-                replaceAll("CW", KnownAlgorithms.CHINESE_WHISPERS.name()).
-                replaceAll("MCL_BIN", KnownAlgorithms.MARKOV_CLUSTERING_EXTERNAL.name()).
-                replaceAll("MCL", KnownAlgorithms.CHINESE_WHISPERS.name());
+                replaceAll("KST", ProvidingAlgorithm.K_SPANNING_TREE.name()).
+                replaceAll("CW", ProvidingAlgorithm.CHINESE_WHISPERS.name()).
+                replaceAll("MCL_BIN", ProvidingAlgorithm.MARKOV_CLUSTERING_EXTERNAL.name()).
+                replaceAll("MCL", ProvidingAlgorithm.CHINESE_WHISPERS.name());
     }
 }
