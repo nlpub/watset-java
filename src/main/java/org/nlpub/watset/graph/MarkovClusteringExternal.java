@@ -47,7 +47,6 @@ import static org.jgrapht.GraphTests.requireUndirected;
  * @see <a href="https://doi.org/10.1137/040608635">van Dongen (2008)</a>
  * @see <a href="https://micans.org/mcl/">MCL - a cluster algorithm for graphs</a>
  */
-@SuppressWarnings("ALL")
 public class MarkovClusteringExternal<V, E> implements ClusteringAlgorithm<V> {
     /**
      * Builder for {@link MarkovClusteringExternal}.
@@ -202,7 +201,7 @@ public class MarkovClusteringExternal<V, E> implements ClusteringAlgorithm<V> {
         /**
          * The mapping of nodes to indices.
          */
-        protected VertexToIntegerMapping<V> mapping;
+        protected final VertexToIntegerMapping<V> mapping;
 
         /**
          * The output file.
@@ -218,11 +217,11 @@ public class MarkovClusteringExternal<V, E> implements ClusteringAlgorithm<V> {
          * @param threads the number of threads
          */
         public Implementation(Graph<V, E> graph, Path path, double r, int threads) {
-            this.mapping = Graphs.getVertexToIntegerMapping(graph);
             this.graph = graph;
             this.path = path;
             this.r = r;
             this.threads = threads;
+            this.mapping = Graphs.getVertexToIntegerMapping(graph);
         }
 
         /**
@@ -243,7 +242,7 @@ public class MarkovClusteringExternal<V, E> implements ClusteringAlgorithm<V> {
 
             try (var stream = Files.lines(output.toPath())) {
                 final var clusters = stream.map(line -> Arrays.stream(line.split("\t")).
-                        map(id -> mapping.getIndexList().get(Integer.valueOf(id))).
+                        map(id -> mapping.getIndexList().get(Integer.parseInt(id))).
                         collect(Collectors.toSet())).
                         collect(Collectors.toList());
 
@@ -276,7 +275,7 @@ public class MarkovClusteringExternal<V, E> implements ClusteringAlgorithm<V> {
 
             final var process = builder.start();
 
-            int status = 0;
+            int status;
 
             try {
                 status = process.waitFor();
