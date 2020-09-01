@@ -17,6 +17,7 @@
 
 package org.nlpub.watset.cli;
 
+import com.beust.jcommander.Parameters;
 import com.beust.jcommander.ParametersDelegate;
 import org.jgrapht.Graphs;
 import org.nlpub.watset.util.Matrices;
@@ -28,6 +29,7 @@ import java.io.UncheckedIOException;
 /**
  * A command that computes graph embeddings.
  */
+@Parameters(commandDescription = "Graph Embeddings")
 class EmbeddingCommand extends Command {
     /**
      * The number of clusters parameters.

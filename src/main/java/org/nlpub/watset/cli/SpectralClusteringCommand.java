@@ -18,6 +18,7 @@
 package org.nlpub.watset.cli;
 
 import com.beust.jcommander.Parameter;
+import com.beust.jcommander.Parameters;
 import com.beust.jcommander.ParametersDelegate;
 import org.apache.commons.math3.ml.clustering.KMeansPlusPlusClusterer;
 import org.apache.commons.math3.ml.clustering.MultiKMeansPlusPlusClusterer;
@@ -30,6 +31,7 @@ import org.nlpub.watset.graph.SpectralClustering;
 /**
  * A command that runs the spectral clustering algorithm.
  */
+@Parameters(commandDescription = "Spectral Clustering")
 class SpectralClusteringCommand extends ClusteringCommand {
     /**
      * The number of clusters parameters.

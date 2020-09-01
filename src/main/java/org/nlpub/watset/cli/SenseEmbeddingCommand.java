@@ -17,6 +17,7 @@
 
 package org.nlpub.watset.cli;
 
+import com.beust.jcommander.Parameters;
 import com.beust.jcommander.ParametersDelegate;
 import org.jgrapht.Graphs;
 import org.nlpub.watset.graph.EmptyClustering;
@@ -29,6 +30,7 @@ import java.io.UncheckedIOException;
 /**
  * A command that computes the Watset sense graph embeddings.
  */
+@Parameters(commandDescription = "Sense Graph Embeddings")
 class SenseEmbeddingCommand extends LocalWatsetCommand {
     /**
      * The number of clusters parameters.

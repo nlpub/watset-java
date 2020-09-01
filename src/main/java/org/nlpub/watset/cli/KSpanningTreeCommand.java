@@ -17,6 +17,7 @@
 
 package org.nlpub.watset.cli;
 
+import com.beust.jcommander.Parameters;
 import com.beust.jcommander.ParametersDelegate;
 import org.jgrapht.alg.clustering.KSpanningTreeClustering;
 import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
@@ -24,6 +25,7 @@ import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
 /**
  * A command that runs the <em>k</em> spanning tree clustering algorithm.
  */
+@Parameters(commandDescription = "k Spanning Tree Clustering")
 class KSpanningTreeCommand extends ClusteringCommand {
     /**
      * The number of clusters parameters.
