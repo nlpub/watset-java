@@ -3,7 +3,7 @@
 WATSET=${WATSET-watset.jar}
 INPUT=${INPUT-java.tsv}
 
-set -ex
+set -euxo pipefail
 
 # Version
 java -jar "$WATSET" -v
