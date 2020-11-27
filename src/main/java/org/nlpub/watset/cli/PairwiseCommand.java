@@ -17,15 +17,11 @@
 
 package org.nlpub.watset.cli;
 
-import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
-import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
 import org.nlpub.watset.eval.Pairwise;
-import org.nlpub.watset.util.ILEFormat;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.nio.file.Path;
 import java.util.Locale;
 
 import static java.util.Objects.requireNonNull;
@@ -35,13 +31,7 @@ import static org.nlpub.watset.eval.Pairwise.transform;
  * A command that performs pairwise cluster evaluation.
  */
 @Parameters(commandDescription = "Pairwise Cluster Evaluation")
-class PairwiseCommand extends Command {
-    /**
-     * The gold file.
-     */
-    @Parameter(required = true, names = {"-g", "--gold"}, description = "Gold file")
-    public Path gold;
-
+class PairwiseCommand extends EvaluateCommand {
     /**
      * Create an instance of command.
      *
@@ -79,22 +69,6 @@ class PairwiseCommand extends Command {
 
             writer.write(String.format(Locale.ROOT, "F1: %f", results.getF1Score()));
             writer.write(System.lineSeparator());
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
-    }
-
-    private ClusteringAlgorithm.Clustering<String> getClusters() {
-        try (final var stream = newInputStream()) {
-            return ILEFormat.read(stream);
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
-    }
-
-    private ClusteringAlgorithm.Clustering<String> getClasses() {
-        try (final var stream = newInputStream(gold)) {
-            return ILEFormat.read(stream);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
