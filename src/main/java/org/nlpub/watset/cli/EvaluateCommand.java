@@ -24,6 +24,7 @@ import org.nlpub.watset.util.ILEFormat;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Path;
+import java.util.stream.Stream;
 
 /**
  * A command that performs cluster evaluation.
@@ -44,17 +45,29 @@ abstract class EvaluateCommand extends Command {
         super(parameters);
     }
 
+    /**
+     * Read, parse, and return the input clusters stored in {@link MainParameters#input}.
+     *
+     * @return clusters
+     * @see ILEFormat#parse(Stream)
+     */
     protected ClusteringAlgorithm.Clustering<String> getClusters() {
         try (final var stream = newInputStream()) {
-            return ILEFormat.read(stream);
+            return ILEFormat.parse(stream);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
     }
 
+    /**
+     * Read, parse, and return the gold clusters stored in {@link EvaluateCommand#gold}.
+     *
+     * @return gold clusters (aka classes)
+     * @see ILEFormat#parse(Stream)
+     */
     protected ClusteringAlgorithm.Clustering<String> getClasses() {
         try (final var stream = newInputStream(gold)) {
-            return ILEFormat.read(stream);
+            return ILEFormat.parse(stream);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }

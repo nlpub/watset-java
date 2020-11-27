@@ -50,7 +50,7 @@ public final class ILEFormat {
      * @return the clusters
      * @throws IOException if an I/O error occurs
      */
-    public static ClusteringAlgorithm.Clustering<String> read(Stream<String> stream) throws IOException {
+    public static ClusteringAlgorithm.Clustering<String> parse(Stream<String> stream) throws IOException {
         final var clusters = new ArrayList<Set<String>>();
 
         stream.forEach(line -> {
