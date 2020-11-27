@@ -145,14 +145,23 @@ abstract class Command implements Runnable {
      */
     public Stream<String> newInputStream() throws IOException {
         requireNonNull(parameters, "parameters are not initialized");
+        return newInputStream(parameters.input);
+    }
 
-        if (isNull(parameters.input)) {
+    /**
+     * Provide a stream to the input file.
+     *
+     * @return the lines from the file as a {@code Stream}
+     * @throws IOException if an I/O error occurs
+     */
+    public Stream<String> newInputStream(Path input) throws IOException {
+        if (isNull(input)) {
             logger.info("Reading from standard input.");
             return new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8)).lines();
         }
 
-        logger.log(Level.INFO, "Reading from {0}.", parameters.input);
-        return Files.lines(parameters.input);
+        logger.log(Level.INFO, "Reading from {0}.", input);
+        return Files.lines(input);
     }
 
     /**

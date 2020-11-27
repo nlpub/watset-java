@@ -44,7 +44,7 @@ public class NormalizedModifiedPurity<V> {
      * @param <V>      the type of cluster elements
      * @return a collection of weighted cluster elements
      */
-    public static <V> List<Map<V, Double>> transform(List<Collection<V>> clusters) {
+    public static <V> List<Map<V, Double>> transform(List<? extends Collection<V>> clusters) {
         return clusters.stream().
                 map(cluster -> cluster.stream().collect(Collectors.groupingBy(identity(), Collectors.reducing(0d, e -> 1d, Double::sum)))).
                 collect(Collectors.toList());

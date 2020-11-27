@@ -76,3 +76,7 @@ for lmode in top lin log ; do
     java -jar "$WATSET" -i "$INPUT" watset -l cw -lp mode=$lmode -g cw -gp mode=$gmode # Watset[CW, CW]
   done
 done
+
+# Evaluation
+
+java -jar "$WATSET" -i "bank-soft.tsv" purity -g "bank-gold.tsv" -n -m

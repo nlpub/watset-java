@@ -21,7 +21,9 @@ import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Set;
+import java.util.stream.Stream;
 
 /**
  * Utilities for handling the ILE {@code (identifier, length, elements)} file format.
@@ -40,6 +42,26 @@ public final class ILEFormat {
      * The default delimiter, expressed by comma and space.
      */
     public static final String DELIMITER = ", ";
+
+    /**
+     * Read the ILE-formatted file representing the clusters.
+     *
+     * @param stream the input stream
+     * @return the clusters
+     * @throws IOException if an I/O error occurs
+     */
+    public static ClusteringAlgorithm.Clustering<String> read(Stream<String> stream) throws IOException {
+        final var clusters = new ArrayList<Set<String>>();
+
+        stream.forEach(line -> {
+            final var fields = line.split(SEPARATOR, 3);
+            final var length = Integer.valueOf(fields[1]);
+            final var split = fields[2].split(DELIMITER, length);
+            clusters.add(Set.of(split));
+        });
+
+        return new ClusteringAlgorithm.ClusteringImpl<>(clusters);
+    }
 
     /**
      * Write the ILE-formatted file representing the clusters.
