@@ -100,6 +100,7 @@ public final class Application implements Runnable {
                 .addCommand("embedsenses", new SenseEmbeddingCommand(parameters))
                 .addCommand("watset", new WatsetCommand(parameters))
                 .addCommand("maxmax", new ProvidedClusteringCommand(parameters, "maxmax"))
+                .addCommand("pairwise", new PairwiseCommand(parameters))
                 .addCommand("purity", new PurityCommand(parameters))
                 .addCommand("version", new VersionCommand(parameters))
                 .build();

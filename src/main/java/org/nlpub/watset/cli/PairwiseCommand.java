@@ -20,74 +20,61 @@ package org.nlpub.watset.cli;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
-import org.nlpub.watset.eval.NormalizedModifiedPurity;
+import org.nlpub.watset.eval.Pairwise;
 import org.nlpub.watset.util.ILEFormat;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.Locale;
-import java.util.Map;
+
+import static java.util.Objects.requireNonNull;
+import static org.nlpub.watset.eval.Pairwise.transform;
 
 /**
- * A command that evaluates clusters with purity.
+ * A command that performs pairwise cluster evaluation.
  */
-@Parameters(commandDescription = "Cluster Evaluation with Purity")
-class PurityCommand extends Command {
+@Parameters(commandDescription = "Pairwise Cluster Evaluation")
+class PairwiseCommand extends Command {
     /**
      * The gold file.
      */
     @Parameter(required = true, names = {"-g", "--gold"}, description = "Gold file")
     public Path gold;
 
-    @Parameter(names = {"-n", "--normalized"}, description = "Use normalized purity")
-    public boolean normalized;
-
-    @Parameter(names = {"-m", "--modified"}, description = "Use modified purity")
-    public boolean modified;
-
     /**
      * Create an instance of command.
      *
      * @param parameters the parameters
      */
-    public PurityCommand(MainParameters parameters) {
+    public PairwiseCommand(MainParameters parameters) {
         super(parameters);
     }
 
     @Override
     public void run() {
-        final var clusters = transform(getClusters());
-        final var classes = transform(getClasses());
+        final var clusters = getClusters().getClusters();
+        final var classes = getClasses().getClusters();
 
-        final var precision = new NormalizedModifiedPurity<String>(normalized, modified);
-        final var recall = new NormalizedModifiedPurity<String>(normalized, false); // this is intentional
+        final var pairwise = new Pairwise<String>();
+        final var clusterPairs = transform(requireNonNull(clusters));
+        final var classPairs = transform(requireNonNull(classes));
 
-        final var results = NormalizedModifiedPurity.evaluate(precision, recall, clusters, classes);
+        final var results = pairwise.evaluate(clusterPairs, classPairs);
 
         try (final var writer = newOutputWriter()) {
             writer.write(String.format(Locale.ROOT, "Clusters: %d", clusters.size()));
             writer.write(System.lineSeparator());
+            writer.write(String.format(Locale.ROOT, "Cluster Pairs: %d", clusterPairs.size()));
+            writer.write(System.lineSeparator());
             writer.write(String.format(Locale.ROOT, "Classes: %d", classes.size()));
             writer.write(System.lineSeparator());
-
-            if (normalized && modified) {
-                writer.write(String.format(Locale.ROOT, "nmPU: %f", results.getPrecision()));
-            } else if (normalized) {
-                writer.write(String.format(Locale.ROOT, "nPU: %f", results.getPrecision()));
-            } else if (modified) {
-                writer.write(String.format(Locale.ROOT, "mPU: %f", results.getPrecision()));
-            } else {
-                writer.write(String.format(Locale.ROOT, "PU: %f", results.getPrecision()));
-            }
+            writer.write(String.format(Locale.ROOT, "Class Pairs: %d", classPairs.size()));
             writer.write(System.lineSeparator());
 
-            if (normalized) {
-                writer.write(String.format(Locale.ROOT, "niPU: %f", results.getRecall()));
-            } else {
-                writer.write(String.format(Locale.ROOT, "iPU: %f", results.getRecall()));
-            }
+            writer.write(String.format(Locale.ROOT, "Precision: %f", results.getPrecision()));
+            writer.write(System.lineSeparator());
+            writer.write(String.format(Locale.ROOT, "Recall: %f", results.getRecall()));
             writer.write(System.lineSeparator());
 
             writer.write(String.format(Locale.ROOT, "F1: %f", results.getF1Score()));
@@ -111,10 +98,5 @@ class PurityCommand extends Command {
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
-    }
-
-    private List<Map<String, Double>> transform(ClusteringAlgorithm.Clustering<String> clustering) {
-        final var transformed = NormalizedModifiedPurity.transform(clustering.getClusters());
-        return normalized ? NormalizedModifiedPurity.normalize(transformed) : transformed;
     }
 }

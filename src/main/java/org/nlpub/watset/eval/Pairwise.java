@@ -44,7 +44,7 @@ public class Pairwise<V> {
      * @param <V>      the type of cluster elements
      * @return a collection of pairs
      */
-    public static <V> Set<Pair<V, V>> transform(Collection<Collection<V>> clusters) {
+    public static <V> Set<Pair<V, V>> transform(Collection<? extends Collection<V>> clusters) {
         return clusters.parallelStream().flatMap(Pairwise::combination).collect(Collectors.toSet());
     }
 
@@ -76,13 +76,11 @@ public class Pairwise<V> {
     /**
      * Compute a pairwise precision, recall, and F-score.
      *
-     * @param clusters the collection of the clusters to evaluate
-     * @param classes  the collection of the gold standard clusters
+     * @param clusterPairs the cluster pairs to evaluate
+     * @param classPairs   the gold standard pairs to evaluate
      * @return precision and recalled wrapped in an instance of {@link PrecisionRecall}
      */
-    public PrecisionRecall evaluate(Collection<Collection<V>> clusters, Collection<Collection<V>> classes) {
-        final var clusterPairs = transform(requireNonNull(clusters));
-        final var classPairs = transform(requireNonNull(classes));
+    public PrecisionRecall evaluate(Set<Pair<V, V>> clusterPairs, Set<Pair<V, V>> classPairs) {
 
         final var union = new HashSet<>(clusterPairs);
         union.addAll(classPairs);
@@ -109,5 +107,18 @@ public class Pairwise<V> {
         double tp_fp = tp + fp, tp_fn = tp + fn;
 
         return new PrecisionRecall(tp_fp == 0d ? 0 : tp / tp_fp, tp_fn == 0d ? 0 : tp / tp_fn);
+    }
+
+    /**
+     * Transform the clusters to pairs and compute a pairwise precision, recall, and F-score.
+     *
+     * @param clusters the collection of the clusters to evaluate
+     * @param classes  the collection of the gold standard clusters
+     * @return precision and recalled wrapped in an instance of {@link PrecisionRecall}
+     */
+    public PrecisionRecall evaluate(Collection<? extends Collection<V>> clusters, Collection<? extends Collection<V>> classes) {
+        final var clusterPairs = transform(requireNonNull(clusters));
+        final var classPairs = transform(requireNonNull(classes));
+        return evaluate(clusterPairs, classPairs);
     }
 }
