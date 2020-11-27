@@ -25,6 +25,9 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Path;
 
+/**
+ * A command that performs cluster evaluation.
+ */
 abstract class EvaluateCommand extends Command {
     /**
      * The gold file.
