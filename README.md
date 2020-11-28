@@ -111,7 +111,7 @@ $ java -jar watset.jar -i graph.txt -o output.tsv mcl-bin -r 2 --bin /path/to/mc
 
 [Watset] is a *local-global meta-algorithm* for fuzzy graph clustering. It builds an intermediate undirected graph that addresses the element ambiguity by considering different senses of each element in the input graph. This package offers the best-performing variation of Watset known as Simplified Watset.
 
-Watset requires two different clustering algorithms to be selected: the *local* clustering algorithm for sense induction that is specified using `-l` (`--local`) and the *global* algorithm for the final clustering that is specified using `-g` (`--global`). It is possible to configure the algorithms using the similar options as shown above using the `-lp` (`--local-params`) and `-gp` (`--global-params`) options. Multiple parameters should be separated with ampersand.
+Watset requires two different clustering algorithms to be selected: the *local* clustering algorithm for sense induction that is specified using `-l` (`--local`) and the *global* algorithm for the final clustering that is specified using `-g` (`--global`). It is possible to configure the algorithms using the similar options as shown above using the `-lp` (`--local-params`) and `-gp` (`--global-params`) options, which can be inserted multiple times.
 
 ```bash
 $ java -jar watset.jar -i graph.txt -o output.tsv watset -l mcl -lp e=1 -lp r=3 -g cw -gp mode=lin
