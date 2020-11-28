@@ -80,4 +80,7 @@ done
 # Evaluation
 
 java -jar "$WATSET" -i "bank-soft.tsv" pairwise -g "bank-gold.tsv"
+java -jar "$WATSET" -i "bank-soft.tsv" purity -g "bank-gold.tsv"
+java -jar "$WATSET" -i "bank-soft.tsv" purity -g "bank-gold.tsv" -n
+java -jar "$WATSET" -i "bank-soft.tsv" purity -g "bank-gold.tsv" -m
 java -jar "$WATSET" -i "bank-soft.tsv" purity -g "bank-gold.tsv" -n -m

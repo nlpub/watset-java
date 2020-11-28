@@ -5,7 +5,7 @@ RELEASE := 2.5.2
 
 MCL := 14-137
 
-all: HardClustering FuzzyClustering PickleGraph PickleClustering CommandLine
+all: HardClustering FuzzyClustering PickleGraph PickleClustering EvaluateClustering CommandLine
 
 clean:
 	-rm -fv *.pkl *.jar *.tar.gz

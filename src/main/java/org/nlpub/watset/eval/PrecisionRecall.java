@@ -78,4 +78,13 @@ public class PrecisionRecall {
 
         return (1 + beta2) * precision * recall / denominator;
     }
+
+    /**
+     * Return a textual representation of precision, recall, and F<sub>1</sub>.
+     *
+     * @return a textual representation
+     */
+    public String toString() {
+        return "PrecisionRecall [Pr=" + precision + ", Re=" + recall + ", F1=" + getF1Score() + "]";
+    }
 }
