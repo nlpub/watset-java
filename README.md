@@ -45,7 +45,7 @@ In fact, `watset-java` is not only a tool, it also features a complete API for g
 
 ### Dummy Clustering
 
-As the baseline, it is possible to use the following four dummy clustering “algorithms”:
+As the baseline, it is possible to use the following four dummy clustering &ldquo;algorithms&rdquo;:
 
 * `empty`: the empty output regardless of the input;
 * `singleton`: each node of the input graph is a different cluster;
@@ -153,6 +153,15 @@ $ java -jar watset.jar -i graph.txt -o sense-graph.w2v embedsenses -l mcl -k 2
 
 ```bash
 $ java -jar watset.jar -i graph.txt -o output.tsv maxmax
+```
+
+### Evaluation
+
+This package provides implementations of two fuzzy clustering evaluation approaches: pairwise F-score and normalized modified purity. Given the set of clusters to evaluate and a set of gold clusters (&ldquo;classes&rdquo;), it is possible to study the clustering quality.
+
+```
+$ java -jar watset.jar -i output.tsv pairwise -g gold.tsv
+$ java -jar watset.jar -i output.tsv purity -g gold.tsv -n -m
 ```
 
 ## Citation
