@@ -1,4 +1,4 @@
-// java -cp watset.jar EvaluateClustering
+// java -cp watset.jar EvaluateClustering.java
 
 /*
  * Copyright 2020 Dmitry Ustalov
