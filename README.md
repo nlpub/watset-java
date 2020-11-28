@@ -157,7 +157,7 @@ $ java -jar watset.jar -i graph.txt -o output.tsv maxmax
 
 ### Evaluation
 
-This package provides implementations of two fuzzy clustering evaluation approaches: pairwise F-score and normalized modified purity. Given the set of clusters to evaluate and a set of gold clusters (&ldquo;classes&rdquo;), it is possible to study the clustering quality.
+This package provides implementations of two fuzzy clustering evaluation approaches: pairwise F-score and normalized modified purity. Given the set of clusters to evaluate and the set of gold clusters (&ldquo;classes&rdquo;), it is possible to study the clustering quality.
 
 ```
 $ java -jar watset.jar -i output.tsv pairwise -g gold.tsv
