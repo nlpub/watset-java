@@ -48,14 +48,13 @@ public final class ILEFormat {
      *
      * @param stream the input stream
      * @return the clusters
-     * @throws IOException if an I/O error occurs
      */
-    public static ClusteringAlgorithm.Clustering<String> parse(Stream<String> stream) throws IOException {
+    public static ClusteringAlgorithm.Clustering<String> parse(Stream<String> stream) {
         final var clusters = new ArrayList<Set<String>>();
 
         stream.forEach(line -> {
             final var fields = line.split(SEPARATOR, 3);
-            final var length = Integer.valueOf(fields[1]);
+            final var length = Integer.parseInt(fields[1]);
             final var split = fields[2].split(DELIMITER, length);
             clusters.add(Set.of(split));
         });
