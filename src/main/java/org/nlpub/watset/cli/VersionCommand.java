@@ -43,7 +43,7 @@ class VersionCommand extends Command {
         System.out.println("* Ustalov, D., Panchenko, A., Biemann, C., Ponzetto, S.P.:");
         System.out.println("  Watset: Local-Global Graph Clustering with Applications in Sense and Frame Induction.");
         System.out.println("  Computational Linguistics 45(3), 423-479 (2019).");
-        System.out.println("  DOI: 10.1162/COLI_a_00354");
+        System.out.println("  https://doi.org/10.1162/COLI_a_00354");
     }
 
     /**
