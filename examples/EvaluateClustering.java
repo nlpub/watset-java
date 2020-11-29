@@ -26,15 +26,15 @@ import java.util.Set;
 public class EvaluateClustering {
     public static void main(String[] args) {
         var clusters = List.of(
-            Set.of("bank"),
-            Set.of("bank", "building"),
-            Set.of("riverbank", "streambank", "streamside"),
-            Set.of("bank building")
+                Set.of("bank"),
+                Set.of("bank", "building"),
+                Set.of("riverbank", "streambank", "streamside"),
+                Set.of("bank building")
         );
 
         var classes = List.of(
-            Set.of("bank", "riverbank", "streambank", "streamside"),
-            Set.of("bank", "building", "bank building")
+                Set.of("bank", "riverbank", "streambank", "streamside"),
+                Set.of("bank", "building", "bank building")
         );
 
         var clusterPairs = Pairwise.transform(clusters);
