@@ -49,7 +49,7 @@ class VersionCommand extends Command {
     /**
      * Get the Watset package version, if possible.
      *
-     * @return the version.
+     * @return the version
      */
     public Optional<String> getVersion() {
         return Optional.ofNullable(getClass().getPackage().getImplementationVersion());

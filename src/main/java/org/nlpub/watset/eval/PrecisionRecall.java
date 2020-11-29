@@ -23,8 +23,7 @@ package org.nlpub.watset.eval;
  * @see <a href="https://nlp.stanford.edu/IR-book/html/htmledition/evaluation-of-unranked-retrieval-sets-1.html">Evaluation of unranked retrieval sets</a>
  */
 public class PrecisionRecall {
-    private final double precision;
-    private final double recall;
+    private final double precision, recall;
 
     /**
      * Wrap the precision and recall values.
@@ -80,9 +79,9 @@ public class PrecisionRecall {
     }
 
     /**
-     * Return a textual representation of precision, recall, and F<sub>1</sub>.
+     * Return the textual representation of precision, recall, and F<sub>1</sub>.
      *
-     * @return a textual representation
+     * @return the textual representation
      */
     public String toString() {
         return "PrecisionRecall [Pr=" + precision + ", Re=" + recall + ", F1=" + getF1Score() + "]";
