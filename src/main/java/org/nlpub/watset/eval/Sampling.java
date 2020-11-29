@@ -24,7 +24,11 @@ import java.util.Random;
 /**
  * Utilities for statistical evaluation of computational experiments.
  */
-public interface Sampling {
+public final class Sampling {
+    private Sampling() {
+        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
+    }
+
     /**
      * Creates a bootstrapped dataset using sampling with replacement from the given dataset.
      * <p>
@@ -35,7 +39,7 @@ public interface Sampling {
      * @param <T>     the type of dataset elements
      * @return a sampled dataset
      */
-    static <T> Collection<T> sample(T[] dataset, Random random) {
+    public static <T> Collection<T> sample(T[] dataset, Random random) {
         final var sample = new ArrayList<T>(dataset.length);
 
         for (var i = 0; i < dataset.length; i++) {
