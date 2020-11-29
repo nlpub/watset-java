@@ -32,7 +32,6 @@ import static java.util.Objects.isNull;
  * @param <V> the type of nodes in the graph
  */
 public interface WatsetClustering<V> extends ClusteringAlgorithm.Clustering<V> {
-
     /**
      * Get the intermediate node sense graph built during {@link Watset#getClustering()}.
      *

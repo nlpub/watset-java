@@ -81,7 +81,6 @@ public class Pairwise<V> {
      * @return precision and recalled wrapped in an instance of {@link PrecisionRecall}
      */
     public PrecisionRecall evaluate(Set<Pair<V, V>> clusterPairs, Set<Pair<V, V>> classPairs) {
-
         final var union = new HashSet<>(clusterPairs);
         union.addAll(classPairs);
 
