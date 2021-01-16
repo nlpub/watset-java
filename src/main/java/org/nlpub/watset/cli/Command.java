@@ -150,10 +150,13 @@ abstract class Command implements Runnable {
 
     /**
      * Provide a stream to the input file.
+     * <p>
+     * Please do not forget to close the stream after use.
      *
      * @return the lines from the file as a {@code Stream}
      * @throws IOException if an I/O error occurs
      */
+    @SuppressWarnings("StreamResourceLeak")
     public Stream<String> newInputStream(Path input) throws IOException {
         if (isNull(input)) {
             logger.info("Reading from standard input.");
@@ -162,9 +165,7 @@ abstract class Command implements Runnable {
 
         logger.log(Level.INFO, "Reading from {0}.", input);
 
-        try (final var lines = Files.lines(input)) {
-            return lines;
-        }
+        return Files.lines(input);
     }
 
     /**
