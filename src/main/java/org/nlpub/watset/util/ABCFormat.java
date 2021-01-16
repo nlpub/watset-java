@@ -47,7 +47,7 @@ public final class ABCFormat {
         final var builder = SimpleWeightedGraph.<String, DefaultWeightedEdge>createBuilder(DefaultWeightedEdge.class);
 
         stream.forEach(line -> {
-            final var split = line.split(regex);
+            final var split = line.split(regex, -1);
 
             if (split.length != 3 || split[0].equals(split[1])) return;
 

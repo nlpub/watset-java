@@ -98,9 +98,9 @@ public class Pairwise<V> {
         int tp = 0, fp = 0, fn = 0;
 
         for (i = 0; i < union.size(); i++) {
-            if ((preds[i]) && (trues[i])) tp++;
-            if ((preds[i]) && (!trues[i])) fp++;
-            if (!(preds[i]) && (trues[i])) fn++;
+            if (preds[i] && trues[i]) tp++;
+            if (preds[i] && !trues[i]) fp++;
+            if (!preds[i] && trues[i]) fn++;
         }
 
         double tp_fp = tp + fp, tp_fn = tp + fn;

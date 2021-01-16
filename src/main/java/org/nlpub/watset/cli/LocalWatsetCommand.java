@@ -40,7 +40,7 @@ abstract class LocalWatsetCommand extends Command implements WatsetGetter<String
      *
      * @param parameters the parameters
      */
-    public LocalWatsetCommand(MainParameters parameters) {
+    protected LocalWatsetCommand(MainParameters parameters) {
         super(parameters);
     }
 

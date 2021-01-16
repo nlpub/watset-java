@@ -169,7 +169,7 @@ public class MaxMax<V, E> implements ClusteringAlgorithm<V> {
 
             for (final var v : digraph.vertexSet()) {
                 if (roots.get(v)) {
-                    final var queue = new LinkedList<>(Graphs.successorListOf(digraph, v));
+                    final var queue = new ArrayDeque<>(Graphs.successorListOf(digraph, v));
 
                     visited.add(v);
 
@@ -207,7 +207,7 @@ public class MaxMax<V, E> implements ClusteringAlgorithm<V> {
             return rootNodes.stream().map(root -> {
                 final Set<V> cluster = new HashSet<>();
 
-                final var queue = new LinkedList<V>();
+                final var queue = new ArrayDeque<V>();
                 queue.add(root);
 
                 while (!queue.isEmpty()) {

@@ -19,6 +19,7 @@ package org.nlpub.watset.eval;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -39,7 +40,7 @@ public final class Sampling {
      * @param <T>     the type of dataset elements
      * @return a sampled dataset
      */
-    public static <T> Collection<T> sample(T[] dataset, Random random) {
+    public static <T> List<T> sample(T[] dataset, Random random) {
         final var sample = new ArrayList<T>(dataset.length);
 
         for (var i = 0; i < dataset.length; i++) {

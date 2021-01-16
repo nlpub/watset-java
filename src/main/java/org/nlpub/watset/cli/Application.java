@@ -131,6 +131,7 @@ public final class Application implements Runnable {
     /**
      * Run the parsed command.
      */
+    @Override
     public void run() {
         final var command = status == ParseStatus.EMPTY_BUT_VERSION ?
                 "version" :

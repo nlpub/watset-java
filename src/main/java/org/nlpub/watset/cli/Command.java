@@ -133,7 +133,7 @@ abstract class Command implements Runnable {
      *
      * @param parameters the parameters
      */
-    public Command(MainParameters parameters) {
+    protected Command(MainParameters parameters) {
         this.parameters = requireNonNull(parameters, "parameters are not initialized");
     }
 
@@ -161,7 +161,10 @@ abstract class Command implements Runnable {
         }
 
         logger.log(Level.INFO, "Reading from {0}.", input);
-        return Files.lines(input);
+
+        try (final var lines = Files.lines(input)) {
+            return lines;
+        }
     }
 
     /**

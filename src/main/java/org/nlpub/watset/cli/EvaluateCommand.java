@@ -41,7 +41,7 @@ abstract class EvaluateCommand extends Command {
      *
      * @param parameters the parameters
      */
-    public EvaluateCommand(MainParameters parameters) {
+    protected EvaluateCommand(MainParameters parameters) {
         super(parameters);
     }
 

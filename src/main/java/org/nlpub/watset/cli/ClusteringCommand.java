@@ -32,7 +32,7 @@ abstract class ClusteringCommand extends Command {
      *
      * @param parameters the parameters
      */
-    public ClusteringCommand(MainParameters parameters) {
+    protected ClusteringCommand(MainParameters parameters) {
         super(parameters);
     }
 

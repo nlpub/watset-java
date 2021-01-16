@@ -17,7 +17,7 @@
 
 package org.nlpub.watset.util;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Random;
 import java.util.function.Function;
@@ -106,7 +106,7 @@ public final class Maximizer {
      * @return a non-empty optional that contains the randomly chosen argmax, otherwise the empty one
      */
     public static <V, S extends Comparable<S>> Optional<V> argrandmax(Iterable<V> iterable, Function<V, S> scorer, Random random) {
-        final var results = new LinkedList<V>();
+        final var results = new ArrayList<V>();
         S score = null;
 
         for (final var current : iterable) {

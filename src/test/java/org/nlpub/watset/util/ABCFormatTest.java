@@ -29,16 +29,20 @@ public class ABCFormatTest extends TestCase {
     final static URL EDGE_TSV = ABCFormatTest.class.getResource("edge.tsv");
 
     public void testParse() throws IOException, URISyntaxException {
-        final var graph = ABCFormat.parse(Files.lines(Path.of(EDGE_TSV.toURI())));
+        try (final var edges = Files.lines(Path.of(EDGE_TSV.toURI()))) {
+            final var graph = ABCFormat.parse(edges);
 
-        assertEquals(2, graph.vertexSet().size());
-        assertEquals(1, graph.edgeSet().size());
+            assertEquals(2, graph.vertexSet().size());
+            assertEquals(1, graph.edgeSet().size());
+        }
     }
 
     public void testParseRegex() throws URISyntaxException, IOException {
-        final var graph = ABCFormat.parse(Files.lines(Path.of(EDGE_TSV.toURI())), " ");
+        try (final var edges = Files.lines(Path.of(EDGE_TSV.toURI()))) {
+            final var graph = ABCFormat.parse(edges, " ");
 
-        assertTrue(graph.vertexSet().isEmpty());
-        assertTrue(graph.edgeSet().isEmpty());
+            assertTrue(graph.vertexSet().isEmpty());
+            assertTrue(graph.edgeSet().isEmpty());
+        }
     }
 }

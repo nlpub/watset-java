@@ -50,7 +50,7 @@ public final class NetworkXFormat {
      * @throws IOException if an I/O error occurs
      */
     public static ClassDict parse(InputStream stream) throws IOException {
-        return (ClassDict) (new Unpickler().load(requireNonNull(stream)));
+        return (ClassDict) new Unpickler().load(requireNonNull(stream));
     }
 
     /**
