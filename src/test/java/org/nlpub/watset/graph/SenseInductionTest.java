@@ -17,9 +17,7 @@
 
 package org.nlpub.watset.graph;
 
-import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
-import org.jgrapht.graph.SimpleWeightedGraph;
 import org.junit.Test;
 
 import java.util.Random;
@@ -27,25 +25,11 @@ import java.util.Random;
 import static org.junit.Assert.assertEquals;
 
 public class SenseInductionTest {
-    public final static Graph<String, DefaultWeightedEdge> WORDS = SimpleWeightedGraph.<String, DefaultWeightedEdge>createBuilder(DefaultWeightedEdge.class).
-            addVertices("a", "b", "c", "d", "e", "f", "g", "h").
-            addEdge("a", "b", 10).
-            addEdge("a", "c", .5).
-            addEdge("a", "d").
-            addEdge("a", "e", .4).
-            addEdge("a", "f").
-            addEdge("a", "g").
-            addEdge("b", "c", 3).
-            addEdge("b", "d").
-            addEdge("c", "d").
-            addEdge("e", "f", .25).
-            build();
-
     private final static Random random = new Random(1337);
 
     private final static ChineseWhispers.Builder<String, DefaultWeightedEdge> local = ChineseWhispers.<String, DefaultWeightedEdge>builder().setRandom(random);
 
-    private final static SenseInduction<String, DefaultWeightedEdge> senseInduction = new SenseInduction<>(WORDS, local);
+    private final static SenseInduction<String, DefaultWeightedEdge> senseInduction = new SenseInduction<>(Fixtures.WORD_GRAPH, local);
 
     @Test
     public void getSensesA() {

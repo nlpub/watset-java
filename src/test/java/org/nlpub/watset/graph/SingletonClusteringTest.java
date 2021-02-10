@@ -22,11 +22,11 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class SingletonClusteringTest {
-    private final SingletonClustering<String, DefaultWeightedEdge> singleton = SingletonClustering.<String, DefaultWeightedEdge>builder().apply(ChineseWhispersTest.DISJOINT);
+    private final SingletonClustering<String, DefaultWeightedEdge> singleton = SingletonClustering.<String, DefaultWeightedEdge>builder().apply(Fixtures.TWO_COMPONENTS);
 
     @Test
     public void testClustering() {
         final var clustering = singleton.getClustering();
-        Assert.assertEquals(ChineseWhispersTest.DISJOINT.vertexSet().size(), clustering.getNumberClusters());
+        Assert.assertEquals(Fixtures.TWO_COMPONENTS.vertexSet().size(), clustering.getNumberClusters());
     }
 }

@@ -17,9 +17,7 @@
 
 package org.nlpub.watset.graph;
 
-import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
-import org.jgrapht.graph.SimpleWeightedGraph;
 import org.junit.Test;
 
 import java.util.Random;
@@ -29,17 +27,9 @@ import static org.junit.Assert.assertEquals;
 public class ChineseWhispersTest {
     private final static Random random = new Random(1337);
 
-    public final static Graph<String, DefaultWeightedEdge> DISJOINT = SimpleWeightedGraph.<String, DefaultWeightedEdge>createBuilder(DefaultWeightedEdge.class).
-            addVertices("a", "b", "c", "d", "e").
-            addEdge("a", "b").
-            addEdge("a", "c").
-            addEdge("a", "c").
-            addEdge("d", "e").
-            build();
-
     public final static ChineseWhispers.Builder<String, DefaultWeightedEdge> BUILDER = ChineseWhispers.<String, DefaultWeightedEdge>builder().setRandom(random);
 
-    private final ChineseWhispers<String, DefaultWeightedEdge> cw = BUILDER.apply(DISJOINT);
+    private final ChineseWhispers<String, DefaultWeightedEdge> cw = BUILDER.apply(Fixtures.TWO_COMPONENTS);
 
     @Test
     public void testClustering() {

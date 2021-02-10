@@ -23,7 +23,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 public class EmptyClusteringTest {
-    private final EmptyClustering<String> empty = EmptyClustering.<String, DefaultWeightedEdge>builder().apply(ChineseWhispersTest.DISJOINT);
+    private final EmptyClustering<String> empty = EmptyClustering.<String, DefaultWeightedEdge>builder().apply(Fixtures.TWO_COMPONENTS);
 
     @Test
     public void testClustering() {

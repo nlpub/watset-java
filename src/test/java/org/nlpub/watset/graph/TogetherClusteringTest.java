@@ -23,12 +23,12 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 public class TogetherClusteringTest {
-    private final TogetherClustering<String, DefaultWeightedEdge> together = TogetherClustering.<String, DefaultWeightedEdge>builder().apply(ChineseWhispersTest.DISJOINT);
+    private final TogetherClustering<String, DefaultWeightedEdge> together = TogetherClustering.<String, DefaultWeightedEdge>builder().apply(Fixtures.TWO_COMPONENTS);
 
     @Test
     public void testClustering() {
         final var clustering = together.getClustering();
         assertEquals(1, clustering.getNumberClusters());
-        assertEquals(ChineseWhispersTest.DISJOINT.vertexSet(), clustering.getClusters().toArray()[0]);
+        assertEquals(Fixtures.TWO_COMPONENTS.vertexSet(), clustering.getClusters().toArray()[0]);
     }
 }

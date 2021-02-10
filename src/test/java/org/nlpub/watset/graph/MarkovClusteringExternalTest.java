@@ -26,14 +26,12 @@ import java.nio.file.Path;
 import static java.util.Objects.nonNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assume.assumeTrue;
-import static org.nlpub.watset.graph.MarkovClusteringTest.BIPARTITE;
-import static org.nlpub.watset.graph.MarkovClusteringTest.TWOCLUSTERS;
 
 public class MarkovClusteringExternalTest {
     Path path;
 
     MarkovClusteringExternal<String, DefaultWeightedEdge> mcl1;
-    MarkovClusteringExternal<Integer, DefaultWeightedEdge> mcl2;
+    MarkovClusteringExternal<String, DefaultWeightedEdge> mcl2;
 
     @Before
     public void setup() {
@@ -43,8 +41,8 @@ public class MarkovClusteringExternalTest {
         path = Path.of(env);
         assumeTrue(path.toFile().canExecute());
 
-        mcl1 = MarkovClusteringExternal.<String, DefaultWeightedEdge>builder().setPath(path).apply(BIPARTITE);
-        mcl2 = MarkovClusteringExternal.<Integer, DefaultWeightedEdge>builder().setPath(path).apply(TWOCLUSTERS);
+        mcl1 = MarkovClusteringExternal.<String, DefaultWeightedEdge>builder().setPath(path).apply(Fixtures.BIPARTITE);
+        mcl2 = MarkovClusteringExternal.<String, DefaultWeightedEdge>builder().setPath(path).apply(Fixtures.MCL_GRAPH);
     }
 
     @Test
