@@ -1,0 +1,8 @@
+bank	streambank	1
+bank	riverbank	1
+streamside	bank	1
+bank	building	1
+bank	bank building	1
+streambank	riverbank	1
+riverbank	streamside	1
+building	bank building	1
