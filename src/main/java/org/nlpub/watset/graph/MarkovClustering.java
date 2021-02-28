@@ -246,7 +246,8 @@ public class MarkovClustering<V, E> implements ClusteringAlgorithm<V> {
                 if (matrix.equals(previous)) break;
             }
 
-            final var clusters = new ArrayList<Set<V>>();
+            // matrix can contain identical clusters of elements which are less than one
+            final var clusters = new HashSet<Set<V>>(matrix.getRowDimension());
 
             for (var i = 0; i < matrix.getRowDimension(); i++) {
                 final var cluster = new HashSet<V>();
@@ -258,7 +259,7 @@ public class MarkovClustering<V, E> implements ClusteringAlgorithm<V> {
                 if (!cluster.isEmpty()) clusters.add(cluster);
             }
 
-            return new ClusteringImpl<>(clusters);
+            return new ClusteringImpl<>(new ArrayList<>(clusters));
         }
 
         /**
