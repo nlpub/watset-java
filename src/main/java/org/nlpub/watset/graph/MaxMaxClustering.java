@@ -47,11 +47,11 @@ public interface MaxMaxClustering<V> extends ClusteringAlgorithm.Clustering<V> {
     Map<V, Set<V>> getMaximals();
 
     /**
-     * Return the map of root and non-root nodes.
+     * Return the set of root nodes.
      *
-     * @return a map of root and non-root nodes
+     * @return a set of root nodes
      */
-    Map<V, Boolean> getRoots();
+    Set<V> getRoots();
 
     /**
      * Default implementation of the MaxMax clustering.
@@ -72,7 +72,7 @@ public interface MaxMaxClustering<V> extends ClusteringAlgorithm.Clustering<V> {
         /**
          * The map of root and non-root nodes.
          */
-        private final Map<V, Boolean> roots;
+        private final Set<V> roots;
 
         /**
          * Construct a new MaxMax clustering.
@@ -82,7 +82,7 @@ public interface MaxMaxClustering<V> extends ClusteringAlgorithm.Clustering<V> {
          * @param maximals the map of maximal affinities
          * @param roots    the map of root and non-root nodes
          */
-        public MaxMaxClusteringImpl(List<Set<V>> clusters, Graph<V, DefaultEdge> digraph, Map<V, Set<V>> maximals, Map<V, Boolean> roots) {
+        public MaxMaxClusteringImpl(List<Set<V>> clusters, Graph<V, DefaultEdge> digraph, Map<V, Set<V>> maximals, Set<V> roots) {
             super(clusters);
             this.digraph = digraph;
             this.maximals = maximals;
@@ -100,7 +100,7 @@ public interface MaxMaxClustering<V> extends ClusteringAlgorithm.Clustering<V> {
         }
 
         @Override
-        public Map<V, Boolean> getRoots() {
+        public Set<V> getRoots() {
             return roots;
         }
     }

@@ -44,8 +44,8 @@ public class MaxMaxTest {
 
     @Test
     public void testRoots() {
-        assertEquals(Fixtures.MAXMAX_CLUSTERS.size(), clustering1.getRoots().values().stream().filter(v -> v).count());
-        assertEquals(Fixtures.FUZZY_CLUSTERS.size(), clustering2.getRoots().values().stream().filter(v -> v).count());
+        assertEquals(Fixtures.MAXMAX_CLUSTERS.size(), clustering1.getRoots().size());
+        assertEquals(Fixtures.FUZZY_CLUSTERS.size(), clustering2.getRoots().size());
     }
 
     @Test

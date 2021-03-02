@@ -23,9 +23,11 @@ import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
 import org.jgrapht.graph.AsUnmodifiableGraph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleDirectedGraph;
+import org.jgrapht.traverse.DepthFirstIterator;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.Objects.isNull;
 import static org.jgrapht.GraphTests.requireUndirected;
@@ -116,7 +118,7 @@ public class MaxMax<V, E> implements ClusteringAlgorithm<V> {
         /**
          * The map of root and non-root nodes.
          */
-        protected final Map<V, Boolean> roots;
+        protected final Set<V> roots;
 
         /**
          * Create an instance of the MaxMax clustering algorithm implementation.
@@ -126,17 +128,8 @@ public class MaxMax<V, E> implements ClusteringAlgorithm<V> {
         public Implementation(Graph<V, E> graph) {
             this.graph = graph;
             this.maximals = new HashMap<>(graph.vertexSet().size());
-            this.roots = new HashMap<>(graph.vertexSet().size());
-
-            final var builder = SimpleDirectedGraph.<V, DefaultEdge>createBuilder(DefaultEdge.class);
-
-            for (final var node : graph.vertexSet()) {
-                maximals.put(node, new HashSet<>());
-                roots.put(node, true);
-                builder.addVertex(node);
-            }
-
-            this.digraph = builder.build();
+            this.roots = new HashSet<>(graph.vertexSet());
+            this.digraph = SimpleDirectedGraph.<V, DefaultEdge>createBuilder(DefaultEdge.class).build();
         }
 
         /**
@@ -145,8 +138,27 @@ public class MaxMax<V, E> implements ClusteringAlgorithm<V> {
          * @return the clustering
          */
         public MaxMaxClustering<V> compute() {
-            // Preparation: Compute Maximal Vertices
-            for (final var u : digraph.vertexSet()) {
+            computeMaximals();
+
+            buildArcs();
+
+            identifyClusters();
+
+            final var clusters = extractClusters();
+
+            return new MaxMaxClustering.MaxMaxClusteringImpl<>(clusters,
+                    new AsUnmodifiableGraph<>(digraph),
+                    Collections.unmodifiableMap(maximals),
+                    Collections.unmodifiableSet(roots));
+        }
+
+        /**
+         * Compute maximal vertices.
+         */
+        protected void computeMaximals() {
+            for (final var u : graph.vertexSet()) {
+                maximals.put(u, new HashSet<>());
+
                 final var max = graph.edgesOf(u).stream().mapToDouble(graph::getEdgeWeight).max().orElse(-1);
 
                 graph.edgesOf(u).stream().
@@ -154,43 +166,37 @@ public class MaxMax<V, E> implements ClusteringAlgorithm<V> {
                         map(e -> Graphs.getOppositeVertex(graph, e, u)).
                         forEach(v -> maximals.get(u).add(v));
             }
+        }
 
-            // Stage 1: Graph Transformation
-            for (final var e : graph.edgeSet()) {
-                final var u = graph.getEdgeSource(e);
-                final var v = graph.getEdgeTarget(e);
+        /**
+         * Perform Stage 1: Graph Transformation.
+         */
+        protected void buildArcs() {
+            Graphs.addAllVertices(digraph, graph.vertexSet());
+
+            for (final var edge : graph.edgeSet()) {
+                final var u = graph.getEdgeSource(edge);
+                final var v = graph.getEdgeTarget(edge);
 
                 if (maximals.get(u).contains(v)) digraph.addEdge(v, u);
                 if (maximals.get(v).contains(u)) digraph.addEdge(u, v);
             }
+        }
 
-            // Stage 2: Identifying Clusters
-            final var visited = new HashSet<V>();
-
+        /**
+         * Perform Stage 2: Identifying Clusters.
+         */
+        private void identifyClusters() {
             for (final var v : digraph.vertexSet()) {
-                if (roots.get(v)) {
-                    final var queue = new ArrayDeque<>(Graphs.successorListOf(digraph, v));
+                if (roots.contains(v)) {
+                    final var dfs = new DepthFirstIterator<>(digraph, v);
 
-                    visited.add(v);
-
-                    while (!queue.isEmpty()) {
-                        final var u = queue.remove();
-
-                        if (!visited.contains(u)) {
-                            roots.put(u, false);
-                            visited.add(u);
-                            queue.addAll(Graphs.successorListOf(digraph, u));
-                        }
+                    while (dfs.hasNext()) {
+                        final var u = dfs.next();
+                        if (!u.equals(v)) roots.remove(u);
                     }
                 }
             }
-
-            final var clusters = extractClusters();
-
-            return new MaxMaxClustering.MaxMaxClusteringImpl<>(clusters,
-                    new AsUnmodifiableGraph<>(digraph),
-                    Collections.unmodifiableMap(maximals),
-                    Collections.unmodifiableMap(roots));
         }
 
         /**
@@ -199,28 +205,20 @@ public class MaxMax<V, E> implements ClusteringAlgorithm<V> {
          * @return the clusters
          */
         protected List<Set<V>> extractClusters() {
-            final var rootNodes = roots.entrySet().stream().
-                    filter(Map.Entry::getValue).
-                    map(Map.Entry::getKey).
-                    collect(Collectors.toSet());
+            final var clusters = new ArrayList<Set<V>>();
 
-            return rootNodes.stream().map(root -> {
-                final Set<V> cluster = new HashSet<>();
+            for (final var root : roots) {
+                final var dfs = new DepthFirstIterator<>(digraph, root);
 
-                final var queue = new ArrayDeque<V>();
-                queue.add(root);
+                final var cluster = Stream.generate(() -> null).
+                        takeWhile(p -> dfs.hasNext()).
+                        map(n -> dfs.next()).
+                        collect(Collectors.toSet());
 
-                while (!queue.isEmpty()) {
-                    final var v = queue.remove();
+                clusters.add(cluster);
+            }
 
-                    if (!cluster.contains(v)) {
-                        cluster.add(v);
-                        queue.addAll(Graphs.successorListOf(digraph, v));
-                    }
-                }
-
-                return cluster;
-            }).collect(Collectors.toList());
+            return clusters;
         }
     }
 }
