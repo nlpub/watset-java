@@ -33,7 +33,7 @@ jobs:
       run: mvn -B javadoc:javadoc
       if: matrix.java-version == '16-ea' && github.ref == 'refs/heads/master'
     - name: Upload Pages
-      uses: peaceiris/actions-gh-pages@v3
+      uses: peaceiris/actions-gh-pages@v3.8.0
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./target/site/apidocs
