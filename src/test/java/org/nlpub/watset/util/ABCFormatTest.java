@@ -18,6 +18,7 @@
 package org.nlpub.watset.util;
 
 import junit.framework.TestCase;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -28,6 +29,7 @@ import java.nio.file.Path;
 public class ABCFormatTest extends TestCase {
     final static URL EDGE_TSV = ABCFormatTest.class.getResource("edge.tsv");
 
+    @Test
     public void testParse() throws IOException, URISyntaxException {
         try (final var edges = Files.lines(Path.of(EDGE_TSV.toURI()))) {
             final var graph = ABCFormat.parse(edges);
@@ -37,6 +39,7 @@ public class ABCFormatTest extends TestCase {
         }
     }
 
+    @Test
     public void testParseRegex() throws URISyntaxException, IOException {
         try (final var edges = Files.lines(Path.of(EDGE_TSV.toURI()))) {
             final var graph = ABCFormat.parse(edges, " ");
