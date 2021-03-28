@@ -99,10 +99,12 @@ public final class Matrices {
      * @return a symmetric Laplacian
      */
     public static RealMatrix buildSymmetricLaplacian(RealMatrix degree, RealMatrix adjacency) {
-        final var eigen = new EigenDecomposition(degree);
-        final var sqrt = eigen.getSquareRoot();
+        final var sqrt = degree.copy();
+        sqrt.walkInOptimizedOrder(new InflateVisitor(.5));
+        final var isqrt = MatrixUtils.inverse(sqrt);
+
         final var laplacian = degree.subtract(adjacency);
-        return sqrt.multiply(laplacian).multiply(sqrt);
+        return isqrt.multiply(laplacian).multiply(isqrt);
     }
 
     /**
