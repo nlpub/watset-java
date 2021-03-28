@@ -14,6 +14,9 @@ java -jar "$WATSET" -i "$INPUT" singleton
 java -jar "$WATSET" -i "$INPUT" together
 java -jar "$WATSET" -i "$INPUT" components
 
+# Girvan-Newman Clustering
+java -jar "$WATSET" -i "$INPUT" gn -k 2
+
 # k Spanning Tree Clustering
 java -jar "$WATSET" -i "$INPUT" kst -k 2
 

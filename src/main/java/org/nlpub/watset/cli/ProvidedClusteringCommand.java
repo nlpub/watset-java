@@ -29,7 +29,7 @@ import java.util.Collections;
  */
 @Parameters(commandDescription = "Clustering")
 class ProvidedClusteringCommand extends ClusteringCommand {
-    private final String algorithm;
+    protected final String algorithm;
 
     /**
      * Create an instance of command.

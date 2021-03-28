@@ -19,6 +19,7 @@
 
 import org.apache.commons.math3.ml.clustering.KMeansPlusPlusClusterer;
 import org.apache.commons.math3.ml.clustering.MultiKMeansPlusPlusClusterer;
+import org.jgrapht.alg.clustering.GirvanNewmanClustering;
 import org.jgrapht.alg.clustering.KSpanningTreeClustering;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
@@ -56,6 +57,11 @@ public class HardClustering {
         var components = ComponentsClustering.<String, DefaultWeightedEdge>builder().apply(graph);
         System.out.print("Components: ");
         System.out.println(components.getClustering());
+
+        // Girvan-Newman Clustering
+        var gn = new GirvanNewmanClustering<>(graph, 2);
+        System.out.print("Girvan-Newman (k=2): ");
+        System.out.println(gn.getClustering());
 
         // k Spanning Tree Clustering
         var kst = new KSpanningTreeClustering<>(graph, 2);

@@ -19,14 +19,18 @@ package org.nlpub.watset.cli;
 
 import com.beust.jcommander.Parameters;
 import com.beust.jcommander.ParametersDelegate;
-import org.jgrapht.alg.clustering.KSpanningTreeClustering;
 import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
+import org.jgrapht.graph.DefaultWeightedEdge;
+import org.nlpub.watset.util.ClusteringAlgorithmProvider;
+
+import java.util.Map;
 
 /**
- * A command that runs the <em>k</em> spanning tree clustering algorithm.
+ * A command that uses {@link ClusteringAlgorithmProvider} to resolve the clustering algorithm
+ * with the pre-defined number of clusters <em>k</em>.
  */
-@Parameters(commandDescription = "k Spanning Tree Clustering")
-class KSpanningTreeCommand extends ClusteringCommand {
+@Parameters(commandDescription = "Clustering with Fixed Number of Clusters")
+class ProvidedClusteringFixedKCommand extends ProvidedClusteringCommand {
     /**
      * The number of clusters parameters.
      */
@@ -38,13 +42,18 @@ class KSpanningTreeCommand extends ClusteringCommand {
      * Create an instance of command.
      *
      * @param parameters the parameters
+     * @param algorithm  the algorithm
      */
-    public KSpanningTreeCommand(MainParameters parameters) {
-        super(parameters);
+    public ProvidedClusteringFixedKCommand(MainParameters parameters, String algorithm) {
+        super(parameters, algorithm);
     }
 
     @Override
     public ClusteringAlgorithm<String> getAlgorithm() {
-        return new KSpanningTreeClustering<>(getGraph(), fixed.k);
+        return new ClusteringAlgorithmProvider<String, DefaultWeightedEdge>(
+                algorithm,
+                Map.of("k", String.valueOf(fixed.k)),
+                parameters.random
+        ).apply(getGraph());
     }
 }

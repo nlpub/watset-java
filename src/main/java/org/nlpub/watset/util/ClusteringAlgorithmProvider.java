@@ -22,6 +22,7 @@ import org.apache.commons.math3.ml.clustering.MultiKMeansPlusPlusClusterer;
 import org.apache.commons.math3.ml.distance.EuclideanDistance;
 import org.apache.commons.math3.random.JDKRandomGenerator;
 import org.jgrapht.Graph;
+import org.jgrapht.alg.clustering.GirvanNewmanClustering;
 import org.jgrapht.alg.clustering.KSpanningTreeClustering;
 import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
 import org.nlpub.watset.graph.*;
@@ -69,6 +70,11 @@ public class ClusteringAlgorithmProvider<V, E> implements ClusteringAlgorithmBui
          * Label for {@link KSpanningTreeClustering}.
          */
         K_SPANNING_TREE,
+
+        /**
+         * Label for {@link GirvanNewmanClustering}.
+         */
+        GIRVAN_NEWMAN,
 
         /**
          * Label for {@link SpectralClustering}.
@@ -129,6 +135,9 @@ public class ClusteringAlgorithmProvider<V, E> implements ClusteringAlgorithmBui
             case K_SPANNING_TREE:
                 final int kst = Integer.parseInt(requireNonNull(params.get("k"), "k must be specified"));
                 return new KSpanningTreeClustering<>(graph, kst);
+            case GIRVAN_NEWMAN:
+                final int kgn = Integer.parseInt(requireNonNull(params.get("k"), "k must be specified"));
+                return new GirvanNewmanClustering<>(graph, kgn);
             case SPECTRAL:
                 final int kSpectral = Integer.parseInt(requireNonNull(params.get("k"), "k must be specified"));
                 final var clusterer = new KMeansPlusPlusClusterer<NodeEmbedding<V>>(kSpectral, -1, new EuclideanDistance(), random);
@@ -168,6 +177,7 @@ public class ClusteringAlgorithmProvider<V, E> implements ClusteringAlgorithmBui
     protected String normalize(String algorithm) {
         return algorithm.toUpperCase(Locale.ROOT).
                 replaceAll("-", "_").
+                replaceAll("GN", ProvidingAlgorithm.GIRVAN_NEWMAN.name()).
                 replaceAll("KST", ProvidingAlgorithm.K_SPANNING_TREE.name()).
                 replaceAll("CW", ProvidingAlgorithm.CHINESE_WHISPERS.name()).
                 replaceAll("MCL_BIN", ProvidingAlgorithm.MARKOV_CLUSTERING_EXTERNAL.name()).
