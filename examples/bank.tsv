@@ -1,8 +1,8 @@
-bank	streambank	1
-bank	riverbank	1
-streamside	bank	1
-bank	building	1
-bank	bank building	1
-streambank	riverbank	1
-riverbank	streamside	1
-building	bank building	1
+bank	streambank	0.131
+bank	riverbank	0.126
+streamside	bank	0.133
+bank	building	0.131
+bank	bank building	0.131
+streambank	riverbank	0.555
+riverbank	streamside	0.467
+building	bank building	0.347
