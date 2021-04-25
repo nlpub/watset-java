@@ -25,10 +25,9 @@ import org.jgrapht.graph.SimpleWeightedGraph;
 import org.nlpub.watset.util.IndexedSense;
 import org.nlpub.watset.util.Sense;
 
+import java.lang.System.Logger.Level;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.*;
@@ -96,7 +95,7 @@ public class Watset<V, E> implements ClusteringAlgorithm<V> {
         return new Builder<>();
     }
 
-    private static final Logger logger = Logger.getLogger(Watset.class.getSimpleName());
+    private static final System.Logger logger = System.getLogger(Watset.class.getSimpleName());
 
     /**
      * The graph.
@@ -193,7 +192,7 @@ public class Watset<V, E> implements ClusteringAlgorithm<V> {
          * @return the clustering
          */
         public WatsetClustering<V> compute() {
-            logger.info("Watset started.");
+            logger.log(Level.INFO, "Watset started.");
 
             buildInventory();
 
@@ -209,12 +208,12 @@ public class Watset<V, E> implements ClusteringAlgorithm<V> {
                         senseGraph.edgeSet().size());
             }
 
-            logger.info("Watset: sense graph constructed.");
+            logger.log(Level.INFO, "Watset: sense graph constructed.");
 
             final var globalAlgorithm = global.apply(senseGraph);
             final var senseClusters = globalAlgorithm.getClustering();
 
-            logger.info("Watset finished.");
+            logger.log(Level.INFO, "Watset finished.");
 
             final var clusters = senseClusters.getClusters().stream().
                     map(cluster -> cluster.stream().map(Sense::get).collect(Collectors.toSet())).

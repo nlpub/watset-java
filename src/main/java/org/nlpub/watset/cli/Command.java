@@ -25,13 +25,12 @@ import org.jgrapht.graph.DefaultWeightedEdge;
 import org.nlpub.watset.util.ABCFormat;
 
 import java.io.*;
+import java.lang.System.Logger.Level;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 import static java.util.Objects.isNull;
@@ -121,7 +120,7 @@ abstract class Command implements Runnable {
         public Map<String, String> params = new HashMap<>();
     }
 
-    private static final Logger logger = Logger.getLogger(Command.class.getSimpleName());
+    private static final System.Logger logger = System.getLogger(Command.class.getSimpleName());
 
     /**
      * The main command-line parameters.
@@ -159,7 +158,7 @@ abstract class Command implements Runnable {
     @SuppressWarnings("StreamResourceLeak")
     public Stream<String> newInputStream(Path input) throws IOException {
         if (isNull(input)) {
-            logger.info("Reading from standard input.");
+            logger.log(Level.INFO, "Reading from standard input.");
             return new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8)).lines();
         }
 
@@ -178,7 +177,7 @@ abstract class Command implements Runnable {
         requireNonNull(parameters, "parameters are not initialized");
 
         if (isNull(parameters.output)) {
-            logger.info("Writing to standard output.");
+            logger.log(Level.INFO, "Writing to standard output.");
             return new BufferedWriter(new OutputStreamWriter(System.out, StandardCharsets.UTF_8));
         }
 
@@ -197,7 +196,7 @@ abstract class Command implements Runnable {
             final var graph = ABCFormat.parse(stream);
 
             logger.log(Level.INFO, "Read {0} nodes and {1} edges.",
-                    new Object[]{graph.vertexSet().size(), graph.edgeSet().size()});
+                    graph.vertexSet().size(), graph.edgeSet().size());
 
             return graph;
         } catch (IOException e) {

@@ -22,12 +22,11 @@ import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
 import org.jgrapht.alg.util.Pair;
 import org.nlpub.watset.graph.ClusteringAlgorithmBuilder;
 
+import java.lang.System.Logger.Level;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
@@ -61,7 +60,7 @@ public class Measurer<V, E> {
         }
     }
 
-    private static final Logger logger = Logger.getLogger(Measurer.class.getSimpleName());
+    private static final System.Logger logger = System.getLogger(Measurer.class.getSimpleName());
 
     /**
      * The default number of repetitions.
@@ -153,7 +152,7 @@ public class Measurer<V, E> {
             }
         }
 
-        logger.info("Evaluation complete.");
+        logger.log(Level.INFO, "Evaluation complete.");
     }
 
     private Measurement<V> measure(ClusteringAlgorithm<V> algorithm) {

@@ -23,12 +23,12 @@ import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
 import org.jgrapht.util.VertexToIntegerMapping;
 
 import java.io.*;
+import java.lang.System.Logger.Level;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Locale;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
@@ -120,7 +120,7 @@ public class MarkovClusteringExternal<V, E> implements ClusteringAlgorithm<V> {
         return new Builder<>();
     }
 
-    private static final Logger logger = Logger.getLogger(MarkovClusteringExternal.class.getSimpleName());
+    private static final System.Logger logger = System.getLogger(MarkovClusteringExternal.class.getSimpleName());
 
     /**
      * The graph.
@@ -230,7 +230,7 @@ public class MarkovClusteringExternal<V, E> implements ClusteringAlgorithm<V> {
          * @return the clustering
          */
         public Clustering<V> compute() {
-            logger.info("Preparing for Markov Clustering.");
+            logger.log(Level.INFO, "Preparing for Markov Clustering.");
 
             try {
                 process();
@@ -238,7 +238,7 @@ public class MarkovClusteringExternal<V, E> implements ClusteringAlgorithm<V> {
                 throw new UncheckedIOException(ex);
             }
 
-            logger.info("Markov Clustering finished.");
+            logger.log(Level.INFO, "Markov Clustering finished.");
 
             try (var stream = Files.lines(output.toPath())) {
                 final var clusters = stream.map(line -> Arrays.stream(line.split("\t")).
@@ -271,7 +271,7 @@ public class MarkovClusteringExternal<V, E> implements ClusteringAlgorithm<V> {
                     "--abc",
                     "-o", output.toString());
 
-            logger.info(() -> "Command: " + String.join(" ", builder.command()));
+            logger.log(Level.INFO, () -> "Command: " + String.join(" ", builder.command()));
 
             final var process = builder.start();
 

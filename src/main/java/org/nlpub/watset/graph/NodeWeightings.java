@@ -19,9 +19,9 @@ package org.nlpub.watset.graph;
 
 import org.jgrapht.Graph;
 
+import java.lang.System.Logger.Level;
 import java.util.Locale;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import static java.util.Objects.requireNonNullElse;
 
@@ -70,7 +70,7 @@ public final class NodeWeightings {
         LIN
     }
 
-    private static final Logger logger = Logger.getLogger(NodeWeightings.class.getSimpleName());
+    private static final System.Logger logger = System.getLogger(NodeWeightings.class.getSimpleName());
 
     private NodeWeightings() {
         throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
@@ -195,7 +195,7 @@ public final class NodeWeightings {
             case LOG:
                 return NodeWeightings.log();
             case NOLOG: // We used this notation in many papers; kept for compatibility
-                logger.warning("Please update your code: 'nolog' weighting is renamed to 'lin'.");
+                logger.log(Level.WARNING, "Please update your code: 'nolog' weighting is renamed to 'lin'.");
                 return NodeWeightings.linear();
             case LIN:
                 return NodeWeightings.linear();

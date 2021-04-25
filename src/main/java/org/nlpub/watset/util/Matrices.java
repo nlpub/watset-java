@@ -22,16 +22,15 @@ import org.jgrapht.Graph;
 import org.jgrapht.util.VertexToIntegerMapping;
 import org.nlpub.watset.graph.NodeEmbedding;
 
+import java.lang.System.Logger.Level;
 import java.util.List;
-import java.util.Locale;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
  * Utilities for working with matrices.
  */
 public final class Matrices {
-    private static final Logger logger = Logger.getLogger(Matrices.class.getSimpleName());
+    private static final System.Logger logger = System.getLogger(Matrices.class.getSimpleName());
 
     private Matrices() {
         throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
@@ -51,7 +50,7 @@ public final class Matrices {
      */
     public static <V, E> RealMatrix buildAdjacencyMatrix(Graph<V, E> graph, VertexToIntegerMapping<V> mapping, boolean addLoops) {
         if (graph.vertexSet().size() > 2048) {
-            logger.warning(() -> String.format(Locale.ROOT, "Graph is large: %d nodes.", graph.vertexSet().size()));
+            logger.log(Level.WARNING, "Graph is large: %d nodes.", graph.vertexSet().size());
         }
 
         final var matrix = addLoops ?
