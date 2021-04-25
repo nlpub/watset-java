@@ -37,6 +37,6 @@ public class WatsetTest {
     @Test
     public void testClustering() {
         final var clustering = watset.getClustering();
-        assertEquals(4, clustering.getNumberClusters());
+        assertEquals(2, clustering.getNumberClusters());
     }
 }

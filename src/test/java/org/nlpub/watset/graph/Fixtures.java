@@ -102,16 +102,14 @@ public final class Fixtures {
     public final static List<Set<String>> FUZZY_CLUSTERS = List.of(Set.of("a", "b", "c"), Set.of("c", "d", "e"));
 
     public final static Graph<String, DefaultWeightedEdge> WORD_GRAPH = SimpleWeightedGraph.<String, DefaultWeightedEdge>createBuilder(DefaultWeightedEdge.class).
-            addVertices("a", "b", "c", "d", "e", "f", "g", "h").
-            addEdge("a", "b", 10).
-            addEdge("a", "c", .5).
-            addEdge("a", "d").
-            addEdge("a", "e", .4).
-            addEdge("a", "f").
-            addEdge("a", "g").
-            addEdge("b", "c", 3).
-            addEdge("b", "d").
-            addEdge("c", "d").
-            addEdge("e", "f", .25).
+            addVertices("bank", "streambank", "riverbank", "streamside", "building", "bank building").
+            addEdge("bank", "streambank", 0.131).
+            addEdge("bank", "riverbank", 0.126).
+            addEdge("streamside", "bank", 0.133).
+            addEdge("bank", "building", 0.131).
+            addEdge("bank", "bank building", 0.131).
+            addEdge("streambank", "riverbank", 0.555).
+            addEdge("riverbank", "streamside", 0.467).
+            addEdge("building", "bank building", 0.347).
             build();
 }

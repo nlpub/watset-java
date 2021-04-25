@@ -33,7 +33,7 @@ public class SenseInductionTest {
 
     @Test
     public void getSensesA() {
-        final var senses = senseInduction.contexts("a");
-        assertEquals(3, senses.size());
+        final var senses = senseInduction.contexts("bank");
+        assertEquals(2, senses.size());
     }
 }

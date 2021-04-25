@@ -31,14 +31,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 public class NeighborsTest {
-    private final static Set<String> NEIGHBORHOOD = Graphs.neighborSetOf(Fixtures.WORD_GRAPH, "a");
+    private final static Set<String> NEIGHBORHOOD = Graphs.neighborSetOf(Fixtures.WORD_GRAPH, "bank");
     private final static Graph<String, DefaultWeightedEdge> EGO_SUBGRAPH = new AsSubgraph<>(Fixtures.WORD_GRAPH, new HashSet<>(NEIGHBORHOOD));
 
     @Test
     public void testGraph() {
-        final var ego = Neighbors.graph(Fixtures.WORD_GRAPH, "a");
+        final var ego = Neighbors.graph(Fixtures.WORD_GRAPH, "bank");
         assertEquals(EGO_SUBGRAPH.vertexSet(), ego.vertexSet());
         assertEquals(EGO_SUBGRAPH.edgeSet(), ego.edgeSet());
-        assertFalse(ego.containsVertex("a"));
+        assertFalse(ego.containsVertex("bank"));
     }
 }
