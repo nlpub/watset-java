@@ -18,9 +18,9 @@
 package org.nlpub.watset.graph;
 
 import org.jgrapht.graph.DefaultWeightedEdge;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MarkovClusteringTest {
     private final MarkovClustering<String, DefaultWeightedEdge> mcl1 = MarkovClustering.<String, DefaultWeightedEdge>builder().apply(Fixtures.BIPARTITE);

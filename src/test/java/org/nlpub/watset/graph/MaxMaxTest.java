@@ -18,39 +18,28 @@
 package org.nlpub.watset.graph;
 
 import org.jgrapht.graph.DefaultWeightedEdge;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MaxMaxTest {
     private final static MaxMax.Builder<String, DefaultWeightedEdge> BUILDER = MaxMax.builder();
     private final static MaxMax<String, DefaultWeightedEdge> maxmax1 = BUILDER.apply(Fixtures.MAXMAX_GRAPH);
     private final static MaxMax<String, DefaultWeightedEdge> maxmax2 = BUILDER.apply(Fixtures.FUZZY_GRAPH);
 
-    private MaxMaxClustering<String> clustering1, clustering2;
-
-    @Before
-    public void setup() {
-        clustering1 = maxmax1.getClustering();
-        clustering2 = maxmax2.getClustering();
+    @Test
+    public void testMaxMaxGraph() {
+        final var clustering = maxmax1.getClustering();
+        assertEquals(Fixtures.MAXMAX_GRAPH.vertexSet(), clustering.getDigraph().vertexSet());
+        assertEquals(Fixtures.MAXMAX_CLUSTERS.size(), clustering.getRoots().size());
+        assertEquals(Fixtures.MAXMAX_CLUSTERS, clustering.getClusters());
     }
 
     @Test
-    public void testDigraphVerticesConsistency() {
-        assertEquals(Fixtures.MAXMAX_GRAPH.vertexSet(), clustering1.getDigraph().vertexSet());
-        assertEquals(Fixtures.FUZZY_GRAPH.vertexSet(), clustering2.getDigraph().vertexSet());
-    }
-
-    @Test
-    public void testRoots() {
-        assertEquals(Fixtures.MAXMAX_CLUSTERS.size(), clustering1.getRoots().size());
-        assertEquals(Fixtures.FUZZY_CLUSTERS.size(), clustering2.getRoots().size());
-    }
-
-    @Test
-    public void testClusters() {
-        assertEquals(Fixtures.MAXMAX_CLUSTERS, clustering1.getClusters());
-        assertEquals(Fixtures.FUZZY_CLUSTERS, clustering2.getClusters());
+    public void testFuzzyGraph() {
+        final var clustering = maxmax2.getClustering();
+        assertEquals(Fixtures.FUZZY_GRAPH.vertexSet(), clustering.getDigraph().vertexSet());
+        assertEquals(Fixtures.FUZZY_CLUSTERS.size(), clustering.getRoots().size());
+        assertEquals(Fixtures.FUZZY_CLUSTERS, clustering.getClusters());
     }
 }

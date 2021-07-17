@@ -17,14 +17,15 @@
 
 package org.nlpub.watset.util;
 
-import junit.framework.TestCase;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.jgrapht.util.VertexToIntegerMapping;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.nlpub.watset.graph.Fixtures;
 
-public class MatricesTest extends TestCase {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+public class MatricesTest {
     public static final VertexToIntegerMapping<String> MCL_MAPPING = new VertexToIntegerMapping<>(Fixtures.MCL_GRAPH.vertexSet());
 
     public static final RealMatrix MCL_LAPLACIAN = MatrixUtils.createRealMatrix(new double[][]{

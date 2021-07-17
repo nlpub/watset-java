@@ -21,14 +21,14 @@ import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
 import org.jgrapht.graph.AsSubgraph;
 import org.jgrapht.graph.DefaultWeightedEdge;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.nlpub.watset.graph.Fixtures;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class NeighborsTest {
     private final static Set<String> NEIGHBORHOOD = Graphs.neighborSetOf(Fixtures.WORD_GRAPH, "bank");

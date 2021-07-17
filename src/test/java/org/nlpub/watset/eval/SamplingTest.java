@@ -17,13 +17,14 @@
 
 package org.nlpub.watset.eval;
 
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SamplingTest {
     static final Integer[] EMPTY_ARRAY = {};

@@ -22,9 +22,9 @@ import org.apache.commons.math3.ml.clustering.KMeansPlusPlusClusterer;
 import org.apache.commons.math3.ml.distance.EuclideanDistance;
 import org.apache.commons.math3.random.JDKRandomGenerator;
 import org.jgrapht.graph.DefaultWeightedEdge;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SpectralClusteringTest {
     final KMeansPlusPlusClusterer<NodeEmbedding<String>> KMEANS = new KMeansPlusPlusClusterer<>(2, -1, new EuclideanDistance(), new JDKRandomGenerator(1337));

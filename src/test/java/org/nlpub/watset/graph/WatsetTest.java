@@ -18,12 +18,12 @@
 package org.nlpub.watset.graph;
 
 import org.jgrapht.graph.DefaultWeightedEdge;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.nlpub.watset.util.Sense;
 
 import java.util.Random;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class WatsetTest {
     private final static Random random = new Random(1337);

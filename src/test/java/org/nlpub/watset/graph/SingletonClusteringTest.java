@@ -18,8 +18,9 @@
 package org.nlpub.watset.graph;
 
 import org.jgrapht.graph.DefaultWeightedEdge;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SingletonClusteringTest {
     private final SingletonClustering<String, DefaultWeightedEdge> singleton = SingletonClustering.<String, DefaultWeightedEdge>builder().apply(Fixtures.TWO_COMPONENTS);
@@ -27,6 +28,6 @@ public class SingletonClusteringTest {
     @Test
     public void testClustering() {
         final var clustering = singleton.getClustering();
-        Assert.assertEquals(Fixtures.TWO_COMPONENTS.vertexSet().size(), clustering.getNumberClusters());
+        assertEquals(Fixtures.TWO_COMPONENTS.vertexSet().size(), clustering.getNumberClusters());
     }
 }

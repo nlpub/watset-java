@@ -18,18 +18,20 @@
 package org.nlpub.watset.eval;
 
 import org.jgrapht.graph.DefaultWeightedEdge;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.nlpub.watset.graph.ChineseWhispersTest;
 import org.nlpub.watset.graph.Fixtures;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class MeasurerTest {
     static final Measurer<String, DefaultWeightedEdge> MEASURER = new Measurer<>(ChineseWhispersTest.BUILDER, Fixtures.TWO_COMPONENTS);
 
-    @Before
-    public void setUp() {
+    @BeforeAll
+    public static void init() {
         MEASURER.run();
     }
 

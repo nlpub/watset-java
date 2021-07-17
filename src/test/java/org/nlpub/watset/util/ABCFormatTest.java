@@ -17,8 +17,7 @@
 
 package org.nlpub.watset.util;
 
-import junit.framework.TestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -26,7 +25,10 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class ABCFormatTest extends TestCase {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+public class ABCFormatTest {
     final static URL EDGE_TSV = ABCFormatTest.class.getResource("edge.tsv");
 
     @Test

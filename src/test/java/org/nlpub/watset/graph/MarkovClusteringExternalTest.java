@@ -18,42 +18,40 @@
 package org.nlpub.watset.graph;
 
 import org.jgrapht.graph.DefaultWeightedEdge;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 
 import java.nio.file.Path;
 
 import static java.util.Objects.nonNull;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assume.assumeTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class MarkovClusteringExternalTest {
-    Path path;
+    static Path path;
 
-    MarkovClusteringExternal<String, DefaultWeightedEdge> mcl1;
-    MarkovClusteringExternal<String, DefaultWeightedEdge> mcl2;
-
-    @Before
-    public void setup() {
+    @BeforeAll
+    public static void init() {
         final var env = System.getenv("MCL");
         assumeTrue(nonNull(env));
 
         path = Path.of(env);
         assumeTrue(path.toFile().canExecute());
-
-        mcl1 = MarkovClusteringExternal.<String, DefaultWeightedEdge>builder().setPath(path).apply(Fixtures.BIPARTITE);
-        mcl2 = MarkovClusteringExternal.<String, DefaultWeightedEdge>builder().setPath(path).apply(Fixtures.MCL_GRAPH);
     }
 
     @Test
     public void testBipartiteClustering() {
-        final var clustering = mcl1.getClustering();
+        final var mcl = MarkovClusteringExternal.<String, DefaultWeightedEdge>builder().setPath(path).apply(Fixtures.BIPARTITE);
+        final var clustering = mcl.getClustering();
         assertEquals(2, clustering.getNumberClusters());
     }
 
     @Test
     public void testClustering() {
-        final var clustering = mcl2.getClustering();
+        final var mcl = MarkovClusteringExternal.<String, DefaultWeightedEdge>builder().setPath(path).apply(Fixtures.MCL_GRAPH);
+        final var clustering = mcl.getClustering();
         assertEquals(1, clustering.getNumberClusters());
     }
 }

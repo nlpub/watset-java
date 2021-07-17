@@ -18,9 +18,9 @@
 package org.nlpub.watset.graph;
 
 import org.jgrapht.graph.DefaultWeightedEdge;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ComponentsClusteringTest {
     private final ComponentsClustering<String, DefaultWeightedEdge> components = ComponentsClustering.<String, DefaultWeightedEdge>builder().apply(Fixtures.TWO_COMPONENTS);
