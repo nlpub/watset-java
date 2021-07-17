@@ -18,19 +18,18 @@
 package org.nlpub.watset.graph;
 
 import org.jgrapht.Graph;
+import org.jgrapht.GraphTests;
 import org.jgrapht.Graphs;
 import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
 import org.jgrapht.graph.AsUnmodifiableGraph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleDirectedGraph;
-import org.jgrapht.traverse.DepthFirstIterator;
 
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static java.util.Objects.isNull;
 import static org.jgrapht.GraphTests.requireUndirected;
+import static org.jgrapht.GraphTests.requireWeighted;
 
 /**
  * Implementation of the MaxMax soft clustering algorithm.
@@ -81,7 +80,11 @@ public class MaxMax<V, E> implements ClusteringAlgorithm<V> {
      * @param graph the graph
      */
     public MaxMax(Graph<V, E> graph) {
-        this.graph = requireUndirected(graph);
+        this.graph = requireWeighted(requireUndirected(graph));
+
+        if (!GraphTests.isSimple(graph)) {
+            throw new IllegalArgumentException("Graph must be simple");
+        }
     }
 
     @Override
@@ -106,19 +109,14 @@ public class MaxMax<V, E> implements ClusteringAlgorithm<V> {
         protected final Graph<V, E> graph;
 
         /**
-         * The map of nodes to their maximal affinity nodes.
+         * The weights.
          */
-        protected final Map<V, Set<V>> maximals;
+        protected final Map<V, Double> weights;
 
         /**
          * The directed graph.
          */
         protected final Graph<V, DefaultEdge> digraph;
-
-        /**
-         * The map of root and non-root nodes.
-         */
-        protected final Set<V> roots;
 
         /**
          * Create an instance of the MaxMax clustering algorithm implementation.
@@ -127,8 +125,7 @@ public class MaxMax<V, E> implements ClusteringAlgorithm<V> {
          */
         public Implementation(Graph<V, E> graph) {
             this.graph = graph;
-            this.maximals = new HashMap<>(graph.vertexSet().size());
-            this.roots = new HashSet<>(graph.vertexSet());
+            this.weights = new HashMap<>(graph.vertexSet().size());
             this.digraph = SimpleDirectedGraph.<V, DefaultEdge>createBuilder(DefaultEdge.class).build();
         }
 
@@ -138,84 +135,90 @@ public class MaxMax<V, E> implements ClusteringAlgorithm<V> {
          * @return the clustering
          */
         public MaxMaxClustering<V> compute() {
-            computeMaximals();
+            computeWeights();
 
             buildArcs();
 
-            identifyClusters();
-
             final var clusters = extractClusters();
 
-            return new MaxMaxClustering.MaxMaxClusteringImpl<>(clusters,
-                    new AsUnmodifiableGraph<>(digraph),
-                    Collections.unmodifiableMap(maximals),
-                    Collections.unmodifiableSet(roots));
-        }
+            final long elements = clusters.values().stream().flatMap(Collection::stream).distinct().count();
 
-        /**
-         * Compute maximal vertices.
-         */
-        protected void computeMaximals() {
-            for (final var u : graph.vertexSet()) {
-                maximals.put(u, new HashSet<>());
-
-                final var max = graph.edgesOf(u).stream().mapToDouble(graph::getEdgeWeight).max().orElse(-1);
-
-                graph.edgesOf(u).stream().
-                        filter(e -> graph.getEdgeWeight(e) == max).
-                        map(e -> Graphs.getOppositeVertex(graph, e, u)).
-                        forEach(v -> maximals.get(u).add(v));
+            if (elements != graph.vertexSet().size()) {
+                throw new IllegalStateException("Clusters do not cover the nodes: " + elements + " vs. " + graph.vertexSet().size());
             }
+
+            return new MaxMaxClustering.MaxMaxClusteringImpl<>(List.copyOf(clusters.values()),
+                    new AsUnmodifiableGraph<>(digraph),
+                    Collections.unmodifiableSet(clusters.keySet()));
         }
 
         /**
-         * Perform Stage 1: Graph Transformation.
+         * Compute the weights for maximal affinity nodes.
          */
-        protected void buildArcs() {
-            Graphs.addAllVertices(digraph, graph.vertexSet());
-
+        private void computeWeights() {
             for (final var edge : graph.edgeSet()) {
                 final var u = graph.getEdgeSource(edge);
                 final var v = graph.getEdgeTarget(edge);
+                final var weight = graph.getEdgeWeight(edge);
 
-                if (maximals.get(u).contains(v)) digraph.addEdge(v, u);
-                if (maximals.get(v).contains(u)) digraph.addEdge(u, v);
+                if ((!weights.containsKey(u)) || (weights.get(u) < weight)) weights.put(u, weight);
+                if ((!weights.containsKey(v)) || (weights.get(v) < weight)) weights.put(v, weight);
+            }
+
+            if (!weights.keySet().equals(graph.vertexSet())) {
+                throw new IllegalArgumentException("Graph must not have zero-degree nodes");
             }
         }
 
         /**
-         * Perform Stage 2: Identifying Clusters.
+         * Build the intermediate directed graph.
          */
-        private void identifyClusters() {
-            for (final var v : digraph.vertexSet()) {
-                if (roots.contains(v)) {
-                    final var dfs = new DepthFirstIterator<>(digraph, v);
+        protected void buildArcs() {
+            for (final var edge : graph.edgeSet()) {
+                final var u = graph.getEdgeSource(edge);
+                final var v = graph.getEdgeTarget(edge);
+                final var weight = graph.getEdgeWeight(edge);
 
-                    while (dfs.hasNext()) {
-                        final var u = dfs.next();
-                        if (!u.equals(v)) roots.remove(u);
-                    }
-                }
+                if (weight == weights.get(u)) Graphs.addEdgeWithVertices(digraph, v, u);
+                if (weight == weights.get(v)) Graphs.addEdgeWithVertices(digraph, u, v);
             }
         }
 
         /**
-         * Extract clusters by traversing from the root nodes.
+         * Extract the quasi-strongly connected subgraphs from the intermediate directed graph.
          *
-         * @return the clusters
+         * @return the map of cluster roots to the clusters
          */
-        protected List<Set<V>> extractClusters() {
-            final var clusters = new ArrayList<Set<V>>();
+        protected Map<V, Set<V>> extractClusters() {
+            final var leaves = new HashSet<>(graph.vertexSet().size());
+            final var clusters = new HashMap<V, Set<V>>();
 
-            for (final var root : roots) {
-                final var dfs = new DepthFirstIterator<>(digraph, root);
+            for (final var u : digraph.vertexSet()) {
+                if (!leaves.contains(u)) {
+                    final var cluster = new HashSet<V>();
 
-                final var cluster = Stream.generate(() -> null).
-                        takeWhile(p -> dfs.hasNext()).
-                        map(n -> dfs.next()).
-                        collect(Collectors.toSet());
+                    cluster.add(u);
 
-                clusters.add(cluster);
+                    final var queue = new ArrayDeque<>(Graphs.successorListOf(digraph, u));
+
+                    final var visited = new HashSet<V>();
+
+                    while (!queue.isEmpty()) {
+                        final var v = queue.remove();
+                        leaves.add(v);
+
+                        if (!visited.contains(v)) {
+                            clusters.remove(v);
+
+                            if (digraph.containsVertex(v)) queue.addAll(Graphs.successorListOf(digraph, v));
+
+                            cluster.add(v);
+                            visited.add(v);
+                        }
+                    }
+
+                    clusters.put(u, cluster);
+                }
             }
 
             return clusters;

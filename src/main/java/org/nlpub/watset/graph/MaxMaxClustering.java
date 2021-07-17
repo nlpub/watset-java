@@ -22,7 +22,6 @@ import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
 import org.jgrapht.graph.DefaultEdge;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -38,13 +37,6 @@ public interface MaxMaxClustering<V> extends ClusteringAlgorithm.Clustering<V> {
      * @return a directed graph
      */
     Graph<V, DefaultEdge> getDigraph();
-
-    /**
-     * Return the map of nodes to their maximal affinity nodes.
-     *
-     * @return a map of maximal affinities
-     */
-    Map<V, Set<V>> getMaximals();
 
     /**
      * Return the set of root nodes.
@@ -65,11 +57,6 @@ public interface MaxMaxClustering<V> extends ClusteringAlgorithm.Clustering<V> {
         private final Graph<V, DefaultEdge> digraph;
 
         /**
-         * The map of nodes to their maximal affinity nodes.
-         */
-        private final Map<V, Set<V>> maximals;
-
-        /**
          * The map of root and non-root nodes.
          */
         private final Set<V> roots;
@@ -79,24 +66,17 @@ public interface MaxMaxClustering<V> extends ClusteringAlgorithm.Clustering<V> {
          *
          * @param clusters the clusters
          * @param digraph  the directed graph representation
-         * @param maximals the map of maximal affinities
          * @param roots    the map of root and non-root nodes
          */
-        public MaxMaxClusteringImpl(List<Set<V>> clusters, Graph<V, DefaultEdge> digraph, Map<V, Set<V>> maximals, Set<V> roots) {
+        public MaxMaxClusteringImpl(List<Set<V>> clusters, Graph<V, DefaultEdge> digraph, Set<V> roots) {
             super(clusters);
             this.digraph = digraph;
-            this.maximals = maximals;
             this.roots = roots;
         }
 
         @Override
         public Graph<V, DefaultEdge> getDigraph() {
             return digraph;
-        }
-
-        @Override
-        public Map<V, Set<V>> getMaximals() {
-            return maximals;
         }
 
         @Override
