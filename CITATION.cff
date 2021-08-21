@@ -1,0 +1,30 @@
+cff-version: 1.2.0
+message: If you use this software, please cite the article from preferred-citation.
+authors:
+- family-names: Ustalov
+  given-names: Dmitry
+  orcid: "https://orcid.org/0000-0002-9979-2188"
+title: Watset
+license: Apache-2.0
+repository-artifact: https://search.maven.org/artifact/org.nlpub/watset
+repository-code: https://github.com/nlpub/watset-java
+preferred-citation:
+  type: article
+  authors:
+  - family-names: Ustalov
+    given-names: Dmitry
+  - family-names: Panchenko
+    given-names: Alexander
+  - family-names: Biemann
+    given-names: Chris
+  - family-names: Ponzetto
+    given-names: Simone Paolo
+  title: "Watset: Local-Global Graph Clustering with Applications in Sense and Frame Induction"
+  year: 2019
+  journal: Computational Linguistics
+  volume: 45
+  number: 3
+  start: 423
+  end: 479
+  doi: 10.1162/COLI_a_00354
+  issn: 0891-2017
