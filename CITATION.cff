@@ -23,8 +23,8 @@ preferred-citation:
   year: 2019
   journal: Computational Linguistics
   volume: 45
-  number: 3
+  issue: 3
   start: 423
   end: 479
-  doi: 10.1162/COLI_a_00354
+  doi: "10.1162/COLI_a_00354"
   issn: 0891-2017
