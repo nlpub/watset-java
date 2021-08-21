@@ -70,7 +70,9 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+    - name: Install cff
+      run: gem install cff
     - name: Validate CITATION.cff
-      run: |
-        gem install cff
-        ruby -rcff -e 'CFF::File.validate!("CITATION.cff")'
+      run: ruby -rcff -e 'CFF::File.validate!("CITATION.cff")'
