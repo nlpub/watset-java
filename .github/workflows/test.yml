@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         distribution: [adopt]
-        java-version: [11, 16, 17-ea, 18-ea]
+        java-version: [11, 16, 17-ea]
     env:
       MCL: examples/mcl
     steps:
