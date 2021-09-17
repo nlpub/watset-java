@@ -9,6 +9,7 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    continue-on-error: ${{ matrix.java-version == '17' }}
     strategy:
       matrix:
         distribution: [temurin]
