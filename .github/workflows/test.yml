@@ -34,13 +34,13 @@ jobs:
       run: mvn -Dshade=true -B package
     - name: Build Javadoc
       run: mvn -B javadoc:javadoc
-      if: matrix.java-version == '17' && github.ref == 'refs/heads/master'
+      if: matrix.java-version == '16' && github.ref == 'refs/heads/master'
     - name: Upload Pages
       uses: peaceiris/actions-gh-pages@v3.8.0
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./target/site/apidocs
-      if: matrix.java-version == '17' && github.ref == 'refs/heads/master'
+      if: matrix.java-version == '16' && github.ref == 'refs/heads/master'
   examples:
     runs-on: ubuntu-latest
     steps:
