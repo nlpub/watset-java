@@ -90,3 +90,4 @@ jobs:
           RELEASE=${{ steps.get_version.outputs.VERSION }}
         tags: |
           ghcr.io/nlpub/watset-java:latest
+          ghcr.io/nlpub/watset-java:${{ steps.get_version.outputs.VERSION }}
