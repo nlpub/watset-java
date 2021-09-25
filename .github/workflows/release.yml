@@ -24,8 +24,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ github.ref }}
-        release_name: Watset ${{ github.ref }}
+        tag_name: ${{ github.event.release.tag_name }}
+        release_name: Watset ${{ github.event.release.tag_name }}
         draft: false
         prerelease: false
     - name: Upload Release Asset
@@ -84,6 +84,6 @@ jobs:
         platforms: linux/amd64,linux/arm64
         push: ${{ github.event_name != 'pull_request' }}
         build-args: |
-          RELEASE=${{ github.ref }}
+          RELEASE=${{ github.event.release.tag_name }}
         tags: |
           ghcr.io/nlpub/watset-java:latest
