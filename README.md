@@ -186,7 +186,7 @@ $ java -jar watset.jar -i output.tsv purity -g gold.tsv -n -m
 
 ## Tutorial
 
-Watset was featured in the &ldquo;[Graph Clustering for Natural Language Processing](https://doi.org/10.5281/zenodo.1161505)&rdquo; tutorial at the [AINL&nbsp;2018](https://ainlconf.ru/2018/) conference.
+Watset will be featured at the [Graphs, Computation, and Language](https://doi.org/10.5281/zenodo.4291120) class at the [33rd European Summer School in Logic, Language and Information](https://2022.esslli.eu/courses-wokshops-accepted/accepted.html) (ESSLLI 2022)!
 
 ## Contributing
 
@@ -198,7 +198,7 @@ Watset was featured in the &ldquo;[Graph Clustering for Natural Language Process
 
 ## Copyright
 
-Copyright (c) 2016&ndash;2021 [Dmitry Ustalov]. See [LICENSE](LICENSE) for details.
+Copyright (c) 2016&ndash;2022 [Dmitry Ustalov]. See [LICENSE](LICENSE) for details.
 
 [Watset]: https://doi.org/10.1162/COLI_a_00354
 [Chinese Whispers]: https://doi.org/10.3115/1654758.1654774
