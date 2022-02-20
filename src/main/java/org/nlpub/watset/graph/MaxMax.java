@@ -18,7 +18,6 @@
 package org.nlpub.watset.graph;
 
 import org.jgrapht.Graph;
-import org.jgrapht.GraphTests;
 import org.jgrapht.Graphs;
 import org.jgrapht.alg.interfaces.ClusteringAlgorithm;
 import org.jgrapht.graph.AsUnmodifiableGraph;
@@ -28,8 +27,7 @@ import org.jgrapht.graph.SimpleDirectedGraph;
 import java.util.*;
 
 import static java.util.Objects.isNull;
-import static org.jgrapht.GraphTests.requireUndirected;
-import static org.jgrapht.GraphTests.requireWeighted;
+import static org.jgrapht.GraphTests.*;
 
 /**
  * Implementation of the MaxMax soft clustering algorithm.
@@ -82,7 +80,7 @@ public class MaxMax<V, E> implements ClusteringAlgorithm<V> {
     public MaxMax(Graph<V, E> graph) {
         this.graph = requireWeighted(requireUndirected(graph));
 
-        if (!GraphTests.isSimple(graph)) {
+        if (!isSimple(graph)) {
             throw new IllegalArgumentException("Graph must be simple");
         }
     }
