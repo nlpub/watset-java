@@ -242,6 +242,7 @@ public class MarkovClustering<V, E> implements ClusteringAlgorithm<V> {
 
                 expand();
                 inflate();
+                normalize();
 
                 if (matrix.equals(previous)) break;
             }
@@ -282,7 +283,6 @@ public class MarkovClustering<V, E> implements ClusteringAlgorithm<V> {
          * Perform the inflation step.
          */
         protected void inflate() {
-            normalize();
             matrix.walkInOptimizedOrder(inflateVisitor);
         }
     }
