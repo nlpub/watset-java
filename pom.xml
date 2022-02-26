@@ -264,6 +264,7 @@
                 <version>3.3.2</version>
                 <configuration>
                     <detectLinks>true</detectLinks>
+                    <detectJavaApiLink>false</detectJavaApiLink>
                     <docfilessubdirs>true</docfilessubdirs>
                 </configuration>
                 <executions>
