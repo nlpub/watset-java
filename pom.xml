@@ -235,9 +235,6 @@
                 <version>3.2.2</version>
                 <configuration>
                     <archive>
-                        <manifestEntries>
-                            <Automatic-Module-Name>org.nlpub.watset</Automatic-Module-Name>
-                        </manifestEntries>
                         <manifest>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                             <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
@@ -264,7 +261,6 @@
                 <version>3.3.2</version>
                 <configuration>
                     <detectLinks>true</detectLinks>
-                    <detectJavaApiLink>false</detectJavaApiLink>
                     <docfilessubdirs>true</docfilessubdirs>
                 </configuration>
                 <executions>
