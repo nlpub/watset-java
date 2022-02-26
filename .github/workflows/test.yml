@@ -31,11 +31,11 @@ jobs:
       run: mvn -B package
     - name: Build with Maven (Shade)
       run: mvn -Dshade=true -B package
-    - name: Deploy with Maven
-      run: mvn deploy -B -DskipTests=true -DaltDeploymentRepository=local::default::file://repo
     - name: Build Javadoc
       run: mvn -B javadoc:javadoc
       if: matrix.java-version == '17' && github.ref == 'refs/heads/master'
+    - name: Deploy with Maven
+      run: mvn deploy -B -DskipTests=true -DaltDeploymentRepository=local::default::file://repo
     - name: Upload Pages
       uses: peaceiris/actions-gh-pages@v3.8.0
       with:
