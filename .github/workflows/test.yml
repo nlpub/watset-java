@@ -2,9 +2,9 @@ name: Unit Tests
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   test:
@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         distribution: [temurin]
-        java-version: [11, 16, 17]
+        java-version: ['11', '17']
     env:
       MCL: examples/mcl
     steps:
