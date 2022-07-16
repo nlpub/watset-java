@@ -75,16 +75,7 @@ jobs:
       uses: actions/checkout@v3
     - name: Run ShellCheck
       run: bash -c 'shopt -s globstar nullglob; shellcheck **/*.{sh,ksh,bash}'
-  cff:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.x'
-    - name: Install cffconvert
-      run: python3 -m pip install --user cffconvert
     - name: Validate CITATION.cff
-      run: cffconvert --validate
+      uses: citation-file-format/cffconvert-github-action@2.0.0
+      with:
+        args: "--validate"
