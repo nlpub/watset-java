@@ -1,11 +1,11 @@
 export LANG := en_US.UTF-8
 export CLASSPATH := $(CURDIR)/watset.jar
 
-RELEASE := 2.6.0
+RELEASE := 2.8.0
 
 MCL := 14-137
 
-all: HardClustering FuzzyClustering PickleGraph PickleClustering EvaluateClustering CommandLine
+all: HardClustering FuzzyClustering ABCGraph PickleGraph PickleClustering EvaluateClustering CommandLine
 
 clean:
 	-rm -fv *.pkl *.jar *.tar.gz
