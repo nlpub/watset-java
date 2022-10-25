@@ -37,7 +37,7 @@ jobs:
     - name: Deploy with Maven
       run: mvn deploy -B -DskipTests=true -DaltDeploymentRepository=local::default::file://repo
     - name: Upload Pages
-      uses: peaceiris/actions-gh-pages@v3.8.0
+      uses: peaceiris/actions-gh-pages@v3.9.0
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./target/site/apidocs
