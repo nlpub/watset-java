@@ -186,7 +186,7 @@ $ java -jar watset.jar -i output.tsv purity -g gold.tsv -n -m
 
 ## Tutorial
 
-Watset will be featured in the [Graphs, Computation, and Language](https://doi.org/10.5281/zenodo.4291120) class at the [33rd European Summer School in Logic, Language and Information](https://2022.esslli.eu/courses-wokshops-accepted/accepted.html) (ESSLLI 2022)!
+Watset will be featured in the [Graphs, Computation, and Language](https://doi.org/10.5281/zenodo.6667766) class at the [33rd European Summer School in Logic, Language and Information](https://2022.esslli.eu/courses-workshops-accepted/course-information.html#DmitryUstalov) (ESSLLI&nbsp;2022)!
 
 ## Contributing
 
